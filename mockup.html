@@ -3,1084 +3,1817 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>KIS Home Dashboard — Mockup v2</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet" />
+<title>KIS Home — Command Center</title>
 <style>
+/* ═══════════════════════════════════════════════════════════════
+   KIS HOME DASHBOARD — Premium Redesign
+   Target: Samsung Galaxy Tab S9+ landscape (1752×2800 landscape)
+   Inspired by: Savant gesture-UX, Control4 X4 widget system,
+                Elan/Nice theme-tile approach — executed better.
+   Design: Deep obsidian + electric cyan + glass morphism
+═══════════════════════════════════════════════════════════════ */
 
+/* ── TOKENS ─────────────────────────────────────────────────── */
 :root {
-  --bg-base:        #06080e;
-  --bg-card:        #0d1e38;
-  --bg-card-hover:  #112244;
-  --bg-nav:         #080f20;
-  --accent-cyan:    #00C8E8;
-  --accent-blue:    #1565C0;
-  --text-primary:   #e4e8f0;
-  --text-muted:     #6a8090;
-  --border:         rgba(0,200,232,0.15);
-  --border-bright:  rgba(0,200,232,0.45);
-  --state-on:       #00C8E8;
-  --state-off:      #6a8090;
-  --state-locked:   #00C8E8;
-  --state-unlocked: #f59e0b;
-  --state-open:     #ef4444;
-  --state-closed:   #22c55e;
-  --state-disarmed: #22c55e;
-  --state-home:     #f59e0b;
-  --state-away:     #1565C0;
-  --state-cool:     #60a5fa;
-  --state-heat:     #fb923c;
-  --nav-h:          68px;
-  --status-h:       56px;
-  --gap:            8px;
-  --radius:         10px;
+  /* Base palette */
+  --obsidian:       #070910;
+  --surface-0:      #0b0e17;
+  --surface-1:      #10151f;
+  --surface-2:      #151c2a;
+  --surface-3:      #1c2438;
+
+  /* Accent */
+  --cyan:           #00d4f0;
+  --cyan-dim:       rgba(0,212,240,0.12);
+  --cyan-glow:      rgba(0,212,240,0.25);
+  --cyan-border:    rgba(0,212,240,0.18);
+  --cyan-border-hi: rgba(0,212,240,0.5);
+
+  /* State colors */
+  --green:          #10d090;
+  --green-dim:      rgba(16,208,144,0.12);
+  --amber:          #f5a623;
+  --amber-dim:      rgba(245,166,35,0.12);
+  --red:            #f04060;
+  --red-dim:        rgba(240,64,96,0.12);
+  --blue:           #4d8ef0;
+  --blue-dim:       rgba(77,142,240,0.12);
+  --violet:         #9d6ef0;
+  --violet-dim:     rgba(157,110,240,0.12);
+
+  /* Text */
+  --text-hi:        #eef2f8;
+  --text-mid:       #8a9ab8;
+  --text-lo:        #4a5570;
+
+  /* Glass */
+  --glass-bg:       rgba(16,21,31,0.72);
+  --glass-border:   rgba(255,255,255,0.06);
+  --glass-shine:    rgba(255,255,255,0.03);
+
+  /* Layout */
+  --nav-h:          72px;
+  --bar-h:          60px;
+  --r-card:         16px;
+  --r-sm:           10px;
+  --gap:            10px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
 
 html, body {
   width: 100%; height: 100%;
   overflow: hidden;
-  background: var(--bg-base);
-  color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--obsidian);
+  color: var(--text-hi);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+               "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── SHELL ─────────────────────────────────────────────────── */
+/* Subtle radial ambient light behind content */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(0,100,180,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 85% 100%, rgba(0,212,240,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SHELL ──────────────────────────────────────────────────── */
 .shell {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   height: 100dvh;
   overflow: hidden;
 }
 
-/* ── STATUS BAR ────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   STATUS BAR
+═══════════════════════════════════════════════════════════════ */
 .status-bar {
   flex-shrink: 0;
-  height: var(--status-h);
-  background: #080f20;
-  border-bottom: 1px solid var(--border);
+  height: var(--bar-h);
+  background: rgba(7,9,16,0.9);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--glass-border);
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  gap: 12px;
+  padding: 0 20px;
+  gap: 0;
+  position: relative;
 }
-.status-clock {
-  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-primary);
+
+/* Clock — left anchor */
+.bar-clock {
+  display: flex;
+  flex-direction: column;
   line-height: 1;
-  min-width: 72px;
+  min-width: 90px;
 }
-.status-date {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: var(--text-muted);
+.bar-time {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+.bar-date {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  flex: 1;
+  color: var(--text-lo);
+  margin-top: 1px;
 }
-.status-weather {
+
+/* Divider */
+.bar-div {
+  width: 1px;
+  height: 32px;
+  background: var(--glass-border);
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+
+/* Weather */
+.bar-weather {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
+  gap: 8px;
 }
-.status-weather .icon { font-size: 18px; }
-.status-weather .temp { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 18px; font-weight: 600; }
-.alarm-badge {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1.5px solid;
+.bar-weather-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.bar-weather-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.bar-weather-temp {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-hi);
+  letter-spacing: -0.01em;
+}
+.bar-weather-desc {
+  font-size: 10px;
+  color: var(--text-lo);
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
-.alarm-badge.disarmed { color: var(--state-disarmed); border-color: var(--state-disarmed); background: rgba(34,197,94,0.1); }
-.alarm-badge.armed-home { color: var(--state-home); border-color: var(--state-home); background: rgba(245,158,11,0.1); }
-.alarm-badge.armed-away { color: var(--accent-cyan); border-color: var(--accent-cyan); background: rgba(0,200,232,0.1); }
-.presence-chips { display: flex; gap: 5px; }
-.presence-chip {
-  width: 28px; height: 28px;
+
+/* Spacer */
+.bar-spacer { flex: 1; }
+
+/* Alarm badge */
+.bar-alarm {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.bar-alarm.disarmed {
+  color: var(--green);
+  border-color: rgba(16,208,144,0.3);
+  background: var(--green-dim);
+}
+.bar-alarm.armed-home {
+  color: var(--amber);
+  border-color: rgba(245,166,35,0.3);
+  background: var(--amber-dim);
+}
+.bar-alarm-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* Presence */
+.bar-presence {
+  display: flex;
+  gap: 6px;
+  margin-left: 12px;
+}
+.presence-avatar {
+  width: 30px; height: 30px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 600;
+  font-size: 11px; font-weight: 700;
   border: 2px solid;
+  letter-spacing: 0;
 }
-.presence-chip.home { border-color: var(--state-disarmed); background: rgba(34,197,94,0.15); color: var(--state-disarmed); }
-.presence-chip.away { border-color: var(--text-muted); background: rgba(106,128,144,0.15); color: var(--text-muted); }
+.presence-avatar.home {
+  color: var(--green);
+  border-color: rgba(16,208,144,0.5);
+  background: var(--green-dim);
+}
+.presence-avatar.away {
+  color: var(--text-lo);
+  border-color: rgba(74,85,112,0.4);
+  background: rgba(74,85,112,0.08);
+}
 
-/* ── CONTENT AREA ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   CONTENT AREA
+═══════════════════════════════════════════════════════════════ */
 .content {
   flex: 1;
   overflow: hidden;
   position: relative;
 }
+
 .page {
   position: absolute;
   inset: 0;
   display: none;
   overflow: hidden;
+  overflow-y: auto;
   padding: var(--gap);
+  /* hide scrollbar visually */
+  scrollbar-width: none;
 }
+.page::-webkit-scrollbar { display: none; }
 .page.active { display: grid; }
 
-/* ── BOTTOM NAV ────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════════════════════════════════════ */
 .bottom-nav {
   flex-shrink: 0;
   height: var(--nav-h);
-  background: var(--bg-nav);
-  border-top: 1px solid var(--border);
+  background: rgba(7,9,16,0.95);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-top: 1px solid var(--glass-border);
   display: flex;
   align-items: stretch;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
 .nav-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
   border: none;
   background: transparent;
-  color: var(--text-muted);
-  transition: color 0.15s;
-  padding: 8px 4px;
-  -webkit-tap-highlight-color: transparent;
+  color: var(--text-lo);
+  transition: color 0.2s ease;
+  padding: 6px 4px;
+  position: relative;
 }
-.nav-item.active { color: var(--accent-cyan); }
-.nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+.nav-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: var(--cyan);
+  border-radius: 0 0 2px 2px;
+  transition: width 0.25s ease;
+}
+.nav-item.active {
+  color: var(--cyan);
+}
+.nav-item.active::after {
+  width: 32px;
+}
+.nav-item svg {
+  width: 22px; height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.nav-item.active svg { stroke: var(--cyan); }
 .nav-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.nav-item.active .nav-label { color: var(--accent-cyan); }
 
-/* ── CARD BASE ────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   GLASS CARD BASE
+═══════════════════════════════════════════════════════════════ */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-card);
   overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease;
 }
-.card:active { background: var(--bg-card-hover); border-color: var(--border-bright); }
-
-.card-row { display: flex; align-items: center; gap: 8px; }
-.card-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
-.card-label { font-size: 12px; font-weight: 500; color: var(--text-muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-value { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 20px; font-weight: 700; line-height: 1; }
-.card-state {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 2px 7px;
-  border-radius: 10px; border: 1px solid currentColor;
-  white-space: nowrap;
+/* Subtle top shine on cards */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--glass-shine) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: inherit;
 }
-
-/* State colors */
-.locked   { color: var(--state-locked); }
-.unlocked { color: var(--state-unlocked); }
-.open     { color: var(--state-open); }
-.closed   { color: var(--state-closed); }
-.on       { color: var(--state-on); }
-.off      { color: var(--text-muted); }
-.cool     { color: var(--state-cool); }
-.heat     { color: var(--state-heat); }
-
-/* Section title */
-.section-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.25em;
-  text-transform: uppercase; color: var(--accent-cyan);
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--border);
+.card:active {
+  transform: scale(0.98);
+  border-color: var(--cyan-border-hi);
 }
 
-/* ══════════════════════════════════════════════════
-   PAGE: HOME
-   Grid: status-bar already fixed.
-   Layout: Quick Actions row + Security 2-col + (spacer)
-   ══════════════════════════════════════════════════ */
+/* Card accent line (left edge) */
+.card-accent {
+  position: absolute;
+  left: 0; top: 16px; bottom: 16px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: var(--cyan);
+}
+
+/* Section heading */
+.section-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+  padding: 0 2px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--glass-border), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE: HOME — Quick Actions + Security Overview
+═══════════════════════════════════════════════════════════════ */
 #page-home {
   grid-template-rows: auto auto 1fr;
-  grid-template-columns: 1fr;
   gap: var(--gap);
+  align-content: start;
 }
 
-/* Quick Actions */
+/* ── Quick Actions ─────────────────────────────────────────── */
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: var(--gap);
 }
-@media (max-width: 600px) {
+@media (max-width: 520px) {
   .quick-actions { grid-template-columns: repeat(3, 1fr); }
 }
-.quick-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px 6px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 5px; cursor: pointer;
-  text-align: center;
-  transition: background 0.12s, border-color 0.12s;
+
+.qa-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-card);
+  padding: 14px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s;
 }
-.quick-card:active { background: var(--bg-card-hover); border-color: var(--border-bright); }
-.quick-card .q-icon { font-size: 22px; }
-.quick-card .q-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
-  text-transform: uppercase; color: var(--text-muted);
+.qa-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--glass-shine) 0%, transparent 50%);
+  pointer-events: none;
+}
+.qa-card:active { transform: scale(0.96); }
+.qa-card.active-scene {
+  border-color: var(--cyan-border-hi);
+  background: linear-gradient(135deg, rgba(0,212,240,0.08) 0%, rgba(0,212,240,0.02) 100%);
 }
 
-/* Security grid */
-.security-grid {
+.qa-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.qa-icon-wrap svg {
+  width: 22px; height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.qa-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.2;
+}
+.qa-card.active-scene .qa-label { color: var(--cyan); }
+
+/* Scene colors */
+.qa-morning .qa-icon-wrap  { background: rgba(245,166,35,0.15); color: var(--amber); }
+.qa-night .qa-icon-wrap    { background: rgba(157,110,240,0.15); color: var(--violet); }
+.qa-away .qa-icon-wrap     { background: rgba(240,64,96,0.15); color: var(--red); }
+.qa-welcome .qa-icon-wrap  { background: rgba(16,208,144,0.15); color: var(--green); }
+.qa-movie .qa-icon-wrap    { background: rgba(77,142,240,0.15); color: var(--blue); }
+
+/* ── Security Section ──────────────────────────────────────── */
+.security-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto repeat(3, 1fr) repeat(2, 1fr);
   gap: var(--gap);
 }
-.security-grid .col-header {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--accent-cyan);
-  padding: 0 2px;
-  display: flex; align-items: center; gap: 6px;
-}
-.security-grid .col-header .dot {
-  width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0;
-}
+.security-col { display: flex; flex-direction: column; gap: var(--gap); }
 
-/* Landscape on phone: expand security to use more cols */
-@media (orientation: landscape) and (max-height: 500px) {
-  #page-home {
-    grid-template-rows: auto 1fr;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "qa qa"
-      "locks garages";
-  }
-  .quick-actions { grid-area: qa; grid-template-columns: repeat(5, 1fr); }
-  .security-grid { grid-area: locks; }
+.lock-card {
+  padding: 12px 14px 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
 }
+.lock-icon-wrap {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.lock-icon-wrap svg {
+  width: 20px; height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lock-info { flex: 1; min-width: 0; }
+.lock-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lock-sub {
+  font-size: 10px;
+  color: var(--text-lo);
+  margin-top: 2px;
+  letter-spacing: 0.05em;
+}
+.lock-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.state-locked   { color: var(--cyan);  border-color: rgba(0,212,240,0.35);  background: rgba(0,212,240,0.08); }
+.state-unlocked { color: var(--amber); border-color: rgba(245,166,35,0.35); background: rgba(245,166,35,0.08); }
+.state-closed   { color: var(--green); border-color: rgba(16,208,144,0.35); background: rgba(16,208,144,0.08); }
+.state-open     { color: var(--red);   border-color: rgba(240,64,96,0.35);  background: rgba(240,64,96,0.08); }
 
-/* ══════════════════════════════════════════════════
+.icon-locked .lock-icon-wrap   { background: rgba(0,212,240,0.1);   color: var(--cyan); }
+.icon-unlocked .lock-icon-wrap { background: rgba(245,166,35,0.1);  color: var(--amber); }
+.icon-closed .lock-icon-wrap   { background: rgba(16,208,144,0.1);  color: var(--green); }
+.icon-open .lock-icon-wrap     { background: rgba(240,64,96,0.1);   color: var(--red); }
+
+/* ═══════════════════════════════════════════════════════════════
    PAGE: CLIMATE
-   ══════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 #page-climate {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: var(--gap);
+  height: 100%;
 }
 @media (max-width: 480px) and (orientation: portrait) {
-  #page-climate { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
+  #page-climate {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, auto);
+    height: auto;
+  }
 }
+
 .climate-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  cursor: pointer; overflow: hidden;
-  transition: background 0.12s;
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
 }
-.climate-card:active { background: var(--bg-card-hover); }
-.climate-room {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--text-muted);
+
+.climate-room-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-lo);
 }
-.climate-temp {
-  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
-  font-size: 52px; font-weight: 700; line-height: 1;
+.climate-temp-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 8px 0 4px;
 }
-.climate-meta {
-  display: flex; align-items: center; justify-content: space-between;
+.climate-temp-big {
+  font-size: 56px;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
 }
-.climate-setpoint { font-size: 13px; color: var(--text-muted); }
-.climate-setpoint strong { color: var(--text-primary); }
-.climate-mode-badge {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 3px 9px;
-  border-radius: 12px; border: 1px solid currentColor;
+.climate-temp-unit {
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text-mid);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
 }
+.climate-setpoint-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.climate-setpoint {
+  font-size: 12px;
+  color: var(--text-lo);
+  letter-spacing: 0.03em;
+}
+.climate-setpoint strong {
+  color: var(--text-mid);
+  font-weight: 600;
+}
+.climate-mode {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+.mode-cool { color: var(--blue);  border-color: rgba(77,142,240,0.35);  background: rgba(77,142,240,0.08); }
+.mode-heat { color: var(--amber); border-color: rgba(245,166,35,0.35);  background: rgba(245,166,35,0.08); }
+.mode-auto { color: var(--green); border-color: rgba(16,208,144,0.35);  background: rgba(16,208,144,0.08); }
+
 .climate-controls {
-  display: flex; gap: 6px; margin-top: 8px;
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
 }
 .climate-btn {
-  flex: 1; height: 34px; border-radius: 6px;
-  background: rgba(0,200,232,0.08); border: 1px solid var(--border);
-  color: var(--text-primary); font-family: ui-monospace, 'SF Mono', Consolas, monospace;
-  font-size: 18px; font-weight: 700; cursor: pointer;
+  flex: 1;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-mid);
+  font-size: 18px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
   display: flex; align-items: center; justify-content: center;
 }
-.climate-btn:active { background: rgba(0,200,232,0.2); }
+.climate-btn:active { background: var(--cyan-dim); color: var(--cyan); }
 
-/* ══════════════════════════════════════════════════
+/* Climate temp bar visual */
+.climate-progress {
+  height: 3px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  margin: 6px 0;
+  overflow: hidden;
+}
+.climate-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.fill-cool { background: linear-gradient(to right, #4d8ef0, #00d4f0); }
+.fill-heat { background: linear-gradient(to right, #f0a030, #f06040); }
+
+/* ═══════════════════════════════════════════════════════════════
    PAGE: LIGHTS
-   ══════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 #page-lights {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: var(--gap);
+  height: 100%;
 }
 @media (max-width: 480px) and (orientation: portrait) {
-  #page-lights { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
-}
-.light-group-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  overflow: hidden; cursor: pointer;
-  transition: background 0.12s;
-}
-.light-group-card:active { background: var(--bg-card-hover); }
-.lg-header { display: flex; align-items: center; justify-content: space-between; }
-.lg-title { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 18px; font-weight: 700; }
-.lg-icon { font-size: 24px; }
-.lg-count { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-.lg-toggle {
-  margin-top: auto;
-  display: flex; gap: 6px;
-}
-.toggle-btn {
-  flex: 1; height: 34px; border-radius: 6px;
-  background: rgba(0,200,232,0.08); border: 1px solid var(--border);
-  color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
-  text-transform: uppercase; cursor: pointer;
-}
-.toggle-btn.all-on { background: rgba(0,200,232,0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
-.toggle-btn:active { background: rgba(0,200,232,0.25); }
-.lg-lights {
-  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
-}
-.lg-light-pill {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
-  text-transform: uppercase; padding: 3px 8px; border-radius: 10px;
-  border: 1px solid;
-  white-space: nowrap;
-}
-.lg-light-pill.on { color: var(--accent-cyan); border-color: var(--accent-cyan); background: rgba(0,200,232,0.1); }
-.lg-light-pill.off { color: var(--text-muted); border-color: rgba(106,128,144,0.3); background: rgba(106,128,144,0.05); }
-
-/* ══════════════════════════════════════════════════
-   PAGE: CAMERAS
-   ══════════════════════════════════════════════════ */
-#page-cameras {
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr;
-  gap: var(--gap);
-}
-@media (max-width: 600px) and (orientation: portrait) {
-  #page-cameras {
+  #page-lights {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(4, auto);
+    height: auto;
   }
 }
-@media (max-width: 900px) and (orientation: landscape) {
-  #page-cameras {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr;
-  }
-}
-.camera-card {
-  background: #050b16;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden; cursor: pointer;
-  display: flex; flex-direction: column;
-  position: relative;
-}
-.camera-feed {
-  flex: 1; background: #030609;
-  display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
-}
-.camera-feed-placeholder {
-  width: 100%; height: 100%;
-  background: linear-gradient(135deg, #040810 0%, #071020 50%, #040810 100%);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 40px; opacity: 0.3;
-}
-.camera-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
-  padding: 20px 10px 8px;
-}
-.camera-name {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--text-primary);
-}
-.camera-status {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 10px; color: var(--text-muted); margin-top: 2px;
-}
-.live-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--state-closed); flex-shrink: 0;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-/* ══════════════════════════════════════════════════
-   PAGE: MORE
-   ══════════════════════════════════════════════════ */
-#page-more {
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto 1fr;
-  gap: var(--gap);
+.light-group-card {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 160px;
 }
-@media (max-width: 480px) and (orientation: portrait) {
-  #page-more { grid-template-columns: 1fr; }
+
+.lg-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
-.media-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  display: flex; flex-direction: column; gap: 8px;
-  grid-column: 1 / -1;
+.lg-header-left {}
+.lg-room {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-lo);
 }
-.media-header { display: flex; align-items: center; justify-content: space-between; }
-.media-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-cyan);
+.lg-count {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text-hi);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 2px;
 }
-.media-playing { font-size: 13px; color: var(--text-primary); font-weight: 500; }
-.media-artist { font-size: 11px; color: var(--text-muted); }
-.media-controls { display: flex; gap: 8px; align-items: center; }
-.media-btn {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(0,200,232,0.08); border: 1px solid var(--border);
-  color: var(--text-primary); font-size: 16px; cursor: pointer;
+.lg-count-sub {
+  font-size: 11px;
+  color: var(--text-lo);
+  font-weight: 400;
+}
+.lg-icon-area {
+  width: 44px; height: 44px;
+  border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
 }
-.media-btn.play { background: rgba(0,200,232,0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
-.media-btn:active { background: rgba(0,200,232,0.25); }
-.volume-bar {
-  flex: 1; height: 4px; background: rgba(255,255,255,0.1);
-  border-radius: 2px; position: relative;
+.lg-icon-area svg {
+  width: 24px; height: 24px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
 }
-.volume-fill { height: 100%; width: 62%; background: var(--accent-cyan); border-radius: 2px; }
-.volume-thumb {
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--accent-cyan); border: 2px solid var(--bg-base);
-  position: absolute; top: 50%; left: 62%; transform: translate(-50%,-50%);
+
+/* Light chip grid */
+.light-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: auto;
+  padding-top: 10px;
 }
-.more-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 12px 14px;
-  display: flex; flex-direction: column; gap: 8px;
+.light-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.15s;
 }
-.more-card-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-cyan);
+.light-chip.on {
+  color: var(--amber);
+  border-color: rgba(245,166,35,0.35);
+  background: rgba(245,166,35,0.1);
 }
-.presence-row { display: flex; gap: 8px; }
-.presence-person {
-  flex: 1; background: rgba(0,200,232,0.06); border: 1px solid var(--border);
-  border-radius: 8px; padding: 8px 10px;
-  display: flex; align-items: center; gap: 8px;
+.light-chip.off {
+  color: var(--text-lo);
+  border-color: rgba(74,85,112,0.2);
+  background: transparent;
 }
-.presence-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700; border: 2px solid;
+.chip-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
   flex-shrink: 0;
 }
-.presence-avatar.home { border-color: var(--state-closed); background: rgba(34,197,94,0.1); color: var(--state-closed); }
-.presence-avatar.away { border-color: var(--text-muted); background: rgba(106,128,144,0.1); color: var(--text-muted); }
-.presence-info { flex: 1; min-width: 0; }
-.presence-name { font-size: 13px; font-weight: 600; }
-.presence-status { font-size: 10px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+.light-chip.on .chip-dot {
+  box-shadow: 0 0 4px var(--amber);
+  animation: glow-dot 2.5s ease-in-out infinite;
+}
+@keyframes glow-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--amber); }
+  50% { opacity: 0.7; box-shadow: 0 0 8px var(--amber); }
+}
 
-/* ── PREVIEW FRAME WRAPPER (demo only) ─────────────────────── */
-.preview-wrapper {
-  background: #03050a;
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; padding: 20px 16px;
-  gap: 24px;
+/* Group toggle */
+.lg-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
 }
-.preview-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--text-muted); text-align: center;
+.lg-btn {
+  flex: 1;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.03);
+  color: var(--text-lo);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
 }
-.device-frame {
-  border: 2px solid rgba(0,200,232,0.2);
-  border-radius: 24px;
+.lg-btn.all-on {
+  border-color: rgba(245,166,35,0.4);
+  background: rgba(245,166,35,0.08);
+  color: var(--amber);
+}
+.lg-btn:active { opacity: 0.7; }
+
+/* Light group colors by room */
+.lg-kitchen .lg-icon-area   { background: rgba(245,166,35,0.12); color: var(--amber); }
+.lg-living .lg-icon-area    { background: rgba(77,142,240,0.12); color: var(--blue); }
+.lg-outdoor .lg-icon-area   { background: rgba(16,208,144,0.12); color: var(--green); }
+.lg-bedrooms .lg-icon-area  { background: rgba(157,110,240,0.12); color: var(--violet); }
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE: CAMERAS + MEDIA
+═══════════════════════════════════════════════════════════════ */
+#page-cameras {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  gap: var(--gap);
+  align-content: start;
+}
+@media (max-width: 600px) {
+  #page-cameras {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+.camera-card {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  min-height: 200px;
 }
-.frame-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase;
-  color: var(--accent-cyan); text-align: center;
-  padding: 8px 0 4px; background: #080f20;
-  border-bottom: 1px solid var(--border);
+
+.cam-feed {
+  flex: 1;
+  position: relative;
+  background:
+    linear-gradient(135deg, #080c14 0%, #0e1420 40%, #060a12 100%);
+  overflow: hidden;
+  min-height: 160px;
+}
+/* Camera noise texture */
+.cam-feed::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 3px 3px;
+  pointer-events: none;
+}
+/* Camera scan line effect */
+.cam-feed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.08) 3px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+}
+
+.cam-crosshair {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px; height: 40px;
+  opacity: 0.15;
+}
+.cam-crosshair svg {
+  width: 40px; height: 40px;
+  stroke: var(--cyan); fill: none;
+  stroke-width: 1;
+}
+
+.cam-live-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(240,64,96,0.85);
+  color: white;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 4px;
+}
+.cam-live-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: white;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+.cam-timestamp {
+  position: absolute;
+  bottom: 8px; right: 10px;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.cam-info {
+  padding: 10px 14px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cam-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-hi);
+}
+.cam-status {
+  font-size: 9px;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Media card */
+.media-card {
+  grid-column: 1 / -1;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.media-art {
+  width: 56px; height: 56px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1a1040 0%, #0d2030 100%);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.media-art svg {
+  width: 26px; height: 26px;
+  fill: none; stroke: var(--text-lo);
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.media-info { flex: 1; min-width: 0; }
+.media-track {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.media-room {
+  font-size: 10px;
+  color: var(--text-lo);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.media-progress {
+  height: 2px;
+  background: var(--surface-3);
+  border-radius: 2px;
+  margin-top: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.media-progress-fill {
+  height: 100%;
+  width: 38%;
+  background: linear-gradient(to right, var(--cyan), var(--blue));
+  border-radius: 2px;
+}
+.media-time {
+  font-size: 9px;
+  color: var(--text-lo);
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  font-variant-numeric: tabular-nums;
+}
+
+.media-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.media-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-mid);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.media-btn svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.media-btn.play-btn {
+  width: 46px; height: 46px;
+  background: var(--cyan-dim);
+  border-color: var(--cyan-border);
+  color: var(--cyan);
+}
+.media-btn:active { opacity: 0.6; transform: scale(0.92); }
+
+.media-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 4px;
+}
+.vol-icon svg {
+  width: 16px; height: 16px;
+  fill: none; stroke: var(--text-lo);
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.vol-slider {
+  width: 90px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+.vol-fill {
+  height: 100%;
+  width: 62%;
+  background: linear-gradient(to right, var(--cyan), var(--blue));
+  border-radius: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE: OVERVIEW (full summary — optional extra tab)
+   Actually used as the default Home page with all sections
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Compact status chips ──────────────────────────────────── */
+.status-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: border-color 0.15s;
+  white-space: nowrap;
+}
+.status-chip svg {
+  width: 14px; height: 14px;
+  fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.chip-cyan   { color: var(--cyan);   border-color: var(--cyan-border); }
+.chip-green  { color: var(--green);  border-color: rgba(16,208,144,0.25); }
+.chip-amber  { color: var(--amber);  border-color: rgba(245,166,35,0.25); }
+.chip-red    { color: var(--red);    border-color: rgba(240,64,96,0.25); }
+.chip-blue   { color: var(--blue);   border-color: rgba(77,142,240,0.25); }
+.chip-violet { color: var(--violet); border-color: rgba(157,110,240,0.25); }
+
+/* ═══════════════════════════════════════════════════════════════
+   ACTIVE STATE GLOW on cards
+═══════════════════════════════════════════════════════════════ */
+.card.state-on-glow {
+  border-color: rgba(245,166,35,0.25);
+  box-shadow: inset 0 0 0 1px rgba(245,166,35,0.08),
+              0 0 20px rgba(245,166,35,0.04);
+}
+.card.state-alert {
+  border-color: rgba(240,64,96,0.3);
+}
+.card.state-active {
+  border-color: var(--cyan-border-hi);
+  box-shadow: 0 0 16px rgba(0,212,240,0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE TWEAKS
+═══════════════════════════════════════════════════════════════ */
+@media (orientation: landscape) and (max-height: 420px) {
+  :root { --bar-h: 48px; --nav-h: 56px; }
+  .bar-time { font-size: 20px; }
+  .climate-temp-big { font-size: 40px; }
+}
+
+/* Tab landscape (our primary target) */
+@media (min-width: 800px) {
+  .quick-actions { grid-template-columns: repeat(5, 1fr); }
+  #page-home { grid-template-rows: auto auto 1fr; }
+  .security-section { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
 <body>
+<div class="shell">
 
-<div class="preview-wrapper">
-  <div class="preview-label">KIS Home Dashboard — v2 Mockup &nbsp;·&nbsp; No-Scroll, Bottom-Nav UX</div>
+  <!-- ═══ STATUS BAR ════════════════════════════════════════════ -->
+  <header class="status-bar">
 
-  <!-- ═══════════════════════════════════════════════
-       FRAME 1: iPhone Portrait (390 × 780)
-       ═══════════════════════════════════════════════ -->
-  <div>
-    <div class="frame-label">iPhone — Portrait</div>
-    <div class="device-frame" style="width:390px; height:780px;">
-      <div class="shell" id="shell-phone" style="height:780px;">
+    <div class="bar-clock">
+      <span class="bar-time" id="clock">3:47 PM</span>
+      <span class="bar-date" id="dateline">Friday · April 11</span>
+    </div>
 
-        <!-- Status Bar -->
-        <div class="status-bar">
-          <div>
-            <div class="status-clock">9:41</div>
-            <div class="status-date">Fri, Apr 11</div>
-          </div>
-          <div class="status-weather">
-            <span class="icon">⛅</span>
-            <span class="temp">74°</span>
-          </div>
-          <div class="alarm-badge disarmed">Disarmed</div>
-          <div class="presence-chips">
-            <div class="presence-chip home" title="Chris — Home">C</div>
-            <div class="presence-chip home" title="Claire — Home">Cl</div>
-          </div>
-        </div>
+    <div class="bar-div"></div>
 
-        <!-- Content -->
-        <div class="content" id="content-phone">
-
-          <!-- HOME PAGE -->
-          <div class="page active" id="p-phone-home"
-               style="grid-template-rows: auto 1fr; gap: 8px;">
-
-            <!-- Quick Actions (3-col on phone) -->
-            <div class="quick-actions" style="grid-template-columns: repeat(3, 1fr);">
-              <div class="quick-card"><span class="q-icon">🌅</span><span class="q-label">Morning</span></div>
-              <div class="quick-card"><span class="q-icon">🌙</span><span class="q-label">Goodnight</span></div>
-              <div class="quick-card"><span class="q-icon">🚗</span><span class="q-label">Away</span></div>
-              <div class="quick-card"><span class="q-icon">🏠</span><span class="q-label">Welcome</span></div>
-              <div class="quick-card"><span class="q-icon">🎬</span><span class="q-label">Movie</span></div>
-              <div class="quick-card"><span class="q-icon">🎉</span><span class="q-label">Party</span></div>
-            </div>
-
-            <!-- Security: 2-col grid -->
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; overflow:hidden;">
-
-              <!-- Locks column -->
-              <div style="display:flex; flex-direction:column; gap:6px; overflow:hidden;">
-                <div class="section-title">Locks</div>
-                <div class="card">
-                  <div class="card-row">
-                    <span class="card-icon locked">🔒</span>
-                    <span class="card-label">Front Door</span>
-                    <span class="card-state locked">Locked</span>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-row">
-                    <span class="card-icon locked">🔒</span>
-                    <span class="card-label">Back Door</span>
-                    <span class="card-state locked">Locked</span>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-row">
-                    <span class="card-icon unlocked" style="color:var(--state-unlocked)">🔓</span>
-                    <span class="card-label">Gemelli</span>
-                    <span class="card-state unlocked" style="color:var(--state-unlocked);border-color:var(--state-unlocked)">Open</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Garage column -->
-              <div style="display:flex; flex-direction:column; gap:6px; overflow:hidden;">
-                <div class="section-title">Garage</div>
-                <div class="card">
-                  <div class="card-row">
-                    <span class="card-icon closed">🚗</span>
-                    <span class="card-label">Left Bay</span>
-                    <span class="card-state closed">Closed</span>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-row">
-                    <span class="card-icon open" style="color:var(--state-open)">⬆️</span>
-                    <span class="card-label">Right Bay</span>
-                    <span class="card-state open" style="color:var(--state-open);border-color:var(--state-open)">Open</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- CLIMATE PAGE (hidden) -->
-          <div class="page" id="p-phone-climate"
-               style="grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;">
-            <div class="climate-card">
-              <div class="climate-room">Living Room</div>
-              <div class="climate-temp cool" style="font-size:40px;">72°</div>
-              <div class="climate-meta">
-                <span class="climate-setpoint">Set: <strong>70°</strong></span>
-                <span class="climate-mode-badge cool">Cool</span>
-              </div>
-              <div class="climate-controls">
-                <button class="climate-btn">−</button>
-                <button class="climate-btn">+</button>
-              </div>
-            </div>
-            <div class="climate-card">
-              <div class="climate-room">Gemelli</div>
-              <div class="climate-temp heat" style="font-size:40px; color:var(--state-heat)">68°</div>
-              <div class="climate-meta">
-                <span class="climate-setpoint">Set: <strong>72°</strong></span>
-                <span class="climate-mode-badge heat" style="color:var(--state-heat);border-color:var(--state-heat)">Heat</span>
-              </div>
-              <div class="climate-controls">
-                <button class="climate-btn">−</button>
-                <button class="climate-btn">+</button>
-              </div>
-            </div>
-            <div class="climate-card">
-              <div class="climate-room">Master</div>
-              <div class="climate-temp cool" style="font-size:40px;">71°</div>
-              <div class="climate-meta">
-                <span class="climate-setpoint">Set: <strong>70°</strong></span>
-                <span class="climate-mode-badge cool">Cool</span>
-              </div>
-              <div class="climate-controls">
-                <button class="climate-btn">−</button>
-                <button class="climate-btn">+</button>
-              </div>
-            </div>
-            <div class="climate-card">
-              <div class="climate-room">Upstairs</div>
-              <div class="climate-temp" style="font-size:40px; color:var(--text-muted)">74°</div>
-              <div class="climate-meta">
-                <span class="climate-setpoint">Set: <strong>72°</strong></span>
-                <span class="climate-mode-badge" style="color:var(--text-muted);border-color:var(--text-muted)">Auto</span>
-              </div>
-              <div class="climate-controls">
-                <button class="climate-btn">−</button>
-                <button class="climate-btn">+</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- LIGHTS PAGE (hidden) -->
-          <div class="page" id="p-phone-lights"
-               style="grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;">
-            <div class="light-group-card">
-              <div class="lg-header"><span class="lg-title">Kitchen</span><span class="lg-icon on">💡</span></div>
-              <div class="lg-count">4 lights · 3 on</div>
-              <div class="lg-lights">
-                <span class="lg-light-pill on">Countertop</span>
-                <span class="lg-light-pill on">Island</span>
-                <span class="lg-light-pill on">Chandelier</span>
-                <span class="lg-light-pill off">Ceiling</span>
-              </div>
-              <div class="lg-toggle" style="margin-top:8px">
-                <button class="toggle-btn all-on">All On</button>
-                <button class="toggle-btn">All Off</button>
-              </div>
-            </div>
-            <div class="light-group-card">
-              <div class="lg-header"><span class="lg-title">Living Room</span><span class="lg-icon off" style="color:var(--text-muted)">💡</span></div>
-              <div class="lg-count">2 lights · 0 on</div>
-              <div class="lg-lights">
-                <span class="lg-light-pill off">Ceiling</span>
-                <span class="lg-light-pill off">Lamp</span>
-              </div>
-              <div class="lg-toggle" style="margin-top:8px">
-                <button class="toggle-btn">All On</button>
-                <button class="toggle-btn">All Off</button>
-              </div>
-            </div>
-            <div class="light-group-card">
-              <div class="lg-header"><span class="lg-title">Outdoor</span><span class="lg-icon on">💡</span></div>
-              <div class="lg-count">7 lights · 2 on</div>
-              <div class="lg-lights">
-                <span class="lg-light-pill on">Patio</span>
-                <span class="lg-light-pill on">Front Porch</span>
-                <span class="lg-light-pill off">Walkway</span>
-                <span class="lg-light-pill off">Garage</span>
-              </div>
-              <div class="lg-toggle" style="margin-top:8px">
-                <button class="toggle-btn">All On</button>
-                <button class="toggle-btn">All Off</button>
-              </div>
-            </div>
-            <div class="light-group-card">
-              <div class="lg-header"><span class="lg-title">Bedrooms</span><span class="lg-icon off" style="color:var(--text-muted)">💡</span></div>
-              <div class="lg-count">2 lights · 0 on</div>
-              <div class="lg-lights">
-                <span class="lg-light-pill off">Ben's Light</span>
-                <span class="lg-light-pill off">Hatch</span>
-              </div>
-              <div class="lg-toggle" style="margin-top:8px">
-                <button class="toggle-btn">All On</button>
-                <button class="toggle-btn">All Off</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- CAMERAS PAGE (hidden) -->
-          <div class="page" id="p-phone-cameras"
-               style="grid-template-columns:1fr; grid-template-rows:repeat(3,1fr);">
-            <div class="camera-card">
-              <div class="camera-feed"><div class="camera-feed-placeholder">📷</div></div>
-              <div class="camera-overlay">
-                <div class="camera-name">Doorbell</div>
-                <div class="camera-status"><span class="live-dot"></span>Live</div>
-              </div>
-            </div>
-            <div class="camera-card">
-              <div class="camera-feed"><div class="camera-feed-placeholder">📷</div></div>
-              <div class="camera-overlay">
-                <div class="camera-name">Izzy</div>
-                <div class="camera-status"><span class="live-dot"></span>Live</div>
-              </div>
-            </div>
-            <div class="camera-card">
-              <div class="camera-feed"><div class="camera-feed-placeholder">📷</div></div>
-              <div class="camera-overlay">
-                <div class="camera-name">Living Room</div>
-                <div class="camera-status"><span class="live-dot"></span>Live</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- MORE PAGE (hidden) -->
-          <div class="page" id="p-phone-more"
-               style="grid-template-columns:1fr; grid-template-rows:auto auto 1fr; gap:8px;">
-            <div class="media-card">
-              <div class="media-header">
-                <span class="media-title">Benjamin's Speaker</span>
-                <span style="font-size:11px;color:var(--state-disarmed)">● Playing</span>
-              </div>
-              <div>
-                <div class="media-playing">Study With Me — Lo-fi Beats</div>
-                <div class="media-artist">Lofi Girl</div>
-              </div>
-              <div class="media-controls">
-                <button class="media-btn">⏮</button>
-                <button class="media-btn play">⏸</button>
-                <button class="media-btn">⏭</button>
-                <div class="volume-bar"><div class="volume-fill"></div><div class="volume-thumb"></div></div>
-              </div>
-            </div>
-            <div class="more-card">
-              <div class="more-card-title">Presence</div>
-              <div class="presence-row">
-                <div class="presence-person">
-                  <div class="presence-avatar home">C</div>
-                  <div class="presence-info">
-                    <div class="presence-name">Chris</div>
-                    <div class="presence-status">● Home</div>
-                  </div>
-                </div>
-                <div class="presence-person">
-                  <div class="presence-avatar home">Cl</div>
-                  <div class="presence-info">
-                    <div class="presence-name">Claire</div>
-                    <div class="presence-status">● Home</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /content -->
-
-        <!-- Bottom Nav -->
-        <nav class="bottom-nav" id="nav-phone">
-          <button class="nav-item active" onclick="switchPage('phone','home',this)">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            <span class="nav-label">Home</span>
-          </button>
-          <button class="nav-item" onclick="switchPage('phone','climate',this)">
-            <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-            <span class="nav-label">Climate</span>
-          </button>
-          <button class="nav-item" onclick="switchPage('phone','lights',this)">
-            <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
-            <span class="nav-label">Lights</span>
-          </button>
-          <button class="nav-item" onclick="switchPage('phone','cameras',this)">
-            <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
-            <span class="nav-label">Cameras</span>
-          </button>
-          <button class="nav-item" onclick="switchPage('phone','more',this)">
-            <svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            <span class="nav-label">More</span>
-          </button>
-        </nav>
-
+    <div class="bar-weather">
+      <!-- Partly cloudy sun SVG -->
+      <svg class="bar-weather-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="5" fill="#f5a623" opacity="0.9"/>
+        <line x1="11" y1="2" x2="11" y2="4.5" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <line x1="11" y1="17.5" x2="11" y2="19" stroke="#f5a623" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="2" y1="11" x2="4.5" y2="11" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <line x1="4.2" y1="4.2" x2="5.9" y2="5.9" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <line x1="17.8" y1="4.2" x2="16.1" y2="5.9" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <path d="M17 19.5a3.5 3.5 0 0 0 0-7H15.8A5 5 0 1 0 8 17.5" fill="rgba(160,180,220,0.3)" stroke="rgba(160,180,220,0.7)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="bar-weather-info">
+        <span class="bar-weather-temp">78°</span>
+        <span class="bar-weather-desc">Dallas · Partly Cloudy</span>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════
-       FRAME 2: iPhone Landscape (780 × 390)
-       ═══════════════════════════════════════════════ -->
-  <div>
-    <div class="frame-label">iPhone — Landscape</div>
-    <div class="device-frame" style="width:780px; height:390px;">
-      <div class="shell" style="height:390px;">
-        <div class="status-bar" style="height:44px;">
-          <div style="display:flex;align-items:center;gap:10px;flex:1">
-            <div class="status-clock" style="font-size:18px">9:41</div>
-            <div class="status-date">Fri, Apr 11</div>
-            <div class="status-weather"><span class="icon">⛅</span><span class="temp" style="font-size:16px">74°</span></div>
-          </div>
-          <div class="alarm-badge disarmed" style="font-size:9px;padding:3px 8px">Disarmed</div>
-          <div class="presence-chips" style="margin-left:8px">
-            <div class="presence-chip home" style="width:24px;height:24px;font-size:10px">C</div>
-            <div class="presence-chip home" style="width:24px;height:24px;font-size:10px">Cl</div>
-          </div>
-        </div>
-        <!-- Home page landscape: 3-col layout -->
-        <div class="page active" style="display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto 1fr; gap:8px;">
-          <!-- Quick Actions spans all 3 cols -->
-          <div class="quick-actions" style="grid-column:1/-1; grid-template-columns:repeat(6,1fr); gap:6px;">
-            <div class="quick-card" style="padding:7px 4px"><span class="q-icon" style="font-size:18px">🌅</span><span class="q-label">Morning</span></div>
-            <div class="quick-card" style="padding:7px 4px"><span class="q-icon" style="font-size:18px">🌙</span><span class="q-label">Goodnight</span></div>
-            <div class="quick-card" style="padding:7px 4px"><span class="q-icon" style="font-size:18px">🚗</span><span class="q-label">Away</span></div>
-            <div class="quick-card" style="padding:7px 4px"><span class="q-icon" style="font-size:18px">🏠</span><span class="q-label">Welcome</span></div>
-            <div class="quick-card" style="padding:7px 4px"><span class="q-icon" style="font-size:18px">🎬</span><span class="q-label">Movie</span></div>
-            <div class="quick-card" style="padding:7px 4px"><span class="q-icon" style="font-size:18px">🎉</span><span class="q-label">Party</span></div>
-          </div>
-          <!-- Locks -->
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <div class="section-title">Locks</div>
-            <div class="card" style="padding:7px 10px"><div class="card-row"><span class="card-icon locked" style="font-size:16px">🔒</span><span class="card-label">Front Door</span><span class="card-state locked" style="font-size:9px;padding:2px 6px">Locked</span></div></div>
-            <div class="card" style="padding:7px 10px"><div class="card-row"><span class="card-icon locked" style="font-size:16px">🔒</span><span class="card-label">Back Door</span><span class="card-state locked" style="font-size:9px;padding:2px 6px">Locked</span></div></div>
-            <div class="card" style="padding:7px 10px"><div class="card-row"><span class="card-icon" style="font-size:16px;color:var(--state-unlocked)">🔓</span><span class="card-label">Gemelli</span><span class="card-state unlocked" style="font-size:9px;padding:2px 6px;color:var(--state-unlocked);border-color:var(--state-unlocked)">Open</span></div></div>
-          </div>
-          <!-- Garage -->
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <div class="section-title">Garage</div>
-            <div class="card" style="padding:7px 10px"><div class="card-row"><span class="card-icon closed" style="font-size:16px">🚗</span><span class="card-label">Left Bay</span><span class="card-state closed" style="font-size:9px;padding:2px 6px">Closed</span></div></div>
-            <div class="card" style="padding:7px 10px;border-color:rgba(239,68,68,0.3)"><div class="card-row"><span class="card-icon open" style="font-size:16px;color:var(--state-open)">⬆️</span><span class="card-label">Right Bay</span><span class="card-state open" style="font-size:9px;padding:2px 6px;color:var(--state-open);border-color:var(--state-open)">Open</span></div></div>
-          </div>
-          <!-- Alarm quick panel -->
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <div class="section-title">Alarm</div>
-            <div class="card" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:10px 12px">
-              <div style="text-align:center">
-                <div style="font-size:22px;margin-bottom:4px">🛡️</div>
-                <div class="card-state disarmed" style="font-size:11px;padding:4px 14px;color:var(--state-disarmed);border-color:var(--state-disarmed);display:inline-block">Disarmed</div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px">
-                <div class="card" style="padding:6px;text-align:center;font-size:10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--state-home)">Arm Home</div>
-                <div class="card" style="padding:6px;text-align:center;font-size:10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-cyan)">Arm Away</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <nav class="bottom-nav" id="nav-phone-ls" style="height:52px;">
-          <button class="nav-item active" style="flex-direction:row;gap:6px;">
-            <svg style="width:18px;height:18px;flex-shrink:0" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            <span class="nav-label">Home</span>
-          </button>
-          <button class="nav-item" style="flex-direction:row;gap:6px;">
-            <svg style="width:18px;height:18px;flex-shrink:0" viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-            <span class="nav-label">Climate</span>
-          </button>
-          <button class="nav-item" style="flex-direction:row;gap:6px;">
-            <svg style="width:18px;height:18px;flex-shrink:0" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
-            <span class="nav-label">Lights</span>
-          </button>
-          <button class="nav-item" style="flex-direction:row;gap:6px;">
-            <svg style="width:18px;height:18px;flex-shrink:0" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
-            <span class="nav-label">Cameras</span>
-          </button>
-          <button class="nav-item" style="flex-direction:row;gap:6px;">
-            <svg style="width:18px;height:18px;flex-shrink:0" viewBox="0 0 24 24" fill="currentColor"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            <span class="nav-label">More</span>
-          </button>
-        </nav>
-      </div>
+    <div class="bar-spacer"></div>
+
+    <div class="bar-alarm disarmed">
+      <span class="bar-alarm-dot"></span>
+      Disarmed
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════
-       FRAME 3: iPad Portrait (768 × 1024)
-       ═══════════════════════════════════════════════ -->
-  <div>
-    <div class="frame-label">iPad — Portrait</div>
-    <div class="device-frame" style="width:768px; height:1000px;">
-      <div class="shell" style="height:1000px;">
-        <div class="status-bar">
-          <div class="status-clock">9:41</div>
-          <div class="status-date" style="flex:1;margin-left:8px">Friday, April 11, 2026</div>
-          <div class="status-weather"><span class="icon">⛅</span><span class="temp">74°</span><span style="font-size:12px;color:var(--text-muted);margin-left:4px">H:80 L:65</span></div>
-          <div class="alarm-badge disarmed" style="margin:0 10px">Disarmed</div>
-          <div class="presence-chips">
-            <div class="presence-chip home">C</div>
-            <div class="presence-chip home">Cl</div>
-          </div>
-        </div>
-        <!-- Home page on iPad -->
-        <div class="page active" style="display:grid;grid-template-rows:auto 1fr 1fr;grid-template-columns:1fr 1fr 1fr;gap:10px;">
-          <!-- Quick Actions: full row -->
-          <div class="quick-actions" style="grid-column:1/-1;grid-template-columns:repeat(6,1fr)">
-            <div class="quick-card"><span class="q-icon">🌅</span><span class="q-label">Good Morning</span></div>
-            <div class="quick-card"><span class="q-icon">🌙</span><span class="q-label">Goodnight</span></div>
-            <div class="quick-card"><span class="q-icon">🚗</span><span class="q-label">Away Mode</span></div>
-            <div class="quick-card"><span class="q-icon">🏠</span><span class="q-label">Welcome Home</span></div>
-            <div class="quick-card"><span class="q-icon">🎬</span><span class="q-label">Movie Time</span></div>
-            <div class="quick-card"><span class="q-icon">🎉</span><span class="q-label">Party Mode</span></div>
-          </div>
-          <!-- Locks -->
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div class="section-title">Locks</div>
-            <div class="card"><div class="card-row"><span class="card-icon locked">🔒</span><span class="card-label">Front Door</span><span class="card-state locked">Locked</span></div></div>
-            <div class="card"><div class="card-row"><span class="card-icon locked">🔒</span><span class="card-label">Back Door</span><span class="card-state locked">Locked</span></div></div>
-            <div class="card"><div class="card-row"><span class="card-icon" style="color:var(--state-unlocked)">🔓</span><span class="card-label">Gemelli Door</span><span class="card-state unlocked">Unlocked</span></div></div>
-          </div>
-          <!-- Garage -->
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div class="section-title">Garage</div>
-            <div class="card"><div class="card-row"><span class="card-icon closed">🚗</span><span class="card-label">Left Bay</span><span class="card-state closed">Closed</span></div></div>
-            <div class="card" style="border-color:rgba(239,68,68,0.4)"><div class="card-row"><span class="card-icon" style="color:var(--state-open)">⬆️</span><span class="card-label">Right Bay</span><span class="card-state open" style="color:var(--state-open);border-color:var(--state-open)">Open</span></div></div>
-          </div>
-          <!-- Alarm -->
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div class="section-title">Alarm System</div>
-            <div class="card" style="flex:1;display:flex;flex-direction:column;justify-content:space-around;align-items:center;padding:16px">
-              <div style="font-size:36px">🛡️</div>
-              <div class="alarm-badge disarmed" style="font-size:13px;padding:6px 20px">System Disarmed</div>
-              <div style="display:flex;gap:8px;width:100%">
-                <div class="card" style="flex:1;text-align:center;padding:10px;color:var(--state-home);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Arm Home</div>
-                <div class="card" style="flex:1;text-align:center;padding:10px;color:var(--accent-cyan);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Arm Away</div>
-              </div>
-            </div>
-          </div>
-          <!-- Climate preview (2-col) -->
-          <div style="grid-column:1/3;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div class="climate-card" style="min-height:0">
-              <div class="climate-room">Living Room</div>
-              <div class="climate-temp cool">72°</div>
-              <div class="climate-meta"><span class="climate-setpoint">Set: <strong>70°</strong></span><span class="climate-mode-badge cool">Cool</span></div>
-              <div class="climate-controls"><button class="climate-btn">−</button><button class="climate-btn">+</button></div>
-            </div>
-            <div class="climate-card" style="min-height:0">
-              <div class="climate-room">Master</div>
-              <div class="climate-temp cool">71°</div>
-              <div class="climate-meta"><span class="climate-setpoint">Set: <strong>70°</strong></span><span class="climate-mode-badge cool">Cool</span></div>
-              <div class="climate-controls"><button class="climate-btn">−</button><button class="climate-btn">+</button></div>
-            </div>
-          </div>
-          <!-- Presence -->
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div class="section-title">Presence</div>
-            <div style="display:flex;flex-direction:column;gap:8px;flex:1">
-              <div class="presence-person" style="flex:1;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:12px">
-                <div class="presence-avatar home" style="width:40px;height:40px;font-size:15px">C</div>
-                <div class="presence-info"><div class="presence-name">Chris</div><div class="presence-status" style="color:var(--state-disarmed)">● At Home</div></div>
-              </div>
-              <div class="presence-person" style="flex:1;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:12px">
-                <div class="presence-avatar home" style="width:40px;height:40px;font-size:15px">Cl</div>
-                <div class="presence-info"><div class="presence-name">Claire</div><div class="presence-status" style="color:var(--state-disarmed)">● At Home</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <nav class="bottom-nav">
-          <button class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            <span class="nav-label">Home</span>
-          </button>
-          <button class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-            <span class="nav-label">Climate</span>
-          </button>
-          <button class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
-            <span class="nav-label">Lights</span>
-          </button>
-          <button class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
-            <span class="nav-label">Cameras</span>
-          </button>
-          <button class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            <span class="nav-label">More</span>
-          </button>
-        </nav>
-      </div>
+    <div class="bar-presence">
+      <div class="presence-avatar home" title="Chris — Home">C</div>
+      <div class="presence-avatar home" title="Claire — Home">CL</div>
+      <div class="presence-avatar away" title="Benjamin — Away">B</div>
     </div>
-  </div>
 
-  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:11px;color:var(--text-muted);letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:8px 0 24px">
-    Tap nav items in the iPhone portrait frame to switch pages &nbsp;·&nbsp; KIntegrated Systems &nbsp;·&nbsp; v2 April 2026
-  </div>
+  </header>
+
+  <!-- ═══ CONTENT ══════════════════════════════════════════════ -->
+  <main class="content">
+
+    <!-- ── PAGE: HOME ──────────────────────────────────────── -->
+    <section id="page-home" class="page active">
+
+      <!-- Quick Actions -->
+      <div>
+        <div class="section-label">Scenes</div>
+        <div class="quick-actions">
+
+          <div class="qa-card qa-morning" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+            </div>
+            <span class="qa-label">Good<br>Morning</span>
+          </div>
+
+          <div class="qa-card qa-night active-scene" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </div>
+            <span class="qa-label">Good<br>Night</span>
+          </div>
+
+          <div class="qa-card qa-away" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span class="qa-label">Away<br>Mode</span>
+          </div>
+
+          <div class="qa-card qa-welcome" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <span class="qa-label">Welcome<br>Home</span>
+          </div>
+
+          <div class="qa-card qa-movie" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+            </div>
+            <span class="qa-label">Movie<br>Time</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Security Overview -->
+      <div>
+        <div class="section-label">Security</div>
+        <div class="security-section">
+
+          <!-- Locks column -->
+          <div class="security-col">
+
+            <div class="card lock-card icon-locked" onclick="toggleLock(this)">
+              <div class="card-accent"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Front Door</div>
+                <div class="lock-sub">Schlage · Last locked 2h ago</div>
+              </div>
+              <span class="lock-badge state-locked">Locked</span>
+            </div>
+
+            <div class="card lock-card icon-locked" onclick="toggleLock(this)">
+              <div class="card-accent"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Back Door</div>
+                <div class="lock-sub">Schlage · Last locked 5m ago</div>
+              </div>
+              <span class="lock-badge state-locked">Locked</span>
+            </div>
+
+            <div class="card lock-card icon-unlocked state-alert" onclick="toggleLock(this)">
+              <div class="card-accent" style="background:var(--amber)"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Gemelli Door</div>
+                <div class="lock-sub">Yale · Unlocked 12m ago</div>
+              </div>
+              <span class="lock-badge state-unlocked">Unlocked</span>
+            </div>
+
+          </div>
+
+          <!-- Garages column -->
+          <div class="security-col">
+
+            <div class="card lock-card icon-closed" onclick="toggleGarage(this)">
+              <div class="card-accent" style="background:var(--green)"></div>
+              <div class="lock-icon-wrap">
+                <!-- Garage icon -->
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="22" x2="9" y2="14"/><line x1="15" y1="22" x2="15" y2="14"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Left Garage</div>
+                <div class="lock-sub">ratgdo · Closed 3h ago</div>
+              </div>
+              <span class="lock-badge state-closed">Closed</span>
+            </div>
+
+            <div class="card lock-card icon-closed" onclick="toggleGarage(this)">
+              <div class="card-accent" style="background:var(--green)"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="22" x2="9" y2="14"/><line x1="15" y1="22" x2="15" y2="14"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Right Garage</div>
+                <div class="lock-sub">ratgdo · Closed 3h ago</div>
+              </div>
+              <span class="lock-badge state-closed">Closed</span>
+            </div>
+
+            <!-- Quick status summary chip row -->
+            <div class="card" style="padding: 14px 16px;">
+              <div class="card-accent" style="background:var(--cyan)"></div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-lo);margin-bottom:10px;">System Status</div>
+              <div class="status-chip-row">
+                <span class="status-chip chip-green">
+                  <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  All Secure
+                </span>
+                <span class="status-chip chip-cyan">
+                  <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  8 Active
+                </span>
+                <span class="status-chip chip-amber">
+                  <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  74°F Avg
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── PAGE: CLIMATE ────────────────────────────────────── -->
+    <section id="page-climate" class="page">
+
+      <!-- Living Room / Daikin -->
+      <div class="card climate-card">
+        <div class="card-accent" style="background:var(--blue)"></div>
+        <div>
+          <div class="climate-room-label">Living Room · Daikin</div>
+          <div class="climate-temp-row">
+            <span class="climate-temp-big">74</span>
+            <span class="climate-temp-unit">°F</span>
+          </div>
+          <div class="climate-progress">
+            <div class="climate-progress-fill fill-cool" style="width:42%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="climate-setpoint-row">
+            <span class="climate-setpoint">Set to <strong>72°F</strong></span>
+            <span class="climate-mode mode-cool">Cool</span>
+          </div>
+          <div class="climate-controls">
+            <button class="climate-btn">−</button>
+            <button class="climate-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gemelli -->
+      <div class="card climate-card">
+        <div class="card-accent" style="background:var(--amber)"></div>
+        <div>
+          <div class="climate-room-label">Gemelli Suite</div>
+          <div class="climate-temp-row">
+            <span class="climate-temp-big">77</span>
+            <span class="climate-temp-unit">°F</span>
+          </div>
+          <div class="climate-progress">
+            <div class="climate-progress-fill fill-heat" style="width:68%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="climate-setpoint-row">
+            <span class="climate-setpoint">Set to <strong>75°F</strong></span>
+            <span class="climate-mode mode-heat">Heat</span>
+          </div>
+          <div class="climate-controls">
+            <button class="climate-btn">−</button>
+            <button class="climate-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Master -->
+      <div class="card climate-card">
+        <div class="card-accent" style="background:var(--blue)"></div>
+        <div>
+          <div class="climate-room-label">Master Bedroom · Ecobee</div>
+          <div class="climate-temp-row">
+            <span class="climate-temp-big">71</span>
+            <span class="climate-temp-unit">°F</span>
+          </div>
+          <div class="climate-progress">
+            <div class="climate-progress-fill fill-cool" style="width:30%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="climate-setpoint-row">
+            <span class="climate-setpoint">Set to <strong>70°F</strong></span>
+            <span class="climate-mode mode-cool">Cool</span>
+          </div>
+          <div class="climate-controls">
+            <button class="climate-btn">−</button>
+            <button class="climate-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upstairs -->
+      <div class="card climate-card">
+        <div class="card-accent" style="background:var(--green)"></div>
+        <div>
+          <div class="climate-room-label">Upstairs</div>
+          <div class="climate-temp-row">
+            <span class="climate-temp-big">76</span>
+            <span class="climate-temp-unit">°F</span>
+          </div>
+          <div class="climate-progress">
+            <div class="climate-progress-fill fill-cool" style="width:55%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="climate-setpoint-row">
+            <span class="climate-setpoint">Set to <strong>74°F</strong></span>
+            <span class="climate-mode mode-auto">Auto</span>
+          </div>
+          <div class="climate-controls">
+            <button class="climate-btn">−</button>
+            <button class="climate-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── PAGE: LIGHTS ─────────────────────────────────────── -->
+    <section id="page-lights" class="page">
+
+      <!-- Kitchen -->
+      <div class="card light-group-card lg-kitchen state-on-glow">
+        <div class="card-accent" style="background:var(--amber)"></div>
+        <div class="lg-header">
+          <div class="lg-header-left">
+            <div class="lg-room">Kitchen</div>
+            <div class="lg-count">3 <span class="lg-count-sub">/ 4 on</span></div>
+          </div>
+          <div class="lg-icon-area">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+        </div>
+        <div class="light-chips">
+          <span class="light-chip on"><span class="chip-dot"></span>Countertop</span>
+          <span class="light-chip on"><span class="chip-dot"></span>Chandelier</span>
+          <span class="light-chip off"><span class="chip-dot"></span>Ceiling</span>
+          <span class="light-chip on"><span class="chip-dot"></span>Island</span>
+        </div>
+        <div class="lg-actions">
+          <button class="lg-btn all-on">All On</button>
+          <button class="lg-btn">All Off</button>
+        </div>
+      </div>
+
+      <!-- Living Room -->
+      <div class="card light-group-card lg-living">
+        <div class="card-accent" style="background:var(--blue)"></div>
+        <div class="lg-header">
+          <div class="lg-header-left">
+            <div class="lg-room">Living Room</div>
+            <div class="lg-count">1 <span class="lg-count-sub">/ 2 on</span></div>
+          </div>
+          <div class="lg-icon-area">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+        </div>
+        <div class="light-chips">
+          <span class="light-chip off"><span class="chip-dot"></span>Ceiling</span>
+          <span class="light-chip on"><span class="chip-dot"></span>Lamp 2</span>
+        </div>
+        <div class="lg-actions">
+          <button class="lg-btn">All On</button>
+          <button class="lg-btn">All Off</button>
+        </div>
+      </div>
+
+      <!-- Outdoor -->
+      <div class="card light-group-card lg-outdoor state-on-glow">
+        <div class="card-accent" style="background:var(--green)"></div>
+        <div class="lg-header">
+          <div class="lg-header-left">
+            <div class="lg-room">Outdoor</div>
+            <div class="lg-count">4 <span class="lg-count-sub">/ 7 on</span></div>
+          </div>
+          <div class="lg-icon-area">
+            <!-- Outdoor/sun icon -->
+            <svg viewBox="0 0 24 24"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg>
+          </div>
+        </div>
+        <div class="light-chips">
+          <span class="light-chip on"><span class="chip-dot"></span>Garage Light</span>
+          <span class="light-chip on"><span class="chip-dot"></span>Patio String</span>
+          <span class="light-chip off"><span class="chip-dot"></span>Front Porch</span>
+          <span class="light-chip off"><span class="chip-dot"></span>Front Walkway</span>
+          <span class="light-chip on"><span class="chip-dot"></span>Upper Outdoor</span>
+          <span class="light-chip off"><span class="chip-dot"></span>Left Patio</span>
+          <span class="light-chip on"><span class="chip-dot"></span>Center Patio</span>
+        </div>
+        <div class="lg-actions">
+          <button class="lg-btn all-on">All On</button>
+          <button class="lg-btn">All Off</button>
+        </div>
+      </div>
+
+      <!-- Bedrooms -->
+      <div class="card light-group-card lg-bedrooms">
+        <div class="card-accent" style="background:var(--violet)"></div>
+        <div class="lg-header">
+          <div class="lg-header-left">
+            <div class="lg-room">Bedrooms</div>
+            <div class="lg-count">0 <span class="lg-count-sub">/ 2 on</span></div>
+          </div>
+          <div class="lg-icon-area">
+            <!-- Moon/sleep icon -->
+            <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </div>
+        </div>
+        <div class="light-chips">
+          <span class="light-chip off"><span class="chip-dot"></span>Benjamin Hatch</span>
+          <span class="light-chip off"><span class="chip-dot"></span>Ben's Light</span>
+        </div>
+        <div class="lg-actions">
+          <button class="lg-btn">All On</button>
+          <button class="lg-btn">All Off</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── PAGE: CAMERAS + MEDIA ────────────────────────────── -->
+    <section id="page-cameras" class="page">
+
+      <!-- Doorbell camera -->
+      <div class="card camera-card">
+        <div class="cam-feed">
+          <div class="cam-crosshair">
+            <svg viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/>
+              <line x1="20" y1="2" x2="20" y2="10"/>
+              <line x1="20" y1="30" x2="20" y2="38"/>
+              <line x1="2" y1="20" x2="10" y2="20"/>
+              <line x1="30" y1="20" x2="38" y2="20"/>
+            </svg>
+          </div>
+          <!-- Camera icon center -->
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translateY(2px);opacity:0.08;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+              <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
+          <div class="cam-timestamp">3:47:22 PM</div>
+        </div>
+        <div class="cam-info">
+          <span class="cam-name">Doorbell</span>
+          <span class="cam-status">● Online</span>
+        </div>
+      </div>
+
+      <!-- Izzy camera -->
+      <div class="card camera-card">
+        <div class="cam-feed">
+          <div class="cam-crosshair">
+            <svg viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/>
+              <line x1="20" y1="2" x2="20" y2="10"/>
+              <line x1="20" y1="30" x2="20" y2="38"/>
+              <line x1="2" y1="20" x2="10" y2="20"/>
+              <line x1="30" y1="20" x2="38" y2="20"/>
+            </svg>
+          </div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translateY(2px);opacity:0.08;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+              <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
+          <div class="cam-timestamp">3:47:22 PM</div>
+        </div>
+        <div class="cam-info">
+          <span class="cam-name">Izzy</span>
+          <span class="cam-status">● Online</span>
+        </div>
+      </div>
+
+      <!-- Living Room camera -->
+      <div class="card camera-card">
+        <div class="cam-feed">
+          <div class="cam-crosshair">
+            <svg viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/>
+              <line x1="20" y1="2" x2="20" y2="10"/>
+              <line x1="20" y1="30" x2="20" y2="38"/>
+              <line x1="2" y1="20" x2="10" y2="20"/>
+              <line x1="30" y1="20" x2="38" y2="20"/>
+            </svg>
+          </div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translateY(2px);opacity:0.08;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+              <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
+          <div class="cam-timestamp">3:47:22 PM</div>
+        </div>
+        <div class="cam-info">
+          <span class="cam-name">Living Room</span>
+          <span class="cam-status">● Online</span>
+        </div>
+      </div>
+
+      <!-- Media player row -->
+      <div class="card media-card">
+        <div class="card-accent" style="background:var(--blue)"></div>
+
+        <div class="media-art">
+          <!-- Music note icon -->
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+
+        <div class="media-info">
+          <div class="media-track">Ambient Study Mix</div>
+          <div class="media-room">Benjamin's Hatch Speaker</div>
+          <div class="media-progress">
+            <div class="media-progress-fill"></div>
+          </div>
+          <div class="media-time">
+            <span>1:24</span>
+            <span>3:47</span>
+          </div>
+        </div>
+
+        <div class="media-controls">
+          <button class="media-btn">
+            <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+          </button>
+          <button class="media-btn play-btn">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <button class="media-btn">
+            <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          </button>
+        </div>
+
+        <div class="media-volume">
+          <span class="vol-icon">
+            <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </span>
+          <div class="vol-slider"><div class="vol-fill"></div></div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ═══ BOTTOM NAV ════════════════════════════════════════════ -->
+  <nav class="bottom-nav">
+
+    <button class="nav-item active" onclick="switchPage('home', this)">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">Home</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('climate', this)">
+      <svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+      <span class="nav-label">Climate</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('lights', this)">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="3"/><path d="M17.66 7.34A6 6 0 1 1 6.34 18.66"/><path d="M6.34 7.34A6 6 0 0 1 17.66 18.66"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <span class="nav-label">Lights</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('cameras', this)">
+      <svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      <span class="nav-label">Cameras</span>
+    </button>
+
+  </nav>
+
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════
+   JAVASCRIPT — Minimal vanilla JS
+═══════════════════════════════════════════════════════════════ -->
 <script>
-function switchPage(shell, page, btn) {
-  // Hide all pages in this shell
-  const pages = document.querySelectorAll('#p-' + shell + '-' + '*'.replace('*',''));
-  // Actually get all pages for this shell
-  const allPages = document.querySelectorAll('[id^="p-' + shell + '-"]');
-  allPages.forEach(p => p.classList.remove('active'));
+"use strict";
 
-  // Show target page
-  const target = document.getElementById('p-' + shell + '-' + page);
-  if (target) target.classList.add('active');
-
-  // Update nav active state
-  const nav = document.getElementById('nav-' + shell);
-  if (nav) {
-    nav.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    btn.classList.add('active');
-  }
-}
-
-// Live clock
+/* ── Clock ──────────────────────────────────────────────────── */
 function updateClock() {
   const now = new Date();
   const h = now.getHours();
-  const m = String(now.getMinutes()).padStart(2, '0');
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  const h12 = h % 12 || 12;
-  const clocks = document.querySelectorAll('.status-clock');
-  clocks.forEach(c => c.textContent = h12 + ':' + m);
+  const m = now.getMinutes().toString().padStart(2, "0");
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = ((h % 12) || 12);
+  document.getElementById("clock").textContent = h12 + ":" + m + " " + ampm;
+
+  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const months = ["January","February","March","April","May","June","July",
+                  "August","September","October","November","December"];
+  const d = now;
+  document.getElementById("dateline").textContent =
+    days[d.getDay()] + " · " + months[d.getMonth()] + " " + d.getDate();
 }
 updateClock();
-setInterval(updateClock, 30000);
+setInterval(updateClock, 1000);
+
+/* ── Page switching ─────────────────────────────────────────── */
+function switchPage(name, btn) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  document.getElementById("page-" + name).classList.add("active");
+  btn.classList.add("active");
+}
+
+/* ── Scene toggle ───────────────────────────────────────────── */
+function activateScene(card) {
+  document.querySelectorAll(".qa-card").forEach(c => c.classList.remove("active-scene"));
+  card.classList.add("active-scene");
+}
+
+/* ── Lock toggle ────────────────────────────────────────────── */
+function toggleLock(card) {
+  const badge = card.querySelector(".lock-badge");
+  const accent = card.querySelector(".card-accent");
+  const iconWrap = card.querySelector(".lock-icon-wrap");
+  const sub = card.querySelector(".lock-sub");
+
+  if (badge.classList.contains("state-locked")) {
+    badge.classList.replace("state-locked", "state-unlocked");
+    badge.textContent = "Unlocked";
+    card.classList.replace("icon-locked", "icon-unlocked");
+    card.classList.add("state-alert");
+    accent.style.background = "var(--amber)";
+    if (sub) sub.textContent = "Unlocked just now";
+    // swap icon to unlocked shackle
+    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
+  } else {
+    badge.classList.replace("state-unlocked", "state-locked");
+    badge.textContent = "Locked";
+    card.classList.replace("icon-unlocked", "icon-locked");
+    card.classList.remove("state-alert");
+    accent.style.background = "var(--cyan)";
+    if (sub) sub.textContent = "Locked just now";
+    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+  }
+}
+
+/* ── Garage toggle ──────────────────────────────────────────── */
+function toggleGarage(card) {
+  const badge = card.querySelector(".lock-badge");
+  const accent = card.querySelector(".card-accent");
+  const sub = card.querySelector(".lock-sub");
+
+  if (badge.classList.contains("state-closed")) {
+    badge.classList.replace("state-closed", "state-open");
+    badge.textContent = "Open";
+    card.classList.replace("icon-closed", "icon-open");
+    card.classList.add("state-alert");
+    accent.style.background = "var(--red)";
+    if (sub) sub.textContent = "Opened just now";
+  } else {
+    badge.classList.replace("state-open", "state-closed");
+    badge.textContent = "Closed";
+    card.classList.replace("icon-open", "icon-closed");
+    card.classList.remove("state-alert");
+    accent.style.background = "var(--green)";
+    if (sub) sub.textContent = "Closed just now";
+  }
+}
+
+/* ── Light chip toggle ──────────────────────────────────────── */
+document.querySelectorAll(".light-chip").forEach(chip => {
+  chip.addEventListener("click", function(e) {
+    e.stopPropagation();
+    this.classList.toggle("on");
+    this.classList.toggle("off");
+    // Update parent group count
+    const groupCard = this.closest(".light-group-card");
+    if (groupCard) {
+      const chips = groupCard.querySelectorAll(".light-chip");
+      const onCount = groupCard.querySelectorAll(".light-chip.on").length;
+      const countEl = groupCard.querySelector(".lg-count");
+      if (countEl) {
+        countEl.innerHTML = onCount + ' <span class="lg-count-sub">/ ' + chips.length + ' on</span>';
+      }
+      // Glow if any on
+      if (onCount > 0) {
+        groupCard.classList.add("state-on-glow");
+        groupCard.querySelector(".lg-btn:first-child").classList.add("all-on");
+      } else {
+        groupCard.classList.remove("state-on-glow");
+        groupCard.querySelector(".lg-btn:first-child").classList.remove("all-on");
+      }
+    }
+  });
+});
+
+/* ── Light group all-on/off ─────────────────────────────────── */
+document.querySelectorAll(".lg-btn").forEach(btn => {
+  btn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    const groupCard = this.closest(".light-group-card");
+    if (!groupCard) return;
+    const isAllOn = this.classList.contains("all-on") || this.textContent.trim() === "All On";
+    const chips = groupCard.querySelectorAll(".light-chip");
+    chips.forEach(chip => {
+      chip.classList.remove("on", "off");
+      chip.classList.add(isAllOn ? "on" : "off");
+    });
+    const onCount = groupCard.querySelectorAll(".light-chip.on").length;
+    const countEl = groupCard.querySelector(".lg-count");
+    if (countEl) countEl.innerHTML = onCount + ' <span class="lg-count-sub">/ ' + chips.length + ' on</span>';
+    const allOnBtn = groupCard.querySelector(".lg-btn:first-child");
+    if (onCount > 0) {
+      groupCard.classList.add("state-on-glow");
+      if (allOnBtn) allOnBtn.classList.add("all-on");
+    } else {
+      groupCard.classList.remove("state-on-glow");
+      if (allOnBtn) allOnBtn.classList.remove("all-on");
+    }
+  });
+});
+
+/* ── Climate ± buttons ──────────────────────────────────────── */
+document.querySelectorAll(".climate-btn").forEach(btn => {
+  btn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    const card = this.closest(".climate-card");
+    const setpointEl = card.querySelector(".climate-setpoint strong");
+    const progressFill = card.querySelector(".climate-progress-fill");
+    if (!setpointEl) return;
+    let val = parseInt(setpointEl.textContent);
+    val += this.textContent.trim() === "+" ? 1 : -1;
+    val = Math.max(60, Math.min(85, val));
+    setpointEl.textContent = val + "°F";
+    // Update progress bar width proportionally
+    if (progressFill) {
+      const pct = ((val - 60) / 25) * 100;
+      progressFill.style.width = Math.max(5, Math.min(95, pct)) + "%";
+    }
+  });
+});
 </script>
 </body>
 </html>
