@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>KIS Home — Tablet Portrait</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   KIS HOME DASHBOARD — Tablet Portrait Optimized
+   Target: Galaxy Tab S9+ / iPad portrait — ~1024×1366px
+   Design: Deep obsidian + electric cyan + glass morphism
+   No Google Fonts — system font stack only
+═══════════════════════════════════════════════════════════════ */
+
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  /* Base palette */
+  --obsidian:       #070910;
+  --surface-0:      #0b0e17;
+  --surface-1:      #10151f;
+  --surface-2:      #151c2a;
+  --surface-3:      #1c2438;
+
+  /* Accent */
+  --cyan:           #00d4f0;
+  --cyan-dim:       rgba(0,212,240,0.12);
+  --cyan-glow:      rgba(0,212,240,0.25);
+  --cyan-border:    rgba(0,212,240,0.18);
+  --cyan-border-hi: rgba(0,212,240,0.5);
+
+  /* State colors */
+  --green:          #10d090;
+  --green-dim:      rgba(16,208,144,0.12);
+  --amber:          #f5a623;
+  --amber-dim:      rgba(245,166,35,0.12);
+  --red:            #f04060;
+  --red-dim:        rgba(240,64,96,0.12);
+  --blue:           #4d8ef0;
+  --blue-dim:       rgba(77,142,240,0.12);
+  --violet:         #9d6ef0;
+  --violet-dim:     rgba(157,110,240,0.12);
+
+  /* Text */
+  --text-hi:        #eef2f8;
+  --text-mid:       #8a9ab8;
+  --text-lo:        #4a5570;
+
+  /* Glass */
+  --glass-bg:       rgba(16,21,31,0.72);
+  --glass-border:   rgba(255,255,255,0.06);
+  --glass-shine:    rgba(255,255,255,0.03);
+
+  /* Layout — tablet portrait */
+  --nav-h:          80px;
+  --bar-h:          72px;
+  --r-card:         20px;
+  --r-sm:           12px;
+  --gap:            14px;
+  --px:             24px;
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--obsidian);
+  color: var(--text-hi);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+               "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ambient radial light */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(0,100,180,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 85% 100%, rgba(0,212,240,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SHELL ──────────────────────────────────────────────────── */
+.shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATUS BAR — single row, 72px, generous breathing room
+═══════════════════════════════════════════════════════════════ */
+.status-bar {
+  flex-shrink: 0;
+  height: var(--bar-h);
+  background: rgba(7,9,16,0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--px);
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Clock */
+.bar-clock {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  min-width: 110px;
+}
+.bar-time {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+.bar-date {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+  margin-top: 2px;
+}
+
+/* Divider */
+.bar-div {
+  width: 1px;
+  height: 36px;
+  background: var(--glass-border);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+/* Weather */
+.bar-weather {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bar-weather-icon {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+}
+.bar-weather-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.bar-weather-temp {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-hi);
+  letter-spacing: -0.01em;
+}
+.bar-weather-desc {
+  font-size: 11px;
+  color: var(--text-lo);
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* Spacer */
+.bar-spacer { flex: 1; }
+
+/* Alarm badge */
+.bar-alarm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 24px;
+  border: 1px solid;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.bar-alarm.disarmed {
+  color: var(--green);
+  border-color: rgba(16,208,144,0.3);
+  background: var(--green-dim);
+}
+.bar-alarm.armed-home {
+  color: var(--amber);
+  border-color: rgba(245,166,35,0.3);
+  background: var(--amber-dim);
+}
+.bar-alarm-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* Presence */
+.bar-presence {
+  display: flex;
+  gap: 8px;
+  margin-left: 16px;
+}
+.presence-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  border: 2px solid;
+  letter-spacing: 0;
+}
+.presence-avatar.home {
+  color: var(--green);
+  border-color: rgba(16,208,144,0.5);
+  background: var(--green-dim);
+}
+.presence-avatar.away {
+  color: var(--text-lo);
+  border-color: rgba(74,85,112,0.4);
+  background: rgba(74,85,112,0.08);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTENT AREA
+═══════════════════════════════════════════════════════════════ */
+.content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+  overflow-y: auto;
+  padding: var(--gap) var(--px);
+  scrollbar-width: none;
+}
+.page::-webkit-scrollbar { display: none; }
+.page.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BOTTOM NAV — 6 items, 80px, 11px labels
+═══════════════════════════════════════════════════════════════ */
+.bottom-nav {
+  flex-shrink: 0;
+  height: var(--nav-h);
+  background: rgba(7,9,16,0.95);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-lo);
+  transition: color 0.2s ease;
+  padding: 8px 4px 6px;
+  position: relative;
+}
+/* Top indicator line */
+.nav-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: var(--cyan);
+  border-radius: 0 0 2px 2px;
+  transition: width 0.25s ease;
+}
+.nav-item.active {
+  color: var(--cyan);
+}
+.nav-item.active::after {
+  width: 36px;
+}
+.nav-item svg {
+  width: 24px; height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.nav-item.active svg { stroke: var(--cyan); }
+.nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASS CARD BASE
+═══════════════════════════════════════════════════════════════ */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--glass-shine) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.card:active {
+  transform: scale(0.99);
+  border-color: var(--cyan-border-hi);
+}
+
+/* Card accent line */
+.card-accent {
+  position: absolute;
+  left: 0; top: 18px; bottom: 18px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--cyan);
+}
+
+/* Section heading */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+  padding: 0 2px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--glass-border), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE: HOME — Quick Actions 5-wide + Security 2-col
+═══════════════════════════════════════════════════════════════ */
+#page-home {
+  padding-bottom: 20px;
+}
+
+/* ── Quick Actions — 5 in a row ─────────────────────────────── */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+}
+
+.qa-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-card);
+  padding: 18px 10px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s;
+  min-height: 96px;
+}
+.qa-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--glass-shine) 0%, transparent 50%);
+  pointer-events: none;
+}
+.qa-card:active { transform: scale(0.97); }
+.qa-card.active-scene {
+  border-color: var(--cyan-border-hi);
+  background: linear-gradient(135deg, rgba(0,212,240,0.08) 0%, rgba(0,212,240,0.02) 100%);
+}
+
+.qa-icon-wrap {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.qa-icon-wrap svg {
+  width: 26px; height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.qa-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.3;
+}
+.qa-card.active-scene .qa-label { color: var(--cyan); }
+
+/* Scene colors */
+.qa-morning .qa-icon-wrap  { background: rgba(245,166,35,0.15); color: var(--amber); }
+.qa-night .qa-icon-wrap    { background: rgba(157,110,240,0.15); color: var(--violet); }
+.qa-away .qa-icon-wrap     { background: rgba(240,64,96,0.15); color: var(--red); }
+.qa-welcome .qa-icon-wrap  { background: rgba(16,208,144,0.15); color: var(--green); }
+.qa-movie .qa-icon-wrap    { background: rgba(77,142,240,0.15); color: var(--blue); }
+
+/* ── Security — 2-col with generous padding ─────────────────── */
+.security-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+.security-col { display: flex; flex-direction: column; gap: var(--gap); }
+
+.lock-card {
+  padding: 16px 18px 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 70px;
+}
+.lock-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.lock-icon-wrap svg {
+  width: 22px; height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lock-info { flex: 1; min-width: 0; }
+.lock-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lock-sub {
+  font-size: 11px;
+  color: var(--text-lo);
+  margin-top: 3px;
+}
+.lock-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.state-locked   { color: var(--cyan);  border-color: rgba(0,212,240,0.35);  background: rgba(0,212,240,0.08); }
+.state-unlocked { color: var(--amber); border-color: rgba(245,166,35,0.35); background: rgba(245,166,35,0.08); }
+.state-closed   { color: var(--green); border-color: rgba(16,208,144,0.35); background: rgba(16,208,144,0.08); }
+.state-open     { color: var(--red);   border-color: rgba(240,64,96,0.35);  background: rgba(240,64,96,0.08); }
+
+.icon-locked .lock-icon-wrap   { background: rgba(0,212,240,0.1);   color: var(--cyan); }
+.icon-unlocked .lock-icon-wrap { background: rgba(245,166,35,0.1);  color: var(--amber); }
+.icon-closed .lock-icon-wrap   { background: rgba(16,208,144,0.1);  color: var(--green); }
+.icon-open .lock-icon-wrap     { background: rgba(240,64,96,0.1);   color: var(--red); }
+
+/* Status chips */
+.status-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-mid);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.status-chip svg {
+  width: 14px; height: 14px;
+  fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.chip-cyan   { color: var(--cyan);   border-color: var(--cyan-border); }
+.chip-green  { color: var(--green);  border-color: rgba(16,208,144,0.25); }
+.chip-amber  { color: var(--amber);  border-color: rgba(245,166,35,0.25); }
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE: CLIMATE — 2×2 grid with min-height 200px
+═══════════════════════════════════════════════════════════════ */
+#page-climate {
+  padding-bottom: 20px;
+  display: block;
+}
+
+.climate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.climate-card {
+  padding: 22px 24px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+}
+
+.climate-room-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+}
+.climate-temp-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+.climate-temp-big {
+  font-size: 64px;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+.climate-temp-unit {
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text-mid);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.climate-setpoint-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.climate-setpoint {
+  font-size: 13px;
+  color: var(--text-lo);
+}
+.climate-setpoint strong {
+  color: var(--text-mid);
+  font-weight: 600;
+}
+.climate-mode {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+.mode-cool { color: var(--blue);  border-color: rgba(77,142,240,0.35);  background: rgba(77,142,240,0.08); }
+.mode-heat { color: var(--amber); border-color: rgba(245,166,35,0.35);  background: rgba(245,166,35,0.08); }
+.mode-auto { color: var(--green); border-color: rgba(16,208,144,0.35);  background: rgba(16,208,144,0.08); }
+
+.climate-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.climate-btn {
+  flex: 1;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-mid);
+  font-size: 22px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.climate-btn:active { background: var(--cyan-dim); color: var(--cyan); }
+
+.climate-progress {
+  height: 3px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  margin: 8px 0;
+  overflow: hidden;
+}
+.climate-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.fill-cool { background: linear-gradient(to right, #4d8ef0, #00d4f0); }
+.fill-heat { background: linear-gradient(to right, #f0a030, #f06040); }
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE: LIGHTS — 2×2 grid with bigger toggles
+═══════════════════════════════════════════════════════════════ */
+#page-lights {
+  padding-bottom: 20px;
+  display: block;
+}
+
+.lights-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.light-group-card {
+  padding: 20px 20px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 180px;
+}
+
+.lg-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.lg-room {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+}
+.lg-count {
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--text-hi);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+.lg-count-sub {
+  font-size: 13px;
+  color: var(--text-lo);
+  font-weight: 400;
+}
+.lg-icon-area {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.lg-icon-area svg {
+  width: 26px; height: 26px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Light chips */
+.light-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+.light-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 28px;
+}
+.light-chip.on {
+  color: var(--amber);
+  border-color: rgba(245,166,35,0.35);
+  background: rgba(245,166,35,0.1);
+}
+.light-chip.off {
+  color: var(--text-lo);
+  border-color: rgba(74,85,112,0.2);
+  background: transparent;
+}
+.chip-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.light-chip.on .chip-dot {
+  box-shadow: 0 0 4px var(--amber);
+  animation: glow-dot 2.5s ease-in-out infinite;
+}
+@keyframes glow-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--amber); }
+  50% { opacity: 0.7; box-shadow: 0 0 8px var(--amber); }
+}
+
+.lg-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.lg-btn {
+  flex: 1;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.03);
+  color: var(--text-lo);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.lg-btn.all-on {
+  border-color: rgba(245,166,35,0.4);
+  background: rgba(245,166,35,0.08);
+  color: var(--amber);
+}
+.lg-btn:active { opacity: 0.7; }
+
+/* Room colors */
+.lg-kitchen .lg-icon-area   { background: rgba(245,166,35,0.12); color: var(--amber); }
+.lg-living .lg-icon-area    { background: rgba(77,142,240,0.12); color: var(--blue); }
+.lg-outdoor .lg-icon-area   { background: rgba(16,208,144,0.12); color: var(--green); }
+.lg-bedrooms .lg-icon-area  { background: rgba(157,110,240,0.12); color: var(--violet); }
+
+/* Card glow states */
+.card.state-on-glow {
+  border-color: rgba(245,166,35,0.25);
+  box-shadow: inset 0 0 0 1px rgba(245,166,35,0.08),
+              0 0 20px rgba(245,166,35,0.04);
+}
+.card.state-alert { border-color: rgba(240,64,96,0.3); }
+.card.state-active {
+  border-color: var(--cyan-border-hi);
+  box-shadow: 0 0 16px rgba(0,212,240,0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE: CAMERAS + MEDIA — 3-col grid
+═══════════════════════════════════════════════════════════════ */
+#page-cameras {
+  padding-bottom: 20px;
+  display: block;
+}
+
+.cameras-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+}
+
+.camera-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 240px;
+}
+
+.cam-feed {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(135deg, #080c14 0%, #0e1420 40%, #060a12 100%);
+  overflow: hidden;
+  /* 16:9 aspect ratio feed */
+  aspect-ratio: 16 / 9;
+}
+.cam-feed::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 3px 3px;
+  pointer-events: none;
+}
+.cam-feed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+}
+
+.cam-crosshair {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  opacity: 0.15;
+}
+.cam-crosshair svg {
+  width: 44px; height: 44px;
+  stroke: var(--cyan); fill: none;
+  stroke-width: 1;
+}
+
+.cam-live-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(240,64,96,0.85);
+  color: white;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.cam-live-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: white;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+.cam-timestamp {
+  position: absolute;
+  bottom: 8px; right: 10px;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+.cam-info {
+  padding: 12px 16px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cam-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-hi);
+}
+.cam-status {
+  font-size: 10px;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Media card — full-width row on tablet */
+.media-card {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.media-art {
+  width: 64px; height: 64px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1a1040 0%, #0d2030 100%);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.media-art svg {
+  width: 28px; height: 28px;
+  fill: none; stroke: var(--text-lo);
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.media-info { flex: 1; min-width: 0; }
+.media-track {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.media-room {
+  font-size: 11px;
+  color: var(--text-lo);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.media-progress {
+  height: 2px;
+  background: var(--surface-3);
+  border-radius: 2px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.media-progress-fill {
+  height: 100%;
+  width: 38%;
+  background: linear-gradient(to right, var(--cyan), var(--blue));
+  border-radius: 2px;
+}
+.media-time {
+  font-size: 10px;
+  color: var(--text-lo);
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  font-variant-numeric: tabular-nums;
+}
+
+.media-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.media-btn {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-mid);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.media-btn svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.media-btn.play-btn {
+  width: 52px; height: 52px;
+  background: var(--cyan-dim);
+  border-color: var(--cyan-border);
+  color: var(--cyan);
+}
+.media-btn:active { opacity: 0.6; transform: scale(0.92); }
+
+.media-volume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 8px;
+}
+.vol-icon svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: var(--text-lo);
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.vol-slider {
+  width: 110px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.vol-fill {
+  height: 100%;
+  width: 62%;
+  background: linear-gradient(to right, var(--cyan), var(--blue));
+  border-radius: 4px;
+}
+
+/* ── Spacing helpers ── */
+.section-block { margin-bottom: var(--gap); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ═══ STATUS BAR — single row, 72px ════════════════════════ -->
+  <header class="status-bar">
+
+    <div class="bar-clock">
+      <span class="bar-time" id="clock">3:47 PM</span>
+      <span class="bar-date" id="dateline">Friday · April 11</span>
+    </div>
+
+    <div class="bar-div"></div>
+
+    <div class="bar-weather">
+      <svg class="bar-weather-icon" viewBox="0 0 28 28" fill="none">
+        <circle cx="11" cy="11" r="5" fill="#f5a623" opacity="0.9"/>
+        <line x1="11" y1="2" x2="11" y2="4.5" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <line x1="11" y1="17.5" x2="11" y2="19" stroke="#f5a623" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <line x1="2" y1="11" x2="4.5" y2="11" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <line x1="4.2" y1="4.2" x2="5.9" y2="5.9" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <line x1="17.8" y1="4.2" x2="16.1" y2="5.9" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>
+        <path d="M17 19.5a3.5 3.5 0 0 0 0-7H15.8A5 5 0 1 0 8 17.5" fill="rgba(160,180,220,0.3)" stroke="rgba(160,180,220,0.7)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="bar-weather-info">
+        <span class="bar-weather-temp">78°</span>
+        <span class="bar-weather-desc">Dallas · Partly Cloudy</span>
+      </div>
+    </div>
+
+    <div class="bar-spacer"></div>
+
+    <div class="bar-alarm disarmed">
+      <span class="bar-alarm-dot"></span>
+      Disarmed
+    </div>
+
+    <div class="bar-presence">
+      <div class="presence-avatar home" title="Chris — Home">C</div>
+      <div class="presence-avatar home" title="Claire — Home">CL</div>
+      <div class="presence-avatar away" title="Benjamin — Away">B</div>
+    </div>
+
+  </header>
+
+  <!-- ═══ CONTENT ═══════════════════════════════════════════════ -->
+  <main class="content">
+
+    <!-- ── PAGE: HOME ─────────────────────────────────────────── -->
+    <section id="page-home" class="page active">
+
+      <!-- Quick Actions — 5-wide row -->
+      <div class="section-block">
+        <div class="section-label">Scenes</div>
+        <div class="quick-actions">
+
+          <div class="qa-card qa-morning" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+            </div>
+            <span class="qa-label">Good<br>Morning</span>
+          </div>
+
+          <div class="qa-card qa-night active-scene" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </div>
+            <span class="qa-label">Good<br>Night</span>
+          </div>
+
+          <div class="qa-card qa-away" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span class="qa-label">Away<br>Mode</span>
+          </div>
+
+          <div class="qa-card qa-welcome" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <span class="qa-label">Welcome<br>Home</span>
+          </div>
+
+          <div class="qa-card qa-movie" onclick="activateScene(this)">
+            <div class="qa-icon-wrap">
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+            </div>
+            <span class="qa-label">Movie<br>Time</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Security — 2-col -->
+      <div class="section-block">
+        <div class="section-label">Security</div>
+        <div class="security-section">
+
+          <!-- Locks column -->
+          <div class="security-col">
+
+            <div class="card lock-card icon-locked" onclick="toggleLock(this)">
+              <div class="card-accent"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Front Door</div>
+                <div class="lock-sub">Schlage · Last locked 2h ago</div>
+              </div>
+              <span class="lock-badge state-locked">Locked</span>
+            </div>
+
+            <div class="card lock-card icon-locked" onclick="toggleLock(this)">
+              <div class="card-accent"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Back Door</div>
+                <div class="lock-sub">Schlage · Last locked 5m ago</div>
+              </div>
+              <span class="lock-badge state-locked">Locked</span>
+            </div>
+
+            <div class="card lock-card icon-unlocked state-alert" onclick="toggleLock(this)">
+              <div class="card-accent" style="background:var(--amber)"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Gemelli Door</div>
+                <div class="lock-sub">Yale · Unlocked 12m ago</div>
+              </div>
+              <span class="lock-badge state-unlocked">Unlocked</span>
+            </div>
+
+          </div>
+
+          <!-- Garages + Status column -->
+          <div class="security-col">
+
+            <div class="card lock-card icon-closed" onclick="toggleGarage(this)">
+              <div class="card-accent" style="background:var(--green)"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="22" x2="9" y2="14"/><line x1="15" y1="22" x2="15" y2="14"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Left Garage</div>
+                <div class="lock-sub">ratgdo · Closed 3h ago</div>
+              </div>
+              <span class="lock-badge state-closed">Closed</span>
+            </div>
+
+            <div class="card lock-card icon-closed" onclick="toggleGarage(this)">
+              <div class="card-accent" style="background:var(--green)"></div>
+              <div class="lock-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="22" x2="9" y2="14"/><line x1="15" y1="22" x2="15" y2="14"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+              </div>
+              <div class="lock-info">
+                <div class="lock-name">Right Garage</div>
+                <div class="lock-sub">ratgdo · Closed 3h ago</div>
+              </div>
+              <span class="lock-badge state-closed">Closed</span>
+            </div>
+
+            <!-- System status -->
+            <div class="card" style="padding: 18px 20px 18px 24px;">
+              <div class="card-accent" style="background:var(--cyan)"></div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-lo);margin-bottom:12px;">System Status</div>
+              <div class="status-chip-row">
+                <span class="status-chip chip-green">
+                  <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  All Secure
+                </span>
+                <span class="status-chip chip-cyan">
+                  <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  8 Active
+                </span>
+                <span class="status-chip chip-amber">
+                  <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  74°F Avg
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── PAGE: CLIMATE ───────────────────────────────────────── -->
+    <section id="page-climate" class="page">
+
+      <div class="section-label" style="margin-bottom:10px;">Climate Control</div>
+      <div class="climate-grid">
+
+        <!-- Living Room / Daikin -->
+        <div class="card climate-card">
+          <div class="card-accent" style="background:var(--blue)"></div>
+          <div>
+            <div class="climate-room-label">Living Room · Daikin</div>
+            <div class="climate-temp-row">
+              <span class="climate-temp-big">74</span>
+              <span class="climate-temp-unit">°F</span>
+            </div>
+            <div class="climate-progress">
+              <div class="climate-progress-fill fill-cool" style="width:42%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="climate-setpoint-row">
+              <span class="climate-setpoint">Set to <strong>72°F</strong></span>
+              <span class="climate-mode mode-cool">Cool</span>
+            </div>
+            <div class="climate-controls">
+              <button class="climate-btn">−</button>
+              <button class="climate-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gemelli Suite -->
+        <div class="card climate-card">
+          <div class="card-accent" style="background:var(--amber)"></div>
+          <div>
+            <div class="climate-room-label">Gemelli Suite</div>
+            <div class="climate-temp-row">
+              <span class="climate-temp-big">77</span>
+              <span class="climate-temp-unit">°F</span>
+            </div>
+            <div class="climate-progress">
+              <div class="climate-progress-fill fill-heat" style="width:68%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="climate-setpoint-row">
+              <span class="climate-setpoint">Set to <strong>75°F</strong></span>
+              <span class="climate-mode mode-heat">Heat</span>
+            </div>
+            <div class="climate-controls">
+              <button class="climate-btn">−</button>
+              <button class="climate-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Bedroom -->
+        <div class="card climate-card">
+          <div class="card-accent" style="background:var(--blue)"></div>
+          <div>
+            <div class="climate-room-label">Master Bedroom · Ecobee</div>
+            <div class="climate-temp-row">
+              <span class="climate-temp-big">71</span>
+              <span class="climate-temp-unit">°F</span>
+            </div>
+            <div class="climate-progress">
+              <div class="climate-progress-fill fill-cool" style="width:30%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="climate-setpoint-row">
+              <span class="climate-setpoint">Set to <strong>70°F</strong></span>
+              <span class="climate-mode mode-cool">Cool</span>
+            </div>
+            <div class="climate-controls">
+              <button class="climate-btn">−</button>
+              <button class="climate-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upstairs -->
+        <div class="card climate-card">
+          <div class="card-accent" style="background:var(--green)"></div>
+          <div>
+            <div class="climate-room-label">Upstairs</div>
+            <div class="climate-temp-row">
+              <span class="climate-temp-big">76</span>
+              <span class="climate-temp-unit">°F</span>
+            </div>
+            <div class="climate-progress">
+              <div class="climate-progress-fill fill-cool" style="width:55%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="climate-setpoint-row">
+              <span class="climate-setpoint">Set to <strong>74°F</strong></span>
+              <span class="climate-mode mode-auto">Auto</span>
+            </div>
+            <div class="climate-controls">
+              <button class="climate-btn">−</button>
+              <button class="climate-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── PAGE: LIGHTS ────────────────────────────────────────── -->
+    <section id="page-lights" class="page">
+
+      <div class="section-label" style="margin-bottom:10px;">Light Groups</div>
+      <div class="lights-grid">
+
+        <!-- Kitchen -->
+        <div class="card light-group-card lg-kitchen state-on-glow">
+          <div class="card-accent" style="background:var(--amber)"></div>
+          <div class="lg-header">
+            <div>
+              <div class="lg-room">Kitchen</div>
+              <div class="lg-count">3 <span class="lg-count-sub">/ 4 on</span></div>
+            </div>
+            <div class="lg-icon-area">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+          </div>
+          <div class="light-chips">
+            <span class="light-chip on"><span class="chip-dot"></span>Countertop</span>
+            <span class="light-chip on"><span class="chip-dot"></span>Chandelier</span>
+            <span class="light-chip off"><span class="chip-dot"></span>Ceiling</span>
+            <span class="light-chip on"><span class="chip-dot"></span>Island</span>
+          </div>
+          <div class="lg-actions">
+            <button class="lg-btn all-on">All On</button>
+            <button class="lg-btn">All Off</button>
+          </div>
+        </div>
+
+        <!-- Living Room -->
+        <div class="card light-group-card lg-living">
+          <div class="card-accent" style="background:var(--blue)"></div>
+          <div class="lg-header">
+            <div>
+              <div class="lg-room">Living Room</div>
+              <div class="lg-count">1 <span class="lg-count-sub">/ 2 on</span></div>
+            </div>
+            <div class="lg-icon-area">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+          </div>
+          <div class="light-chips">
+            <span class="light-chip off"><span class="chip-dot"></span>Ceiling</span>
+            <span class="light-chip on"><span class="chip-dot"></span>Lamp 2</span>
+          </div>
+          <div class="lg-actions">
+            <button class="lg-btn">All On</button>
+            <button class="lg-btn">All Off</button>
+          </div>
+        </div>
+
+        <!-- Outdoor -->
+        <div class="card light-group-card lg-outdoor state-on-glow">
+          <div class="card-accent" style="background:var(--green)"></div>
+          <div class="lg-header">
+            <div>
+              <div class="lg-room">Outdoor</div>
+              <div class="lg-count">4 <span class="lg-count-sub">/ 7 on</span></div>
+            </div>
+            <div class="lg-icon-area">
+              <svg viewBox="0 0 24 24"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg>
+            </div>
+          </div>
+          <div class="light-chips">
+            <span class="light-chip on"><span class="chip-dot"></span>Garage Light</span>
+            <span class="light-chip on"><span class="chip-dot"></span>Patio String</span>
+            <span class="light-chip off"><span class="chip-dot"></span>Front Porch</span>
+            <span class="light-chip off"><span class="chip-dot"></span>Front Walkway</span>
+            <span class="light-chip on"><span class="chip-dot"></span>Upper Outdoor</span>
+            <span class="light-chip off"><span class="chip-dot"></span>Left Patio</span>
+            <span class="light-chip on"><span class="chip-dot"></span>Center Patio</span>
+          </div>
+          <div class="lg-actions">
+            <button class="lg-btn all-on">All On</button>
+            <button class="lg-btn">All Off</button>
+          </div>
+        </div>
+
+        <!-- Bedrooms -->
+        <div class="card light-group-card lg-bedrooms">
+          <div class="card-accent" style="background:var(--violet)"></div>
+          <div class="lg-header">
+            <div>
+              <div class="lg-room">Bedrooms</div>
+              <div class="lg-count">0 <span class="lg-count-sub">/ 2 on</span></div>
+            </div>
+            <div class="lg-icon-area">
+              <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </div>
+          </div>
+          <div class="light-chips">
+            <span class="light-chip off"><span class="chip-dot"></span>Benjamin Hatch</span>
+            <span class="light-chip off"><span class="chip-dot"></span>Ben's Light</span>
+          </div>
+          <div class="lg-actions">
+            <button class="lg-btn">All On</button>
+            <button class="lg-btn">All Off</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── PAGE: CAMERAS + MEDIA ───────────────────────────────── -->
+    <section id="page-cameras" class="page">
+
+      <div class="section-label" style="margin-bottom:10px;">Live Cameras</div>
+      <div class="cameras-grid">
+
+        <!-- Doorbell -->
+        <div class="card camera-card">
+          <div class="cam-feed">
+            <div class="cam-crosshair">
+              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/><line x1="20" y1="2" x2="20" y2="10"/><line x1="20" y1="30" x2="20" y2="38"/><line x1="2" y1="20" x2="10" y2="20"/><line x1="30" y1="20" x2="38" y2="20"/></svg>
+            </div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
+            <div class="cam-timestamp">3:47:22 PM</div>
+          </div>
+          <div class="cam-info">
+            <span class="cam-name">Doorbell</span>
+            <span class="cam-status">● Online</span>
+          </div>
+        </div>
+
+        <!-- Izzy -->
+        <div class="card camera-card">
+          <div class="cam-feed">
+            <div class="cam-crosshair">
+              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/><line x1="20" y1="2" x2="20" y2="10"/><line x1="20" y1="30" x2="20" y2="38"/><line x1="2" y1="20" x2="10" y2="20"/><line x1="30" y1="20" x2="38" y2="20"/></svg>
+            </div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
+            <div class="cam-timestamp">3:47:22 PM</div>
+          </div>
+          <div class="cam-info">
+            <span class="cam-name">Izzy</span>
+            <span class="cam-status">● Online</span>
+          </div>
+        </div>
+
+        <!-- Living Room Camera -->
+        <div class="card camera-card">
+          <div class="cam-feed">
+            <div class="cam-crosshair">
+              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/><line x1="20" y1="2" x2="20" y2="10"/><line x1="20" y1="30" x2="20" y2="38"/><line x1="2" y1="20" x2="10" y2="20"/><line x1="30" y1="20" x2="38" y2="20"/></svg>
+            </div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
+            <div class="cam-timestamp">3:47:22 PM</div>
+          </div>
+          <div class="cam-info">
+            <span class="cam-name">Living Room</span>
+            <span class="cam-status">● Online</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Media row -->
+      <div class="section-label" style="margin-bottom:10px;">Now Playing</div>
+      <div class="card media-card">
+        <div class="card-accent" style="background:var(--blue)"></div>
+
+        <div class="media-art">
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+
+        <div class="media-info">
+          <div class="media-track">Ambient Study Mix</div>
+          <div class="media-room">Benjamin's Hatch Speaker</div>
+          <div class="media-progress">
+            <div class="media-progress-fill"></div>
+          </div>
+          <div class="media-time">
+            <span>1:24</span>
+            <span>3:47</span>
+          </div>
+        </div>
+
+        <div class="media-controls">
+          <button class="media-btn">
+            <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+          </button>
+          <button class="media-btn play-btn">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <button class="media-btn">
+            <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          </button>
+        </div>
+
+        <div class="media-volume">
+          <span class="vol-icon">
+            <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </span>
+          <div class="vol-slider"><div class="vol-fill"></div></div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ── PAGE: SCENES (dedicated tab) ────────────────────────── -->
+    <section id="page-scenes" class="page">
+
+      <div class="section-label" style="margin-bottom:10px;">Scene Library</div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);padding-bottom:20px;">
+
+        <div class="qa-card qa-morning" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+          <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+          </div>
+          <span class="qa-label" style="font-size:12px;">Good Morning</span>
+          <span style="font-size:10px;color:var(--text-lo);text-align:center;">Lights + AC on</span>
+        </div>
+
+        <div class="qa-card qa-night active-scene" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+          <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
+            <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </div>
+          <span class="qa-label" style="font-size:12px;">Good Night</span>
+          <span style="font-size:10px;color:var(--cyan);text-align:center;">Active</span>
+        </div>
+
+        <div class="qa-card qa-away" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+          <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <span class="qa-label" style="font-size:12px;">Away Mode</span>
+          <span style="font-size:10px;color:var(--text-lo);text-align:center;">Lock + arm</span>
+        </div>
+
+        <div class="qa-card qa-welcome" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+          <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <span class="qa-label" style="font-size:12px;">Welcome Home</span>
+          <span style="font-size:10px;color:var(--text-lo);text-align:center;">Lights + unlock</span>
+        </div>
+
+        <div class="qa-card qa-movie" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+          <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+          </div>
+          <span class="qa-label" style="font-size:12px;">Movie Time</span>
+          <span style="font-size:10px;color:var(--text-lo);text-align:center;">Dim + TV on</span>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ BOTTOM NAV — 6 items ══════════════════════════════════ -->
+  <nav class="bottom-nav">
+
+    <button class="nav-item active" onclick="switchPage('home', this)">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">Home</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('climate', this)">
+      <svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+      <span class="nav-label">Climate</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('lights', this)">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="3"/><path d="M17.66 7.34A6 6 0 1 1 6.34 18.66"/><path d="M6.34 7.34A6 6 0 0 1 17.66 18.66"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <span class="nav-label">Lights</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('cameras', this)">
+      <svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      <span class="nav-label">Cameras</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('scenes', this)">
+      <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span class="nav-label">Scenes</span>
+    </button>
+
+    <button class="nav-item" onclick="switchPage('home', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 1 22 12a10 10 0 0 1-2.93 7.07M4.93 19.07A10 10 0 0 1 2 12a10 10 0 0 1 2.93-7.07"/><path d="M16.24 7.76A6 6 0 0 1 18 12a6 6 0 0 1-1.76 4.24M7.76 16.24A6 6 0 0 1 6 12a6 6 0 0 1 1.76-4.24"/></svg>
+      <span class="nav-label">Network</span>
+    </button>
+
+  </nav>
+
+</div>
+
+<!-- ═══ JAVASCRIPT ════════════════════════════════════════════ -->
+<script>
+"use strict";
+
+/* ── Clock ──────────────────────────────────────────────────── */
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes().toString().padStart(2, "0");
+  const s = now.getSeconds().toString().padStart(2, "0");
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = ((h % 12) || 12);
+  document.getElementById("clock").textContent = h12 + ":" + m + " " + ampm;
+
+  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const months = ["January","February","March","April","May","June","July",
+                  "August","September","October","November","December"];
+  const d = now;
+  document.getElementById("dateline").textContent =
+    days[d.getDay()] + " · " + months[d.getMonth()] + " " + d.getDate();
+
+  const camTs = h12 + ":" + m + ":" + s + " " + ampm;
+  document.querySelectorAll(".cam-timestamp").forEach(el => { el.textContent = camTs; });
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ── Page switching ─────────────────────────────────────────── */
+function switchPage(name, btn) {
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+    p.style.display = "none";
+  });
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  const pg = document.getElementById("page-" + name);
+  if (pg) { pg.style.display = "block"; pg.classList.add("active"); }
+  btn.classList.add("active");
+}
+
+/* ── Scene toggle ───────────────────────────────────────────── */
+function activateScene(card) {
+  document.querySelectorAll(".qa-card").forEach(c => c.classList.remove("active-scene"));
+  card.classList.add("active-scene");
+}
+
+/* ── Lock toggle ────────────────────────────────────────────── */
+function toggleLock(card) {
+  const badge = card.querySelector(".lock-badge");
+  const accent = card.querySelector(".card-accent");
+  const iconWrap = card.querySelector(".lock-icon-wrap");
+  const sub = card.querySelector(".lock-sub");
+  if (badge.classList.contains("state-locked")) {
+    badge.classList.replace("state-locked", "state-unlocked");
+    badge.textContent = "Unlocked";
+    card.classList.replace("icon-locked", "icon-unlocked");
+    card.classList.add("state-alert");
+    accent.style.background = "var(--amber)";
+    if (sub) sub.textContent = "Unlocked just now";
+    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
+  } else {
+    badge.classList.replace("state-unlocked", "state-locked");
+    badge.textContent = "Locked";
+    card.classList.replace("icon-unlocked", "icon-locked");
+    card.classList.remove("state-alert");
+    accent.style.background = "var(--cyan)";
+    if (sub) sub.textContent = "Locked just now";
+    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+  }
+}
+
+/* ── Garage toggle ──────────────────────────────────────────── */
+function toggleGarage(card) {
+  const badge = card.querySelector(".lock-badge");
+  const accent = card.querySelector(".card-accent");
+  const sub = card.querySelector(".lock-sub");
+  if (badge.classList.contains("state-closed")) {
+    badge.classList.replace("state-closed", "state-open");
+    badge.textContent = "Open";
+    card.classList.replace("icon-closed", "icon-open");
+    card.classList.add("state-alert");
+    accent.style.background = "var(--red)";
+    if (sub) sub.textContent = "Opened just now";
+  } else {
+    badge.classList.replace("state-open", "state-closed");
+    badge.textContent = "Closed";
+    card.classList.replace("icon-open", "icon-closed");
+    card.classList.remove("state-alert");
+    accent.style.background = "var(--green)";
+    if (sub) sub.textContent = "Closed just now";
+  }
+}
+
+/* ── Light chip toggle ──────────────────────────────────────── */
+document.querySelectorAll(".light-chip").forEach(chip => {
+  chip.addEventListener("click", function(e) {
+    e.stopPropagation();
+    this.classList.toggle("on");
+    this.classList.toggle("off");
+    const groupCard = this.closest(".light-group-card");
+    if (groupCard) {
+      const chips = groupCard.querySelectorAll(".light-chip");
+      const onCount = groupCard.querySelectorAll(".light-chip.on").length;
+      const countEl = groupCard.querySelector(".lg-count");
+      if (countEl) countEl.innerHTML = onCount + ' <span class="lg-count-sub">/ ' + chips.length + ' on</span>';
+      if (onCount > 0) {
+        groupCard.classList.add("state-on-glow");
+        const b = groupCard.querySelector(".lg-btn:first-child");
+        if (b) b.classList.add("all-on");
+      } else {
+        groupCard.classList.remove("state-on-glow");
+        const b = groupCard.querySelector(".lg-btn:first-child");
+        if (b) b.classList.remove("all-on");
+      }
+    }
+  });
+});
+
+/* ── Light group all-on/off ─────────────────────────────────── */
+document.querySelectorAll(".lg-btn").forEach(btn => {
+  btn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    const groupCard = this.closest(".light-group-card");
+    if (!groupCard) return;
+    const isAllOn = this.textContent.trim() === "All On";
+    const chips = groupCard.querySelectorAll(".light-chip");
+    chips.forEach(chip => {
+      chip.classList.remove("on", "off");
+      chip.classList.add(isAllOn ? "on" : "off");
+    });
+    const onCount = groupCard.querySelectorAll(".light-chip.on").length;
+    const countEl = groupCard.querySelector(".lg-count");
+    if (countEl) countEl.innerHTML = onCount + ' <span class="lg-count-sub">/ ' + chips.length + ' on</span>';
+    const allOnBtn = groupCard.querySelector(".lg-btn:first-child");
+    if (onCount > 0) {
+      groupCard.classList.add("state-on-glow");
+      if (allOnBtn) allOnBtn.classList.add("all-on");
+    } else {
+      groupCard.classList.remove("state-on-glow");
+      if (allOnBtn) allOnBtn.classList.remove("all-on");
+    }
+  });
+});
+
+/* ── Climate ± buttons ──────────────────────────────────────── */
+document.querySelectorAll(".climate-btn").forEach(btn => {
+  btn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    const card = this.closest(".climate-card");
+    const setpointEl = card.querySelector(".climate-setpoint strong");
+    const progressFill = card.querySelector(".climate-progress-fill");
+    if (!setpointEl) return;
+    let val = parseInt(setpointEl.textContent);
+    val += this.textContent.trim() === "+" ? 1 : -1;
+    val = Math.max(60, Math.min(85, val));
+    setpointEl.textContent = val + "°F";
+    if (progressFill) {
+      const pct = ((val - 60) / 25) * 100;
+      progressFill.style.width = Math.max(5, Math.min(95, pct)) + "%";
+    }
+  });
+});
+
+/* ── Initialize hidden pages ────────────────────────────────── */
+document.querySelectorAll(".page:not(.active)").forEach(p => {
+  p.style.display = "none";
+});
+</script>
+</body>
+</html>
