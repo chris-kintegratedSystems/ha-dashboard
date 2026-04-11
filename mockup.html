@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KIS Home Dashboard — Mockup</title>
+<style>
+/* ============================================================
+   KIS HOME DASHBOARD MOCKUP
+   Design target: Samsung Galaxy Tab S9+ (1752px, landscape)
+   Brand: KIntegrated Systems dark theme
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@500;600&display=swap');
+
+:root {
+  /* KIS Brand Colors */
+  --bg-base:        #06080e;
+  --bg-card:        #0d1e38;
+  --bg-card-hover:  #112244;
+  --bg-card-active: #0f2952;
+  --navy:           #0a1628;
+  --accent-cyan:    #00C8E8;
+  --accent-blue:    #1565C0;
+  --text-primary:   #e4e8f0;
+  --text-muted:     #6a8090;
+  --border:         rgba(0,200,232,0.15);
+  --border-bright:  rgba(0,200,232,0.4);
+
+  /* State colors */
+  --state-on:       #00C8E8;
+  --state-off:      #6a8090;
+  --state-locked:   #00C8E8;
+  --state-unlocked: #f59e0b;
+  --state-open:     #ef4444;
+  --state-closed:   #22c55e;
+  --state-disarmed: #22c55e;
+  --state-home:     #f59e0b;
+  --state-away:     #1565C0;
+  --state-alert:    #ef4444;
+  --state-cool:     #60a5fa;
+  --state-heat:     #fb923c;
+
+  /* Spacing */
+  --gap: 10px;
+  --radius: 8px;
+  --card-pad: 12px 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* ── DEVICE FRAME ─────────────────────────────────────────── */
+.device-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px 0 6px;
+  background: #03050a;
+}
+
+/* ── DASHBOARD LAYOUT ────────────────────────────────────── */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* ── TYPOGRAPHY ──────────────────────────────────────────── */
+h1, h2, h3, .section-title {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  padding: 4px 0 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+
+/* ── BASE CARD ───────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--card-pad);
+  transition: background 0.15s, border-color 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-bright);
+  cursor: pointer;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,232,0.0));
+  transition: background 0.2s;
+}
+.card.active::before {
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+}
+
+/* ── STATUS BAR ──────────────────────────────────────────── */
+.status-bar {
+  display: grid;
+  grid-template-columns: 220px 1fr auto auto;
+  gap: var(--gap);
+  align-items: stretch;
+  min-height: 90px;
+}
+
+/* Clock card */
+.clock-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+}
+.clock-time {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.clock-date {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-top: 4px;
+}
+
+/* Weather card */
+.weather-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 18px;
+}
+.weather-icon {
+  font-size: 48px;
+  line-height: 1;
+}
+.weather-main-temp {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.weather-condition {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.weather-hi-lo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+.weather-hi-lo span.hi { color: #fb923c; }
+.weather-hi-lo span.lo { color: #60a5fa; }
+
+/* Alarm card */
+.alarm-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  min-width: 160px;
+}
+.alarm-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.alarm-icon-wrap {
+  font-size: 26px;
+  line-height: 1;
+}
+.alarm-state {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.alarm-state.disarmed { color: var(--state-disarmed); }
+.alarm-state.armed-home { color: var(--state-home); }
+.alarm-state.armed-away { color: var(--state-away); }
+.alarm-state.triggered { color: var(--state-alert); animation: pulse 0.8s infinite; }
+.alarm-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--state-disarmed);
+  box-shadow: 0 0 8px var(--state-disarmed);
+}
+
+/* Presence card */
+.presence-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  min-width: 140px;
+}
+.presence-person {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.presence-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Rajdhani', sans-serif;
+}
+.presence-avatar.home { background: rgba(0,200,232,0.2); color: var(--accent-cyan); border: 1px solid rgba(0,200,232,0.4); }
+.presence-avatar.away { background: rgba(106,128,144,0.2); color: var(--text-muted); border: 1px solid rgba(106,128,144,0.3); }
+.presence-name {
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.presence-status {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.presence-status.home { color: var(--accent-cyan); }
+.presence-status.away { color: var(--text-muted); }
+.presence-eta {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* ── QUICK ACTIONS ──────────────────────────────────────── */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--gap);
+}
+
+.action-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.action-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(0,200,232,0.4);
+  transform: translateY(-1px);
+}
+.action-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+.action-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.action-card.goodnight .action-icon { filter: hue-rotate(200deg) brightness(0.7); }
+.action-card.goodnight:hover .action-label { color: #818cf8; }
+.action-card.away:hover .action-label { color: var(--accent-blue); }
+.action-card.morning .action-icon { color: #fbbf24; }
+.action-card.morning:hover .action-label { color: #fbbf24; }
+.action-card.welcome:hover .action-label { color: var(--state-disarmed); }
+.action-card.movie:hover .action-label { color: #a855f7; }
+
+/* ── SECURITY SECTION ────────────────────────────────────── */
+.security-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.security-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* Control card (locks, garage) */
+.control-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 14px;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.control-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(0,200,232,0.35);
+}
+.control-card::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+}
+.control-card.locked::after  { background: var(--state-locked); }
+.control-card.unlocked::after { background: var(--state-unlocked); }
+.control-card.closed::after  { background: var(--state-closed); }
+.control-card.open::after    { background: var(--state-open); }
+
+.control-icon-wrap {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.locked .control-icon-wrap   { background: rgba(0,200,232,0.12); color: var(--state-locked); }
+.unlocked .control-icon-wrap { background: rgba(245,158,11,0.12); color: var(--state-unlocked); }
+.closed .control-icon-wrap   { background: rgba(34,197,94,0.12);  color: var(--state-closed); }
+.open .control-icon-wrap     { background: rgba(239,68,68,0.12);   color: var(--state-open); }
+
+.control-info {
+  flex: 1;
+  min-width: 0;
+}
+.control-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.control-entity {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.control-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.locked .control-badge   { background: rgba(0,200,232,0.12);   color: var(--state-locked); }
+.unlocked .control-badge { background: rgba(245,158,11,0.12);  color: var(--state-unlocked); }
+.closed .control-badge   { background: rgba(34,197,94,0.12);   color: var(--state-closed); }
+.open .control-badge     { background: rgba(239,68,68,0.14);   color: var(--state-open); }
+
+/* ── CLIMATE SECTION ─────────────────────────────────────── */
+.climate-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+}
+
+.climate-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.climate-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(0,200,232,0.35);
+}
+.climate-card::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+}
+.climate-card.cool::after { background: var(--state-cool); }
+.climate-card.heat::after { background: var(--state-heat); }
+.climate-card.off::after  { background: var(--text-muted); opacity: 0.3; }
+
+.climate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.climate-room {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.03em;
+}
+.climate-mode-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.cool .climate-mode-badge { background: rgba(96,165,250,0.15); color: var(--state-cool); }
+.heat .climate-mode-badge { background: rgba(251,146,60,0.15); color: var(--state-heat); }
+.off .climate-mode-badge  { background: rgba(106,128,144,0.1); color: var(--text-muted); }
+
+.climate-temps {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.climate-current {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+}
+.climate-current-unit {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-muted);
+  align-self: flex-start;
+  margin-top: 8px;
+}
+.climate-setpoint-wrap {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.climate-setpoint-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.climate-setpoint-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.climate-setpoint {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+.cool .climate-setpoint { color: var(--state-cool); }
+.heat .climate-setpoint { color: var(--state-heat); }
+.off .climate-setpoint  { color: var(--text-muted); }
+
+.climate-adj-btn {
+  width: 22px; height: 22px;
+  border-radius: 4px;
+  border: 1px solid var(--border-bright);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: monospace;
+}
+.climate-adj-btn:hover {
+  background: rgba(0,200,232,0.1);
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+
+.climate-humidity {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.05em;
+}
+
+/* ── LIGHTS SECTION ──────────────────────────────────────── */
+.lights-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+}
+
+.light-group-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.light-group-card:hover {
+  border-color: rgba(0,200,232,0.35);
+}
+
+.light-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+}
+.light-group-icon {
+  font-size: 20px;
+}
+.light-group-icon.on  { color: var(--accent-cyan); }
+.light-group-icon.off { color: var(--text-muted); }
+
+.light-group-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+.light-group-count {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.toggle-switch input { display: none; }
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: rgba(106,128,144,0.3);
+  border: 1px solid rgba(106,128,144,0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.toggle-track.on {
+  background: rgba(0,200,232,0.2);
+  border-color: rgba(0,200,232,0.5);
+}
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all 0.2s;
+}
+.toggle-track.on .toggle-thumb {
+  left: 19px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 6px rgba(0,200,232,0.5);
+}
+
+.light-group-items {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.light-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.light-item:hover { background: rgba(0,200,232,0.06); }
+.light-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.light-dot.on  { background: var(--accent-cyan); box-shadow: 0 0 6px rgba(0,200,232,0.6); }
+.light-dot.off { background: var(--text-muted); opacity: 0.4; }
+.light-item-name {
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  flex: 1;
+}
+.light-item-name.on { color: var(--text-primary); }
+.light-brightness {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── CAMERAS SECTION ─────────────────────────────────────── */
+.cameras-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+}
+
+.camera-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.camera-card:hover {
+  border-color: rgba(0,200,232,0.4);
+  transform: translateY(-1px);
+}
+
+.camera-preview {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #020810;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.camera-preview-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+.camera-scan-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,232,0.4), transparent);
+  animation: scanLine 3s linear infinite;
+}
+@keyframes scanLine {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+.camera-icon-large {
+  font-size: 36px;
+  opacity: 0.3;
+}
+.camera-feed-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+.camera-live-dot {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--state-alert);
+  box-shadow: 0 0 8px var(--state-alert);
+  animation: pulse 1.5s infinite;
+}
+.camera-rec-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--state-alert);
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.3);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+.camera-expand {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.camera-card:hover .camera-expand { opacity: 0.7; }
+
+.camera-info {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.camera-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.camera-entity {
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Simulated camera feeds */
+.cam-doorbell { background: linear-gradient(145deg, #0a0f1a 0%, #0d1520 50%, #06090f 100%); }
+.cam-doorbell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,200,100,0.06) 0%, transparent 70%);
+}
+.cam-izzy { background: linear-gradient(145deg, #060d08 0%, #0a1510 50%, #040b06 100%); }
+.cam-izzy::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(100,200,100,0.05) 0%, transparent 70%);
+}
+.cam-living { background: linear-gradient(145deg, #0a0c14 0%, #0f111c 50%, #080a12 100%); }
+.cam-living::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 60% 40%, rgba(150,170,255,0.05) 0%, transparent 70%);
+}
+
+/* ── BOTTOM ROW: MEDIA + MISC ─────────────────────────────── */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.media-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.media-album-art {
+  width: 52px; height: 52px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #1565C0, #0a1628);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,200,232,0.2);
+}
+.media-info { flex: 1; min-width: 0; }
+.media-source {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 2px;
+}
+.media-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.media-artist {
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.media-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.media-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+.media-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+.media-btn.play {
+  width: 32px; height: 32px;
+  background: rgba(0,200,232,0.12);
+  border-color: rgba(0,200,232,0.4);
+  color: var(--accent-cyan);
+  font-size: 15px;
+}
+.media-volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.media-vol-icon { font-size: 14px; color: var(--text-muted); }
+.media-vol-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(106,128,144,0.3);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+}
+.media-vol-fill {
+  height: 100%;
+  width: 62%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  border-radius: 2px;
+}
+.media-vol-thumb {
+  position: absolute;
+  top: 50%;
+  left: 62%;
+  transform: translate(-50%, -50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 6px rgba(0,200,232,0.5);
+}
+
+/* Rachio card */
+.rachio-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.rachio-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.rachio-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #22c55e;
+}
+.rachio-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.rachio-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.rachio-status-row {
+  display: flex;
+  gap: 8px;
+}
+.rachio-stat {
+  flex: 1;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  text-align: center;
+}
+.rachio-stat-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.rachio-stat-value {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.rachio-stat-value.green { color: #22c55e; }
+
+/* ── ANIMATIONS ──────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── DEVICE SELECTOR ─────────────────────────────────────── */
+.device-selector {
+  background: #03050a;
+  border-bottom: 1px solid #0d1e38;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+}
+.dev-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid rgba(106,128,144,0.2);
+  border-radius: 4px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dev-btn.active, .dev-btn:hover {
+  background: rgba(0,200,232,0.08);
+  border-color: rgba(0,200,232,0.3);
+  color: var(--accent-cyan);
+}
+
+/* ── HEADER BAR ──────────────────────────────────────────── */
+.app-header {
+  background: rgba(6,8,14,0.95);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.app-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-hex {
+  width: 28px; height: 28px;
+}
+.app-header-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+.app-header-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+}
+.app-header-note {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(0,200,232,0.05);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+}
+
+/* ── MOBILE VIEW ─────────────────────────────────────────── */
+.mobile-view {
+  display: none;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .desktop-view { display: none; }
+  .mobile-view { display: block; }
+
+  .dashboard { padding: 8px; gap: 8px; }
+
+  .status-bar {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  .clock-card { grid-column: 1; }
+  .weather-card { grid-column: 2; }
+  .alarm-card { grid-column: 1; }
+  .presence-card { grid-column: 2; }
+
+  .quick-actions { grid-template-columns: repeat(3, 1fr); }
+
+  .security-grid { grid-template-columns: 1fr; }
+
+  .climate-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .lights-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .cameras-grid { grid-template-columns: 1fr; }
+
+  .bottom-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .clock-time { font-size: 32px; }
+  .weather-main-temp { font-size: 28px; }
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+  .climate-grid { grid-template-columns: 1fr; }
+  .lights-grid { grid-template-columns: 1fr; }
+}
+
+/* Mockup annotation banner */
+.mockup-banner {
+  background: linear-gradient(90deg, rgba(21,101,192,0.2), rgba(0,200,232,0.1));
+  border: 1px solid rgba(0,200,232,0.2);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.mockup-banner-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+}
+.mockup-banner-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Barlow', sans-serif;
+  letter-spacing: normal;
+  text-transform: none;
+  margin-left: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── MOCKUP HEADER ─────────────────────────────────────── -->
+<div class="app-header">
+  <div class="app-header-logo">
+    <!-- KIS Hex Logo Mark (inline SVG) -->
+    <svg class="logo-hex" viewBox="0 0 60 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hexStroke" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00C8E8"/>
+          <stop offset="100%" stop-color="#1040A0"/>
+        </linearGradient>
+        <linearGradient id="kBar" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00C8E8"/>
+          <stop offset="100%" stop-color="#1565C0"/>
+        </linearGradient>
+        <clipPath id="hexClip">
+          <polygon points="30,2 57,17 57,51 30,66 3,51 3,17"/>
+        </clipPath>
+      </defs>
+      <polygon points="30,2 57,17 57,51 30,66 3,51 3,17" fill="#0d1e38" stroke="url(#hexStroke)" stroke-width="2"/>
+      <g clip-path="url(#hexClip)">
+        <rect x="20" y="18" width="6" height="32" fill="url(#kBar)"/>
+        <polygon points="26,34 40,18 46,18 32,34" fill="#1565C0"/>
+        <polygon points="26,34 40,50 46,50 32,34" fill="#00C8E8"/>
+      </g>
+    </svg>
+    <div>
+      <div class="app-header-title">K Integrated Systems</div>
+      <div class="app-header-sub">Home Dashboard</div>
+    </div>
+  </div>
+  <div class="app-header-note">Visual Mockup — Not Live Data</div>
+</div>
+
+<!-- ── DEVICE SELECTOR ─────────────────────────────────────── -->
+<div class="device-selector">
+  <button class="dev-btn active" onclick="setDevice('tablet')">Tab S9+ Kiosk</button>
+  <button class="dev-btn" onclick="setDevice('mobile')">iPhone</button>
+  <button class="dev-btn" onclick="setDevice('ipad')">iPad</button>
+</div>
+
+<!-- ── MOCKUP ANNOTATION ──────────────────────────────────── -->
+<div class="mockup-banner">
+  <div>
+    <span class="mockup-banner-text">Draft Mockup v0.1</span>
+    <span class="mockup-banner-sub">Approve layout &amp; colors before Dev Agent writes YAML → Review sections below, then reply with changes</span>
+  </div>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);">2026-04-11 · Irving, TX</div>
+</div>
+
+<!-- ── DASHBOARD ──────────────────────────────────────────── -->
+<div class="dashboard" id="dashboard">
+
+  <!-- ═══ STATUS BAR ════════════════════════════════════════ -->
+  <div class="section-title" style="margin-bottom:4px;">&#9632; Status Overview</div>
+  <div class="status-bar">
+
+    <!-- Clock -->
+    <div class="clock-card">
+      <div class="clock-time">7:42</div>
+      <div class="clock-date">Friday · April 11, 2026</div>
+    </div>
+
+    <!-- Weather -->
+    <div class="weather-card">
+      <div class="weather-icon">⛅</div>
+      <div>
+        <div class="weather-main-temp">74°</div>
+        <div class="weather-condition">Partly Cloudy · Irving, TX</div>
+        <div class="weather-hi-lo"><span class="hi">H: 81°</span>&nbsp;&nbsp;<span class="lo">L: 62°</span>&nbsp;&nbsp;☁ 20% precip</div>
+      </div>
+      <div style="margin-left:16px;display:flex;flex-direction:column;gap:6px;padding-left:16px;border-left:1px solid var(--border);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);">Forecast</div>
+        <div style="display:flex;gap:10px;">
+          <div style="text-align:center;">
+            <div style="font-size:18px;">🌤</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--text-muted);">Sat</div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text-primary);">79°</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:18px;">🌧</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--text-muted);">Sun</div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text-primary);">71°</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:18px;">☀️</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--text-muted);">Mon</div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text-primary);">83°</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alarm -->
+    <div class="alarm-card">
+      <div class="alarm-label">Security System</div>
+      <div class="alarm-icon-wrap" style="font-size:28px;">🏠</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="alarm-dot"></div>
+        <div class="alarm-state disarmed">Disarmed</div>
+      </div>
+      <div style="font-family:'Barlow',sans-serif;font-size:10px;color:var(--text-muted);">Vivint · kuprycz_home</div>
+    </div>
+
+    <!-- Presence -->
+    <div class="presence-card">
+      <div class="presence-person">
+        <div class="presence-avatar home">C</div>
+        <div>
+          <div class="presence-name">Chris</div>
+          <div class="presence-status home">● Home</div>
+        </div>
+      </div>
+      <div class="presence-person">
+        <div class="presence-avatar away">C</div>
+        <div>
+          <div class="presence-name">Claire</div>
+          <div class="presence-status away">● Away</div>
+          <div style="font-size:10px;color:var(--accent-cyan);font-family:'Barlow',sans-serif;">~12 min ETA</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /status-bar -->
+
+  <!-- ═══ QUICK ACTIONS ════════════════════════════════════ -->
+  <div class="section-title">&#9632; Quick Actions</div>
+  <div class="quick-actions">
+    <div class="action-card morning">
+      <div class="action-icon">🌅</div>
+      <div class="action-label">Good Morning</div>
+    </div>
+    <div class="action-card goodnight">
+      <div class="action-icon" style="filter: none; font-size:26px;">🌙</div>
+      <div class="action-label">Good Night</div>
+    </div>
+    <div class="action-card away">
+      <div class="action-icon">🔒</div>
+      <div class="action-label">Away Mode</div>
+    </div>
+    <div class="action-card welcome">
+      <div class="action-icon">🏠</div>
+      <div class="action-label">Welcome Home</div>
+    </div>
+    <div class="action-card movie">
+      <div class="action-icon">🎬</div>
+      <div class="action-label">Movie Time</div>
+    </div>
+  </div>
+
+  <!-- ═══ SECURITY ════════════════════════════════════════ -->
+  <div class="section-title">&#9632; Security &amp; Access</div>
+  <div class="security-grid">
+
+    <!-- Locks column -->
+    <div class="security-col">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--text-muted);padding-left:4px;margin-bottom:2px;">Door Locks</div>
+
+      <div class="control-card locked">
+        <div class="control-icon-wrap">🔒</div>
+        <div class="control-info">
+          <div class="control-name">Front Door</div>
+          <div class="control-entity">lock.front_door_lock</div>
+        </div>
+        <div class="control-badge">Locked</div>
+      </div>
+
+      <div class="control-card unlocked">
+        <div class="control-icon-wrap">🔓</div>
+        <div class="control-info">
+          <div class="control-name">Back Door</div>
+          <div class="control-entity">lock.back_door_lock</div>
+        </div>
+        <div class="control-badge">Unlocked</div>
+      </div>
+
+      <div class="control-card locked">
+        <div class="control-icon-wrap">🔒</div>
+        <div class="control-info">
+          <div class="control-name">Gemelli Door</div>
+          <div class="control-entity">lock.gemelli_door</div>
+        </div>
+        <div class="control-badge">Locked</div>
+      </div>
+    </div>
+
+    <!-- Garage column -->
+    <div class="security-col">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--text-muted);padding-left:4px;margin-bottom:2px;">Garage Doors</div>
+
+      <div class="control-card open">
+        <div class="control-icon-wrap">🚗</div>
+        <div class="control-info">
+          <div class="control-name">Left Garage</div>
+          <div class="control-entity">ratgdov25i_1746c3_door</div>
+        </div>
+        <div class="control-badge">Open</div>
+      </div>
+
+      <div class="control-card closed">
+        <div class="control-icon-wrap" style="font-size:20px;">🏠</div>
+        <div class="control-info">
+          <div class="control-name">Right Garage</div>
+          <div class="control-entity">ratgdov25i_1746b4_door</div>
+        </div>
+        <div class="control-badge">Closed</div>
+      </div>
+
+      <!-- Garage light bonus card -->
+      <div class="control-card" style="border-color:rgba(0,200,232,0.1);">
+        <div class="control-icon-wrap" style="background:rgba(251,191,36,0.1);color:#fbbf24;font-size:20px;">💡</div>
+        <div class="control-info">
+          <div class="control-name">Garage Light</div>
+          <div class="control-entity">light.garage_light</div>
+        </div>
+        <div class="toggle-switch">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /security-grid -->
+
+  <!-- ═══ CLIMATE ══════════════════════════════════════════ -->
+  <div class="section-title">&#9632; Climate Control</div>
+  <div class="climate-grid">
+
+    <!-- Living Room - Daikin (cooling) -->
+    <div class="climate-card cool">
+      <div class="climate-header">
+        <div>
+          <div class="climate-room">Living Room</div>
+          <div style="font-size:10px;color:var(--text-muted);font-family:'Barlow',sans-serif;">climate.daikin</div>
+        </div>
+        <div class="climate-mode-badge">❄ Cool</div>
+      </div>
+      <div class="climate-temps">
+        <div style="display:flex;align-items:flex-start;gap:2px;">
+          <div class="climate-current">76</div>
+          <div class="climate-current-unit">°F</div>
+        </div>
+        <div class="climate-setpoint-wrap">
+          <div class="climate-setpoint-label">Set to</div>
+          <div class="climate-setpoint-row">
+            <button class="climate-adj-btn">−</button>
+            <div class="climate-setpoint">72°</div>
+            <button class="climate-adj-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="climate-humidity">💧 Humidity: 54%</div>
+    </div>
+
+    <!-- Gemelli - off -->
+    <div class="climate-card off">
+      <div class="climate-header">
+        <div>
+          <div class="climate-room">Gemelli</div>
+          <div style="font-size:10px;color:var(--text-muted);font-family:'Barlow',sans-serif;">climate.gemelli</div>
+        </div>
+        <div class="climate-mode-badge">Off</div>
+      </div>
+      <div class="climate-temps">
+        <div style="display:flex;align-items:flex-start;gap:2px;">
+          <div class="climate-current" style="color:var(--text-muted);">71</div>
+          <div class="climate-current-unit">°F</div>
+        </div>
+        <div class="climate-setpoint-wrap">
+          <div class="climate-setpoint-label">Set to</div>
+          <div class="climate-setpoint-row">
+            <button class="climate-adj-btn">−</button>
+            <div class="climate-setpoint">70°</div>
+            <button class="climate-adj-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="climate-humidity" style="color:rgba(106,128,144,0.5);">–– Inactive</div>
+    </div>
+
+    <!-- Master - heating -->
+    <div class="climate-card heat">
+      <div class="climate-header">
+        <div>
+          <div class="climate-room">Master Bed</div>
+          <div style="font-size:10px;color:var(--text-muted);font-family:'Barlow',sans-serif;">climate.master</div>
+        </div>
+        <div class="climate-mode-badge">🔥 Heat</div>
+      </div>
+      <div class="climate-temps">
+        <div style="display:flex;align-items:flex-start;gap:2px;">
+          <div class="climate-current">68</div>
+          <div class="climate-current-unit">°F</div>
+        </div>
+        <div class="climate-setpoint-wrap">
+          <div class="climate-setpoint-label">Set to</div>
+          <div class="climate-setpoint-row">
+            <button class="climate-adj-btn">−</button>
+            <div class="climate-setpoint">70°</div>
+            <button class="climate-adj-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="climate-humidity">💧 Humidity: 48%</div>
+    </div>
+
+    <!-- Upstairs Ecobee - cooling -->
+    <div class="climate-card cool">
+      <div class="climate-header">
+        <div>
+          <div class="climate-room">Upstairs</div>
+          <div style="font-size:10px;color:var(--text-muted);font-family:'Barlow',sans-serif;">climate.upstairs · Ecobee</div>
+        </div>
+        <div class="climate-mode-badge">❄ Cool</div>
+      </div>
+      <div class="climate-temps">
+        <div style="display:flex;align-items:flex-start;gap:2px;">
+          <div class="climate-current">79</div>
+          <div class="climate-current-unit">°F</div>
+        </div>
+        <div class="climate-setpoint-wrap">
+          <div class="climate-setpoint-label">Set to</div>
+          <div class="climate-setpoint-row">
+            <button class="climate-adj-btn">−</button>
+            <div class="climate-setpoint">75°</div>
+            <button class="climate-adj-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="climate-humidity">💧 Humidity: 51%</div>
+    </div>
+
+  </div><!-- /climate-grid -->
+
+  <!-- ═══ LIGHTS ══════════════════════════════════════════ -->
+  <div class="section-title">&#9632; Lighting — By Room</div>
+  <div class="lights-grid">
+
+    <!-- Kitchen -->
+    <div class="light-group-card">
+      <div class="light-group-header">
+        <div class="light-group-icon on">💡</div>
+        <div class="light-group-name">Kitchen</div>
+        <div class="light-group-count">3 of 4 on</div>
+        <div class="toggle-switch">
+          <div class="toggle-track on">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+      <div class="light-group-items">
+        <div class="light-item">
+          <div class="light-dot on"></div>
+          <div class="light-item-name on">Countertop Lights</div>
+          <div class="light-brightness">80%</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot on"></div>
+          <div class="light-item-name on">Chandelier</div>
+          <div class="light-brightness">60%</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot on"></div>
+          <div class="light-item-name on">Ceiling Lights</div>
+          <div class="light-brightness">100%</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Island Light</div>
+          <div class="light-brightness">–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Living Room -->
+    <div class="light-group-card">
+      <div class="light-group-header">
+        <div class="light-group-icon on">💡</div>
+        <div class="light-group-name">Living Room</div>
+        <div class="light-group-count">1 of 2 on</div>
+        <div class="toggle-switch">
+          <div class="toggle-track on">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+      <div class="light-group-items">
+        <div class="light-item">
+          <div class="light-dot on"></div>
+          <div class="light-item-name on">Ceiling</div>
+          <div class="light-brightness">45%</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Lamp 2</div>
+          <div class="light-brightness">–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outdoor -->
+    <div class="light-group-card">
+      <div class="light-group-header">
+        <div class="light-group-icon off">💡</div>
+        <div class="light-group-name">Outdoor</div>
+        <div class="light-group-count">0 of 5 on</div>
+        <div class="toggle-switch">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+      <div class="light-group-items">
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Patio String</div>
+          <div class="light-brightness">–</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Front Porch</div>
+          <div class="light-brightness">–</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Front Walkway</div>
+          <div class="light-brightness">–</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Upper Outdoor</div>
+          <div class="light-brightness">–</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Left / Center Patio</div>
+          <div class="light-brightness">–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bedrooms -->
+    <div class="light-group-card">
+      <div class="light-group-header">
+        <div class="light-group-icon off">💡</div>
+        <div class="light-group-name">Bedrooms</div>
+        <div class="light-group-count">0 of 2 on</div>
+        <div class="toggle-switch">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+      <div class="light-group-items">
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Benjamin's Hatch</div>
+          <div class="light-brightness">–</div>
+        </div>
+        <div class="light-item">
+          <div class="light-dot off"></div>
+          <div class="light-item-name">Ben's Light</div>
+          <div class="light-brightness">–</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /lights-grid -->
+
+  <!-- ═══ CAMERAS ══════════════════════════════════════════ -->
+  <div class="section-title">&#9632; Cameras — Tap to Expand</div>
+  <div class="cameras-grid">
+
+    <!-- Doorbell -->
+    <div class="camera-card">
+      <div class="camera-preview cam-doorbell">
+        <div class="camera-scan-line"></div>
+        <div class="camera-live-dot"></div>
+        <div class="camera-rec-badge">● REC</div>
+        <!-- Simulated doorbell view: front door silhouette -->
+        <svg width="100%" height="100%" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0;opacity:0.35;">
+          <rect width="320" height="180" fill="#030810"/>
+          <!-- Sky gradient -->
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0a1520" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#050d18" stop-opacity="1"/>
+            </linearGradient>
+          </defs>
+          <rect width="320" height="120" fill="url(#skyGrad)"/>
+          <!-- Ground -->
+          <rect y="120" width="320" height="60" fill="#04080e"/>
+          <!-- Porch post left -->
+          <rect x="40" y="30" width="12" height="150" fill="#0c1a30"/>
+          <!-- Porch post right -->
+          <rect x="268" y="30" width="12" height="150" fill="#0c1a30"/>
+          <!-- Door frame -->
+          <rect x="120" y="50" width="80" height="130" rx="2" fill="#060e1c"/>
+          <!-- Door -->
+          <rect x="124" y="54" width="72" height="122" rx="2" fill="#08121e"/>
+          <!-- Door panel details -->
+          <rect x="130" y="62" width="26" height="36" rx="1" fill="#0a1828" stroke="#111f35" stroke-width="1"/>
+          <rect x="164" y="62" width="26" height="36" rx="1" fill="#0a1828" stroke="#111f35" stroke-width="1"/>
+          <rect x="130" y="106" width="26" height="36" rx="1" fill="#0a1828" stroke="#111f35" stroke-width="1"/>
+          <rect x="164" y="106" width="26" height="36" rx="1" fill="#0a1828" stroke="#111f35" stroke-width="1"/>
+          <!-- Doorknob -->
+          <circle cx="188" cy="118" r="3" fill="#1a3050"/>
+          <!-- Porch light glow -->
+          <ellipse cx="160" cy="44" rx="30" ry="18" fill="rgba(255,220,150,0.04)"/>
+          <circle cx="160" cy="44" r="4" fill="rgba(255,220,150,0.3)"/>
+          <!-- Timestamp overlay -->
+          <text x="6" y="172" fill="#6a8090" font-family="monospace" font-size="8">2026-04-11  07:42:15</text>
+          <text x="246" y="172" fill="#6a8090" font-family="monospace" font-size="8">CH1 · NVR</text>
+        </svg>
+        <div class="camera-expand" style="opacity:0.5;">⛶</div>
+      </div>
+      <div class="camera-info">
+        <div>
+          <div class="camera-name">Doorbell</div>
+          <div class="camera-entity">camera.doorbell · Vivint DBC300</div>
+        </div>
+        <div style="font-size:20px;opacity:0.5;">⛶</div>
+      </div>
+    </div>
+
+    <!-- Izzy -->
+    <div class="camera-card">
+      <div class="camera-preview cam-izzy">
+        <div class="camera-scan-line" style="animation-delay:1s;"></div>
+        <div class="camera-live-dot"></div>
+        <div class="camera-rec-badge">● REC</div>
+        <svg width="100%" height="100%" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0;opacity:0.35;">
+          <rect width="320" height="180" fill="#020808"/>
+          <!-- Night vision green tint scene -->
+          <defs>
+            <radialGradient id="nvGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#061008" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#020608" stop-opacity="1"/>
+            </radialGradient>
+          </defs>
+          <rect width="320" height="180" fill="url(#nvGrad)"/>
+          <!-- Floor line -->
+          <line x1="0" y1="130" x2="320" y2="130" stroke="#0a1f0c" stroke-width="1"/>
+          <!-- Generic room furniture silhouettes -->
+          <!-- Couch shape -->
+          <rect x="60" y="90" width="120" height="40" rx="4" fill="#071510"/>
+          <rect x="55" y="80" width="15" height="52" rx="3" fill="#071510"/>
+          <rect x="170" y="80" width="15" height="52" rx="3" fill="#071510"/>
+          <!-- Coffee table -->
+          <rect x="90" y="136" width="60" height="8" rx="2" fill="#060e08"/>
+          <!-- Plant -->
+          <rect x="240" y="100" width="8" height="30" fill="#050e07"/>
+          <ellipse cx="244" cy="98" rx="14" ry="12" fill="#071510"/>
+          <!-- TV stand -->
+          <rect x="10" y="100" width="50" height="30" rx="2" fill="#060e08"/>
+          <rect x="15" y="94" width="40" height="8" rx="1" fill="#040c06"/>
+          <!-- NV timestamp -->
+          <text x="6" y="172" fill="#2a5c30" font-family="monospace" font-size="8">NV · 2026-04-11  07:42:15</text>
+          <text x="248" y="172" fill="#2a5c30" font-family="monospace" font-size="8">CH2 · NEST</text>
+        </svg>
+        <div class="camera-expand" style="opacity:0.5;">⛶</div>
+      </div>
+      <div class="camera-info">
+        <div>
+          <div class="camera-name">Izzy Cam</div>
+          <div class="camera-entity">camera.izzy_camera · Nest</div>
+        </div>
+        <div style="font-size:20px;opacity:0.5;">⛶</div>
+      </div>
+    </div>
+
+    <!-- Living Room Cam -->
+    <div class="camera-card">
+      <div class="camera-preview cam-living">
+        <div class="camera-scan-line" style="animation-delay:2s;"></div>
+        <div class="camera-live-dot"></div>
+        <div class="camera-rec-badge">● REC</div>
+        <svg width="100%" height="100%" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0;opacity:0.35;">
+          <rect width="320" height="180" fill="#030612"/>
+          <!-- Living room daytime scene - low light -->
+          <defs>
+            <linearGradient id="lrGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#060a18"/>
+              <stop offset="100%" stop-color="#030510"/>
+            </linearGradient>
+            <radialGradient id="winGlow" cx="50%" cy="30%" r="40%">
+              <stop offset="0%" stop-color="rgba(200,220,255,0.08)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="320" height="180" fill="url(#lrGrad)"/>
+          <rect width="320" height="180" fill="url(#winGlow)"/>
+          <!-- Window -->
+          <rect x="110" y="20" width="100" height="70" rx="2" fill="#06101e"/>
+          <line x1="160" y1="20" x2="160" y2="90" stroke="#080e1c" stroke-width="2"/>
+          <line x1="110" y1="55" x2="210" y2="55" stroke="#080e1c" stroke-width="2"/>
+          <!-- Thin drape lines -->
+          <line x1="108" y1="18" x2="108" y2="94" stroke="#090e20" stroke-width="3"/>
+          <line x1="212" y1="18" x2="212" y2="94" stroke="#090e20" stroke-width="3"/>
+          <!-- Floor -->
+          <rect y="130" width="320" height="50" fill="#02040e"/>
+          <!-- Couch -->
+          <rect x="50" y="95" width="140" height="38" rx="4" fill="#070d1e"/>
+          <rect x="44" y="86" width="14" height="50" rx="3" fill="#070d1e"/>
+          <rect x="178" y="86" width="14" height="50" rx="3" fill="#070d1e"/>
+          <!-- TV wall mount -->
+          <rect x="5" y="60" width="55" height="34" rx="2" fill="#04080f"/>
+          <rect x="7" y="62" width="51" height="30" rx="1" fill="#030610"/>
+          <!-- timestamp -->
+          <text x="6" y="172" fill="#1e2a5e" font-family="monospace" font-size="8">2026-04-11  07:42:16</text>
+          <text x="248" y="172" fill="#1e2a5e" font-family="monospace" font-size="8">CH3 · NEST</text>
+        </svg>
+        <div class="camera-expand" style="opacity:0.5;">⛶</div>
+      </div>
+      <div class="camera-info">
+        <div>
+          <div class="camera-name">Living Room</div>
+          <div class="camera-entity">camera.living_room_camera · Nest</div>
+        </div>
+        <div style="font-size:20px;opacity:0.5;">⛶</div>
+      </div>
+    </div>
+
+  </div><!-- /cameras-grid -->
+
+  <!-- ═══ BOTTOM ROW: MEDIA + IRRIGATION ═══════════════════ -->
+  <div class="section-title">&#9632; Media &amp; Utilities</div>
+  <div class="bottom-row">
+
+    <!-- Media Player -->
+    <div class="media-card">
+      <div class="media-album-art">♪</div>
+      <div class="media-info">
+        <div class="media-source">Spotify · Benjamin's Room</div>
+        <div class="media-title">Lose Yourself</div>
+        <div class="media-artist">Eminem · 8 Mile Soundtrack</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+          <div class="media-controls">
+            <button class="media-btn">⏮</button>
+            <button class="media-btn play">▶</button>
+            <button class="media-btn">⏭</button>
+          </div>
+          <div class="media-volume-wrap" style="max-width:120px;margin-left:12px;">
+            <div class="media-vol-icon">🔊</div>
+            <div class="media-vol-bar">
+              <div class="media-vol-fill"></div>
+              <div class="media-vol-thumb"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:4px;padding-left:14px;border-left:1px solid var(--border);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);">Entity</div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:'Barlow',sans-serif;text-align:center;">media_player.<br/>benjamins_hatch</div>
+      </div>
+    </div>
+
+    <!-- Rachio Irrigation -->
+    <div class="rachio-card">
+      <div class="rachio-header">
+        <div class="rachio-icon">💧</div>
+        <div>
+          <div class="rachio-title">Rachio Irrigation</div>
+          <div class="rachio-subtitle">Lawn &amp; Garden Zones</div>
+        </div>
+        <div style="margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#22c55e;padding:3px 8px;border-radius:4px;">Idle</div>
+      </div>
+      <div class="rachio-status-row">
+        <div class="rachio-stat">
+          <div class="rachio-stat-label">Next Run</div>
+          <div class="rachio-stat-value">Sat 6am</div>
+        </div>
+        <div class="rachio-stat">
+          <div class="rachio-stat-label">Last Run</div>
+          <div class="rachio-stat-value">Wed</div>
+        </div>
+        <div class="rachio-stat">
+          <div class="rachio-stat-label">Zones</div>
+          <div class="rachio-stat-value green">8</div>
+        </div>
+        <div class="rachio-stat">
+          <div class="rachio-stat-label">Status</div>
+          <div class="rachio-stat-value green">OK</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /bottom-row -->
+
+  <!-- ── DESIGN NOTES ────────────────────────────────────── -->
+  <div style="margin-top:16px;padding:14px;background:rgba(21,101,192,0.06);border:1px solid rgba(21,101,192,0.2);border-radius:8px;">
+    <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent-cyan);margin-bottom:10px;letter-spacing:0.05em;">Design Decision Notes — For Chris's Review</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
+      <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#fbbf24;margin-bottom:6px;">🔑 Security Changes</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Back door shown <span style="color:#f59e0b;font-weight:500;">Unlocked</span> (amber) — easy to spot vs. locked (cyan). Garage <span style="color:#ef4444;font-weight:500;">Left = Open</span> to demo the red alert state. Confirm: do you want tap-to-lock with a confirmation dialog, or direct tap?</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#60a5fa;margin-bottom:6px;">🌡 Climate Layout</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">4-column works on Tab S9+, stacks to 2×2 on iPhone. Current temp shown large (left) + setpoint with ± buttons (right). Confirm: want fan mode displayed? Want ability to switch heat/cool/off from the card?</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#fbbf24;margin-bottom:6px;">💡 Light Groups</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Grouped into Kitchen, Living Room, Outdoor, Bedrooms. Master toggle per room + individual items. Confirm: Are there existing HA group entities, or do we build <code style="color:var(--accent-cyan);font-size:11px;">light.kitchen_group</code> etc. in configuration.yaml?</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#a855f7;margin-bottom:6px;">⚡ Quick Actions</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">5 scene shortcuts at top. Confirm which of these scripts/scenes exist in your HA already vs. need to be created. "Goodnight" would lock all + arm home + lights off. "Away Mode" arms away + locks + sets HVAC eco.</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#22c55e;margin-bottom:6px;">📷 Camera Views</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">3-column layout, simulated with SVG scenes. Real build uses <code style="color:var(--accent-cyan);font-size:11px;">camera_view: auto</code>. Tap opens browser_mod popup with full stream. OK to keep same 3-col layout, or prefer 2+1 (doorbell bigger)?</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#6a8090;margin-bottom:6px;">💧 Rachio</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Shown as a status card in the bottom row. Confirm: Is Rachio connected to your HA instance? If not, this card will be replaced with a "Benjamin's room" scene card or removed. Let me know.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /dashboard -->
+
+<div style="text-align:center;padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(106,128,144,0.4);border-top:1px solid var(--border);margin-top:10px;">
+  K Integrated Systems &nbsp;·&nbsp; Confidential &nbsp;·&nbsp; kintegratedsystems.com &nbsp;·&nbsp; (214) 478-2680
+</div>
+
+<script>
+// Device selector — simulates different viewport widths
+function setDevice(device) {
+  const dashboard = document.getElementById('dashboard');
+  const btns = document.querySelectorAll('.dev-btn');
+  btns.forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (device === 'tablet') {
+    dashboard.style.maxWidth = '1400px';
+    dashboard.style.fontSize = '14px';
+    // Reset any mobile overrides
+    document.body.style.maxWidth = '';
+    document.body.style.margin = '';
+  } else if (device === 'mobile') {
+    dashboard.style.maxWidth = '390px';
+    dashboard.style.fontSize = '13px';
+    document.body.style.maxWidth = '390px';
+    document.body.style.margin = '0 auto';
+    document.body.style.border = '1px solid rgba(0,200,232,0.15)';
+  } else if (device === 'ipad') {
+    dashboard.style.maxWidth = '820px';
+    dashboard.style.fontSize = '14px';
+    document.body.style.maxWidth = '820px';
+    document.body.style.margin = '0 auto';
+    document.body.style.border = '1px solid rgba(0,200,232,0.15)';
+  }
+}
+
+// Toggle switch demo
+document.querySelectorAll('.toggle-track').forEach(track => {
+  track.addEventListener('click', function() {
+    this.classList.toggle('on');
+    const thumb = this.querySelector('.toggle-thumb');
+  });
+});
+
+// Control card tap feedback
+document.querySelectorAll('.control-card').forEach(card => {
+  card.addEventListener('click', function() {
+    this.style.opacity = '0.7';
+    setTimeout(() => { this.style.opacity = ''; }, 200);
+  });
+});
+
+// Live clock
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  document.querySelector('.clock-time').textContent = `${h12}:${m}`;
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.querySelector('.clock-date').textContent =
+    `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+}
+updateClock();
+setInterval(updateClock, 30000);
+</script>
+
+</body>
+</html>
