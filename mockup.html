@@ -44,7 +44,7 @@ html, body {
   overflow: hidden;
   background: var(--bg-base);
   color: var(--text-primary);
-  font-family: 'Barlow', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
 /* ── SHELL ─────────────────────────────────────────────────── */
@@ -67,7 +67,7 @@ html, body {
   gap: 12px;
 }
 .status-clock {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
   font-size: 22px;
   font-weight: 700;
   color: var(--text-primary);
@@ -75,7 +75,7 @@ html, body {
   min-width: 72px;
 }
 .status-date {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px;
   letter-spacing: 0.12em;
   color: var(--text-muted);
@@ -91,9 +91,9 @@ html, body {
   color: var(--text-primary);
 }
 .status-weather .icon { font-size: 18px; }
-.status-weather .temp { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 600; }
+.status-weather .temp { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 18px; font-weight: 600; }
 .alarm-badge {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -160,7 +160,7 @@ html, body {
 .nav-item.active { color: var(--accent-cyan); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 .nav-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -186,9 +186,9 @@ html, body {
 .card-row { display: flex; align-items: center; gap: 8px; }
 .card-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
 .card-label { font-size: 12px; font-weight: 500; color: var(--text-muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-value { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; line-height: 1; }
+.card-value { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 20px; font-weight: 700; line-height: 1; }
 .card-state {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase; padding: 2px 7px;
   border-radius: 10px; border: 1px solid currentColor;
@@ -207,7 +207,7 @@ html, body {
 
 /* Section title */
 .section-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.25em;
   text-transform: uppercase; color: var(--accent-cyan);
   padding-bottom: 4px;
@@ -248,7 +248,7 @@ html, body {
 .quick-card:active { background: var(--bg-card-hover); border-color: var(--border-bright); }
 .quick-card .q-icon { font-size: 22px; }
 .quick-card .q-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
   text-transform: uppercase; color: var(--text-muted);
 }
@@ -261,7 +261,7 @@ html, body {
   gap: var(--gap);
 }
 .security-grid .col-header {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--accent-cyan);
   padding: 0 2px;
@@ -306,12 +306,12 @@ html, body {
 }
 .climate-card:active { background: var(--bg-card-hover); }
 .climate-room {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--text-muted);
 }
 .climate-temp {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
   font-size: 52px; font-weight: 700; line-height: 1;
 }
 .climate-meta {
@@ -320,7 +320,7 @@ html, body {
 .climate-setpoint { font-size: 13px; color: var(--text-muted); }
 .climate-setpoint strong { color: var(--text-primary); }
 .climate-mode-badge {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase; padding: 3px 9px;
   border-radius: 12px; border: 1px solid currentColor;
@@ -331,7 +331,7 @@ html, body {
 .climate-btn {
   flex: 1; height: 34px; border-radius: 6px;
   background: rgba(0,200,232,0.08); border: 1px solid var(--border);
-  color: var(--text-primary); font-family: 'Rajdhani', sans-serif;
+  color: var(--text-primary); font-family: ui-monospace, 'SF Mono', Consolas, monospace;
   font-size: 18px; font-weight: 700; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
 }
@@ -359,7 +359,7 @@ html, body {
 }
 .light-group-card:active { background: var(--bg-card-hover); }
 .lg-header { display: flex; align-items: center; justify-content: space-between; }
-.lg-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; }
+.lg-title { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 18px; font-weight: 700; }
 .lg-icon { font-size: 24px; }
 .lg-count { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .lg-toggle {
@@ -369,7 +369,7 @@ html, body {
 .toggle-btn {
   flex: 1; height: 34px; border-radius: 6px;
   background: rgba(0,200,232,0.08); border: 1px solid var(--border);
-  color: var(--text-primary); font-family: 'Barlow Condensed', sans-serif;
+  color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
   text-transform: uppercase; cursor: pointer;
 }
@@ -379,7 +379,7 @@ html, body {
   display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
 }
 .lg-light-pill {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
   text-transform: uppercase; padding: 3px 8px; border-radius: 10px;
   border: 1px solid;
@@ -433,7 +433,7 @@ html, body {
   padding: 20px 10px 8px;
 }
 .camera-name {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--text-primary);
 }
@@ -469,7 +469,7 @@ html, body {
 }
 .media-header { display: flex; align-items: center; justify-content: space-between; }
 .media-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-cyan);
 }
 .media-playing { font-size: 13px; color: var(--text-primary); font-weight: 500; }
@@ -499,7 +499,7 @@ html, body {
   display: flex; flex-direction: column; gap: 8px;
 }
 .more-card-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-cyan);
 }
 .presence-row { display: flex; gap: 8px; }
@@ -518,7 +518,7 @@ html, body {
 .presence-avatar.away { border-color: var(--text-muted); background: rgba(106,128,144,0.1); color: var(--text-muted); }
 .presence-info { flex: 1; min-width: 0; }
 .presence-name { font-size: 13px; font-weight: 600; }
-.presence-status { font-size: 10px; color: var(--text-muted); font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+.presence-status { font-size: 10px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
 
 /* ── PREVIEW FRAME WRAPPER (demo only) ─────────────────────── */
 .preview-wrapper {
@@ -529,7 +529,7 @@ html, body {
   gap: 24px;
 }
 .preview-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
   color: var(--text-muted); text-align: center;
 }
@@ -540,7 +540,7 @@ html, body {
   box-shadow: 0 0 40px rgba(0,0,0,0.6);
 }
 .frame-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 10px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase;
   color: var(--accent-cyan); text-align: center;
   padding: 8px 0 4px; background: #080f20;
@@ -903,8 +903,8 @@ html, body {
                 <div class="card-state disarmed" style="font-size:11px;padding:4px 14px;color:var(--state-disarmed);border-color:var(--state-disarmed);display:inline-block">Disarmed</div>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px">
-                <div class="card" style="padding:6px;text-align:center;font-size:10px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--state-home)">Arm Home</div>
-                <div class="card" style="padding:6px;text-align:center;font-size:10px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-cyan)">Arm Away</div>
+                <div class="card" style="padding:6px;text-align:center;font-size:10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--state-home)">Arm Home</div>
+                <div class="card" style="padding:6px;text-align:center;font-size:10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-cyan)">Arm Away</div>
               </div>
             </div>
           </div>
@@ -983,8 +983,8 @@ html, body {
               <div style="font-size:36px">🛡️</div>
               <div class="alarm-badge disarmed" style="font-size:13px;padding:6px 20px">System Disarmed</div>
               <div style="display:flex;gap:8px;width:100%">
-                <div class="card" style="flex:1;text-align:center;padding:10px;color:var(--state-home);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Arm Home</div>
-                <div class="card" style="flex:1;text-align:center;padding:10px;color:var(--accent-cyan);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Arm Away</div>
+                <div class="card" style="flex:1;text-align:center;padding:10px;color:var(--state-home);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Arm Home</div>
+                <div class="card" style="flex:1;text-align:center;padding:10px;color:var(--accent-cyan);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Arm Away</div>
               </div>
             </div>
           </div>
@@ -1044,7 +1044,7 @@ html, body {
     </div>
   </div>
 
-  <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--text-muted);letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:8px 0 24px">
+  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:11px;color:var(--text-muted);letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:8px 0 24px">
     Tap nav items in the iPhone portrait frame to switch pages &nbsp;·&nbsp; KIntegrated Systems &nbsp;·&nbsp; v2 April 2026
   </div>
 </div>
