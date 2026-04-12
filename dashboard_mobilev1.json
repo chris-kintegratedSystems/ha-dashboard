@@ -876,34 +876,80 @@
                   "card_mod": {
                     "style": "ha-card { background: #0f1117 !important; border: 1px solid rgba(0,212,240,0.15) !important; border-radius: 14px !important; }"
                   }
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "transparent"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "height": "80px"
-                      }
-                    ]
-                  }
                 }
               ]
             }
-          ]
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/media"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "temperature_sensor": null,
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
         },
         {
           "title": "Climate",
@@ -956,7 +1002,77 @@
                 }
               ]
             }
-          ]
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/media"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "temperature_sensor": null,
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
         },
         {
           "title": "Lights",
@@ -2165,34 +2281,80 @@
                       }
                     }
                   ]
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "transparent"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "height": "80px"
-                      }
-                    ]
-                  }
                 }
               ]
             }
-          ]
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/media"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "temperature_sensor": null,
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
         },
         {
           "title": "Cameras",
@@ -2299,34 +2461,80 @@
                       }
                     }
                   }
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "transparent"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "height": "80px"
-                      }
-                    ]
-                  }
                 }
               ]
             }
-          ]
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/media"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "temperature_sensor": null,
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
         },
         {
           "title": "Media",
@@ -2352,42 +2560,83 @@
                     "next"
                   ],
                   "collapsible_controls": false
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "transparent"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "height": "80px"
-                      }
-                    ]
-                  }
                 }
               ]
             }
-          ]
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-mobilev1/media"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "temperature_sensor": null,
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
         }
       ],
-      "resources": [
-        {
-          "url": "/local/mobile_v1/kis-nav.js?v=9",
-          "type": "module"
-        }
-      ],
+      "resources": [],
       "kiosk_mode": {
         "hide_header": true,
         "hide_sidebar": true

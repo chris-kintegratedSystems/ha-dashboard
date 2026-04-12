@@ -1,0 +1,1790 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_tabletv1",
+  "data": {
+    "config": {
+      "title": "tabletV1",
+      "theme": "kis-dark",
+      "views": [
+        {
+          "title": "Home",
+          "path": "home",
+          "icon": "mdi:home",
+          "type": "sections",
+          "max_columns": 4,
+          "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "20px 20px 16px 20px"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  },
+                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                }
+              ],
+              "sticky": true
+            },
+            {
+              "title": "Scenes",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "grid",
+                  "columns": 5,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "entity": "scene.morning_mode",
+                      "name": "Good Morning",
+                      "icon": "mdi:weather-sunrise",
+                      "color": "#f5a623",
+                      "size": "36px",
+                      "styles": {
+                        "card": [
+                          {
+                            "height": "14vh"
+                          },
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "12px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
+                        ]
+                      },
+                      "card_mod": {
+                        "style": "ha-card { background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.3); border-radius: 14px; }\n #icon { background: rgba(245,166,35,0.25); border-radius: 50%; padding: 10px; }\n"
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "service_data": {
+                          "entity_id": "scene.morning_mode"
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "scene.night_mode",
+                      "name": "Good Night",
+                      "icon": "mdi:moon-waning-crescent",
+                      "color": "#9d6ef0",
+                      "size": "36px",
+                      "styles": {
+                        "card": [
+                          {
+                            "height": "14vh"
+                          },
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "12px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
+                        ]
+                      },
+                      "card_mod": {
+                        "style": "ha-card { background: rgba(157,110,240,0.15); border: 1px solid rgba(157,110,240,0.3); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 50%; padding: 10px; }\n"
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "service_data": {
+                          "entity_id": "scene.night_mode"
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "scene.chill_mode",
+                      "name": "Away Mode",
+                      "icon": "mdi:home-export-outline",
+                      "color": "#f04060",
+                      "size": "36px",
+                      "styles": {
+                        "card": [
+                          {
+                            "height": "14vh"
+                          },
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "12px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
+                        ]
+                      },
+                      "card_mod": {
+                        "style": "ha-card { background: rgba(240,64,96,0.15); border: 1px solid rgba(240,64,96,0.3); border-radius: 14px; }\n #icon { background: rgba(240,64,96,0.25); border-radius: 50%; padding: 10px; }\n"
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "service_data": {
+                          "entity_id": "scene.chill_mode"
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "scene.day_mode",
+                      "name": "Welcome Home",
+                      "icon": "mdi:home-import-outline",
+                      "color": "#10d090",
+                      "size": "36px",
+                      "styles": {
+                        "card": [
+                          {
+                            "height": "14vh"
+                          },
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "12px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
+                        ]
+                      },
+                      "card_mod": {
+                        "style": "ha-card { background: rgba(16,208,144,0.15); border: 1px solid rgba(16,208,144,0.3); border-radius: 14px; }\n #icon { background: rgba(16,208,144,0.25); border-radius: 50%; padding: 10px; }\n"
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "service_data": {
+                          "entity_id": "scene.day_mode"
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "scene.chill_mode",
+                      "name": "Movie Time",
+                      "icon": "mdi:television-play",
+                      "color": "#4d8ef0",
+                      "size": "36px",
+                      "styles": {
+                        "card": [
+                          {
+                            "height": "14vh"
+                          },
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "12px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
+                        ]
+                      },
+                      "card_mod": {
+                        "style": "ha-card { background: rgba(77,142,240,0.15); border: 1px solid rgba(77,142,240,0.3); border-radius: 14px; }\n #icon { background: rgba(77,142,240,0.25); border-radius: 50%; padding: 10px; }\n"
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "service_data": {
+                          "entity_id": "scene.chill_mode"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Security",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "vertical-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "entity": "lock.front_door_lock",
+                          "name": "Front Door",
+                          "show_state": true,
+                          "size": "32px",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "height": "11vh"
+                              }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "12px"
+                              }
+                            ],
+                            "state": [
+                              {
+                                "font-size": "11px"
+                              }
+                            ]
+                          },
+                          "state": [
+                            {
+                              "value": "locked",
+                              "color": "#00d4f0",
+                              "icon": "mdi:lock"
+                            },
+                            {
+                              "value": "unlocked",
+                              "color": "#f5a623",
+                              "icon": "mdi:lock-open"
+                            },
+                            {
+                              "value": "jammed",
+                              "color": "#f04060",
+                              "icon": "mdi:lock-alert"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "lock.back_door_lock",
+                          "name": "Back Door",
+                          "show_state": true,
+                          "size": "32px",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "height": "11vh"
+                              }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "12px"
+                              }
+                            ],
+                            "state": [
+                              {
+                                "font-size": "11px"
+                              }
+                            ]
+                          },
+                          "state": [
+                            {
+                              "value": "locked",
+                              "color": "#00d4f0",
+                              "icon": "mdi:lock"
+                            },
+                            {
+                              "value": "unlocked",
+                              "color": "#f5a623",
+                              "icon": "mdi:lock-open"
+                            },
+                            {
+                              "value": "jammed",
+                              "color": "#f04060",
+                              "icon": "mdi:lock-alert"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "lock.gemelli_door_lock",
+                          "name": "Gemelli Door",
+                          "show_state": true,
+                          "size": "32px",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "height": "11vh"
+                              }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "12px"
+                              }
+                            ],
+                            "state": [
+                              {
+                                "font-size": "11px"
+                              }
+                            ]
+                          },
+                          "state": [
+                            {
+                              "value": "locked",
+                              "color": "#00d4f0",
+                              "icon": "mdi:lock"
+                            },
+                            {
+                              "value": "unlocked",
+                              "color": "#f5a623",
+                              "icon": "mdi:lock-open"
+                            },
+                            {
+                              "value": "jammed",
+                              "color": "#f04060",
+                              "icon": "mdi:lock-alert"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "vertical-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "entity": "cover.ratgdov25i_1746c3_door",
+                          "name": "Left Garage",
+                          "show_state": true,
+                          "size": "32px",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "height": "11vh"
+                              }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "12px"
+                              }
+                            ],
+                            "state": [
+                              {
+                                "font-size": "11px"
+                              }
+                            ]
+                          },
+                          "state": [
+                            {
+                              "value": "closed",
+                              "color": "#10d090",
+                              "icon": "mdi:garage"
+                            },
+                            {
+                              "value": "open",
+                              "color": "#f04060",
+                              "icon": "mdi:garage-open"
+                            },
+                            {
+                              "value": "opening",
+                              "color": "#f5a623",
+                              "icon": "mdi:garage-open"
+                            },
+                            {
+                              "value": "closing",
+                              "color": "#f5a623",
+                              "icon": "mdi:garage"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "cover.ratgdov25i_1746b4_door",
+                          "name": "Right Garage",
+                          "show_state": true,
+                          "size": "32px",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "height": "11vh"
+                              }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "12px"
+                              }
+                            ],
+                            "state": [
+                              {
+                                "font-size": "11px"
+                              }
+                            ]
+                          },
+                          "state": [
+                            {
+                              "value": "closed",
+                              "color": "#10d090",
+                              "icon": "mdi:garage"
+                            },
+                            {
+                              "value": "open",
+                              "color": "#f04060",
+                              "icon": "mdi:garage-open"
+                            },
+                            {
+                              "value": "opening",
+                              "color": "#f5a623",
+                              "icon": "mdi:garage-open"
+                            },
+                            {
+                              "value": "closing",
+                              "color": "#f5a623",
+                              "icon": "mdi:garage"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:mushroom-chips-card",
+                          "chips": [
+                            {
+                              "type": "template",
+                              "content": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}All Secure{% elif not (f and b and g) %}Check Locks{% elif not (lg and rg) %}Garage Open{% else %}Check Alarm{% endif %}",
+                              "icon": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}mdi:shield-check{% else %}mdi:shield-alert{% endif %}",
+                              "icon_color": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}green{% else %}red{% endif %}",
+                              "tap_action": {
+                                "action": "more-info",
+                                "entity": "alarm_control_panel.kuprycz_home"
+                              }
+                            },
+                            {
+                              "type": "template",
+                              "content": "{% set on_lights = states.light | selectattr('state','eq','on') | list | count %}{{ on_lights }} Active",
+                              "icon": "mdi:lightbulb-group",
+                              "icon_color": "cyan",
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "/dashboard-tabletv1/lights"
+                              }
+                            },
+                            {
+                              "type": "template",
+                              "content": "{% set temps = [state_attr('climate.daikin','current_temperature'), state_attr('climate.gemelli','current_temperature'), state_attr('climate.master','current_temperature'), state_attr('climate.upstairs','current_temperature')] | select('!=', None) | list %}{% if temps | length > 0 %}{{ ((temps | sum) / (temps | length)) | round(0) | int }}°F Avg{% else %}--°F Avg{% endif %}",
+                              "icon": "mdi:thermometer",
+                              "icon_color": "amber",
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "/dashboard-tabletv1/climate"
+                              }
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card { height: 11vh; display: flex; align-items: center; justify-content: center; }\n"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Now Playing",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "media-control",
+                  "entity": "media_player.benjamins_hatch_media_player",
+                  "card_mod": {
+                    "style": "ha-card { min-height: 20vh; background: var(--ha-card-background, var(--card-background-color)); border-radius: 16px; }\n"
+                  }
+                }
+              ]
+            }
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/media"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:play-circle",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/scenes"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
+        },
+        {
+          "title": "Climate",
+          "path": "climate",
+          "icon": "mdi:thermostat",
+          "type": "sections",
+          "max_columns": 2,
+          "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "20px 20px 16px 20px"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  },
+                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                }
+              ],
+              "sticky": true
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "thermostat",
+                  "entity": "climate.daikin",
+                  "name": "Living Room — Daikin",
+                  "card_mod": {
+                    "style": "ha-card { height: 40vh; }\n"
+                  }
+                },
+                {
+                  "type": "thermostat",
+                  "entity": "climate.gemelli",
+                  "name": "Gemelli Suite",
+                  "card_mod": {
+                    "style": "ha-card { height: 40vh; }\n"
+                  }
+                },
+                {
+                  "type": "thermostat",
+                  "entity": "climate.master",
+                  "name": "Master Bedroom",
+                  "card_mod": {
+                    "style": "ha-card { height: 40vh; }\n"
+                  }
+                },
+                {
+                  "type": "thermostat",
+                  "entity": "climate.upstairs",
+                  "name": "Upstairs",
+                  "card_mod": {
+                    "style": "ha-card { height: 40vh; }\n"
+                  }
+                }
+              ]
+            }
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/media"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:play-circle",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/scenes"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
+        },
+        {
+          "title": "Lights",
+          "path": "lights",
+          "icon": "mdi:lightbulb",
+          "type": "sections",
+          "max_columns": 2,
+          "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "20px 20px 16px 20px"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  },
+                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                }
+              ],
+              "sticky": true
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "entities",
+                  "title": "Kitchen",
+                  "show_header_toggle": true,
+                  "entities": [
+                    {
+                      "entity": "light.countertop_lights",
+                      "name": "Countertop"
+                    },
+                    {
+                      "entity": "light.kitchen_chandelier",
+                      "name": "Chandelier"
+                    },
+                    {
+                      "entity": "light.kitchen_ceilings_lights",
+                      "name": "Ceiling"
+                    },
+                    {
+                      "entity": "light.kitchen_island_light",
+                      "name": "Island"
+                    }
+                  ]
+                },
+                {
+                  "type": "entities",
+                  "title": "Living Room",
+                  "show_header_toggle": true,
+                  "entities": [
+                    {
+                      "entity": "light.living_room_ceiling",
+                      "name": "Ceiling"
+                    },
+                    {
+                      "entity": "light.living_room_lamp_2",
+                      "name": "Lamp"
+                    }
+                  ]
+                },
+                {
+                  "type": "entities",
+                  "title": "Outdoor",
+                  "show_header_toggle": true,
+                  "entities": [
+                    {
+                      "entity": "light.garage_light",
+                      "name": "Garage Light"
+                    },
+                    {
+                      "entity": "light.outdoor_switch_2",
+                      "name": "Patio String"
+                    },
+                    {
+                      "entity": "light.front_porch_lights",
+                      "name": "Front Porch"
+                    },
+                    {
+                      "entity": "light.front_walkway_lights",
+                      "name": "Front Walkway"
+                    },
+                    {
+                      "entity": "light.upper_outdoor_lights",
+                      "name": "Upper Outdoor"
+                    },
+                    {
+                      "entity": "light.left_outdoor_patio_lights",
+                      "name": "Left Patio"
+                    },
+                    {
+                      "entity": "light.center_outdoor_patio",
+                      "name": "Center Patio"
+                    }
+                  ]
+                },
+                {
+                  "type": "entities",
+                  "title": "Bedrooms",
+                  "show_header_toggle": true,
+                  "entities": [
+                    {
+                      "entity": "light.benjamins_hatch_light",
+                      "name": "Benjamin Hatch"
+                    },
+                    {
+                      "entity": "light.bens_light",
+                      "name": "Ben's Light"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/media"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:play-circle",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/scenes"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
+        },
+        {
+          "title": "Cameras",
+          "path": "cameras",
+          "icon": "mdi:cctv",
+          "type": "sections",
+          "max_columns": 2,
+          "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "20px 20px 16px 20px"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  },
+                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                }
+              ],
+              "sticky": true
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "picture-entity",
+                  "entity": "camera.doorbell",
+                  "camera_image": "camera.doorbell",
+                  "camera_view": "auto",
+                  "show_state": false,
+                  "show_name": true,
+                  "fit_mode": "cover",
+                  "card_mod": {
+                    "style": "ha-card { height: 38vh; }\n"
+                  },
+                  "tap_action": {
+                    "action": "fire-dom-event",
+                    "browser_mod": {
+                      "service": "browser_mod.popup",
+                      "data": {
+                        "title": false,
+                        "dismissable": true,
+                        "content": {
+                          "type": "picture-entity",
+                          "entity": "camera.doorbell",
+                          "camera_image": "camera.doorbell",
+                          "camera_view": "live",
+                          "show_state": false,
+                          "show_name": false,
+                          "fit_mode": "cover"
+                        },
+                        "style": "--popup-border-radius: 0px; --popup-padding: 0px; --popup-min-width: 90vw; --popup-max-width: 90vw; --popup-background: black;"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "picture-entity",
+                  "entity": "camera.izzy_camera",
+                  "camera_image": "camera.izzy_camera",
+                  "camera_view": "auto",
+                  "show_state": false,
+                  "show_name": true,
+                  "fit_mode": "cover",
+                  "card_mod": {
+                    "style": "ha-card { height: 38vh; }\n"
+                  },
+                  "tap_action": {
+                    "action": "fire-dom-event",
+                    "browser_mod": {
+                      "service": "browser_mod.popup",
+                      "data": {
+                        "title": false,
+                        "dismissable": true,
+                        "content": {
+                          "type": "picture-entity",
+                          "entity": "camera.izzy_camera",
+                          "camera_image": "camera.izzy_camera",
+                          "camera_view": "live",
+                          "show_state": false,
+                          "show_name": false,
+                          "fit_mode": "cover"
+                        },
+                        "style": "--popup-border-radius: 0px; --popup-padding: 0px; --popup-min-width: 90vw; --popup-max-width: 90vw; --popup-background: black;"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "picture-entity",
+                  "entity": "camera.living_room_camera",
+                  "camera_image": "camera.living_room_camera",
+                  "camera_view": "auto",
+                  "show_state": false,
+                  "show_name": true,
+                  "fit_mode": "cover",
+                  "card_mod": {
+                    "style": "ha-card { height: 38vh; }\n"
+                  },
+                  "tap_action": {
+                    "action": "fire-dom-event",
+                    "browser_mod": {
+                      "service": "browser_mod.popup",
+                      "data": {
+                        "title": false,
+                        "dismissable": true,
+                        "content": {
+                          "type": "picture-entity",
+                          "entity": "camera.living_room_camera",
+                          "camera_image": "camera.living_room_camera",
+                          "camera_view": "live",
+                          "show_state": false,
+                          "show_name": false,
+                          "fit_mode": "cover"
+                        },
+                        "style": "--popup-border-radius: 0px; --popup-padding: 0px; --popup-min-width: 90vw; --popup-max-width: 90vw; --popup-background: black;"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/media"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:play-circle",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/scenes"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
+        },
+        {
+          "title": "Media",
+          "path": "media",
+          "icon": "mdi:speaker",
+          "type": "sections",
+          "max_columns": 2,
+          "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "20px 20px 16px 20px"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  },
+                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                }
+              ],
+              "sticky": true
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "media-control",
+                  "entity": "media_player.benjamins_hatch_media_player",
+                  "card_mod": {
+                    "style": "ha-card { min-height: 22vh; }\n"
+                  }
+                }
+              ]
+            }
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/media"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:play-circle",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/scenes"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
+        },
+        {
+          "title": "Scenes",
+          "path": "scenes",
+          "icon": "mdi:play-circle",
+          "type": "sections",
+          "max_columns": 3,
+          "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "20px 20px 16px 20px"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  },
+                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                }
+              ],
+              "sticky": true
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "entity": "scene.morning_mode",
+                  "name": "Good Morning",
+                  "icon": "mdi:weather-sunrise",
+                  "size": "48px",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "service_data": {
+                      "entity_id": "scene.morning_mode"
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "height": "22vh"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "15px"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "scene.night_mode",
+                  "name": "Good Night",
+                  "icon": "mdi:moon-waning-crescent",
+                  "size": "48px",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "service_data": {
+                      "entity_id": "scene.night_mode"
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "height": "22vh"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "15px"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "scene.chill_mode",
+                  "name": "Away Mode",
+                  "icon": "mdi:home-export-outline",
+                  "size": "48px",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "service_data": {
+                      "entity_id": "scene.chill_mode"
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "height": "22vh"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "15px"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "scene.day_mode",
+                  "name": "Welcome Home",
+                  "icon": "mdi:home-import-outline",
+                  "size": "48px",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "service_data": {
+                      "entity_id": "scene.day_mode"
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "height": "22vh"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "15px"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "scene.chill_mode",
+                  "name": "Movie Time",
+                  "icon": "mdi:television-play",
+                  "size": "48px",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "service_data": {
+                      "entity_id": "scene.chill_mode"
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "height": "22vh"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "15px"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "footer": {
+            "type": "custom:mushroom-chips-card",
+            "alignment": "center",
+            "chips": [
+              {
+                "type": "template",
+                "icon": "mdi:home",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/home"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:thermostat",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/climate"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:lightbulb",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/lights"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:cctv",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/cameras"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:speaker",
+                "icon_color": "disabled",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/media"
+                }
+              },
+              {
+                "type": "template",
+                "icon": "mdi:play-circle",
+                "icon_color": "cyan",
+                "tap_action": {
+                  "action": "navigate",
+                  "navigation_path": "/dashboard-tabletv1/scenes"
+                }
+              }
+            ]
+          },
+          "header": {
+            "type": "custom:clock-weather-card",
+            "entity": "weather.forecast_home",
+            "sun_entity": "sun.sun",
+            "weather_icon_type": "line",
+            "animated_icon": false,
+            "forecast_rows": 0,
+            "locale": "en-US",
+            "time_format": 12,
+            "time_zone": "America/Chicago",
+            "show_humidity": false,
+            "hide_today_section": false,
+            "hide_forecast_section": true,
+            "use_browser_time": true,
+            "card_mod": {
+              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
+            }
+          }
+        }
+      ],
+      "resources": []
+    }
+  }
+}
