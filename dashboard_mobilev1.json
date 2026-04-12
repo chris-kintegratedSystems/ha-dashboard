@@ -6,18 +6,6 @@
     "config": {
       "title": "mobileV1",
       "theme": "kis-dark",
-      "kiosk_mode": {
-        "admin_settings": {
-          "hide_header": true,
-          "hide_sidebar": true,
-          "hide_tab": true
-        },
-        "non_admin_settings": {
-          "hide_header": true,
-          "hide_sidebar": true,
-          "hide_tab": true
-        }
-      },
       "views": [
         {
           "title": "Home",
@@ -31,115 +19,44 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:clock-weather-card",
-                  "entity": "weather.forecast_home",
-                  "forecast_rows": 0,
-                  "hide_forecast_section": true,
-                  "card_mod": {
-                    "style": "ha-card { min-height: 80px; max-height: 110px; }\n"
-                  }
-                },
-                {
-                  "type": "grid",
-                  "columns": 2,
-                  "square": false,
-                  "cards": [
-                    {
-                      "type": "custom:mushroom-template-card",
-                      "primary": "Chris",
-                      "secondary": "{{ states('sensor.chris_distance_from_home') }}",
-                      "icon": "mdi:account",
-                      "icon_color": "{% if is_state('person.chris', 'home') %}green{% else %}orange{% endif %}",
-                      "badge_icon": "{% if is_state('person.chris', 'home') %}mdi:home{% else %}mdi:map-marker{% endif %}",
-                      "badge_color": "{% if is_state('person.chris', 'home') %}green{% else %}orange{% endif %}",
-                      "entity": "person.chris",
-                      "tap_action": { "action": "none" },
-                      "hold_action": { "action": "more-info" },
-                      "layout": "vertical",
-                      "fill_container": true
-                    },
-                    {
-                      "type": "custom:mushroom-template-card",
-                      "primary": "Claire",
-                      "secondary": "{{ states('sensor.claire_distance_from_home') }}",
-                      "icon": "mdi:account",
-                      "icon_color": "{% if is_state('person.claire', 'home') %}green{% else %}orange{% endif %}",
-                      "badge_icon": "{% if is_state('person.claire', 'home') %}mdi:home{% else %}mdi:map-marker{% endif %}",
-                      "badge_color": "{% if is_state('person.claire', 'home') %}green{% else %}orange{% endif %}",
-                      "entity": "person.claire",
-                      "tap_action": { "action": "none" },
-                      "hold_action": { "action": "more-info" },
-                      "layout": "vertical",
-                      "fill_container": true
-                    }
-                  ]
-                },
-                {
                   "type": "custom:button-card",
-                  "entity": "alarm_control_panel.kuprycz_home",
-                  "name": "Home Alarm",
-                  "show_state": true,
-                  "size": "26px",
-                  "layout": "icon_name_state2nd",
-                  "tap_action": { "action": "more-info" },
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
                   "styles": {
                     "card": [
-                      { "padding": "10px 14px" },
-                      { "border-radius": "14px" }
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "20px 20px 16px 20px"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
                     ],
-                    "name": [{ "font-size": "13px" }, { "font-weight": "600" }],
-                    "state": [{ "font-size": "11px" }, { "opacity": "0.7" }]
+                    "label": [
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
                   },
-                  "state": [
-                    {
-                      "value": "disarmed",
-                      "color": "#10d090",
-                      "icon": "mdi:shield-off",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid #10d090; background: rgba(16,208,144,0.06); }\n"
-                      }
-                    },
-                    {
-                      "value": "armed_home",
-                      "color": "#f5a623",
-                      "icon": "mdi:shield-home",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid #f5a623; background: rgba(245,166,35,0.06); }\n"
-                      }
-                    },
-                    {
-                      "value": "armed_away",
-                      "color": "#4d8ef0",
-                      "icon": "mdi:shield-lock",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid #4d8ef0; background: rgba(77,142,240,0.06); }\n"
-                      }
-                    },
-                    {
-                      "value": "arming",
-                      "color": "#f5a623",
-                      "icon": "mdi:shield-sync",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid #f5a623; background: rgba(245,166,35,0.06); }\n"
-                      }
-                    },
-                    {
-                      "value": "pending",
-                      "color": "#f5a623",
-                      "icon": "mdi:shield-alert",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid #f5a623; background: rgba(245,166,35,0.06); }\n"
-                      }
-                    },
-                    {
-                      "value": "triggered",
-                      "color": "#f04060",
-                      "icon": "mdi:shield-alert",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid #f04060; background: rgba(240,64,96,0.06); }\n"
-                      }
-                    }
-                  ]
+                  "label": "[[[\n  const _d2 = new Date(); const _h = String(_d2.getHours()).padStart(2,'0'); const _m = String(_d2.getMinutes()).padStart(2,'0'); const time = _h + ':' + _m;\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-family:monospace;font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-family:monospace;color:#f1f5f9;font-size:15px;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
                 }
               ]
             },
@@ -157,31 +74,53 @@
                       "entity": "scene.morning_mode",
                       "name": "Good Morning",
                       "icon": "mdi:weather-sunrise",
-                      "color": "#f5a623",
+                      "color": "#9d6ef0",
                       "size": "28px",
                       "styles": {
                         "card": [
-                          { "padding": "14px 8px 12px" },
-                          { "border-radius": "14px" },
-                          { "min-height": "80px" },
-                          { "flex-direction": "column" }
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "min-height": "80px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
                         ],
                         "name": [
-                          { "font-size": "10px" },
-                          { "font-weight": "600" },
-                          { "letter-spacing": "0.05em" },
-                          { "text-transform": "uppercase" },
-                          { "color": "rgba(138,154,184,1)" },
-                          { "margin-top": "8px" }
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: rgba(245,166,35,0.06); border: 1px solid rgba(245,166,35,0.20); border-radius: 14px; }\n #icon { background: rgba(245,166,35,0.18); border-radius: 50%; padding: 10px; }\n"
+                        "style": "ha-card { background: rgba(157,110,240,0.06); border: 1px solid rgba(157,110,240,0.20); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.18); border-radius: 50%; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
                         "service": "scene.turn_on",
-                        "service_data": { "entity_id": "scene.morning_mode" }
+                        "service_data": {
+                          "entity_id": "scene.morning_mode"
+                        }
                       }
                     },
                     {
@@ -193,18 +132,38 @@
                       "size": "28px",
                       "styles": {
                         "card": [
-                          { "padding": "14px 8px 12px" },
-                          { "border-radius": "14px" },
-                          { "min-height": "80px" },
-                          { "flex-direction": "column" }
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "min-height": "80px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
                         ],
                         "name": [
-                          { "font-size": "10px" },
-                          { "font-weight": "600" },
-                          { "letter-spacing": "0.05em" },
-                          { "text-transform": "uppercase" },
-                          { "color": "rgba(138,154,184,1)" },
-                          { "margin-top": "8px" }
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
                         ]
                       },
                       "card_mod": {
@@ -213,7 +172,9 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "scene.turn_on",
-                        "service_data": { "entity_id": "scene.night_mode" }
+                        "service_data": {
+                          "entity_id": "scene.night_mode"
+                        }
                       }
                     },
                     {
@@ -221,31 +182,53 @@
                       "entity": "scene.chill_mode",
                       "name": "Away Mode",
                       "icon": "mdi:home-export-outline",
-                      "color": "#4d8ef0",
+                      "color": "#9d6ef0",
                       "size": "28px",
                       "styles": {
                         "card": [
-                          { "padding": "14px 8px 12px" },
-                          { "border-radius": "14px" },
-                          { "min-height": "80px" },
-                          { "flex-direction": "column" }
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "min-height": "80px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
                         ],
                         "name": [
-                          { "font-size": "10px" },
-                          { "font-weight": "600" },
-                          { "letter-spacing": "0.05em" },
-                          { "text-transform": "uppercase" },
-                          { "color": "rgba(138,154,184,1)" },
-                          { "margin-top": "8px" }
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: rgba(77,142,240,0.06); border: 1px solid rgba(77,142,240,0.20); border-radius: 14px; }\n #icon { background: rgba(77,142,240,0.18); border-radius: 50%; padding: 10px; }\n"
+                        "style": "ha-card { background: rgba(157,110,240,0.06); border: 1px solid rgba(157,110,240,0.20); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.18); border-radius: 50%; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
                         "service": "scene.turn_on",
-                        "service_data": { "entity_id": "scene.chill_mode" }
+                        "service_data": {
+                          "entity_id": "scene.chill_mode"
+                        }
                       }
                     },
                     {
@@ -253,31 +236,53 @@
                       "entity": "scene.day_mode",
                       "name": "Welcome Home",
                       "icon": "mdi:home-import-outline",
-                      "color": "#10d090",
+                      "color": "#9d6ef0",
                       "size": "28px",
                       "styles": {
                         "card": [
-                          { "padding": "14px 8px 12px" },
-                          { "border-radius": "14px" },
-                          { "min-height": "80px" },
-                          { "flex-direction": "column" }
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "min-height": "80px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
                         ],
                         "name": [
-                          { "font-size": "10px" },
-                          { "font-weight": "600" },
-                          { "letter-spacing": "0.05em" },
-                          { "text-transform": "uppercase" },
-                          { "color": "rgba(138,154,184,1)" },
-                          { "margin-top": "8px" }
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: rgba(16,208,144,0.06); border: 1px solid rgba(16,208,144,0.20); border-radius: 14px; }\n #icon { background: rgba(16,208,144,0.18); border-radius: 50%; padding: 10px; }\n"
+                        "style": "ha-card { background: rgba(157,110,240,0.06); border: 1px solid rgba(157,110,240,0.20); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.18); border-radius: 50%; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
                         "service": "scene.turn_on",
-                        "service_data": { "entity_id": "scene.day_mode" }
+                        "service_data": {
+                          "entity_id": "scene.day_mode"
+                        }
                       }
                     },
                     {
@@ -285,31 +290,53 @@
                       "entity": "scene.chill_mode",
                       "name": "Movie Time",
                       "icon": "mdi:television-play",
-                      "color": "#00d4f0",
+                      "color": "#9d6ef0",
                       "size": "28px",
                       "styles": {
                         "card": [
-                          { "padding": "14px 8px 12px" },
-                          { "border-radius": "14px" },
-                          { "min-height": "80px" },
-                          { "flex-direction": "column" }
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "min-height": "80px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
                         ],
                         "name": [
-                          { "font-size": "10px" },
-                          { "font-weight": "600" },
-                          { "letter-spacing": "0.05em" },
-                          { "text-transform": "uppercase" },
-                          { "color": "rgba(138,154,184,1)" },
-                          { "margin-top": "8px" }
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: rgba(0,212,240,0.06); border: 1px solid rgba(0,212,240,0.20); border-radius: 14px; }\n #icon { background: rgba(0,212,240,0.18); border-radius: 50%; padding: 10px; }\n"
+                        "style": "ha-card { background: rgba(157,110,240,0.06); border: 1px solid rgba(157,110,240,0.20); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.18); border-radius: 50%; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
                         "service": "scene.turn_on",
-                        "service_data": { "entity_id": "scene.chill_mode" }
+                        "service_data": {
+                          "entity_id": "scene.chill_mode"
+                        }
                       }
                     }
                   ]
@@ -335,42 +362,88 @@
                   },
                   "styles": {
                     "card": [
-                      { "padding": "12px 14px" },
-                      { "border-radius": "14px" }
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
                     ],
                     "grid": [
-                      { "grid-template-areas": "'i n badge' 'i l badge'" },
-                      { "grid-template-columns": "auto 1fr auto" },
-                      { "grid-template-rows": "auto auto" }
+                      {
+                        "grid-template-areas": "'i n badge' 'i l badge'"
+                      },
+                      {
+                        "grid-template-columns": "auto 1fr auto"
+                      },
+                      {
+                        "grid-template-rows": "auto auto"
+                      }
                     ],
                     "name": [
-                      { "font-size": "14px" },
-                      { "font-weight": "600" },
-                      { "text-align": "left" },
-                      { "color": "#eef2f8" }
+                      {
+                        "font-size": "14px"
+                      },
+                      {
+                        "font-weight": "600"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "#eef2f8"
+                      }
                     ],
                     "label": [
-                      { "font-size": "11px" },
-                      { "text-align": "left" },
-                      { "color": "rgba(74,85,112,1)" },
-                      { "margin-top": "2px" }
+                      {
+                        "font-size": "11px"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "rgba(74,85,112,1)"
+                      },
+                      {
+                        "margin-top": "2px"
+                      }
                     ],
                     "custom_fields": {
                       "badge": [
-                        { "align-self": "center" },
-                        { "justify-self": "end" }
+                        {
+                          "align-self": "center"
+                        },
+                        {
+                          "justify-self": "end"
+                        }
                       ]
                     }
                   },
                   "card_mod": {
                     "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4f0' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 12px; }\n"
                   },
-                  "tap_action": { "action": "toggle" },
-                  "hold_action": { "action": "more-info" },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  },
                   "state": [
-                    { "value": "locked",   "color": "#00d4f0", "icon": "mdi:lock"       },
-                    { "value": "unlocked", "color": "#f5a623", "icon": "mdi:lock-open"  },
-                    { "value": "jammed",   "color": "#f04060", "icon": "mdi:lock-alert" }
+                    {
+                      "value": "locked",
+                      "color": "#00d4f0",
+                      "icon": "mdi:lock"
+                    },
+                    {
+                      "value": "unlocked",
+                      "color": "#f5a623",
+                      "icon": "mdi:lock-open"
+                    },
+                    {
+                      "value": "jammed",
+                      "color": "#f04060",
+                      "icon": "mdi:lock-alert"
+                    }
                   ]
                 },
                 {
@@ -388,42 +461,88 @@
                   },
                   "styles": {
                     "card": [
-                      { "padding": "12px 14px" },
-                      { "border-radius": "14px" }
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
                     ],
                     "grid": [
-                      { "grid-template-areas": "'i n badge' 'i l badge'" },
-                      { "grid-template-columns": "auto 1fr auto" },
-                      { "grid-template-rows": "auto auto" }
+                      {
+                        "grid-template-areas": "'i n badge' 'i l badge'"
+                      },
+                      {
+                        "grid-template-columns": "auto 1fr auto"
+                      },
+                      {
+                        "grid-template-rows": "auto auto"
+                      }
                     ],
                     "name": [
-                      { "font-size": "14px" },
-                      { "font-weight": "600" },
-                      { "text-align": "left" },
-                      { "color": "#eef2f8" }
+                      {
+                        "font-size": "14px"
+                      },
+                      {
+                        "font-weight": "600"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "#eef2f8"
+                      }
                     ],
                     "label": [
-                      { "font-size": "11px" },
-                      { "text-align": "left" },
-                      { "color": "rgba(74,85,112,1)" },
-                      { "margin-top": "2px" }
+                      {
+                        "font-size": "11px"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "rgba(74,85,112,1)"
+                      },
+                      {
+                        "margin-top": "2px"
+                      }
                     ],
                     "custom_fields": {
                       "badge": [
-                        { "align-self": "center" },
-                        { "justify-self": "end" }
+                        {
+                          "align-self": "center"
+                        },
+                        {
+                          "justify-self": "end"
+                        }
                       ]
                     }
                   },
                   "card_mod": {
                     "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4f0' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 12px; }\n"
                   },
-                  "tap_action": { "action": "toggle" },
-                  "hold_action": { "action": "more-info" },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  },
                   "state": [
-                    { "value": "locked",   "color": "#00d4f0", "icon": "mdi:lock"       },
-                    { "value": "unlocked", "color": "#f5a623", "icon": "mdi:lock-open"  },
-                    { "value": "jammed",   "color": "#f04060", "icon": "mdi:lock-alert" }
+                    {
+                      "value": "locked",
+                      "color": "#00d4f0",
+                      "icon": "mdi:lock"
+                    },
+                    {
+                      "value": "unlocked",
+                      "color": "#f5a623",
+                      "icon": "mdi:lock-open"
+                    },
+                    {
+                      "value": "jammed",
+                      "color": "#f04060",
+                      "icon": "mdi:lock-alert"
+                    }
                   ]
                 },
                 {
@@ -441,42 +560,88 @@
                   },
                   "styles": {
                     "card": [
-                      { "padding": "12px 14px" },
-                      { "border-radius": "14px" }
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
                     ],
                     "grid": [
-                      { "grid-template-areas": "'i n badge' 'i l badge'" },
-                      { "grid-template-columns": "auto 1fr auto" },
-                      { "grid-template-rows": "auto auto" }
+                      {
+                        "grid-template-areas": "'i n badge' 'i l badge'"
+                      },
+                      {
+                        "grid-template-columns": "auto 1fr auto"
+                      },
+                      {
+                        "grid-template-rows": "auto auto"
+                      }
                     ],
                     "name": [
-                      { "font-size": "14px" },
-                      { "font-weight": "600" },
-                      { "text-align": "left" },
-                      { "color": "#eef2f8" }
+                      {
+                        "font-size": "14px"
+                      },
+                      {
+                        "font-weight": "600"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "#eef2f8"
+                      }
                     ],
                     "label": [
-                      { "font-size": "11px" },
-                      { "text-align": "left" },
-                      { "color": "rgba(74,85,112,1)" },
-                      { "margin-top": "2px" }
+                      {
+                        "font-size": "11px"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "rgba(74,85,112,1)"
+                      },
+                      {
+                        "margin-top": "2px"
+                      }
                     ],
                     "custom_fields": {
                       "badge": [
-                        { "align-self": "center" },
-                        { "justify-self": "end" }
+                        {
+                          "align-self": "center"
+                        },
+                        {
+                          "justify-self": "end"
+                        }
                       ]
                     }
                   },
                   "card_mod": {
                     "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4f0' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 12px; }\n"
                   },
-                  "tap_action": { "action": "toggle" },
-                  "hold_action": { "action": "more-info" },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  },
                   "state": [
-                    { "value": "locked",   "color": "#00d4f0", "icon": "mdi:lock"       },
-                    { "value": "unlocked", "color": "#f5a623", "icon": "mdi:lock-open"  },
-                    { "value": "jammed",   "color": "#f04060", "icon": "mdi:lock-alert" }
+                    {
+                      "value": "locked",
+                      "color": "#00d4f0",
+                      "icon": "mdi:lock"
+                    },
+                    {
+                      "value": "unlocked",
+                      "color": "#f5a623",
+                      "icon": "mdi:lock-open"
+                    },
+                    {
+                      "value": "jammed",
+                      "color": "#f04060",
+                      "icon": "mdi:lock-alert"
+                    }
                   ]
                 }
               ]
@@ -484,6 +649,8 @@
             {
               "title": "",
               "type": "grid",
+              "columns": 2,
+              "square": false,
               "cards": [
                 {
                   "type": "custom:button-card",
@@ -500,43 +667,93 @@
                   },
                   "styles": {
                     "card": [
-                      { "padding": "12px 14px" },
-                      { "border-radius": "14px" }
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
                     ],
                     "grid": [
-                      { "grid-template-areas": "'i n badge' 'i l badge'" },
-                      { "grid-template-columns": "auto 1fr auto" },
-                      { "grid-template-rows": "auto auto" }
+                      {
+                        "grid-template-areas": "'i n badge' 'i l badge'"
+                      },
+                      {
+                        "grid-template-columns": "auto 1fr auto"
+                      },
+                      {
+                        "grid-template-rows": "auto auto"
+                      }
                     ],
                     "name": [
-                      { "font-size": "14px" },
-                      { "font-weight": "600" },
-                      { "text-align": "left" },
-                      { "color": "#eef2f8" }
+                      {
+                        "font-size": "14px"
+                      },
+                      {
+                        "font-weight": "600"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "#eef2f8"
+                      }
                     ],
                     "label": [
-                      { "font-size": "11px" },
-                      { "text-align": "left" },
-                      { "color": "rgba(74,85,112,1)" },
-                      { "margin-top": "2px" }
+                      {
+                        "font-size": "11px"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "rgba(74,85,112,1)"
+                      },
+                      {
+                        "margin-top": "2px"
+                      }
                     ],
                     "custom_fields": {
                       "badge": [
-                        { "align-self": "center" },
-                        { "justify-self": "end" }
+                        {
+                          "align-self": "center"
+                        },
+                        {
+                          "justify-self": "end"
+                        }
                       ]
                     }
                   },
                   "card_mod": {
                     "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'closed' ? '#10d090' : entity.state === 'open' ? '#f04060' : '#f5a623' ]]]; border-radius: 12px; }\n"
                   },
-                  "tap_action": { "action": "toggle" },
-                  "hold_action": { "action": "more-info" },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  },
                   "state": [
-                    { "value": "closed",  "color": "#10d090", "icon": "mdi:garage"      },
-                    { "value": "open",    "color": "#f04060", "icon": "mdi:garage-open" },
-                    { "value": "opening", "color": "#f5a623", "icon": "mdi:garage-open" },
-                    { "value": "closing", "color": "#f5a623", "icon": "mdi:garage"      }
+                    {
+                      "value": "closed",
+                      "color": "#10d090",
+                      "icon": "mdi:garage"
+                    },
+                    {
+                      "value": "open",
+                      "color": "#f04060",
+                      "icon": "mdi:garage-open"
+                    },
+                    {
+                      "value": "opening",
+                      "color": "#f5a623",
+                      "icon": "mdi:garage-open"
+                    },
+                    {
+                      "value": "closing",
+                      "color": "#f5a623",
+                      "icon": "mdi:garage"
+                    }
                   ]
                 },
                 {
@@ -554,43 +771,93 @@
                   },
                   "styles": {
                     "card": [
-                      { "padding": "12px 14px" },
-                      { "border-radius": "14px" }
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
                     ],
                     "grid": [
-                      { "grid-template-areas": "'i n badge' 'i l badge'" },
-                      { "grid-template-columns": "auto 1fr auto" },
-                      { "grid-template-rows": "auto auto" }
+                      {
+                        "grid-template-areas": "'i n badge' 'i l badge'"
+                      },
+                      {
+                        "grid-template-columns": "auto 1fr auto"
+                      },
+                      {
+                        "grid-template-rows": "auto auto"
+                      }
                     ],
                     "name": [
-                      { "font-size": "14px" },
-                      { "font-weight": "600" },
-                      { "text-align": "left" },
-                      { "color": "#eef2f8" }
+                      {
+                        "font-size": "14px"
+                      },
+                      {
+                        "font-weight": "600"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "#eef2f8"
+                      }
                     ],
                     "label": [
-                      { "font-size": "11px" },
-                      { "text-align": "left" },
-                      { "color": "rgba(74,85,112,1)" },
-                      { "margin-top": "2px" }
+                      {
+                        "font-size": "11px"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "color": "rgba(74,85,112,1)"
+                      },
+                      {
+                        "margin-top": "2px"
+                      }
                     ],
                     "custom_fields": {
                       "badge": [
-                        { "align-self": "center" },
-                        { "justify-self": "end" }
+                        {
+                          "align-self": "center"
+                        },
+                        {
+                          "justify-self": "end"
+                        }
                       ]
                     }
                   },
                   "card_mod": {
                     "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'closed' ? '#10d090' : entity.state === 'open' ? '#f04060' : '#f5a623' ]]]; border-radius: 12px; }\n"
                   },
-                  "tap_action": { "action": "toggle" },
-                  "hold_action": { "action": "more-info" },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  },
                   "state": [
-                    { "value": "closed",  "color": "#10d090", "icon": "mdi:garage"      },
-                    { "value": "open",    "color": "#f04060", "icon": "mdi:garage-open" },
-                    { "value": "opening", "color": "#f5a623", "icon": "mdi:garage-open" },
-                    { "value": "closing", "color": "#f5a623", "icon": "mdi:garage"      }
+                    {
+                      "value": "closed",
+                      "color": "#10d090",
+                      "icon": "mdi:garage"
+                    },
+                    {
+                      "value": "open",
+                      "color": "#f04060",
+                      "icon": "mdi:garage-open"
+                    },
+                    {
+                      "value": "opening",
+                      "color": "#f5a623",
+                      "icon": "mdi:garage-open"
+                    },
+                    {
+                      "value": "closing",
+                      "color": "#f5a623",
+                      "icon": "mdi:garage"
+                    }
                   ]
                 }
               ]
@@ -604,20 +871,32 @@
                   "show_name": false,
                   "show_state": false,
                   "show_icon": false,
-                  "tap_action": { "action": "none" },
+                  "tap_action": {
+                    "action": "none"
+                  },
                   "custom_fields": {
-                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var temp = daikin && daikin.attributes.current_temperature ? daikin.attributes.current_temperature : '--'; var secColor = secureAll ? '#10d090' : '#f04060'; var secBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var secBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var secLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\"><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + secBorder + ';background:' + secBg + ';color:' + secColor + ';\">' + secLabel + '</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + temp + '\u00b0F</span></div>'; ]]]"
+                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var temp = daikin && daikin.attributes.current_temperature ? daikin.attributes.current_temperature : '--'; var secColor = secureAll ? '#10d090' : '#f04060'; var secBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var secBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var secLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\"><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + secBorder + ';background:' + secBg + ';color:' + secColor + ';\">' + secLabel + '</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + temp + '°F</span></div>'; ]]]"
                   },
                   "styles": {
                     "card": [
-                      { "padding": "12px 16px 12px 20px" },
-                      { "border-radius": "12px" },
-                      { "border-left": "3px solid #00d4f0" }
+                      {
+                        "padding": "12px 16px 12px 20px"
+                      },
+                      {
+                        "border-radius": "12px"
+                      },
+                      {
+                        "border-left": "3px solid #00d4f0"
+                      }
                     ],
                     "custom_fields": {
                       "chips": [
-                        { "width": "100%" },
-                        { "justify-self": "stretch" }
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "justify-self": "stretch"
+                        }
                       ]
                     }
                   }
@@ -631,92 +910,42 @@
                 {
                   "type": "media-control",
                   "entity": "media_player.benjamins_hatch_media_player",
-                  "card_mod": { "style": "ha-card { min-height: 18vh; }\n" }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "grid",
-                  "columns": 5,
-                  "square": false,
                   "card_mod": {
-                    "style": "ha-card { background: rgba(7,9,16,0.95) !important; border: none !important; border-top: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; box-shadow: none !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 1000 !important; }\n"
+                    "style": "ha-card { min-height: 18vh; }\n"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
                   },
-                  "cards": [
-                    {
-                      "type": "custom:button-card",
-                      "name": "Home",
-                      "icon": "mdi:home",
-                      "color": "#00d4f0",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/home" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#00d4f0" } ]
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "transparent"
                       },
-                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Climate",
-                      "icon": "mdi:thermostat",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/climate" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "height": "80px"
                       }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Lights",
-                      "icon": "mdi:lightbulb",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/lights" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Cameras",
-                      "icon": "mdi:cctv",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/cameras" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Media",
-                      "icon": "mdi:speaker",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/media" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    }
-                  ]
+                    ]
+                  }
                 }
               ]
             }
-          ]
+          ],
+          "card_mod": {
+            "style": {
+              "$": ".sections-container { padding-bottom: 80px !important; overflow-y: auto !important; }"
+            }
+          }
         },
         {
           "title": "Climate",
@@ -727,115 +956,356 @@
           "sections": [
             {
               "type": "grid",
+              "columns": 1,
               "cards": [
                 {
-                  "type": "thermostat",
+                  "type": "custom:button-card",
                   "entity": "climate.daikin",
-                  "name": "Living Room — Daikin",
-                  "card_mod": { "style": "ha-card { height: 40vh; }\n" }
-                },
-                {
-                  "type": "thermostat",
-                  "entity": "climate.gemelli",
-                  "name": "Gemelli Suite",
-                  "card_mod": { "style": "ha-card { height: 40vh; }\n" }
-                },
-                {
-                  "type": "thermostat",
-                  "entity": "climate.master",
-                  "name": "Master Bedroom",
-                  "card_mod": { "style": "ha-card { height: 40vh; }\n" }
-                },
-                {
-                  "type": "thermostat",
-                  "entity": "climate.upstairs",
-                  "name": "Upstairs",
-                  "card_mod": { "style": "ha-card { height: 40vh; }\n" }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "grid",
-                  "columns": 5,
-                  "square": false,
-                  "card_mod": {
-                    "style": "ha-card { background: rgba(7,9,16,0.95) !important; border: none !important; border-top: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; box-shadow: none !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 1000 !important; }\n"
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_state": false,
+                  "tap_action": {
+                    "action": "more-info"
                   },
-                  "cards": [
-                    {
-                      "type": "custom:button-card",
-                      "name": "Home",
-                      "icon": "mdi:home",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/home" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
+                  "custom_fields": {
+                    "display": "[[[ var e=states['climate.daikin']; var cur=e&&e.attributes.current_temperature!==undefined?e.attributes.current_temperature:'--'; var sp=e&&e.attributes.temperature!==undefined?e.attributes.temperature:'--'; var hvac=e&&e.attributes.hvac_action?e.attributes.hvac_action:(e?e.state:'off'); var ml=hvac==='cooling'?'COOL':hvac==='heating'?'HEAT':hvac==='idle'?'IDLE':'AUTO'; var mc=hvac==='cooling'?'#4d8ef0':hvac==='heating'?'#f5a623':'#10d090'; var mb=hvac==='cooling'?'rgba(77,142,240,0.08)':hvac==='heating'?'rgba(245,166,35,0.08)':'rgba(16,208,144,0.08)'; var mbd=hvac==='cooling'?'rgba(77,142,240,0.35)':hvac==='heating'?'rgba(245,166,35,0.35)':'rgba(16,208,144,0.35)'; var fg=hvac==='cooling'?'linear-gradient(to right,#4d8ef0,#00d4f0)':hvac==='heating'?'linear-gradient(to right,#f0a030,#f06040)':'rgba(16,208,144,0.4)'; var p=cur!=='--'&&sp!=='--'?Math.min(90,Math.max(10,Math.round(((Number(cur)-60)/30)*100))):50; return '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570\">Living Room · Daikin</div><div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px\"><span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums\">'+cur+'</span><span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px\">°F</span></div><div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden\"><div style=\"height:100%;border-radius:3px;background:'+fg+';width:'+p+'%\"></div></div><div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px\"><span style=\"font-size:12px;color:#4a5570\">Set to <strong style=\"color:#8a9ab8;font-weight:600\">'+sp+'°F</strong></span><span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid '+mbd+';background:'+mb+';color:'+mc+'\">'+ml+'</span></div>'; ]]]",
+                    "minus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">−</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.daikin",
+                          "temperature": "[[[ return Math.round((Number(states['climate.daikin'].attributes.temperature)||72)-1); ]]]"
+                        }
                       }
                     },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Climate",
-                      "icon": "mdi:thermostat",
-                      "color": "#00d4f0",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/climate" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#00d4f0" } ]
-                      },
-                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Lights",
-                      "icon": "mdi:lightbulb",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/lights" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Cameras",
-                      "icon": "mdi:cctv",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/cameras" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Media",
-                      "icon": "mdi:speaker",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/media" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
+                    "plus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">+</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.daikin",
+                          "temperature": "[[[ return Math.round((Number(states['climate.daikin'].attributes.temperature)||72)+1); ]]]"
+                        }
                       }
                     }
-                  ]
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "16px 18px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "grid-template-columns": "1fr 1fr"
+                      },
+                      {
+                        "gap": "0"
+                      }
+                    ],
+                    "custom_fields": {
+                      "display": [
+                        {
+                          "grid-column": "1 / -1"
+                        },
+                        {
+                          "padding": "0"
+                        }
+                      ],
+                      "minus": [
+                        {
+                          "grid-column": "1 / 2"
+                        },
+                        {
+                          "padding": "10px 4px 0 0"
+                        }
+                      ],
+                      "plus": [
+                        {
+                          "grid-column": "2 / 3"
+                        },
+                        {
+                          "padding": "10px 0 0 4px"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "climate.gemelli",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_state": false,
+                  "tap_action": {
+                    "action": "more-info"
+                  },
+                  "custom_fields": {
+                    "display": "[[[ var e=states['climate.gemelli']; var cur=e&&e.attributes.current_temperature!==undefined?e.attributes.current_temperature:'--'; var sp=e&&e.attributes.temperature!==undefined?e.attributes.temperature:'--'; var hvac=e&&e.attributes.hvac_action?e.attributes.hvac_action:(e?e.state:'off'); var ml=hvac==='cooling'?'COOL':hvac==='heating'?'HEAT':hvac==='idle'?'IDLE':'AUTO'; var mc=hvac==='cooling'?'#4d8ef0':hvac==='heating'?'#f5a623':'#10d090'; var mb=hvac==='cooling'?'rgba(77,142,240,0.08)':hvac==='heating'?'rgba(245,166,35,0.08)':'rgba(16,208,144,0.08)'; var mbd=hvac==='cooling'?'rgba(77,142,240,0.35)':hvac==='heating'?'rgba(245,166,35,0.35)':'rgba(16,208,144,0.35)'; var fg=hvac==='cooling'?'linear-gradient(to right,#4d8ef0,#00d4f0)':hvac==='heating'?'linear-gradient(to right,#f0a030,#f06040)':'rgba(16,208,144,0.4)'; var p=cur!=='--'&&sp!=='--'?Math.min(90,Math.max(10,Math.round(((Number(cur)-60)/30)*100))):50; return '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570\">Gemelli Suite</div><div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px\"><span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums\">'+cur+'</span><span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px\">°F</span></div><div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden\"><div style=\"height:100%;border-radius:3px;background:'+fg+';width:'+p+'%\"></div></div><div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px\"><span style=\"font-size:12px;color:#4a5570\">Set to <strong style=\"color:#8a9ab8;font-weight:600\">'+sp+'°F</strong></span><span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid '+mbd+';background:'+mb+';color:'+mc+'\">'+ml+'</span></div>'; ]]]",
+                    "minus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">−</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.gemelli",
+                          "temperature": "[[[ return Math.round((Number(states['climate.gemelli'].attributes.temperature)||72)-1); ]]]"
+                        }
+                      }
+                    },
+                    "plus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">+</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.gemelli",
+                          "temperature": "[[[ return Math.round((Number(states['climate.gemelli'].attributes.temperature)||72)+1); ]]]"
+                        }
+                      }
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "16px 18px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "grid-template-columns": "1fr 1fr"
+                      },
+                      {
+                        "gap": "0"
+                      }
+                    ],
+                    "custom_fields": {
+                      "display": [
+                        {
+                          "grid-column": "1 / -1"
+                        },
+                        {
+                          "padding": "0"
+                        }
+                      ],
+                      "minus": [
+                        {
+                          "grid-column": "1 / 2"
+                        },
+                        {
+                          "padding": "10px 4px 0 0"
+                        }
+                      ],
+                      "plus": [
+                        {
+                          "grid-column": "2 / 3"
+                        },
+                        {
+                          "padding": "10px 0 0 4px"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "climate.master",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_state": false,
+                  "tap_action": {
+                    "action": "more-info"
+                  },
+                  "custom_fields": {
+                    "display": "[[[ var e=states['climate.master']; var cur=e&&e.attributes.current_temperature!==undefined?e.attributes.current_temperature:'--'; var sp=e&&e.attributes.temperature!==undefined?e.attributes.temperature:'--'; var hvac=e&&e.attributes.hvac_action?e.attributes.hvac_action:(e?e.state:'off'); var ml=hvac==='cooling'?'COOL':hvac==='heating'?'HEAT':hvac==='idle'?'IDLE':'AUTO'; var mc=hvac==='cooling'?'#4d8ef0':hvac==='heating'?'#f5a623':'#10d090'; var mb=hvac==='cooling'?'rgba(77,142,240,0.08)':hvac==='heating'?'rgba(245,166,35,0.08)':'rgba(16,208,144,0.08)'; var mbd=hvac==='cooling'?'rgba(77,142,240,0.35)':hvac==='heating'?'rgba(245,166,35,0.35)':'rgba(16,208,144,0.35)'; var fg=hvac==='cooling'?'linear-gradient(to right,#4d8ef0,#00d4f0)':hvac==='heating'?'linear-gradient(to right,#f0a030,#f06040)':'rgba(16,208,144,0.4)'; var p=cur!=='--'&&sp!=='--'?Math.min(90,Math.max(10,Math.round(((Number(cur)-60)/30)*100))):50; return '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570\">Master Bedroom</div><div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px\"><span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums\">'+cur+'</span><span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px\">°F</span></div><div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden\"><div style=\"height:100%;border-radius:3px;background:'+fg+';width:'+p+'%\"></div></div><div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px\"><span style=\"font-size:12px;color:#4a5570\">Set to <strong style=\"color:#8a9ab8;font-weight:600\">'+sp+'°F</strong></span><span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid '+mbd+';background:'+mb+';color:'+mc+'\">'+ml+'</span></div>'; ]]]",
+                    "minus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">−</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.master",
+                          "temperature": "[[[ return Math.round((Number(states['climate.master'].attributes.temperature)||72)-1); ]]]"
+                        }
+                      }
+                    },
+                    "plus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">+</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.master",
+                          "temperature": "[[[ return Math.round((Number(states['climate.master'].attributes.temperature)||72)+1); ]]]"
+                        }
+                      }
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "16px 18px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "grid-template-columns": "1fr 1fr"
+                      },
+                      {
+                        "gap": "0"
+                      }
+                    ],
+                    "custom_fields": {
+                      "display": [
+                        {
+                          "grid-column": "1 / -1"
+                        },
+                        {
+                          "padding": "0"
+                        }
+                      ],
+                      "minus": [
+                        {
+                          "grid-column": "1 / 2"
+                        },
+                        {
+                          "padding": "10px 4px 0 0"
+                        }
+                      ],
+                      "plus": [
+                        {
+                          "grid-column": "2 / 3"
+                        },
+                        {
+                          "padding": "10px 0 0 4px"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "climate.upstairs",
+                  "show_name": false,
+                  "show_icon": false,
+                  "show_state": false,
+                  "tap_action": {
+                    "action": "more-info"
+                  },
+                  "custom_fields": {
+                    "display": "[[[ var e=states['climate.upstairs']; var cur=e&&e.attributes.current_temperature!==undefined?e.attributes.current_temperature:'--'; var sp=e&&e.attributes.temperature!==undefined?e.attributes.temperature:'--'; var hvac=e&&e.attributes.hvac_action?e.attributes.hvac_action:(e?e.state:'off'); var ml=hvac==='cooling'?'COOL':hvac==='heating'?'HEAT':hvac==='idle'?'IDLE':'AUTO'; var mc=hvac==='cooling'?'#4d8ef0':hvac==='heating'?'#f5a623':'#10d090'; var mb=hvac==='cooling'?'rgba(77,142,240,0.08)':hvac==='heating'?'rgba(245,166,35,0.08)':'rgba(16,208,144,0.08)'; var mbd=hvac==='cooling'?'rgba(77,142,240,0.35)':hvac==='heating'?'rgba(245,166,35,0.35)':'rgba(16,208,144,0.35)'; var fg=hvac==='cooling'?'linear-gradient(to right,#4d8ef0,#00d4f0)':hvac==='heating'?'linear-gradient(to right,#f0a030,#f06040)':'rgba(16,208,144,0.4)'; var p=cur!=='--'&&sp!=='--'?Math.min(90,Math.max(10,Math.round(((Number(cur)-60)/30)*100))):50; return '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570\">Upstairs</div><div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px\"><span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums\">'+cur+'</span><span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px\">°F</span></div><div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden\"><div style=\"height:100%;border-radius:3px;background:'+fg+';width:'+p+'%\"></div></div><div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px\"><span style=\"font-size:12px;color:#4a5570\">Set to <strong style=\"color:#8a9ab8;font-weight:600\">'+sp+'°F</strong></span><span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid '+mbd+';background:'+mb+';color:'+mc+'\">'+ml+'</span></div>'; ]]]",
+                    "minus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">−</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.upstairs",
+                          "temperature": "[[[ return Math.round((Number(states['climate.upstairs'].attributes.temperature)||72)-1); ]]]"
+                        }
+                      }
+                    },
+                    "plus": {
+                      "value": "'<div style=\"display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);color:#8a9ab8;font-size:24px;font-weight:300\">+</div>'",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "climate.set_temperature",
+                        "service_data": {
+                          "entity_id": "climate.upstairs",
+                          "temperature": "[[[ return Math.round((Number(states['climate.upstairs'].attributes.temperature)||72)+1); ]]]"
+                        }
+                      }
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "16px 18px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "grid-template-columns": "1fr 1fr"
+                      },
+                      {
+                        "gap": "0"
+                      }
+                    ],
+                    "custom_fields": {
+                      "display": [
+                        {
+                          "grid-column": "1 / -1"
+                        },
+                        {
+                          "padding": "0"
+                        }
+                      ],
+                      "minus": [
+                        {
+                          "grid-column": "1 / 2"
+                        },
+                        {
+                          "padding": "10px 4px 0 0"
+                        }
+                      ],
+                      "plus": [
+                        {
+                          "grid-column": "2 / 3"
+                        },
+                        {
+                          "padding": "10px 0 0 4px"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "transparent"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "height": "80px"
+                      }
+                    ]
+                  }
                 }
               ]
             }
-          ]
+          ],
+          "card_mod": {
+            "style": {
+              "$": ".sections-container { padding-bottom: 80px !important; overflow-y: auto !important; }"
+            }
+          }
         },
         {
           "title": "Lights",
@@ -852,14 +1322,60 @@
                   "name": "Kitchen",
                   "icon": "mdi:countertop",
                   "show_state": false,
-                  "size": "14px",
-                  "layout": "icon_name",
-                  "tap_action": { "action": "none" },
+                  "tap_action": {
+                    "action": "none"
+                  },
                   "styles": {
-                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
-                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
-                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
-                  }
+                    "card": [
+                      {
+                        "background": "transparent"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "padding": "14px 4px 4px"
+                      },
+                      {
+                        "align-items": "flex-start"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "10px"
+                      },
+                      {
+                        "font-weight": "700"
+                      },
+                      {
+                        "letter-spacing": "0.14em"
+                      },
+                      {
+                        "text-transform": "uppercase"
+                      },
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "width": "16px"
+                      }
+                    ]
+                  },
+                  "show_icon": false
                 },
                 {
                   "type": "grid",
@@ -874,16 +1390,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -894,16 +1452,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -914,16 +1514,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -934,16 +1576,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     }
                   ]
@@ -953,14 +1637,60 @@
                   "name": "Living Room",
                   "icon": "mdi:sofa",
                   "show_state": false,
-                  "size": "14px",
-                  "layout": "icon_name",
-                  "tap_action": { "action": "none" },
+                  "tap_action": {
+                    "action": "none"
+                  },
                   "styles": {
-                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
-                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
-                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
-                  }
+                    "card": [
+                      {
+                        "background": "transparent"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "padding": "14px 4px 4px"
+                      },
+                      {
+                        "align-items": "flex-start"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "10px"
+                      },
+                      {
+                        "font-weight": "700"
+                      },
+                      {
+                        "letter-spacing": "0.14em"
+                      },
+                      {
+                        "text-transform": "uppercase"
+                      },
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "width": "16px"
+                      }
+                    ]
+                  },
+                  "show_icon": false
                 },
                 {
                   "type": "grid",
@@ -975,16 +1705,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -995,16 +1767,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     }
                   ]
@@ -1014,14 +1828,60 @@
                   "name": "Outdoor",
                   "icon": "mdi:outdoor-lamp",
                   "show_state": false,
-                  "size": "14px",
-                  "layout": "icon_name",
-                  "tap_action": { "action": "none" },
+                  "tap_action": {
+                    "action": "none"
+                  },
                   "styles": {
-                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
-                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
-                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
-                  }
+                    "card": [
+                      {
+                        "background": "transparent"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "padding": "14px 4px 4px"
+                      },
+                      {
+                        "align-items": "flex-start"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "10px"
+                      },
+                      {
+                        "font-weight": "700"
+                      },
+                      {
+                        "letter-spacing": "0.14em"
+                      },
+                      {
+                        "text-transform": "uppercase"
+                      },
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "width": "16px"
+                      }
+                    ]
+                  },
+                  "show_icon": false
                 },
                 {
                   "type": "grid",
@@ -1036,16 +1896,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -1056,16 +1958,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -1076,16 +2020,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -1096,16 +2082,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -1116,16 +2144,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -1136,16 +2206,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -1156,16 +2268,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     }
                   ]
@@ -1175,14 +2329,60 @@
                   "name": "Bedrooms",
                   "icon": "mdi:bed",
                   "show_state": false,
-                  "size": "14px",
-                  "layout": "icon_name",
-                  "tap_action": { "action": "none" },
+                  "tap_action": {
+                    "action": "none"
+                  },
                   "styles": {
-                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
-                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
-                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
-                  }
+                    "card": [
+                      {
+                        "background": "transparent"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "padding": "14px 4px 4px"
+                      },
+                      {
+                        "align-items": "flex-start"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "10px"
+                      },
+                      {
+                        "font-weight": "700"
+                      },
+                      {
+                        "letter-spacing": "0.14em"
+                      },
+                      {
+                        "text-transform": "uppercase"
+                      },
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "text-align": "left"
+                      },
+                      {
+                        "width": "100%"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "color": "#6a8090"
+                      },
+                      {
+                        "width": "16px"
+                      }
+                    ]
+                  },
+                  "show_icon": false
                 },
                 {
                   "type": "grid",
@@ -1197,16 +2397,58 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     },
                     {
@@ -1217,104 +2459,94 @@
                       "show_icon": true,
                       "size": "20px",
                       "layout": "vertical",
-                      "tap_action": { "action": "toggle" },
-                      "hold_action": { "action": "more-info" },
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
                       "styles": {
                         "card": [
-                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
-                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
-                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                          {
+                            "padding": "12px 8px 10px"
+                          },
+                          {
+                            "border-radius": "10px"
+                          },
+                          {
+                            "overflow": "hidden"
+                          },
+                          {
+                            "min-height": "72px"
+                          },
+                          {
+                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"
+                          },
+                          {
+                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          }
                         ],
-                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
-                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                        "icon": [
+                          {
+                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
+                          },
+                          {
+                            "margin-top": "5px"
+                          }
+                        ]
                       }
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
+                },
                 {
-                  "type": "grid",
-                  "columns": 5,
-                  "square": false,
-                  "card_mod": {
-                    "style": "ha-card { background: rgba(7,9,16,0.95) !important; border: none !important; border-top: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; box-shadow: none !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 1000 !important; }\n"
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
                   },
-                  "cards": [
-                    {
-                      "type": "custom:button-card",
-                      "name": "Home",
-                      "icon": "mdi:home",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/home" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Climate",
-                      "icon": "mdi:thermostat",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/climate" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Lights",
-                      "icon": "mdi:lightbulb",
-                      "color": "#00d4f0",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/lights" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#00d4f0" } ]
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "transparent"
                       },
-                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Cameras",
-                      "icon": "mdi:cctv",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/cameras" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "height": "80px"
                       }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Media",
-                      "icon": "mdi:speaker",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/media" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    }
-                  ]
+                    ]
+                  }
                 }
               ]
             }
-          ]
+          ],
+          "card_mod": {
+            "style": {
+              "$": ".sections-container { padding-bottom: 80px !important; overflow-y: auto !important; }"
+            }
+          }
         },
         {
           "title": "Cameras",
@@ -1334,7 +2566,9 @@
                   "show_state": false,
                   "show_name": true,
                   "fit_mode": "cover",
-                  "card_mod": { "style": "ha-card { height: 30vh; }\n" },
+                  "card_mod": {
+                    "style": "ha-card { height: 30vh; }\n"
+                  },
                   "tap_action": {
                     "action": "fire-dom-event",
                     "browser_mod": {
@@ -1364,7 +2598,9 @@
                   "show_state": false,
                   "show_name": true,
                   "fit_mode": "cover",
-                  "card_mod": { "style": "ha-card { height: 30vh; }\n" },
+                  "card_mod": {
+                    "style": "ha-card { height: 30vh; }\n"
+                  },
                   "tap_action": {
                     "action": "fire-dom-event",
                     "browser_mod": {
@@ -1394,7 +2630,9 @@
                   "show_state": false,
                   "show_name": true,
                   "fit_mode": "cover",
-                  "card_mod": { "style": "ha-card { height: 30vh; }\n" },
+                  "card_mod": {
+                    "style": "ha-card { height: 30vh; }\n"
+                  },
                   "tap_action": {
                     "action": "fire-dom-event",
                     "browser_mod": {
@@ -1415,91 +2653,39 @@
                       }
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
+                },
                 {
-                  "type": "grid",
-                  "columns": 5,
-                  "square": false,
-                  "card_mod": {
-                    "style": "ha-card { background: rgba(7,9,16,0.95) !important; border: none !important; border-top: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; box-shadow: none !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 1000 !important; }\n"
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
                   },
-                  "cards": [
-                    {
-                      "type": "custom:button-card",
-                      "name": "Home",
-                      "icon": "mdi:home",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/home" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Climate",
-                      "icon": "mdi:thermostat",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/climate" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Lights",
-                      "icon": "mdi:lightbulb",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/lights" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Cameras",
-                      "icon": "mdi:cctv",
-                      "color": "#00d4f0",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/cameras" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#00d4f0" } ]
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "transparent"
                       },
-                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Media",
-                      "icon": "mdi:speaker",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/media" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "height": "80px"
                       }
-                    }
-                  ]
+                    ]
+                  }
                 }
               ]
             }
-          ]
+          ],
+          "card_mod": {
+            "style": {
+              "$": ".sections-container { padding-bottom: 80px !important; overflow-y: auto !important; }"
+            }
+          }
         },
         {
           "title": "Media",
@@ -1514,92 +2700,48 @@
                 {
                   "type": "media-control",
                   "entity": "media_player.benjamins_hatch_media_player",
-                  "card_mod": { "style": "ha-card { min-height: 22vh; }\n" }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "grid",
-                  "columns": 5,
-                  "square": false,
                   "card_mod": {
-                    "style": "ha-card { background: rgba(7,9,16,0.95) !important; border: none !important; border-top: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; box-shadow: none !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 1000 !important; }\n"
+                    "style": "\nha-card {\n  background: #141824 !important;\n  overflow: hidden;\n}\nhui-media-control-card {\n  --primary-color: #00d4f0 !important;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
                   },
-                  "cards": [
-                    {
-                      "type": "custom:button-card",
-                      "name": "Home",
-                      "icon": "mdi:home",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/home" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Climate",
-                      "icon": "mdi:thermostat",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/climate" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Lights",
-                      "icon": "mdi:lightbulb",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/lights" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Cameras",
-                      "icon": "mdi:cctv",
-                      "color": "#4a5570",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/cameras" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#4a5570" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#4a5570" } ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "name": "Media",
-                      "icon": "mdi:speaker",
-                      "color": "#00d4f0",
-                      "size": "22px",
-                      "tap_action": { "action": "navigate", "navigation_path": "/dashboard-mobilev1/media" },
-                      "styles": {
-                        "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
-                        "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
-                        "icon": [ { "color": "#00d4f0" } ]
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "transparent"
                       },
-                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
-                    }
-                  ]
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "height": "80px"
+                      }
+                    ]
+                  }
                 }
               ]
             }
-          ]
+          ],
+          "card_mod": {
+            "style": {
+              "$": ".sections-container { padding-bottom: 80px !important; overflow-y: auto !important; }"
+            }
+          }
+        }
+      ],
+      "resources": [
+        {
+          "url": "/local/mobile_v1/kis-nav.js",
+          "type": "module"
         }
       ]
     }
