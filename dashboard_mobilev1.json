@@ -8,9 +8,9 @@
       "theme": "kis-dark",
       "kiosk_mode": {
         "admin_settings": {
-          "hide_header": false,
-          "hide_sidebar": false,
-          "hide_tab": false
+          "hide_header": true,
+          "hide_sidebar": true,
+          "hide_tab": true
         },
         "non_admin_settings": {
           "hide_header": true,
@@ -601,67 +601,26 @@
               "cards": [
                 {
                   "type": "custom:button-card",
-                  "entity": "alarm_control_panel.kuprycz_home",
-                  "name": "Alarm",
-                  "show_state": true,
-                  "show_name": true,
-                  "icon": "mdi:shield-home",
-                  "size": "16px",
-                  "layout": "icon_name_state2nd",
-                  "styles": {
-                    "card": [
-                      { "padding": "8px 12px" },
-                      { "border-radius": "20px" },
-                      { "display": "inline-flex" },
-                      { "width": "auto" },
-                      { "background": "rgba(16,21,31,0.72)" },
-                      { "border": "1px solid rgba(255,255,255,0.06)" }
-                    ],
-                    "name": [
-                      { "font-size": "11px" },
-                      { "font-weight": "500" }
-                    ],
-                    "state": [
-                      { "font-size": "10px" },
-                      { "text-transform": "capitalize" },
-                      { "opacity": "0.8" }
-                    ],
-                    "img_cell": [{ "width": "16px" }]
-                  },
-                  "tap_action": { "action": "more-info" },
-                  "state": [
-                    { "value": "disarmed",   "color": "#10d090", "icon": "mdi:shield-off"   },
-                    { "value": "armed_home", "color": "#f5a623", "icon": "mdi:shield-home"  },
-                    { "value": "armed_away", "color": "#4d8ef0", "icon": "mdi:shield-lock"  },
-                    { "value": "arming",     "color": "#f5a623", "icon": "mdi:shield-sync"  },
-                    { "value": "pending",    "color": "#f5a623", "icon": "mdi:shield-alert" },
-                    { "value": "triggered",  "color": "#f04060", "icon": "mdi:shield-alert" }
-                  ]
-                },
-                {
-                  "type": "custom:button-card",
-                  "name": "[[[ \n  var front = states['lock.front_door_lock'];\n  var back = states['lock.back_door_lock'];\n  var gem = states['lock.gemelli_door_lock'];\n  var lg = states['cover.ratgdov25i_1746c3_door'];\n  var rg = states['cover.ratgdov25i_1746b4_door'];\n  var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked';\n  var garageOk = lg && lg.state==='closed' && rg && rg.state==='closed';\n  if (allLocked && garageOk) return 'All Secure';\n  if (!allLocked) return 'Check Locks';\n  return 'Garage Open';\n]]]",
-                  "icon": "[[[ \n  var front = states['lock.front_door_lock'];\n  var back = states['lock.back_door_lock'];\n  var gem = states['lock.gemelli_door_lock'];\n  var lg = states['cover.ratgdov25i_1746c3_door'];\n  var rg = states['cover.ratgdov25i_1746b4_door'];\n  var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked';\n  var garageOk = lg && lg.state==='closed' && rg && rg.state==='closed';\n  if (allLocked && garageOk) return 'mdi:shield-check';\n  if (!allLocked) return 'mdi:shield-alert';\n  return 'mdi:garage-alert';\n]]]",
-                  "color": "[[[ \n  var front = states['lock.front_door_lock'];\n  var back = states['lock.back_door_lock'];\n  var gem = states['lock.gemelli_door_lock'];\n  var lg = states['cover.ratgdov25i_1746c3_door'];\n  var rg = states['cover.ratgdov25i_1746b4_door'];\n  var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked';\n  var garageOk = lg && lg.state==='closed' && rg && rg.state==='closed';\n  if (allLocked && garageOk) return '#10d090';\n  if (!allLocked) return '#f04060';\n  return '#f5a623';\n]]]",
-                  "size": "16px",
-                  "show_name": true,
+                  "show_name": false,
                   "show_state": false,
+                  "show_icon": false,
+                  "tap_action": { "action": "none" },
+                  "custom_fields": {
+                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var temp = daikin && daikin.attributes.current_temperature ? daikin.attributes.current_temperature : '--'; var secColor = secureAll ? '#10d090' : '#f04060'; var secBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var secBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var secLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\"><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + secBorder + ';background:' + secBg + ';color:' + secColor + ';\">' + secLabel + '</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + temp + '\u00b0F</span></div>'; ]]]"
+                  },
                   "styles": {
                     "card": [
-                      { "padding": "8px 12px" },
-                      { "border-radius": "20px" },
-                      { "display": "inline-flex" },
-                      { "width": "auto" },
-                      { "background": "rgba(16,21,31,0.72)" },
-                      { "border": "1px solid rgba(255,255,255,0.06)" }
+                      { "padding": "12px 16px 12px 20px" },
+                      { "border-radius": "12px" },
+                      { "border-left": "3px solid #00d4f0" }
                     ],
-                    "name": [
-                      { "font-size": "11px" },
-                      { "font-weight": "500" }
-                    ],
-                    "img_cell": [{ "width": "16px" }]
-                  },
-                  "tap_action": { "action": "none" }
+                    "custom_fields": {
+                      "chips": [
+                        { "width": "100%" },
+                        { "justify-self": "stretch" }
+                      ]
+                    }
+                  }
                 }
               ]
             },
@@ -889,46 +848,387 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "entities",
-                  "title": "Kitchen",
-                  "show_header_toggle": true,
-                  "entities": [
-                    { "entity": "light.countertop_lights",       "name": "Countertop" },
-                    { "entity": "light.kitchen_chandelier",      "name": "Chandelier"  },
-                    { "entity": "light.kitchen_ceilings_lights", "name": "Ceiling"     },
-                    { "entity": "light.kitchen_island_light",    "name": "Island"      }
+                  "type": "custom:button-card",
+                  "name": "Kitchen",
+                  "icon": "mdi:countertop",
+                  "show_state": false,
+                  "size": "14px",
+                  "layout": "icon_name",
+                  "tap_action": { "action": "none" },
+                  "styles": {
+                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
+                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
+                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
+                  }
+                },
+                {
+                  "type": "grid",
+                  "columns": 3,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.countertop_lights",
+                      "name": "Countertop",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.kitchen_chandelier",
+                      "name": "Chandelier",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.kitchen_ceilings_lights",
+                      "name": "Ceiling",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.kitchen_island_light",
+                      "name": "Island",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    }
                   ]
                 },
                 {
-                  "type": "entities",
-                  "title": "Living Room",
-                  "show_header_toggle": true,
-                  "entities": [
-                    { "entity": "light.living_room_ceiling", "name": "Ceiling" },
-                    { "entity": "light.living_room_lamp_2",  "name": "Lamp"    }
+                  "type": "custom:button-card",
+                  "name": "Living Room",
+                  "icon": "mdi:sofa",
+                  "show_state": false,
+                  "size": "14px",
+                  "layout": "icon_name",
+                  "tap_action": { "action": "none" },
+                  "styles": {
+                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
+                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
+                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
+                  }
+                },
+                {
+                  "type": "grid",
+                  "columns": 3,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.living_room_ceiling",
+                      "name": "Ceiling",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.living_room_lamp_2",
+                      "name": "Lamp",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    }
                   ]
                 },
                 {
-                  "type": "entities",
-                  "title": "Outdoor",
-                  "show_header_toggle": true,
-                  "entities": [
-                    { "entity": "light.garage_light",              "name": "Garage Light"  },
-                    { "entity": "light.outdoor_switch_2",          "name": "Patio String"  },
-                    { "entity": "light.front_porch_lights",        "name": "Front Porch"   },
-                    { "entity": "light.front_walkway_lights",      "name": "Front Walkway" },
-                    { "entity": "light.upper_outdoor_lights",      "name": "Upper Outdoor" },
-                    { "entity": "light.left_outdoor_patio_lights", "name": "Left Patio"    },
-                    { "entity": "light.center_outdoor_patio",      "name": "Center Patio"  }
+                  "type": "custom:button-card",
+                  "name": "Outdoor",
+                  "icon": "mdi:outdoor-lamp",
+                  "show_state": false,
+                  "size": "14px",
+                  "layout": "icon_name",
+                  "tap_action": { "action": "none" },
+                  "styles": {
+                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
+                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
+                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
+                  }
+                },
+                {
+                  "type": "grid",
+                  "columns": 3,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.garage_light",
+                      "name": "Garage",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.outdoor_switch_2",
+                      "name": "Patio String",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.front_porch_lights",
+                      "name": "Front Porch",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.front_walkway_lights",
+                      "name": "Front Walk",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.upper_outdoor_lights",
+                      "name": "Upper Out",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.left_outdoor_patio_lights",
+                      "name": "Left Patio",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.center_outdoor_patio",
+                      "name": "Center Patio",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    }
                   ]
                 },
                 {
-                  "type": "entities",
-                  "title": "Bedrooms",
-                  "show_header_toggle": true,
-                  "entities": [
-                    { "entity": "light.benjamins_hatch_light", "name": "Benjamin Hatch" },
-                    { "entity": "light.bens_light",            "name": "Ben's Light"    }
+                  "type": "custom:button-card",
+                  "name": "Bedrooms",
+                  "icon": "mdi:bed",
+                  "show_state": false,
+                  "size": "14px",
+                  "layout": "icon_name",
+                  "tap_action": { "action": "none" },
+                  "styles": {
+                    "card": [{"background":"transparent"},{"border":"none"},{"box-shadow":"none"},{"padding":"10px 4px 2px"},{"justify-content":"flex-start"}],
+                    "name": [{"font-size":"10px"},{"font-weight":"700"},{"letter-spacing":"0.14em"},{"text-transform":"uppercase"},{"color":"#6a8090"}],
+                    "icon": [{"color":"#6a8090"},{"width":"16px"}]
+                  }
+                },
+                {
+                  "type": "grid",
+                  "columns": 3,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.benjamins_hatch_light",
+                      "name": "Ben Hatch",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "light.bens_light",
+                      "name": "Ben's Light",
+                      "show_state": false,
+                      "show_icon": true,
+                      "size": "20px",
+                      "layout": "vertical",
+                      "tap_action": { "action": "toggle" },
+                      "hold_action": { "action": "more-info" },
+                      "styles": {
+                        "card": [
+                          {"padding":"12px 8px 10px"},{"border-radius":"10px"},{"overflow":"hidden"},{"min-height":"72px"},
+                          {"background":"[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,rgba(13,30,56,1) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'rgba(13,30,56,1)'; ]]]"},
+                          {"border":"1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"}
+                        ],
+                        "icon": [{"color":"[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"}],
+                        "name": [{"font-size":"10px"},{"font-weight":"600"},{"letter-spacing":"0.05em"},{"text-transform":"uppercase"},{"color":"[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"},{"margin-top":"5px"}]
+                      }
+                    }
                   ]
                 }
               ]

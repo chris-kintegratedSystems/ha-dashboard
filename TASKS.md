@@ -10,20 +10,23 @@
 ## Phase 1: Product Spec & Mockups
 
 - [x] Project folder created
-- [ ] Product Agent produces PRD with visual mockups
-- [ ] Chris approves spec / mockups
+- [x] Product Agent produces PRD with visual mockups
+- [x] Chris approves spec / mockups
 
 ## Phase 2: Design & Build
 
-- [ ] Final lovelace.yaml designed and validated
-- [ ] Deployed to Pi and tested on all devices (Tab S9+, iPhone, iPad)
-- [ ] QA sign-off
+- [x] dashboard_mobilev1.json designed and deployed to Pi
+- [x] Kiosk mode — admin users now hidden (header/sidebar/tab)
+- [x] System Status card — 3-chip row (security, lights count, temp)
+- [x] Scene grid — 3-col with mixed colors per scene type
+- [x] Dimmer light buttons — orange gradient fill proportional to brightness %, tap=toggle, hold=slider
+- [x] Nav bar — cyan pill active indicator on all 5 tabs
+- [ ] QA sign-off from Chris on all devices (Tab S9+, iPhone, iPad)
 
 ## Phase 3: Ship
 
-- [ ] Backup taken before deploy
-- [ ] lovelace.yaml pushed to Pi
 - [ ] Chris confirms on all devices
+- [ ] Tag release commit
 
 ---
 
