@@ -698,7 +698,8 @@
                         "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
                         "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
                         "icon": [ { "color": "#00d4f0" } ]
-                      }
+                      },
+                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
                     },
                     {
                       "type": "custom:button-card",
@@ -829,7 +830,8 @@
                         "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
                         "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
                         "icon": [ { "color": "#00d4f0" } ]
-                      }
+                      },
+                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
                     },
                     {
                       "type": "custom:button-card",
@@ -979,7 +981,8 @@
                         "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
                         "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
                         "icon": [ { "color": "#00d4f0" } ]
-                      }
+                      },
+                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
                     },
                     {
                       "type": "custom:button-card",
@@ -1176,7 +1179,8 @@
                         "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
                         "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
                         "icon": [ { "color": "#00d4f0" } ]
-                      }
+                      },
+                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
                     },
                     {
                       "type": "custom:button-card",
@@ -1288,7 +1292,8 @@
                         "card": [ { "background": "transparent" }, { "border": "none" }, { "box-shadow": "none" }, { "padding": "10px 4px 8px" }, { "flex-direction": "column" } ],
                         "name": [ { "font-size": "9px" }, { "font-weight": "600" }, { "letter-spacing": "0.1em" }, { "text-transform": "uppercase" }, { "color": "#00d4f0" }, { "margin-top": "4px" } ],
                         "icon": [ { "color": "#00d4f0" } ]
-                      }
+                      },
+                      "card_mod": { "style": "ha-card { position: relative; } ha-card::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00d4f0; border-radius: 3px; }" }
                     }
                   ]
                 }
