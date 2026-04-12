@@ -1468,21 +1468,21 @@ body::before {
         <path d="M17 19.5a3.5 3.5 0 0 0 0-7H15.8A5 5 0 1 0 8 17.5" fill="rgba(160,180,220,0.3)" stroke="rgba(160,180,220,0.7)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="bar-weather-info">
-        <span class="bar-weather-temp">78°</span>
-        <span class="bar-weather-desc">Dallas · Partly Cloudy</span>
+        <span class="bar-weather-temp" id="weather-temp">78°</span>
+        <span class="bar-weather-desc" id="weather-desc">Dallas · Partly Cloudy</span>
       </div>
     </div>
 
     <div class="bar-spacer"></div>
 
-    <div class="bar-alarm disarmed">
+    <div class="bar-alarm disarmed" id="alarm-badge">
       <span class="bar-alarm-dot"></span>
       Disarmed
     </div>
 
     <div class="bar-presence">
-      <div class="presence-avatar home" title="Chris — Home">C</div>
-      <div class="presence-avatar home" title="Claire — Home">CL</div>
+      <div class="presence-avatar home" id="presence-chris" title="Chris — Home">C</div>
+      <div class="presence-avatar home" id="presence-claire" title="Claire — Home">CL</div>
       <div class="presence-avatar away" title="Benjamin — Away">B</div>
     </div>
 
@@ -1499,35 +1499,35 @@ body::before {
         <div class="section-label">Scenes</div>
         <div class="quick-actions">
 
-          <div class="qa-card qa-morning" onclick="activateScene(this)">
+          <div class="qa-card qa-morning" onclick="haActivateScene('scene.morning_mode', this)">
             <div class="qa-icon-wrap">
               <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
             </div>
             <span class="qa-label">Good<br>Morning</span>
           </div>
 
-          <div class="qa-card qa-night active-scene" onclick="activateScene(this)">
+          <div class="qa-card qa-night" onclick="haActivateScene('scene.night_mode', this)">
             <div class="qa-icon-wrap">
               <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             </div>
             <span class="qa-label">Good<br>Night</span>
           </div>
 
-          <div class="qa-card qa-away" onclick="activateScene(this)">
+          <div class="qa-card qa-away" onclick="haActivateScene('scene.chill_mode', this)">
             <div class="qa-icon-wrap">
               <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
             <span class="qa-label">Away<br>Mode</span>
           </div>
 
-          <div class="qa-card qa-welcome" onclick="activateScene(this)">
+          <div class="qa-card qa-welcome" onclick="haActivateScene('scene.day_mode', this)">
             <div class="qa-icon-wrap">
               <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </div>
             <span class="qa-label">Welcome<br>Home</span>
           </div>
 
-          <div class="qa-card qa-movie" onclick="activateScene(this)">
+          <div class="qa-card qa-movie" onclick="haActivateScene('scene.chill_mode', this)">
             <div class="qa-icon-wrap">
               <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
             </div>
@@ -1545,7 +1545,7 @@ body::before {
           <!-- Locks column -->
           <div class="security-col">
 
-            <div class="card lock-card icon-locked" onclick="toggleLock(this)">
+            <div class="card lock-card icon-locked" id="lock-front" data-entity="lock.front_door_lock" onclick="haToggleLock(this)">
               <div class="card-accent"></div>
               <div class="lock-icon-wrap">
                 <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -1557,7 +1557,7 @@ body::before {
               <span class="lock-badge state-locked">Locked</span>
             </div>
 
-            <div class="card lock-card icon-locked" onclick="toggleLock(this)">
+            <div class="card lock-card icon-locked" id="lock-back" data-entity="lock.back_door_lock" onclick="haToggleLock(this)">
               <div class="card-accent"></div>
               <div class="lock-icon-wrap">
                 <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -1569,7 +1569,7 @@ body::before {
               <span class="lock-badge state-locked">Locked</span>
             </div>
 
-            <div class="card lock-card icon-unlocked state-alert" onclick="toggleLock(this)">
+            <div class="card lock-card icon-unlocked state-alert" id="lock-gemelli" data-entity="lock.gemelli_door_lock" onclick="haToggleLock(this)">
               <div class="card-accent" style="background:var(--amber)"></div>
               <div class="lock-icon-wrap">
                 <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
@@ -1586,7 +1586,7 @@ body::before {
           <!-- Garages + Status column -->
           <div class="security-col">
 
-            <div class="card lock-card icon-closed" onclick="toggleGarage(this)">
+            <div class="card lock-card icon-closed" id="cover-left" data-entity="cover.ratgdov25i_1746c3_door" onclick="haToggleGarage(this)">
               <div class="card-accent" style="background:var(--green)"></div>
               <div class="lock-icon-wrap">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="22" x2="9" y2="14"/><line x1="15" y1="22" x2="15" y2="14"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
@@ -1598,7 +1598,7 @@ body::before {
               <span class="lock-badge state-closed">Closed</span>
             </div>
 
-            <div class="card lock-card icon-closed" onclick="toggleGarage(this)">
+            <div class="card lock-card icon-closed" id="cover-right" data-entity="cover.ratgdov25i_1746b4_door" onclick="haToggleGarage(this)">
               <div class="card-accent" style="background:var(--green)"></div>
               <div class="lock-icon-wrap">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="22" x2="9" y2="14"/><line x1="15" y1="22" x2="15" y2="14"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
@@ -1677,7 +1677,7 @@ body::before {
       <div class="climate-grid">
 
         <!-- Living Room / Daikin -->
-        <div class="card climate-card">
+        <div class="card climate-card" id="climate-daikin" data-entity="climate.daikin">
           <div class="card-accent" style="background:var(--blue)"></div>
           <div>
             <div class="climate-room-label">Living Room · Daikin</div>
@@ -1695,14 +1695,14 @@ body::before {
               <span class="climate-mode mode-cool">Cool</span>
             </div>
             <div class="climate-controls">
-              <button class="climate-btn">−</button>
-              <button class="climate-btn">+</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), -1)">−</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), 1)">+</button>
             </div>
           </div>
         </div>
 
         <!-- Gemelli Suite -->
-        <div class="card climate-card">
+        <div class="card climate-card" id="climate-gemelli" data-entity="climate.gemelli">
           <div class="card-accent" style="background:var(--amber)"></div>
           <div>
             <div class="climate-room-label">Gemelli Suite</div>
@@ -1720,14 +1720,14 @@ body::before {
               <span class="climate-mode mode-heat">Heat</span>
             </div>
             <div class="climate-controls">
-              <button class="climate-btn">−</button>
-              <button class="climate-btn">+</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), -1)">−</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), 1)">+</button>
             </div>
           </div>
         </div>
 
         <!-- Master Bedroom -->
-        <div class="card climate-card">
+        <div class="card climate-card" id="climate-master" data-entity="climate.master">
           <div class="card-accent" style="background:var(--blue)"></div>
           <div>
             <div class="climate-room-label">Master Bedroom · Ecobee</div>
@@ -1745,14 +1745,14 @@ body::before {
               <span class="climate-mode mode-cool">Cool</span>
             </div>
             <div class="climate-controls">
-              <button class="climate-btn">−</button>
-              <button class="climate-btn">+</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), -1)">−</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), 1)">+</button>
             </div>
           </div>
         </div>
 
         <!-- Upstairs -->
-        <div class="card climate-card">
+        <div class="card climate-card" id="climate-upstairs" data-entity="climate.upstairs">
           <div class="card-accent" style="background:var(--green)"></div>
           <div>
             <div class="climate-room-label">Upstairs</div>
@@ -1770,8 +1770,8 @@ body::before {
               <span class="climate-mode mode-auto">Auto</span>
             </div>
             <div class="climate-controls">
-              <button class="climate-btn">−</button>
-              <button class="climate-btn">+</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), -1)">−</button>
+              <button class="climate-btn" onclick="haSetClimateTemp(this.closest('.climate-card'), 1)">+</button>
             </div>
           </div>
         </div>
@@ -1798,14 +1798,14 @@ body::before {
             </div>
           </div>
           <div class="light-chips">
-            <span class="light-chip on"><span class="chip-dot"></span>Countertop</span>
-            <span class="light-chip on"><span class="chip-dot"></span>Chandelier</span>
-            <span class="light-chip off"><span class="chip-dot"></span>Ceiling</span>
-            <span class="light-chip on"><span class="chip-dot"></span>Island</span>
+            <span class="light-chip on" data-entity="light.countertop_lights" onclick="haToggleLight(this)"><span class="chip-dot"></span>Countertop</span>
+            <span class="light-chip on" data-entity="light.kitchen_chandelier" onclick="haToggleLight(this)"><span class="chip-dot"></span>Chandelier</span>
+            <span class="light-chip off" data-entity="light.kitchen_ceilings_lights" onclick="haToggleLight(this)"><span class="chip-dot"></span>Ceiling</span>
+            <span class="light-chip on" data-entity="light.kitchen_island_light" onclick="haToggleLight(this)"><span class="chip-dot"></span>Island</span>
           </div>
           <div class="lg-actions">
-            <button class="lg-btn all-on">All On</button>
-            <button class="lg-btn">All Off</button>
+            <button class="lg-btn all-on" onclick="haLightGroupAll(this, true)">All On</button>
+            <button class="lg-btn" onclick="haLightGroupAll(this, false)">All Off</button>
           </div>
         </div>
 
@@ -1822,12 +1822,12 @@ body::before {
             </div>
           </div>
           <div class="light-chips">
-            <span class="light-chip off"><span class="chip-dot"></span>Ceiling</span>
-            <span class="light-chip on"><span class="chip-dot"></span>Lamp 2</span>
+            <span class="light-chip off" data-entity="light.living_room_ceiling" onclick="haToggleLight(this)"><span class="chip-dot"></span>Ceiling</span>
+            <span class="light-chip on" data-entity="light.living_room_lamp_2" onclick="haToggleLight(this)"><span class="chip-dot"></span>Lamp 2</span>
           </div>
           <div class="lg-actions">
-            <button class="lg-btn">All On</button>
-            <button class="lg-btn">All Off</button>
+            <button class="lg-btn" onclick="haLightGroupAll(this, true)">All On</button>
+            <button class="lg-btn" onclick="haLightGroupAll(this, false)">All Off</button>
           </div>
         </div>
 
@@ -1844,17 +1844,17 @@ body::before {
             </div>
           </div>
           <div class="light-chips">
-            <span class="light-chip on"><span class="chip-dot"></span>Garage Light</span>
-            <span class="light-chip on"><span class="chip-dot"></span>Patio String</span>
-            <span class="light-chip off"><span class="chip-dot"></span>Front Porch</span>
-            <span class="light-chip off"><span class="chip-dot"></span>Front Walkway</span>
-            <span class="light-chip on"><span class="chip-dot"></span>Upper Outdoor</span>
-            <span class="light-chip off"><span class="chip-dot"></span>Left Patio</span>
-            <span class="light-chip on"><span class="chip-dot"></span>Center Patio</span>
+            <span class="light-chip on" data-entity="light.garage_light" onclick="haToggleLight(this)"><span class="chip-dot"></span>Garage Light</span>
+            <span class="light-chip on" data-entity="light.outdoor_switch_2" onclick="haToggleLight(this)"><span class="chip-dot"></span>Patio String</span>
+            <span class="light-chip off" data-entity="light.front_porch_lights" onclick="haToggleLight(this)"><span class="chip-dot"></span>Front Porch</span>
+            <span class="light-chip off" data-entity="light.front_walkway_lights" onclick="haToggleLight(this)"><span class="chip-dot"></span>Front Walkway</span>
+            <span class="light-chip on" data-entity="light.upper_outdoor_lights" onclick="haToggleLight(this)"><span class="chip-dot"></span>Upper Outdoor</span>
+            <span class="light-chip off" data-entity="light.left_outdoor_patio_lights" onclick="haToggleLight(this)"><span class="chip-dot"></span>Left Patio</span>
+            <span class="light-chip on" data-entity="light.center_outdoor_patio" onclick="haToggleLight(this)"><span class="chip-dot"></span>Center Patio</span>
           </div>
           <div class="lg-actions">
-            <button class="lg-btn all-on">All On</button>
-            <button class="lg-btn">All Off</button>
+            <button class="lg-btn all-on" onclick="haLightGroupAll(this, true)">All On</button>
+            <button class="lg-btn" onclick="haLightGroupAll(this, false)">All Off</button>
           </div>
         </div>
 
@@ -1871,12 +1871,12 @@ body::before {
             </div>
           </div>
           <div class="light-chips">
-            <span class="light-chip off"><span class="chip-dot"></span>Benjamin Hatch</span>
-            <span class="light-chip off"><span class="chip-dot"></span>Ben's Light</span>
+            <span class="light-chip off" data-entity="light.benjamins_hatch_light" onclick="haToggleLight(this)"><span class="chip-dot"></span>Benjamin Hatch</span>
+            <span class="light-chip off" data-entity="light.bens_light" onclick="haToggleLight(this)"><span class="chip-dot"></span>Ben's Light</span>
           </div>
           <div class="lg-actions">
-            <button class="lg-btn">All On</button>
-            <button class="lg-btn">All Off</button>
+            <button class="lg-btn" onclick="haLightGroupAll(this, true)">All On</button>
+            <button class="lg-btn" onclick="haLightGroupAll(this, false)">All Off</button>
           </div>
         </div>
 
@@ -1892,14 +1892,9 @@ body::before {
         <!-- Doorbell -->
         <div class="card camera-card">
           <div class="cam-feed">
-            <div class="cam-crosshair">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/><line x1="20" y1="2" x2="20" y2="10"/><line x1="20" y1="30" x2="20" y2="38"/><line x1="2" y1="20" x2="10" y2="20"/><line x1="30" y1="20" x2="38" y2="20"/></svg>
-            </div>
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;">
-              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-            </div>
+            <img id="cam-doorbell" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" alt="">
             <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
-            <div class="cam-timestamp">3:47:22 PM</div>
+            <div class="cam-timestamp">--:--:-- --</div>
           </div>
           <div class="cam-info">
             <span class="cam-name">Doorbell</span>
@@ -1910,14 +1905,9 @@ body::before {
         <!-- Izzy -->
         <div class="card camera-card">
           <div class="cam-feed">
-            <div class="cam-crosshair">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/><line x1="20" y1="2" x2="20" y2="10"/><line x1="20" y1="30" x2="20" y2="38"/><line x1="2" y1="20" x2="10" y2="20"/><line x1="30" y1="20" x2="38" y2="20"/></svg>
-            </div>
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;">
-              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-            </div>
+            <img id="cam-izzy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" alt="">
             <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
-            <div class="cam-timestamp">3:47:22 PM</div>
+            <div class="cam-timestamp">--:--:-- --</div>
           </div>
           <div class="cam-info">
             <span class="cam-name">Izzy</span>
@@ -1928,14 +1918,9 @@ body::before {
         <!-- Living Room Camera -->
         <div class="card camera-card">
           <div class="cam-feed">
-            <div class="cam-crosshair">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" stroke-dasharray="4 6"/><line x1="20" y1="2" x2="20" y2="10"/><line x1="20" y1="30" x2="20" y2="38"/><line x1="2" y1="20" x2="10" y2="20"/><line x1="30" y1="20" x2="38" y2="20"/></svg>
-            </div>
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;">
-              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-            </div>
+            <img id="cam-living" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" alt="">
             <div class="cam-live-badge"><span class="cam-live-dot"></span>LIVE</div>
-            <div class="cam-timestamp">3:47:22 PM</div>
+            <div class="cam-timestamp">--:--:-- --</div>
           </div>
           <div class="cam-info">
             <span class="cam-name">Living Room</span>
@@ -1947,7 +1932,7 @@ body::before {
 
       <!-- Media row -->
       <div class="section-label" style="margin-bottom:10px;">Now Playing</div>
-      <div class="card media-card">
+      <div class="card media-card" id="media-hatch" data-entity="media_player.benjamins_hatch_media_player">
         <div class="card-accent" style="background:var(--blue)"></div>
 
         <div class="media-art">
@@ -2111,7 +2096,7 @@ body::before {
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);padding-bottom:20px;">
 
-        <div class="qa-card qa-morning" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+        <div class="qa-card qa-morning" onclick="haActivateScene('scene.morning_mode', this)" style="min-height:120px;padding:20px 16px;">
           <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
           </div>
@@ -2119,7 +2104,7 @@ body::before {
           <span style="font-size:10px;color:var(--text-lo);text-align:center;">Lights + AC on</span>
         </div>
 
-        <div class="qa-card qa-night active-scene" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+        <div class="qa-card qa-night" onclick="haActivateScene('scene.night_mode', this)" style="min-height:120px;padding:20px 16px;">
           <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
             <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           </div>
@@ -2127,7 +2112,7 @@ body::before {
           <span style="font-size:10px;color:var(--cyan);text-align:center;">Active</span>
         </div>
 
-        <div class="qa-card qa-away" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+        <div class="qa-card qa-away" onclick="haActivateScene('scene.chill_mode', this)" style="min-height:120px;padding:20px 16px;">
           <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
             <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
@@ -2135,7 +2120,7 @@ body::before {
           <span style="font-size:10px;color:var(--text-lo);text-align:center;">Lock + arm</span>
         </div>
 
-        <div class="qa-card qa-welcome" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+        <div class="qa-card qa-welcome" onclick="haActivateScene('scene.day_mode', this)" style="min-height:120px;padding:20px 16px;">
           <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </div>
@@ -2143,7 +2128,7 @@ body::before {
           <span style="font-size:10px;color:var(--text-lo);text-align:center;">Lights + unlock</span>
         </div>
 
-        <div class="qa-card qa-movie" onclick="activateScene(this)" style="min-height:120px;padding:20px 16px;">
+        <div class="qa-card qa-movie" onclick="haActivateScene('scene.chill_mode', this)" style="min-height:120px;padding:20px 16px;">
           <div class="qa-icon-wrap" style="width:56px;height:56px;border-radius:16px;">
             <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
           </div>
@@ -2191,6 +2176,299 @@ body::before {
 <!-- ═══ JAVASCRIPT ════════════════════════════════════════════ -->
 <script>
 "use strict";
+
+/* ═══ HOME ASSISTANT INTEGRATION ════════════════════════════════
+   WebSocket client — connects to HA, subscribes to state changes,
+   and syncs every entity in the dashboard to real values.
+═══════════════════════════════════════════════════════════════ */
+const HA_HOST = '192.168.51.179:8123';
+const HA_WS   = 'ws://' + HA_HOST + '/api/websocket';
+const HA_HTTP = 'http://' + HA_HOST;
+const HA_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhOWI5OWE1MjJiNjhkOTJhNTY3MTgwMWI3ZWZiYmEzYSIsImlhdCI6MTc3NTk0ODYzOCwiZXhwIjoyMDkxMzA4NjM4fQ.Dg_Ovu5NEuHmJ1xzl1V_bL2zezhLXuWM4qtfuPDqXo';
+
+const ha = {
+  ws: null, msgId: 1, pending: {}, states: {}, connected: false,
+
+  connect() {
+    try {
+      this.ws = new WebSocket(HA_WS);
+      this.ws.onmessage = (e) => this.onMsg(JSON.parse(e.data));
+      this.ws.onclose   = () => { this.connected = false; setTimeout(() => this.connect(), 5000); };
+      this.ws.onerror   = () => {};
+    } catch(e) {}
+  },
+
+  onMsg(msg) {
+    switch (msg.type) {
+      case 'auth_required':
+        this.ws.send(JSON.stringify({ type: 'auth', access_token: HA_TOKEN }));
+        break;
+      case 'auth_ok':
+        this.connected = true;
+        this.send({ type: 'get_states' }, (r) => {
+          if (r.result) {
+            r.result.forEach(s => { this.states[s.entity_id] = s; });
+            this.renderAll();
+          }
+        });
+        this.send({ type: 'subscribe_events', event_type: 'state_changed' });
+        break;
+      case 'event':
+        if (msg.event && msg.event.event_type === 'state_changed') {
+          const { entity_id, new_state } = msg.event.data;
+          this.states[entity_id] = new_state;
+          this.renderEntity(entity_id, new_state);
+        }
+        break;
+      case 'result':
+        if (this.pending[msg.id]) {
+          this.pending[msg.id](msg);
+          delete this.pending[msg.id];
+        }
+        break;
+    }
+  },
+
+  send(payload, cb) {
+    const id = this.msgId++;
+    this.ws.send(JSON.stringify({ id, ...payload }));
+    if (cb) this.pending[id] = cb;
+    return id;
+  },
+
+  callService(domain, service, data) {
+    if (!this.connected) return;
+    this.send({ type: 'call_service', domain, service, service_data: data || {} });
+  },
+
+  renderAll() {
+    Object.entries(this.states).forEach(([id, s]) => this.renderEntity(id, s));
+    this.startCameraRefresh();
+  },
+
+  renderEntity(id, state) {
+    if (!state) return;
+    if (id === 'alarm_control_panel.kuprycz_home') this.renderAlarm(state);
+    else if (id === 'weather.forecast_home')       this.renderWeather(state);
+    else if (id === 'person.chris')                this.renderPerson('chris', state);
+    else if (id === 'person.claire')               this.renderPerson('claire', state);
+    else if (id === 'lock.front_door_lock')        this.renderLock('lock-front', state);
+    else if (id === 'lock.back_door_lock')         this.renderLock('lock-back', state);
+    else if (id === 'lock.gemelli_door_lock')      this.renderLock('lock-gemelli', state);
+    else if (id === 'cover.ratgdov25i_1746c3_door') this.renderCover('cover-left', state);
+    else if (id === 'cover.ratgdov25i_1746b4_door') this.renderCover('cover-right', state);
+    else if (id === 'climate.daikin')   this.renderClimate('climate-daikin', state);
+    else if (id === 'climate.gemelli')  this.renderClimate('climate-gemelli', state);
+    else if (id === 'climate.master')   this.renderClimate('climate-master', state);
+    else if (id === 'climate.upstairs') this.renderClimate('climate-upstairs', state);
+    else if (id === 'media_player.benjamins_hatch_media_player') {
+      this.renderMedia('media-hatch', state);
+      this.renderMedia('media-hatch-home', state);
+    }
+    else if (id.startsWith('light.')) this.renderLight(id, state);
+    this.renderStatusChips();
+  },
+
+  renderAlarm(state) {
+    const el = document.getElementById('alarm-badge');
+    if (!el) return;
+    const s = state.state;
+    const map = { disarmed: 'disarmed', armed_home: 'armed', armed_away: 'armed', arming: 'armed', triggered: 'alert' };
+    el.className = 'bar-alarm ' + (map[s] || 'armed');
+    const labels = { disarmed: 'Disarmed', armed_home: 'Armed Home', armed_away: 'Armed Away', arming: 'Arming…', pending: 'Pending', triggered: 'TRIGGERED' };
+    el.innerHTML = '<span class="bar-alarm-dot"></span>' + (labels[s] || s);
+  },
+
+  renderWeather(state) {
+    const attr = state.attributes;
+    const t = document.getElementById('weather-temp');
+    const d = document.getElementById('weather-desc');
+    if (t) t.textContent = Math.round(attr.temperature || 0) + '°';
+    const cond = (state.state || '').replace(/_/g, ' ');
+    if (d) d.textContent = 'Dallas · ' + cond.charAt(0).toUpperCase() + cond.slice(1);
+  },
+
+  renderPerson(name, state) {
+    const el = document.getElementById('presence-' + name);
+    if (!el) return;
+    const home = state.state === 'home';
+    el.className = 'presence-avatar ' + (home ? 'home' : 'away');
+    el.title = (name === 'chris' ? 'Chris' : 'Claire') + ' — ' + (home ? 'Home' : 'Away');
+  },
+
+  renderLock(elemId, state) {
+    const card = document.getElementById(elemId);
+    if (!card) return;
+    const locked = state.state === 'locked';
+    const badge  = card.querySelector('.lock-badge');
+    const accent = card.querySelector('.card-accent');
+    const sub    = card.querySelector('.lock-sub');
+    const icon   = card.querySelector('.lock-icon-wrap');
+    card.classList.toggle('icon-locked',   locked);
+    card.classList.toggle('icon-unlocked', !locked);
+    card.classList.toggle('state-alert',   !locked);
+    if (badge)  { badge.classList.toggle('state-locked', locked); badge.classList.toggle('state-unlocked', !locked); badge.textContent = locked ? 'Locked' : 'Unlocked'; }
+    if (accent) accent.style.background = locked ? 'var(--cyan)' : 'var(--amber)';
+    if (sub)    sub.textContent = (state.attributes.friendly_name || '') + ' · ' + (locked ? 'Locked ' : 'Unlocked ') + this.ago(state.last_changed);
+    if (icon)   icon.innerHTML = locked
+      ? '<svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
+      : '<svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
+  },
+
+  renderCover(elemId, state) {
+    const card = document.getElementById(elemId);
+    if (!card) return;
+    const closed = state.state === 'closed';
+    const badge  = card.querySelector('.lock-badge');
+    const accent = card.querySelector('.card-accent');
+    const sub    = card.querySelector('.lock-sub');
+    card.classList.toggle('icon-closed', closed);
+    card.classList.toggle('icon-open',   !closed);
+    card.classList.toggle('state-alert', !closed);
+    if (badge)  { badge.classList.toggle('state-closed', closed); badge.classList.toggle('state-open', !closed); badge.textContent = state.state.charAt(0).toUpperCase() + state.state.slice(1); }
+    if (accent) accent.style.background = closed ? 'var(--green)' : 'var(--red)';
+    if (sub)    sub.textContent = (state.attributes.friendly_name || '') + ' · ' + (closed ? 'Closed ' : 'Open ') + this.ago(state.last_changed);
+  },
+
+  renderClimate(elemId, state) {
+    const card = document.getElementById(elemId);
+    if (!card) return;
+    const a   = state.attributes;
+    const cur = Math.round(a.current_temperature || 0);
+    const set = Math.round(a.temperature || 0);
+    const mode = state.state;
+    const el = {
+      temp:     card.querySelector('.climate-temp-big'),
+      setpoint: card.querySelector('.climate-setpoint strong'),
+      modeEl:   card.querySelector('.climate-mode'),
+      fill:     card.querySelector('.climate-progress-fill'),
+      accent:   card.querySelector('.card-accent'),
+    };
+    if (el.temp)     el.temp.textContent = cur;
+    if (el.setpoint) el.setpoint.textContent = set + '°F';
+    if (el.modeEl)   { el.modeEl.textContent = mode.charAt(0).toUpperCase() + mode.slice(1).replace('_', ' '); el.modeEl.className = 'climate-mode mode-' + mode.replace('_cool','').replace('heat_cool','auto'); }
+    if (el.fill)     { const pct = Math.max(5, Math.min(95, ((cur - 60) / 25) * 100)); el.fill.style.width = pct + '%'; el.fill.className = 'climate-progress-fill ' + (mode === 'heat' ? 'fill-heat' : 'fill-cool'); }
+    if (el.accent)   el.accent.style.background = mode === 'heat' ? 'var(--amber)' : mode === 'cool' ? 'var(--blue)' : 'var(--green)';
+  },
+
+  renderLight(entityId, state) {
+    const chip = document.querySelector('.light-chip[data-entity="' + entityId + '"]');
+    if (!chip) return;
+    const on = state.state === 'on';
+    chip.classList.toggle('on', on);
+    chip.classList.toggle('off', !on);
+    const group = chip.closest('.light-group-card');
+    if (group) {
+      const onCount = group.querySelectorAll('.light-chip.on').length;
+      const total   = group.querySelectorAll('.light-chip').length;
+      const countEl = group.querySelector('.lg-count');
+      if (countEl) countEl.innerHTML = onCount + ' <span class="lg-count-sub">/ ' + total + ' on</span>';
+      group.classList.toggle('state-on-glow', onCount > 0);
+    }
+  },
+
+  renderMedia(elemId, state) {
+    const card = document.getElementById(elemId);
+    if (!card) return;
+    const a     = state.attributes;
+    const idle  = state.state === 'idle' || state.state === 'off' || state.state === 'standby';
+    const playing = state.state === 'playing';
+    card.style.opacity = idle ? '0.5' : '1';
+    const track = card.querySelector('.media-track');
+    if (track) {
+      if (idle) { track.textContent = 'Nothing Playing'; track.style.color = 'var(--text-lo)'; }
+      else { const t = [a.media_artist, a.media_title].filter(Boolean).join(' — ') || a.media_album_name || 'Playing'; track.textContent = t; track.style.color = ''; }
+    }
+    const playBtn = card.querySelector('.play-btn');
+    if (playBtn) playBtn.innerHTML = playing
+      ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+      : '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    const volFill = card.querySelector('.vol-fill');
+    if (volFill && a.volume_level != null) volFill.style.width = Math.round(a.volume_level * 100) + '%';
+  },
+
+  renderStatusChips() {
+    const locks = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door_lock'];
+    const allSecure = locks.every(id => this.states[id] && this.states[id].state === 'locked');
+    const chip = document.querySelector('.status-chip.chip-green');
+    if (chip) chip.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> ' + (allSecure ? 'All Secure' : 'Unlocked!');
+    const climates = ['climate.daikin','climate.gemelli','climate.master','climate.upstairs'];
+    const temps = climates.map(id => this.states[id] && this.states[id].attributes.current_temperature).filter(t => t != null);
+    const avg = temps.length ? Math.round(temps.reduce((a,b) => a+b, 0) / temps.length) : null;
+    const tempChip = document.querySelector('.status-chip.chip-amber');
+    if (tempChip && avg) tempChip.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> ' + avg + '°F Avg';
+  },
+
+  startCameraRefresh() {
+    const cams = [
+      { entity: 'camera.doorbell',           elemId: 'cam-doorbell' },
+      { entity: 'camera.izzy_camera',        elemId: 'cam-izzy' },
+      { entity: 'camera.living_room_camera', elemId: 'cam-living' },
+    ];
+    cams.forEach(({ entity, elemId }) => {
+      const img = document.getElementById(elemId);
+      if (!img) return;
+      const refresh = () => fetch(HA_HTTP + '/api/camera_proxy/' + entity + '?t=' + Date.now(), {
+        headers: { 'Authorization': 'Bearer ' + HA_TOKEN }
+      }).then(r => r.blob()).then(blob => {
+        const url = URL.createObjectURL(blob);
+        if (img._prev) URL.revokeObjectURL(img._prev);
+        img._prev = url; img.src = url;
+        const s = img.closest('.camera-card') && img.closest('.camera-card').querySelector('.cam-status');
+        if (s) s.textContent = '● Online';
+      }).catch(() => {
+        const s = img.closest('.camera-card') && img.closest('.camera-card').querySelector('.cam-status');
+        if (s) s.textContent = '○ Offline';
+      });
+      refresh();
+      setInterval(refresh, 5000);
+    });
+  },
+
+  ago(iso) {
+    const d = Math.floor((Date.now() - new Date(iso)) / 1000);
+    if (d < 60) return d + 's ago';
+    if (d < 3600) return Math.floor(d / 60) + 'm ago';
+    if (d < 86400) return Math.floor(d / 3600) + 'h ago';
+    return Math.floor(d / 86400) + 'd ago';
+  }
+};
+
+/* ── HA service call helpers ─────────────────────────────────── */
+function haToggleLock(card) {
+  const locked = card.classList.contains('icon-locked');
+  ha.callService('lock', locked ? 'unlock' : 'lock', { entity_id: card.dataset.entity });
+}
+function haToggleGarage(card) {
+  ha.callService('cover', 'toggle', { entity_id: card.dataset.entity });
+}
+function haToggleLight(chip) {
+  ha.callService('light', 'toggle', { entity_id: chip.dataset.entity });
+}
+function haLightGroupAll(btn, turnOn) {
+  const group = btn.closest('.light-group-card');
+  const ids = Array.from(group.querySelectorAll('.light-chip[data-entity]')).map(c => c.dataset.entity);
+  ha.callService('light', turnOn ? 'turn_on' : 'turn_off', { entity_id: ids });
+}
+function haActivateScene(sceneId, card) {
+  ha.callService('scene', 'turn_on', { entity_id: sceneId });
+  document.querySelectorAll('.qa-card').forEach(c => c.classList.remove('active-scene'));
+  card.classList.add('active-scene');
+}
+function haMediaControl(entityId, action) {
+  const svc = { prev: 'media_previous_track', play: 'media_play_pause', next: 'media_next_track' };
+  ha.callService('media_player', svc[action], { entity_id: entityId });
+}
+function haSetClimateTemp(card, delta) {
+  if (!card) return;
+  const entityId = card.dataset.entity;
+  const state = ha.states[entityId];
+  const cur = state ? (state.attributes.temperature || 72) : 72;
+  ha.callService('climate', 'set_temperature', { entity_id: entityId, temperature: Math.max(60, Math.min(85, Math.round(cur) + delta)) });
+}
+
+// Connect to HA
+ha.connect();
 
 /* ── Clock ──────────────────────────────────────────────────── */
 function updateClock() {
@@ -2252,129 +2530,6 @@ function setSource(btn) {
   btn.closest('.source-grid').querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
-
-/* ── Scene toggle ───────────────────────────────────────────── */
-function activateScene(card) {
-  document.querySelectorAll(".qa-card").forEach(c => c.classList.remove("active-scene"));
-  card.classList.add("active-scene");
-}
-
-/* ── Lock toggle ────────────────────────────────────────────── */
-function toggleLock(card) {
-  const badge = card.querySelector(".lock-badge");
-  const accent = card.querySelector(".card-accent");
-  const iconWrap = card.querySelector(".lock-icon-wrap");
-  const sub = card.querySelector(".lock-sub");
-  if (badge.classList.contains("state-locked")) {
-    badge.classList.replace("state-locked", "state-unlocked");
-    badge.textContent = "Unlocked";
-    card.classList.replace("icon-locked", "icon-unlocked");
-    card.classList.add("state-alert");
-    accent.style.background = "var(--amber)";
-    if (sub) sub.textContent = "Unlocked just now";
-    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
-  } else {
-    badge.classList.replace("state-unlocked", "state-locked");
-    badge.textContent = "Locked";
-    card.classList.replace("icon-unlocked", "icon-locked");
-    card.classList.remove("state-alert");
-    accent.style.background = "var(--cyan)";
-    if (sub) sub.textContent = "Locked just now";
-    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
-  }
-}
-
-/* ── Garage toggle ──────────────────────────────────────────── */
-function toggleGarage(card) {
-  const badge = card.querySelector(".lock-badge");
-  const accent = card.querySelector(".card-accent");
-  const sub = card.querySelector(".lock-sub");
-  if (badge.classList.contains("state-closed")) {
-    badge.classList.replace("state-closed", "state-open");
-    badge.textContent = "Open";
-    card.classList.replace("icon-closed", "icon-open");
-    card.classList.add("state-alert");
-    accent.style.background = "var(--red)";
-    if (sub) sub.textContent = "Opened just now";
-  } else {
-    badge.classList.replace("state-open", "state-closed");
-    badge.textContent = "Closed";
-    card.classList.replace("icon-open", "icon-closed");
-    card.classList.remove("state-alert");
-    accent.style.background = "var(--green)";
-    if (sub) sub.textContent = "Closed just now";
-  }
-}
-
-/* ── Light chip toggle ──────────────────────────────────────── */
-document.querySelectorAll(".light-chip").forEach(chip => {
-  chip.addEventListener("click", function(e) {
-    e.stopPropagation();
-    this.classList.toggle("on");
-    this.classList.toggle("off");
-    const groupCard = this.closest(".light-group-card");
-    if (groupCard) {
-      const chips = groupCard.querySelectorAll(".light-chip");
-      const onCount = groupCard.querySelectorAll(".light-chip.on").length;
-      const countEl = groupCard.querySelector(".lg-count");
-      if (countEl) countEl.innerHTML = onCount + ' <span class="lg-count-sub">/ ' + chips.length + ' on</span>';
-      if (onCount > 0) {
-        groupCard.classList.add("state-on-glow");
-        const b = groupCard.querySelector(".lg-btn:first-child");
-        if (b) b.classList.add("all-on");
-      } else {
-        groupCard.classList.remove("state-on-glow");
-        const b = groupCard.querySelector(".lg-btn:first-child");
-        if (b) b.classList.remove("all-on");
-      }
-    }
-  });
-});
-
-/* ── Light group all-on/off ─────────────────────────────────── */
-document.querySelectorAll(".lg-btn").forEach(btn => {
-  btn.addEventListener("click", function(e) {
-    e.stopPropagation();
-    const groupCard = this.closest(".light-group-card");
-    if (!groupCard) return;
-    const isAllOn = this.textContent.trim() === "All On";
-    const chips = groupCard.querySelectorAll(".light-chip");
-    chips.forEach(chip => {
-      chip.classList.remove("on", "off");
-      chip.classList.add(isAllOn ? "on" : "off");
-    });
-    const onCount = groupCard.querySelectorAll(".light-chip.on").length;
-    const countEl = groupCard.querySelector(".lg-count");
-    if (countEl) countEl.innerHTML = onCount + ' <span class="lg-count-sub">/ ' + chips.length + ' on</span>';
-    const allOnBtn = groupCard.querySelector(".lg-btn:first-child");
-    if (onCount > 0) {
-      groupCard.classList.add("state-on-glow");
-      if (allOnBtn) allOnBtn.classList.add("all-on");
-    } else {
-      groupCard.classList.remove("state-on-glow");
-      if (allOnBtn) allOnBtn.classList.remove("all-on");
-    }
-  });
-});
-
-/* ── Climate ± buttons ──────────────────────────────────────── */
-document.querySelectorAll(".climate-btn").forEach(btn => {
-  btn.addEventListener("click", function(e) {
-    e.stopPropagation();
-    const card = this.closest(".climate-card");
-    const setpointEl = card.querySelector(".climate-setpoint strong");
-    const progressFill = card.querySelector(".climate-progress-fill");
-    if (!setpointEl) return;
-    let val = parseInt(setpointEl.textContent);
-    val += this.textContent.trim() === "+" ? 1 : -1;
-    val = Math.max(60, Math.min(85, val));
-    setpointEl.textContent = val + "°F";
-    if (progressFill) {
-      const pct = ((val - 60) / 25) * 100;
-      progressFill.style.width = Math.max(5, Math.min(95, pct)) + "%";
-    }
-  });
-});
 
 /* ── Initialize hidden pages ────────────────────────────────── */
 document.querySelectorAll(".page:not(.active)").forEach(p => {
