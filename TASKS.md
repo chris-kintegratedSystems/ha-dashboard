@@ -30,6 +30,53 @@
 
 ---
 
+## QA Run #4 — 2026-04-13 (iPhone mockup comparison)
+
+**Tester:** QA Agent
+**Approved mockup:** https://chris-kintegratedsystems.github.io/ha-dashboard/mockup-iphone.html
+**Screenshots taken:** Yes — all 5 pages
+- `scripts/screenshots/qa-run4-iphone-home.png`
+- `scripts/screenshots/qa-run4-iphone-climate.png`
+- `scripts/screenshots/qa-run4-iphone-lights.png`
+- `scripts/screenshots/qa-run4-iphone-cameras.png`
+- `scripts/screenshots/qa-run4-iphone-media.png`
+**Viewport:** 390×844 (iPhone 14 Pro / Companion App)
+
+### Gap Report
+
+| ID | Page | Severity | Description |
+|----|------|----------|-------------|
+| G1 | Home | P1 | **Extra sticky header row** — Live dashboard shows a 3rd row beneath the 2-row header (a redundant "ARMED AWAY" chip + avatar row). Approved mockup specifies exactly 2 rows (time/alarm + weather/avatars). This extra row pushes content down and is not in spec. |
+| G2 | Home | P1 | **Scene grid is 5 buttons, not 6** — Mockup shows a full 3×2 grid (6 scenes). Live dashboard renders only 5 (Good Morning, Good Night, Away Mode, Welcome Home, Movie Time). One scene button is missing from the grid. |
+| G3 | Home | P2 | **System Status chip — alarm chip shows "CHECK LOCKS" with red background instead of security state** — Mockup shows a green "Disarmed" / "Armed Away" shield chip. Live shows a red "CHECK LOCKS" label, which is alarm state text but incorrectly labeled and colored. Should reflect actual alarm state with correct design token color (disarmed=#10d090, armed_away=#4d8ef0, armed_home=#f5a623, triggered=#f04060). |
+| G4 | Home | P2 | **Lock cards missing left accent bar** — Mockup specifies a 2px left-side color bar on each lock card matching lock state (cyan = locked, amber = unlocked). Not visible in live screenshot. |
+| G5 | Climate | P2 | **Climate cards missing current temperature display, mode badge, and progress bar** — Mockup shows a large 52px current temp reading, a color-coded mode badge (Cool/Heat/Auto), and a progress bar per zone. Live shows only the setpoint number with +/− controls. The full card design from the mockup is not implemented. |
+| G6 | Climate | P2 | **Living Room climate zone not visible** — Mockup shows 4 zones (Living Room, Gemelli Suite, Master Bedroom, Upstairs). Living Room is cut off above the fold at page top in the screenshot, suggesting it may be present but scroll state is wrong, or the card ordering needs review. |
+| G7 | Lights | P2 | **Missing room-level summary and action buttons** — Mockup shows each room group with a count chip ("3 / 4 on") and "All On" / "All Off" buttons. Live shows individual tile grid only — no room-level controls or count. |
+| G8 | Media | P2 | **Media page is blank** — Mockup shows a rich media card (album art, track title, room label, progress bar, playback controls, volume slider). Live screenshot shows only the header and an empty dark page. Likely caused by Benjamin's Hatch media player being idle/unavailable, but the page should still show the player card in an idle/off state. |
+| G9 | Cameras | P3 | **No "LIVE" badge overlay on camera feeds** — Mockup shows a red "LIVE" badge top-left on camera tiles. Not visible on live doorbell feed. |
+| G10 | Cameras | P3 | **Izzy Camera and Living Room camera still black** — Carried forward from QA Run #3. Entities appear offline. Chris to verify camera availability in HA. |
+
+### Results Summary
+
+| Severity | Count | Status |
+|----------|-------|--------|
+| P1 | 2 | Open |
+| P2 | 6 | Open |
+| P3 | 2 | Deferred (known) |
+
+**Overall verdict: ❌ QA FAIL — 2 P1 issues and 6 P2 issues require Dev attention before sign-off**
+
+**Priority fixes for Dev:**
+1. G1 — Remove or consolidate the 3rd sticky header row (not in mockup spec)
+2. G2 — Restore missing 6th scene button to complete the 3×2 grid
+3. G3 — Fix System Status alarm chip label/color to use security state + correct design tokens
+4. G5 — Implement full climate card design (current temp display, mode badge, progress bar)
+5. G7 — Add room-level light count and All On/All Off buttons to Lights page
+6. G8 — Ensure Media page shows player card even when idle/unavailable
+
+---
+
 ## QA Run #3 — 2026-04-12 (Full Visual QA — All Pages)
 
 **Tester:** Dev/QA Agent

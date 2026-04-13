@@ -390,6 +390,69 @@
                           "entity_id": "scene.chill_mode"
                         }
                       }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "scene.chill_mode",
+                      "name": "Dinner Time",
+                      "icon": "mdi:food-fork-drink",
+                      "color": "#9d6ef0",
+                      "size": "36px",
+                      "styles": {
+                        "card": [
+                          {
+                            "height": "14vh"
+                          },
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "12px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          },
+                          {
+                            "white-space": "normal"
+                          },
+                          {
+                            "word-break": "break-word"
+                          },
+                          {
+                            "line-height": "1.2"
+                          }
+                        ]
+                      },
+                      "card_mod": {
+                        "style": "ha-card { background: rgba(157,110,240,0.15); border: 1px solid rgba(157,110,240,0.3); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 50%; padding: 10px; }\n"
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "service_data": {
+                          "entity_id": "scene.chill_mode"
+                        }
+                      }
                     }
                   ]
                 }
@@ -666,7 +729,7 @@
                             },
                             {
                               "type": "template",
-                              "content": "{% set temps = [state_attr('climate.daikin','current_temperature'), state_attr('climate.gemelli','current_temperature'), state_attr('climate.master','current_temperature'), state_attr('climate.upstairs','current_temperature')] | select('!=', None) | list %}{% if temps | length > 0 %}{{ ((temps | sum) / (temps | length)) | round(0) | int }}°F Avg{% else %}--°F Avg{% endif %}",
+                              "content": "{% set temps = [state_attr('climate.daikin','current_temperature'), state_attr('climate.gemelli','current_temperature'), state_attr('climate.master','current_temperature'), state_attr('climate.upstairs','current_temperature')] | select('!=', None) | list %}{% if temps | length > 0 %}{{ ((temps | sum) / (temps | length)) | round(0) | int }}\u00c2\u00b0F Avg{% else %}--\u00c2\u00b0F Avg{% endif %}",
                               "icon": "mdi:thermometer",
                               "icon_color": "amber",
                               "tap_action": {
@@ -826,7 +889,7 @@
                 {
                   "type": "thermostat",
                   "entity": "climate.daikin",
-                  "name": "Living Room — Daikin",
+                  "name": "Living Room \u00e2\u20ac\u201d Daikin",
                   "card_mod": {
                     "style": "ha-card { height: 40vh; }\n"
                   }
@@ -1418,10 +1481,117 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "media-control",
-                  "entity": "media_player.benjamins_hatch_media_player",
-                  "card_mod": {
-                    "style": "ha-card { min-height: 22vh; }\n"
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.benjamins_hatch_media_player",
+                      "state_not": "unavailable"
+                    },
+                    {
+                      "entity": "media_player.benjamins_hatch_media_player",
+                      "state_not": "off"
+                    }
+                  ],
+                  "card": {
+                    "type": "media-control",
+                    "entity": "media_player.benjamins_hatch_media_player",
+                    "card_mod": {
+                      "style": "ha-card { min-height: 22vh; }\n"
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.benjamins_hatch_media_player",
+                      "state": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "show_name": false,
+                    "show_state": false,
+                    "show_icon": false,
+                    "show_label": true,
+                    "tap_action": {
+                      "action": "none"
+                    },
+                    "label": "[[[ return '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:60px 20px;\"><svg width=\"56\" height=\"56\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2a3448\" stroke-width=\"1\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg><div style=\"font-size:15px;font-weight:500;color:#4a5570;letter-spacing:0.06em;\">Nothing Playing</div><div style=\"font-size:12px;color:#2a3448;margin-top:4px;\">Benjamin\\'s Room</div></div>'; ]]]",
+                    "styles": {
+                      "card": [
+                        {
+                          "background": "#0b0e17"
+                        },
+                        {
+                          "border-radius": "16px"
+                        },
+                        {
+                          "border": "1px solid rgba(255,255,255,0.04)"
+                        },
+                        {
+                          "box-shadow": "none"
+                        },
+                        {
+                          "min-height": "200px"
+                        }
+                      ],
+                      "label": [
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "white-space": "normal"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.benjamins_hatch_media_player",
+                      "state": "off"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "show_name": false,
+                    "show_state": false,
+                    "show_icon": false,
+                    "show_label": true,
+                    "tap_action": {
+                      "action": "none"
+                    },
+                    "label": "[[[ return '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:60px 20px;\"><svg width=\"56\" height=\"56\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2a3448\" stroke-width=\"1\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg><div style=\"font-size:15px;font-weight:500;color:#4a5570;letter-spacing:0.06em;\">Nothing Playing</div><div style=\"font-size:12px;color:#2a3448;margin-top:4px;\">Benjamin\\'s Room</div></div>'; ]]]",
+                    "styles": {
+                      "card": [
+                        {
+                          "background": "#0b0e17"
+                        },
+                        {
+                          "border-radius": "16px"
+                        },
+                        {
+                          "border": "1px solid rgba(255,255,255,0.04)"
+                        },
+                        {
+                          "box-shadow": "none"
+                        },
+                        {
+                          "min-height": "200px"
+                        }
+                      ],
+                      "label": [
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "white-space": "normal"
+                        }
+                      ]
+                    }
                   }
                 }
               ]
@@ -1678,6 +1848,36 @@
                         "font-size": "15px"
                       }
                     ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "entity": "scene.chill_mode",
+                  "name": "Dinner Time",
+                  "icon": "mdi:food-fork-drink",
+                  "color": "#9d6ef0",
+                  "size": "48px",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "service_data": {
+                      "entity_id": "scene.chill_mode"
+                    }
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "height": "22vh"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "15px"
+                      }
+                    ]
+                  },
+                  "card_mod": {
+                    "style": "ha-card { background: rgba(157,110,240,0.15); border: 1px solid rgba(157,110,240,0.3); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 50%; padding: 10px; }\n"
                   }
                 }
               ]
