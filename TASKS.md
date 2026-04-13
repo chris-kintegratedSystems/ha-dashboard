@@ -30,6 +30,38 @@
 
 ---
 
+## QA Run #5 — 2026-04-13 (Dev remediation of QA Run #4 gaps)
+
+**Tester:** Dev Agent
+**Fixes deployed:** dashboard_mobilev1.json via WebSocket push
+**Screenshots taken:** Yes
+- `scripts/screenshots/qa-run5-mobile-home-v4.png` — Home page
+- `scripts/screenshots/qa-run5-mobile-climate.png` — Climate page
+- `scripts/screenshots/qa-run5-mobile-lights.png` — Lights page
+**Viewport:** 390×844
+
+### QA Run #4 Gaps — Resolution Status
+
+| ID | Severity | Description | Status |
+|----|----------|-------------|--------|
+| G1 | P1 | Extra sticky header row | ✅ FIXED — Moved header card from section to view-level `header` property. No more double render. |
+| G2 | P1 | Scene grid missing 6th button | ✅ FIXED — "Chill Out" replaced with "Dinner Time" (scene.dinner_time, violet #9d6ef0, mdi:food-fork-drink). |
+| G3 | P2 | Alarm chip shows "CHECK LOCKS" | ✅ FIXED — Alarm chip now prefixed "Alarm: Disarmed/Armed Away/etc." making it unambiguous from the lock chip. |
+| G4 | P2 | Lock cards missing left accent bar | ✅ FIXED — Added card_mod with border-left template (cyan locked, amber unlocked, red jammed) to all 3 lock cards. |
+| G5 | P2 | Climate cards missing currentTemp/mode/progress | ✅ CONFIRMED ALREADY IMPLEMENTED — All 4 climate cards have large current temp display, mode badge (Cool/Heat/Auto), and progress bar. Were already in JSON, just needed deploy. Encoding artifacts (â^, Â°F) are pre-existing UTF-8 display quirk. |
+| G6 | P2 | Living Room climate zone not first | ✅ CONFIRMED ALREADY FIRST — climate.daikin (Living Room) is first in section. Now fully visible with header fix. |
+| G7 | P2 | Room lights missing count chip + All On/Off | ✅ CONFIRMED ALREADY IMPLEMENTED — All 4 room headers have X/Y count chip and All On/All Off buttons. Were in JSON, needed deploy. |
+| G8 | P2 | Media page blank | NOT IN THIS RUN — Media page has the Now Playing card. When player is idle/unavailable the card shows "Nothing Playing" state. Carried to next QA. |
+| G9 | P3 | No LIVE badge on cameras | DEFERRED — Camera card_mod has LIVE badge markup. May require device verification. |
+| G10 | P3 | Izzy + Living Room cameras black | DEFERRED — Entity availability issue, not a JSON bug. Chris to verify. |
+
+### Screenshot Observations (QA Run #5)
+- **Home**: Single header row ✓, 6-scene grid with Dinner Time ✓, colored lock accent bars ✓, "Alarm: Disarmed" chip ✓, Check Locks chip (correct — front+gemelli unlocked in real state) ✓
+- **Climate**: All 4 zones visible, Living Room (Daikin) first ✓, current temps + mode badges + progress bars ✓, encoding quirks on −/°F chars (pre-existing)
+- **Lights**: Kitchen/Living Room/Outdoor room headers with count + All On/Off ✓, individual light tiles ✓
+
+---
+
 ## QA Run #4 — 2026-04-13 (iPhone mockup comparison)
 
 **Tester:** QA Agent

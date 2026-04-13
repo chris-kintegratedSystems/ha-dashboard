@@ -19,57 +19,6 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "#0f1117"
-                      },
-                      {
-                        "border-radius": "16px"
-                      },
-                      {
-                        "padding": "12px 16px"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "4px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      },
-                      {
-                        "font-family": "system-ui, -apple-system, sans-serif"
-                      }
-                    ]
-                  }
-                }
-              ],
-              "sticky": true
-            },
-            {
-              "title": "",
-              "type": "grid",
-              "cards": [
-                {
                   "type": "grid",
                   "columns": 3,
                   "square": false,
@@ -346,10 +295,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "entity": "scene.chill_mode",
-                      "name": "Chill Out",
-                      "icon": "mdi:sofa",
-                      "show_icon": true,
+                      "entity": "scene.dinner_time",
+                      "name": "Dinner Time",
+                      "icon": "mdi:food-fork-drink",
                       "color": "#9d6ef0",
                       "size": "28px",
                       "styles": {
@@ -395,7 +343,7 @@
                         "action": "call-service",
                         "service": "scene.turn_on",
                         "service_data": {
-                          "entity_id": "scene.chill_mode"
+                          "entity_id": "scene.dinner_time"
                         }
                       }
                     }
@@ -504,7 +452,10 @@
                       "color": "#f04060",
                       "icon": "mdi:lock-alert"
                     }
-                  ]
+                  ],
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n"
+                  }
                 },
                 {
                   "type": "custom:button-card",
@@ -603,7 +554,10 @@
                       "color": "#f04060",
                       "icon": "mdi:lock-alert"
                     }
-                  ]
+                  ],
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n"
+                  }
                 },
                 {
                   "type": "custom:button-card",
@@ -702,7 +656,10 @@
                       "color": "#f04060",
                       "icon": "mdi:lock-alert"
                     }
-                  ]
+                  ],
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n"
+                  }
                 }
               ]
             },
@@ -935,7 +892,7 @@
                     "action": "none"
                   },
                   "custom_fields": {
-                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var alarm = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown'; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var curTemp = daikin && daikin.attributes && daikin.attributes.current_temperature ? Math.round(daikin.attributes.current_temperature) : '--'; var alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarm] || '#8a9ab8'; var alarmBg = {disarmed:'rgba(16,208,144,0.10)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarm] || 'rgba(74,85,112,0.10)'; var alarmBorder = {disarmed:'rgba(16,208,144,0.30)',armed_away:'rgba(77,142,240,0.30)',armed_home:'rgba(245,166,35,0.30)',arming:'rgba(245,166,35,0.30)',pending:'rgba(245,166,35,0.30)',triggered:'rgba(240,64,96,0.30)'}[alarm] || 'rgba(74,85,112,0.20)'; var alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarm] || 'Unknown'; var lockColor = secureAll ? '#10d090' : '#f04060'; var lockBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var lockBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var lockLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + alarmBorder + ';background:' + alarmBg + ';color:' + alarmColor + ';\">' + alarmLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + lockBorder + ';background:' + lockBg + ';color:' + lockColor + ';\">' + lockLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + curTemp + 'Â°F</span>' + '</div>'; ]]]"
+                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var alarm = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown'; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var curTemp = daikin && daikin.attributes && daikin.attributes.current_temperature ? Math.round(daikin.attributes.current_temperature) : '--'; var alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarm] || '#8a9ab8'; var alarmBg = {disarmed:'rgba(16,208,144,0.10)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarm] || 'rgba(74,85,112,0.10)'; var alarmBorder = {disarmed:'rgba(16,208,144,0.30)',armed_away:'rgba(77,142,240,0.30)',armed_home:'rgba(245,166,35,0.30)',arming:'rgba(245,166,35,0.30)',pending:'rgba(245,166,35,0.30)',triggered:'rgba(240,64,96,0.30)'}[alarm] || 'rgba(74,85,112,0.20)'; var alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarm] || 'Unknown'; var lockColor = secureAll ? '#10d090' : '#f04060'; var lockBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var lockBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var lockLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + alarmBorder + ';background:' + alarmBg + ';color:' + alarmColor + ';\">' + 'Alarm: ' + alarmLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + lockBorder + ';background:' + lockBg + ';color:' + lockColor + ';\">' + lockLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + curTemp + '\u00c2\u00b0F</span>' + '</div>'; ]]]"
                   },
                   "styles": {
                     "card": [
@@ -1079,7 +1036,55 @@
               }
             ]
           },
-          "badges": []
+          "badges": [],
+          "header": {
+            "cards": [
+              {
+                "type": "custom:button-card",
+                "show_name": false,
+                "show_state": false,
+                "show_icon": false,
+                "show_label": true,
+                "tap_action": {
+                  "action": "none"
+                },
+                "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
+                "styles": {
+                  "card": [
+                    {
+                      "background": "#0f1117"
+                    },
+                    {
+                      "border-radius": "16px"
+                    },
+                    {
+                      "padding": "12px 16px"
+                    },
+                    {
+                      "border": "none"
+                    },
+                    {
+                      "box-shadow": "none"
+                    },
+                    {
+                      "margin-bottom": "4px"
+                    }
+                  ],
+                  "label": [
+                    {
+                      "width": "100%"
+                    },
+                    {
+                      "white-space": "normal"
+                    },
+                    {
+                      "font-family": "system-ui, -apple-system, sans-serif"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
         },
         {
           "title": "Climate",
@@ -1088,57 +1093,6 @@
           "type": "sections",
           "max_columns": 1,
           "sections": [
-            {
-              "title": "",
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "#0f1117"
-                      },
-                      {
-                        "border-radius": "16px"
-                      },
-                      {
-                        "padding": "12px 16px"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "4px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      },
-                      {
-                        "font-family": "system-ui, -apple-system, sans-serif"
-                      }
-                    ]
-                  }
-                }
-              ],
-              "sticky": true
-            },
             {
               "cards": [
                 {
@@ -1167,7 +1121,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Living Room Â· Daikin\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Living Room \u00c2\u00b7 Daikin\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">\u00e2\u02c6\u2019</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set \u00e2\u2020\u2019 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00c2\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1231,7 +1185,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Gemelli Suite\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Gemelli Suite\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">\u00e2\u02c6\u2019</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set \u00e2\u2020\u2019 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00c2\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1295,7 +1249,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Master Bedroom\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Master Bedroom\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">\u00e2\u02c6\u2019</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set \u00e2\u2020\u2019 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00c2\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1359,7 +1313,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Upstairs\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Upstairs\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">\u00e2\u02c6\u2019</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set \u00e2\u2020\u2019 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00c2\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1455,6 +1409,54 @@
                 "content": "Media"
               }
             ]
+          },
+          "header": {
+            "cards": [
+              {
+                "type": "custom:button-card",
+                "show_name": false,
+                "show_state": false,
+                "show_icon": false,
+                "show_label": true,
+                "tap_action": {
+                  "action": "none"
+                },
+                "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
+                "styles": {
+                  "card": [
+                    {
+                      "background": "#0f1117"
+                    },
+                    {
+                      "border-radius": "16px"
+                    },
+                    {
+                      "padding": "12px 16px"
+                    },
+                    {
+                      "border": "none"
+                    },
+                    {
+                      "box-shadow": "none"
+                    },
+                    {
+                      "margin-bottom": "4px"
+                    }
+                  ],
+                  "label": [
+                    {
+                      "width": "100%"
+                    },
+                    {
+                      "white-space": "normal"
+                    },
+                    {
+                      "font-family": "system-ui, -apple-system, sans-serif"
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -1464,57 +1466,6 @@
           "type": "sections",
           "max_columns": 1,
           "sections": [
-            {
-              "title": "",
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "#0f1117"
-                      },
-                      {
-                        "border-radius": "16px"
-                      },
-                      {
-                        "padding": "12px 16px"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "4px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      },
-                      {
-                        "font-family": "system-ui, -apple-system, sans-serif"
-                      }
-                    ]
-                  }
-                }
-              ],
-              "sticky": true
-            },
             {
               "type": "grid",
               "cards": [
@@ -2839,6 +2790,54 @@
                 "content": "Media"
               }
             ]
+          },
+          "header": {
+            "cards": [
+              {
+                "type": "custom:button-card",
+                "show_name": false,
+                "show_state": false,
+                "show_icon": false,
+                "show_label": true,
+                "tap_action": {
+                  "action": "none"
+                },
+                "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
+                "styles": {
+                  "card": [
+                    {
+                      "background": "#0f1117"
+                    },
+                    {
+                      "border-radius": "16px"
+                    },
+                    {
+                      "padding": "12px 16px"
+                    },
+                    {
+                      "border": "none"
+                    },
+                    {
+                      "box-shadow": "none"
+                    },
+                    {
+                      "margin-bottom": "4px"
+                    }
+                  ],
+                  "label": [
+                    {
+                      "width": "100%"
+                    },
+                    {
+                      "white-space": "normal"
+                    },
+                    {
+                      "font-family": "system-ui, -apple-system, sans-serif"
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -2848,57 +2847,6 @@
           "type": "sections",
           "max_columns": 1,
           "sections": [
-            {
-              "title": "",
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "#0f1117"
-                      },
-                      {
-                        "border-radius": "16px"
-                      },
-                      {
-                        "padding": "12px 16px"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "4px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      },
-                      {
-                        "font-family": "system-ui, -apple-system, sans-serif"
-                      }
-                    ]
-                  }
-                }
-              ],
-              "sticky": true
-            },
             {
               "type": "grid",
               "cards": [
@@ -2911,7 +2859,7 @@
                   "show_name": true,
                   "fit_mode": "cover",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '● LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }\n"
+                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '\u25cf LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }\n"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -2943,7 +2891,7 @@
                   "show_name": true,
                   "fit_mode": "cover",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '● LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }\n"
+                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '\u25cf LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }\n"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -2975,7 +2923,7 @@
                   "show_name": true,
                   "fit_mode": "cover",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '● LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }\n"
+                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '\u25cf LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }\n"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3056,6 +3004,54 @@
                 "content": "Media"
               }
             ]
+          },
+          "header": {
+            "cards": [
+              {
+                "type": "custom:button-card",
+                "show_name": false,
+                "show_state": false,
+                "show_icon": false,
+                "show_label": true,
+                "tap_action": {
+                  "action": "none"
+                },
+                "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
+                "styles": {
+                  "card": [
+                    {
+                      "background": "#0f1117"
+                    },
+                    {
+                      "border-radius": "16px"
+                    },
+                    {
+                      "padding": "12px 16px"
+                    },
+                    {
+                      "border": "none"
+                    },
+                    {
+                      "box-shadow": "none"
+                    },
+                    {
+                      "margin-bottom": "4px"
+                    }
+                  ],
+                  "label": [
+                    {
+                      "width": "100%"
+                    },
+                    {
+                      "white-space": "normal"
+                    },
+                    {
+                      "font-family": "system-ui, -apple-system, sans-serif"
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -3065,57 +3061,6 @@
           "type": "sections",
           "max_columns": 1,
           "sections": [
-            {
-              "title": "",
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "none"
-                  },
-                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "#0f1117"
-                      },
-                      {
-                        "border-radius": "16px"
-                      },
-                      {
-                        "padding": "12px 16px"
-                      },
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "4px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      },
-                      {
-                        "font-family": "system-ui, -apple-system, sans-serif"
-                      }
-                    ]
-                  }
-                }
-              ],
-              "sticky": true
-            },
             {
               "type": "grid",
               "cards": [
@@ -3227,6 +3172,54 @@
                   "navigation_path": "/dashboard-mobilev1/media"
                 },
                 "content": "Media"
+              }
+            ]
+          },
+          "header": {
+            "cards": [
+              {
+                "type": "custom:button-card",
+                "show_name": false,
+                "show_state": false,
+                "show_icon": false,
+                "show_label": true,
+                "tap_action": {
+                  "action": "none"
+                },
+                "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
+                "styles": {
+                  "card": [
+                    {
+                      "background": "#0f1117"
+                    },
+                    {
+                      "border-radius": "16px"
+                    },
+                    {
+                      "padding": "12px 16px"
+                    },
+                    {
+                      "border": "none"
+                    },
+                    {
+                      "box-shadow": "none"
+                    },
+                    {
+                      "margin-bottom": "4px"
+                    }
+                  ],
+                  "label": [
+                    {
+                      "width": "100%"
+                    },
+                    {
+                      "white-space": "normal"
+                    },
+                    {
+                      "font-family": "system-ui, -apple-system, sans-serif"
+                    }
+                  ]
+                }
               }
             ]
           }
