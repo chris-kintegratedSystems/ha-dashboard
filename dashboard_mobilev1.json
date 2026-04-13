@@ -19,6 +19,50 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "custom_fields": {
+                    "status_row": "[[[ var alarm = states['alarm_control_panel.kuprycz_home']; var chris = states['person.chris']; var claire = states['person.claire']; var alarmState = alarm ? alarm.state : 'unknown'; var alarmColors = {'disarmed': ['#10d090','rgba(16,208,144,0.10)','rgba(16,208,144,0.30)'], 'armed_home': ['#f5a623','rgba(245,166,35,0.10)','rgba(245,166,35,0.30)'], 'armed_away': ['#4d8ef0','rgba(77,142,240,0.10)','rgba(77,142,240,0.30)'], 'triggered': ['#f04060','rgba(240,64,96,0.10)','rgba(240,64,96,0.30)']}; var ac = alarmColors[alarmState] || ['#8a9ab8','rgba(138,154,184,0.10)','rgba(138,154,184,0.20)']; var alarmLabel = alarmState === 'disarmed' ? 'Disarmed' : alarmState === 'armed_home' ? 'Armed Home' : alarmState === 'armed_away' ? 'Armed Away' : alarmState === 'triggered' ? 'TRIGGERED' : alarmState; var chrisHome = chris && chris.state === 'home'; var claireHome = claire && claire.state === 'home'; var chrBg = chrisHome ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)'; var chrBorder = chrisHome ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)'; var chrColor = chrisHome ? '#10d090' : '#4a5570'; var clBg = claireHome ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)'; var clBorder = claireHome ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)'; var clColor = claireHome ? '#10d090' : '#4a5570'; return '<div style=\"display:flex;align-items:center;justify-content:space-between;padding:4px 0;\"><div style=\"display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;border:1px solid ' + ac[2] + ';background:' + ac[1] + ';color:' + ac[0] + ';\"><span style=\"width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;\"></span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;\">' + alarmLabel + '</span></div><div style=\"display:flex;gap:5px;\"><div style=\"width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:2px solid ' + chrBorder + ';background:' + chrBg + ';color:' + chrColor + ';\">C</div><div style=\"width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:2px solid ' + clBorder + ';background:' + clBg + ';color:' + clColor + ';\">CL</div></div></div>'; ]]]"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "4px 16px 8px"
+                      },
+                      {
+                        "background": "transparent"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      }
+                    ],
+                    "custom_fields": {
+                      "status_row": [
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "justify-self": "stretch"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "title": "",
+              "type": "grid",
+              "cards": [
+                {
                   "type": "grid",
                   "columns": 3,
                   "square": false,
@@ -930,25 +974,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "temperature_sensor": null,
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -968,6 +993,10 @@
                   "fill_container": false,
                   "card_mod": {
                     "style": "ha-card { border-radius: 14px; }"
+                  },
+                  "layout_options": {
+                    "grid_columns": 4,
+                    "grid_rows": 2
                   }
                 },
                 {
@@ -978,6 +1007,10 @@
                   "fill_container": false,
                   "card_mod": {
                     "style": "ha-card { border-radius: 14px; }"
+                  },
+                  "layout_options": {
+                    "grid_columns": 4,
+                    "grid_rows": 2
                   }
                 },
                 {
@@ -988,6 +1021,10 @@
                   "fill_container": false,
                   "card_mod": {
                     "style": "ha-card { border-radius: 14px; }"
+                  },
+                  "layout_options": {
+                    "grid_columns": 4,
+                    "grid_rows": 2
                   }
                 },
                 {
@@ -998,6 +1035,10 @@
                   "fill_container": false,
                   "card_mod": {
                     "style": "ha-card { border-radius: 14px; }"
+                  },
+                  "layout_options": {
+                    "grid_columns": 4,
+                    "grid_rows": 2
                   }
                 }
               ]
@@ -1053,25 +1094,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "temperature_sensor": null,
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -2335,25 +2357,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "temperature_sensor": null,
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -2515,25 +2518,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "temperature_sensor": null,
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -2614,25 +2598,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "temperature_sensor": null,
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         }
       ],

@@ -12,8 +12,52 @@
           "path": "home",
           "icon": "mdi:home",
           "type": "sections",
-          "max_columns": 4,
+          "max_columns": 1,
           "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "custom_fields": {
+                    "status_row": "[[[ var alarm = states['alarm_control_panel.kuprycz_home']; var chris = states['person.chris']; var claire = states['person.claire']; var alarmState = alarm ? alarm.state : 'unknown'; var alarmColors = {'disarmed': ['#10d090','rgba(16,208,144,0.10)','rgba(16,208,144,0.30)'], 'armed_home': ['#f5a623','rgba(245,166,35,0.10)','rgba(245,166,35,0.30)'], 'armed_away': ['#4d8ef0','rgba(77,142,240,0.10)','rgba(77,142,240,0.30)'], 'triggered': ['#f04060','rgba(240,64,96,0.10)','rgba(240,64,96,0.30)']}; var ac = alarmColors[alarmState] || ['#8a9ab8','rgba(138,154,184,0.10)','rgba(138,154,184,0.20)']; var alarmLabel = alarmState === 'disarmed' ? 'Disarmed' : alarmState === 'armed_home' ? 'Armed Home' : alarmState === 'armed_away' ? 'Armed Away' : alarmState === 'triggered' ? 'TRIGGERED' : alarmState; var chrisHome = chris && chris.state === 'home'; var claireHome = claire && claire.state === 'home'; var chrBg = chrisHome ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)'; var chrBorder = chrisHome ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)'; var chrColor = chrisHome ? '#10d090' : '#4a5570'; var clBg = claireHome ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)'; var clBorder = claireHome ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)'; var clColor = claireHome ? '#10d090' : '#4a5570'; return '<div style=\"display:flex;align-items:center;justify-content:space-between;padding:4px 0;\"><div style=\"display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;border:1px solid ' + ac[2] + ';background:' + ac[1] + ';color:' + ac[0] + ';\"><span style=\"width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;\"></span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;\">' + alarmLabel + '</span></div><div style=\"display:flex;gap:5px;\"><div style=\"width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:2px solid ' + chrBorder + ';background:' + chrBg + ';color:' + chrColor + ';\">C</div><div style=\"width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:2px solid ' + clBorder + ';background:' + clBg + ';color:' + clColor + ';\">CL</div></div></div>'; ]]]"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "4px 16px 8px"
+                      },
+                      {
+                        "background": "transparent"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      }
+                    ],
+                    "custom_fields": {
+                      "status_row": [
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "justify-self": "stretch"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
             {
               "title": "",
               "type": "grid",
@@ -57,7 +101,7 @@
                       }
                     ]
                   },
-                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                  "label": "[[[\n  const d0 = new Date(); const hh = d0.getHours() % 12 || 12; const mm = String(d0.getMinutes()).padStart(2,'0'); const ampm = d0.getHours() >= 12 ? 'PM' : 'AM'; const time = hh + ':' + mm + ' ' + ampm;\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)') + ';' +\n      'color:' + (home ? '#10d090' : '#4a5570') + ';' +\n      'border:1.5px solid ' + (home ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
                 }
               ],
               "sticky": true
@@ -112,6 +156,15 @@
                           },
                           {
                             "margin-top": "8px"
+                          },
+                          {
+                            "white-space": "normal"
+                          },
+                          {
+                            "word-break": "break-word"
+                          },
+                          {
+                            "line-height": "1.2"
                           }
                         ]
                       },
@@ -166,6 +219,15 @@
                           },
                           {
                             "margin-top": "8px"
+                          },
+                          {
+                            "white-space": "normal"
+                          },
+                          {
+                            "word-break": "break-word"
+                          },
+                          {
+                            "line-height": "1.2"
                           }
                         ]
                       },
@@ -220,6 +282,15 @@
                           },
                           {
                             "margin-top": "8px"
+                          },
+                          {
+                            "white-space": "normal"
+                          },
+                          {
+                            "word-break": "break-word"
+                          },
+                          {
+                            "line-height": "1.2"
                           }
                         ]
                       },
@@ -274,6 +345,15 @@
                           },
                           {
                             "margin-top": "8px"
+                          },
+                          {
+                            "white-space": "normal"
+                          },
+                          {
+                            "word-break": "break-word"
+                          },
+                          {
+                            "line-height": "1.2"
                           }
                         ]
                       },
@@ -328,6 +408,15 @@
                           },
                           {
                             "margin-top": "8px"
+                          },
+                          {
+                            "white-space": "normal"
+                          },
+                          {
+                            "word-break": "break-word"
+                          },
+                          {
+                            "line-height": "1.2"
                           }
                         ]
                       },
@@ -710,24 +799,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -735,7 +806,7 @@
           "path": "climate",
           "icon": "mdi:thermostat",
           "type": "sections",
-          "max_columns": 2,
+          "max_columns": 1,
           "sections": [
             {
               "title": "",
@@ -780,7 +851,7 @@
                       }
                     ]
                   },
-                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                  "label": "[[[\n  const d0 = new Date(); const hh = d0.getHours() % 12 || 12; const mm = String(d0.getMinutes()).padStart(2,'0'); const ampm = d0.getHours() >= 12 ? 'PM' : 'AM'; const time = hh + ':' + mm + ' ' + ampm;\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)') + ';' +\n      'color:' + (home ? '#10d090' : '#4a5570') + ';' +\n      'border:1.5px solid ' + (home ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
                 }
               ],
               "sticky": true
@@ -882,24 +953,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -907,7 +960,7 @@
           "path": "lights",
           "icon": "mdi:lightbulb",
           "type": "sections",
-          "max_columns": 2,
+          "max_columns": 1,
           "sections": [
             {
               "title": "",
@@ -952,7 +1005,7 @@
                       }
                     ]
                   },
-                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                  "label": "[[[\n  const d0 = new Date(); const hh = d0.getHours() % 12 || 12; const mm = String(d0.getMinutes()).padStart(2,'0'); const ampm = d0.getHours() >= 12 ? 'PM' : 'AM'; const time = hh + ':' + mm + ' ' + ampm;\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)') + ';' +\n      'color:' + (home ? '#10d090' : '#4a5570') + ';' +\n      'border:1.5px solid ' + (home ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
                 }
               ],
               "sticky": true
@@ -1110,24 +1163,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -1135,7 +1170,7 @@
           "path": "cameras",
           "icon": "mdi:cctv",
           "type": "sections",
-          "max_columns": 2,
+          "max_columns": 1,
           "sections": [
             {
               "title": "",
@@ -1180,7 +1215,7 @@
                       }
                     ]
                   },
-                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                  "label": "[[[\n  const d0 = new Date(); const hh = d0.getHours() % 12 || 12; const mm = String(d0.getMinutes()).padStart(2,'0'); const ampm = d0.getHours() >= 12 ? 'PM' : 'AM'; const time = hh + ':' + mm + ' ' + ampm;\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)') + ';' +\n      'color:' + (home ? '#10d090' : '#4a5570') + ';' +\n      'border:1.5px solid ' + (home ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
                 }
               ],
               "sticky": true
@@ -1346,24 +1381,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -1371,7 +1388,7 @@
           "path": "media",
           "icon": "mdi:speaker",
           "type": "sections",
-          "max_columns": 2,
+          "max_columns": 1,
           "sections": [
             {
               "title": "",
@@ -1416,7 +1433,7 @@
                       }
                     ]
                   },
-                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                  "label": "[[[\n  const d0 = new Date(); const hh = d0.getHours() % 12 || 12; const mm = String(d0.getMinutes()).padStart(2,'0'); const ampm = d0.getHours() >= 12 ? 'PM' : 'AM'; const time = hh + ':' + mm + ' ' + ampm;\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)') + ';' +\n      'color:' + (home ? '#10d090' : '#4a5570') + ';' +\n      'border:1.5px solid ' + (home ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
                 }
               ],
               "sticky": true
@@ -1493,24 +1510,6 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         },
         {
@@ -1518,7 +1517,7 @@
           "path": "scenes",
           "icon": "mdi:play-circle",
           "type": "sections",
-          "max_columns": 3,
+          "max_columns": 1,
           "sections": [
             {
               "title": "",
@@ -1563,7 +1562,7 @@
                       }
                     ]
                   },
-                  "label": "[[[\n  const time = states['sensor.time'] || '--:--';\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(34,197,94,0.15)',armed_away:'rgba(239,68,68,0.15)',armed_home:'rgba(59,130,246,0.15)',arming:'rgba(245,158,11,0.15)',pending:'rgba(245,158,11,0.15)',triggered:'rgba(239,68,68,0.25)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#22c55e',armed_away:'#ef4444',armed_home:'#3b82f6',arming:'#f59e0b',pending:'#f59e0b',triggered:'#ef4444'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(34,197,94,0.2)' : 'rgba(100,116,139,0.15)') + ';' +\n      'color:' + (home ? '#22c55e' : '#64748b') + ';' +\n      'border:1.5px solid ' + (home ? '#22c55e' : '#334155') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
+                  "label": "[[[\n  const d0 = new Date(); const hh = d0.getHours() % 12 || 12; const mm = String(d0.getMinutes()).padStart(2,'0'); const ampm = d0.getHours() >= 12 ? 'PM' : 'AM'; const time = hh + ':' + mm + ' ' + ampm;\n  const d = new Date();\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' · ' + months[d.getMonth()] + ' ' + d.getDate();\n\n  const alarmState = states['alarm_control_panel.kuprycz_home'] && states['alarm_control_panel.kuprycz_home'].state;\n  const alarmBg = ({disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'})[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = ({disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'})[alarmState] || '#94a3b8';\n  const alarmLabel = ({disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'})[alarmState] || 'Unknown';\n\n  const temp = states['weather.forecast_home'] && states['weather.forecast_home'].attributes && states['weather.forecast_home'].attributes.temperature;\n  const tempStr = temp != null ? Math.round(temp) + '°' : '--°';\n  const cond = states['weather.forecast_home'] && states['weather.forecast_home'].state;\n  const condStr = ({sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'})[cond] || cond || '--';\n  const weatherIcon = ({sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'})[cond] || '🌤️';\n\n  function personStyle(entity) {\n    const home = states[entity] && states[entity].state === 'home';\n    return 'width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:0.02em;' +\n      'background:' + (home ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)') + ';' +\n      'color:' + (home ? '#10d090' : '#4a5570') + ';' +\n      'border:1.5px solid ' + (home ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)') + ';';\n  }\n\n  return '<div style=\"width:100%\">' +\n    '<div style=\"font-size:36px;font-weight:500;color:#f1f5f9;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums;\">' + time + '</div>' +\n    '<div style=\"font-size:13px;color:#64748b;margin-bottom:14px;font-weight:400;\">' + dateStr + '</div>' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:' + alarmBg + ';color:' + alarmColor + ';\">' +\n        '● ' + alarmLabel +\n      '</div>' +\n      '<div style=\"font-size:13px;color:#94a3b8;text-align:right;\">' +\n        '<span style=\"font-size:18px;line-height:1;margin-right:2px;\">' + weatherIcon + '</span>' +'<span style=\"color:#f1f5f9;font-size:15px;font-variant-numeric:tabular-nums;\">' + tempStr + '</span>' +\n        ' Dallas · ' + condStr +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;gap:8px;align-items:center;\">' +\n      '<div style=\"' + personStyle('person.chris') + '\">C</div>' +\n      '<div style=\"' + personStyle('person.claire') + '\">CL</div>' +\n      '<div style=\"' + personStyle('person.benjamin') + '\">B</div>' +\n    '</div>' +\n  '</div>';\n]]]"
                 }
               ],
               "sticky": true
@@ -1763,28 +1762,14 @@
                 }
               }
             ]
-          },
-          "header": {
-            "type": "custom:clock-weather-card",
-            "entity": "weather.forecast_home",
-            "sun_entity": "sun.sun",
-            "weather_icon_type": "line",
-            "animated_icon": false,
-            "forecast_rows": 0,
-            "locale": "en-US",
-            "time_format": 12,
-            "time_zone": "America/Chicago",
-            "show_humidity": false,
-            "hide_today_section": false,
-            "hide_forecast_section": true,
-            "use_browser_time": true,
-            "card_mod": {
-              "style": "ha-card { background: rgba(7,9,16,0.92) !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; border-radius: 0 !important; margin: -4px -4px 8px -4px !important; }"
-            }
           }
         }
       ],
-      "resources": []
+      "resources": [],
+      "kiosk_mode": {
+        "hide_header": true,
+        "hide_sidebar": true
+      }
     }
   }
 }
