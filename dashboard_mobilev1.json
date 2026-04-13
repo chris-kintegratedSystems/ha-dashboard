@@ -27,7 +27,7 @@
                   "tap_action": {
                     "action": "none"
                   },
-                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -57,7 +57,7 @@
                         "white-space": "normal"
                       },
                       {
-                        "font-family": "'DM Sans', system-ui, sans-serif"
+                        "font-family": "system-ui, -apple-system, sans-serif"
                       }
                     ]
                   }
@@ -343,6 +343,61 @@
                           "entity_id": "scene.chill_mode"
                         }
                       }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "entity": "scene.chill_mode",
+                      "name": "Chill Out",
+                      "icon": "mdi:sofa",
+                      "show_icon": true,
+                      "color": "#9d6ef0",
+                      "size": "28px",
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "14px 8px 12px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "min-height": "80px"
+                          },
+                          {
+                            "flex-direction": "column"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "rgba(138,154,184,1)"
+                          },
+                          {
+                            "margin-top": "8px"
+                          }
+                        ]
+                      },
+                      "card_mod": {
+                        "style": "ha-card { background: rgba(157,110,240,0.15); border: 1px solid rgba(157,110,240,0.3); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 50%; padding: 10px; }\n"
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "service_data": {
+                          "entity_id": "scene.chill_mode"
+                        }
+                      }
                     }
                   ]
                 }
@@ -368,10 +423,13 @@
                   "styles": {
                     "card": [
                       {
-                        "padding": "12px 14px"
+                        "padding": "12px 14px 12px 11px"
                       },
                       {
                         "border-radius": "14px"
+                      },
+                      {
+                        "border-left": "[[[ return entity.state === 'locked' ? '3px solid #00d4f0' : entity.state === 'unlocked' ? '3px solid #f5a623' : '3px solid #f04060' ]]]"
                       }
                     ],
                     "grid": [
@@ -423,9 +481,6 @@
                         }
                       ]
                     }
-                  },
-                  "card_mod": {
-                    "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4f0' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 12px; }\n"
                   },
                   "tap_action": {
                     "action": "toggle"
@@ -467,10 +522,13 @@
                   "styles": {
                     "card": [
                       {
-                        "padding": "12px 14px"
+                        "padding": "12px 14px 12px 11px"
                       },
                       {
                         "border-radius": "14px"
+                      },
+                      {
+                        "border-left": "[[[ return entity.state === 'locked' ? '3px solid #00d4f0' : entity.state === 'unlocked' ? '3px solid #f5a623' : '3px solid #f04060' ]]]"
                       }
                     ],
                     "grid": [
@@ -522,9 +580,6 @@
                         }
                       ]
                     }
-                  },
-                  "card_mod": {
-                    "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4f0' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 12px; }\n"
                   },
                   "tap_action": {
                     "action": "toggle"
@@ -566,10 +621,13 @@
                   "styles": {
                     "card": [
                       {
-                        "padding": "12px 14px"
+                        "padding": "12px 14px 12px 11px"
                       },
                       {
                         "border-radius": "14px"
+                      },
+                      {
+                        "border-left": "[[[ return entity.state === 'locked' ? '3px solid #00d4f0' : entity.state === 'unlocked' ? '3px solid #f5a623' : '3px solid #f04060' ]]]"
                       }
                     ],
                     "grid": [
@@ -621,9 +679,6 @@
                         }
                       ]
                     }
-                  },
-                  "card_mod": {
-                    "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4f0' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 12px; }\n"
                   },
                   "tap_action": {
                     "action": "toggle"
@@ -880,7 +935,7 @@
                     "action": "none"
                   },
                   "custom_fields": {
-                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var temp = daikin && daikin.attributes.current_temperature ? daikin.attributes.current_temperature : '--'; var secColor = secureAll ? '#10d090' : '#f04060'; var secBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var secBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var secLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\"><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + secBorder + ';background:' + secBg + ';color:' + secColor + ';\">' + secLabel + '</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + temp + '°F</span></div>'; ]]]"
+                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var alarm = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown'; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var curTemp = daikin && daikin.attributes && daikin.attributes.current_temperature ? Math.round(daikin.attributes.current_temperature) : '--'; var alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarm] || '#8a9ab8'; var alarmBg = {disarmed:'rgba(16,208,144,0.10)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarm] || 'rgba(74,85,112,0.10)'; var alarmBorder = {disarmed:'rgba(16,208,144,0.30)',armed_away:'rgba(77,142,240,0.30)',armed_home:'rgba(245,166,35,0.30)',arming:'rgba(245,166,35,0.30)',pending:'rgba(245,166,35,0.30)',triggered:'rgba(240,64,96,0.30)'}[alarm] || 'rgba(74,85,112,0.20)'; var alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarm] || 'Unknown'; var lockColor = secureAll ? '#10d090' : '#f04060'; var lockBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var lockBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var lockLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + alarmBorder + ';background:' + alarmBg + ';color:' + alarmColor + ';\">' + alarmLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + lockBorder + ';background:' + lockBg + ';color:' + lockColor + ';\">' + lockLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + curTemp + '°F</span>' + '</div>'; ]]]"
                   },
                   "styles": {
                     "card": [
@@ -959,7 +1014,8 @@
                 }
               }
             ]
-          }
+          },
+          "badges": []
         },
         {
           "title": "Climate",
@@ -981,7 +1037,7 @@
                   "tap_action": {
                     "action": "none"
                   },
-                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1011,7 +1067,7 @@
                         "white-space": "normal"
                       },
                       {
-                        "font-family": "'DM Sans', system-ui, sans-serif"
+                        "font-family": "system-ui, -apple-system, sans-serif"
                       }
                     ]
                   }
@@ -1022,59 +1078,195 @@
             {
               "cards": [
                 {
-                  "type": "custom:mushroom-climate-card",
+                  "type": "custom:button-card",
                   "entity": "climate.daikin",
-                  "name": "Living Room Â· Daikin",
-                  "show_temperature_control": true,
-                  "fill_container": false,
-                  "card_mod": {
-                    "style": "ha-card { border-radius: 14px; }"
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "more-info"
                   },
-                  "layout_options": {
-                    "grid_columns": 4,
-                    "grid_rows": 2
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; return '<div style=\"width:100%;padding:16px 18px 14px;display:flex;flex-direction:column;gap:0;box-sizing:border-box;\">' + '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570;\">Living Room · Daikin</div>' + '<div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px;\">' + '<span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</span>' + '<span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px;\">°F</span>' + '<div style=\"flex:1;\"></div>' + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';align-self:center;\">' + modeLabel + '</span>' + '</div>' + '<div style=\"height:3px;border-radius:3px;background:#1c2438;margin:4px 0;overflow:hidden;\">' + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>' + '</div>' + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px;\">' + '<span style=\"font-size:12px;color:#4a5570;\">Set to <strong style=\"color:#8a9ab8;font-weight:600;\">' + setpoint + '°F</strong></span>' + '</div>' + '</div>'; ]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#10151f"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(255,255,255,0.06)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "overflow": "hidden"
+                      },
+                      {
+                        "margin-bottom": "8px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      }
+                    ]
+                  },
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #4d8ef0; border-radius: 14px; }\n"
                   }
                 },
                 {
-                  "type": "custom:mushroom-climate-card",
+                  "type": "custom:button-card",
                   "entity": "climate.gemelli",
-                  "name": "Gemelli Suite",
-                  "show_temperature_control": true,
-                  "fill_container": false,
-                  "card_mod": {
-                    "style": "ha-card { border-radius: 14px; }"
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "more-info"
                   },
-                  "layout_options": {
-                    "grid_columns": 4,
-                    "grid_rows": 2
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; return '<div style=\"width:100%;padding:16px 18px 14px;display:flex;flex-direction:column;gap:0;box-sizing:border-box;\">' + '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570;\">Gemelli Suite</div>' + '<div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px;\">' + '<span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</span>' + '<span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px;\">°F</span>' + '<div style=\"flex:1;\"></div>' + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';align-self:center;\">' + modeLabel + '</span>' + '</div>' + '<div style=\"height:3px;border-radius:3px;background:#1c2438;margin:4px 0;overflow:hidden;\">' + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>' + '</div>' + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px;\">' + '<span style=\"font-size:12px;color:#4a5570;\">Set to <strong style=\"color:#8a9ab8;font-weight:600;\">' + setpoint + '°F</strong></span>' + '</div>' + '</div>'; ]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#10151f"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(255,255,255,0.06)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "overflow": "hidden"
+                      },
+                      {
+                        "margin-bottom": "8px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      }
+                    ]
+                  },
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #4d8ef0; border-radius: 14px; }\n"
                   }
                 },
                 {
-                  "type": "custom:mushroom-climate-card",
+                  "type": "custom:button-card",
                   "entity": "climate.master",
-                  "name": "Master Bedroom",
-                  "show_temperature_control": true,
-                  "fill_container": false,
-                  "card_mod": {
-                    "style": "ha-card { border-radius: 14px; }"
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "more-info"
                   },
-                  "layout_options": {
-                    "grid_columns": 4,
-                    "grid_rows": 2
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; return '<div style=\"width:100%;padding:16px 18px 14px;display:flex;flex-direction:column;gap:0;box-sizing:border-box;\">' + '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570;\">Master Bedroom</div>' + '<div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px;\">' + '<span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</span>' + '<span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px;\">°F</span>' + '<div style=\"flex:1;\"></div>' + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';align-self:center;\">' + modeLabel + '</span>' + '</div>' + '<div style=\"height:3px;border-radius:3px;background:#1c2438;margin:4px 0;overflow:hidden;\">' + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>' + '</div>' + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px;\">' + '<span style=\"font-size:12px;color:#4a5570;\">Set to <strong style=\"color:#8a9ab8;font-weight:600;\">' + setpoint + '°F</strong></span>' + '</div>' + '</div>'; ]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#10151f"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(255,255,255,0.06)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "overflow": "hidden"
+                      },
+                      {
+                        "margin-bottom": "8px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      }
+                    ]
+                  },
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #4d8ef0; border-radius: 14px; }\n"
                   }
                 },
                 {
-                  "type": "custom:mushroom-climate-card",
+                  "type": "custom:button-card",
                   "entity": "climate.upstairs",
-                  "name": "Upstairs",
-                  "show_temperature_control": true,
-                  "fill_container": false,
-                  "card_mod": {
-                    "style": "ha-card { border-radius: 14px; }"
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "more-info"
                   },
-                  "layout_options": {
-                    "grid_columns": 4,
-                    "grid_rows": 2
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; return '<div style=\"width:100%;padding:16px 18px 14px;display:flex;flex-direction:column;gap:0;box-sizing:border-box;\">' + '<div style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#4a5570;\">Upstairs</div>' + '<div style=\"display:flex;align-items:flex-end;gap:6px;margin:6px 0 4px;\">' + '<span style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</span>' + '<span style=\"font-size:18px;font-weight:300;color:#8a9ab8;margin-bottom:8px;\">°F</span>' + '<div style=\"flex:1;\"></div>' + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';align-self:center;\">' + modeLabel + '</span>' + '</div>' + '<div style=\"height:3px;border-radius:3px;background:#1c2438;margin:4px 0;overflow:hidden;\">' + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>' + '</div>' + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:6px;\">' + '<span style=\"font-size:12px;color:#4a5570;\">Set to <strong style=\"color:#8a9ab8;font-weight:600;\">' + setpoint + '°F</strong></span>' + '</div>' + '</div>'; ]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#10151f"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(255,255,255,0.06)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "overflow": "hidden"
+                      },
+                      {
+                        "margin-bottom": "8px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      }
+                    ]
+                  },
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #4d8ef0; border-radius: 14px; }\n"
                   }
                 }
               ]
@@ -1152,7 +1344,7 @@
                   "tap_action": {
                     "action": "none"
                   },
-                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1182,7 +1374,7 @@
                         "white-space": "normal"
                       },
                       {
-                        "font-family": "'DM Sans', system-ui, sans-serif"
+                        "font-family": "system-ui, -apple-system, sans-serif"
                       }
                     ]
                   }
@@ -1195,63 +1387,80 @@
               "cards": [
                 {
                   "type": "custom:button-card",
-                  "name": "Kitchen",
-                  "icon": "mdi:countertop",
+                  "show_name": false,
                   "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
                   "tap_action": {
-                    "action": "none"
+                    "action": "call-service",
+                    "service": "light.turn_on",
+                    "service_data": {
+                      "entity_id": [
+                        "light.countertop_lights",
+                        "light.kitchen_chandelier",
+                        "light.kitchen_ceilings_lights",
+                        "light.kitchen_island_light"
+                      ]
+                    }
                   },
+                  "double_tap_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.countertop_lights",
+                        "light.kitchen_chandelier",
+                        "light.kitchen_ceilings_lights",
+                        "light.kitchen_island_light"
+                      ]
+                    }
+                  },
+                  "hold_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.countertop_lights",
+                        "light.kitchen_chandelier",
+                        "light.kitchen_ceilings_lights",
+                        "light.kitchen_island_light"
+                      ]
+                    }
+                  },
+                  "label": "[[[ const entityIds = [\"light.countertop_lights\",\"light.kitchen_chandelier\",\"light.kitchen_ceilings_lights\",\"light.kitchen_island_light\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">Kitchen</span>' + '<span style=\"font-size:22px;font-weight:300;color:#eef2f8;letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:13px;color:#4a5570;font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>' + '<div style=\"display:flex;gap:6px;\">' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(245,166,35,0.4);background:rgba(245,166,35,0.08);color:#f5a623;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All On</span>' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(74,85,112,0.3);background:rgba(74,85,112,0.06);color:#4a5570;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All Off</span>' + '</div>' + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
-                        "background": "transparent"
+                        "background": "#10151f"
                       },
                       {
-                        "border": "none"
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(0,212,240,0.18)"
                       },
                       {
                         "box-shadow": "none"
                       },
                       {
-                        "padding": "14px 4px 4px"
-                      },
-                      {
-                        "align-items": "flex-start"
+                        "margin-bottom": "6px"
                       }
                     ],
-                    "name": [
-                      {
-                        "font-size": "10px"
-                      },
-                      {
-                        "font-weight": "700"
-                      },
-                      {
-                        "letter-spacing": "0.14em"
-                      },
-                      {
-                        "text-transform": "uppercase"
-                      },
-                      {
-                        "color": "#6a8090"
-                      },
-                      {
-                        "text-align": "left"
-                      },
+                    "label": [
                       {
                         "width": "100%"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "#6a8090"
                       },
                       {
-                        "width": "16px"
+                        "white-space": "normal"
                       }
                     ]
                   },
-                  "show_icon": false
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }\n"
+                  }
                 },
                 {
                   "type": "grid",
@@ -1510,63 +1719,74 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "name": "Living Room",
-                  "icon": "mdi:sofa",
+                  "show_name": false,
                   "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
                   "tap_action": {
-                    "action": "none"
+                    "action": "call-service",
+                    "service": "light.turn_on",
+                    "service_data": {
+                      "entity_id": [
+                        "light.living_room_ceiling",
+                        "light.living_room_lamp_2"
+                      ]
+                    }
                   },
+                  "double_tap_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.living_room_ceiling",
+                        "light.living_room_lamp_2"
+                      ]
+                    }
+                  },
+                  "hold_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.living_room_ceiling",
+                        "light.living_room_lamp_2"
+                      ]
+                    }
+                  },
+                  "label": "[[[ const entityIds = [\"light.living_room_ceiling\",\"light.living_room_lamp_2\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">Living Room</span>' + '<span style=\"font-size:22px;font-weight:300;color:#eef2f8;letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:13px;color:#4a5570;font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>' + '<div style=\"display:flex;gap:6px;\">' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(245,166,35,0.4);background:rgba(245,166,35,0.08);color:#f5a623;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All On</span>' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(74,85,112,0.3);background:rgba(74,85,112,0.06);color:#4a5570;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All Off</span>' + '</div>' + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
-                        "background": "transparent"
+                        "background": "#10151f"
                       },
                       {
-                        "border": "none"
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(0,212,240,0.18)"
                       },
                       {
                         "box-shadow": "none"
                       },
                       {
-                        "padding": "14px 4px 4px"
-                      },
-                      {
-                        "align-items": "flex-start"
+                        "margin-bottom": "6px"
                       }
                     ],
-                    "name": [
-                      {
-                        "font-size": "10px"
-                      },
-                      {
-                        "font-weight": "700"
-                      },
-                      {
-                        "letter-spacing": "0.14em"
-                      },
-                      {
-                        "text-transform": "uppercase"
-                      },
-                      {
-                        "color": "#6a8090"
-                      },
-                      {
-                        "text-align": "left"
-                      },
+                    "label": [
                       {
                         "width": "100%"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "#6a8090"
                       },
                       {
-                        "width": "16px"
+                        "white-space": "normal"
                       }
                     ]
                   },
-                  "show_icon": false
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }\n"
+                  }
                 },
                 {
                   "type": "grid",
@@ -1701,63 +1921,89 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "name": "Outdoor",
-                  "icon": "mdi:outdoor-lamp",
+                  "show_name": false,
                   "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
                   "tap_action": {
-                    "action": "none"
+                    "action": "call-service",
+                    "service": "light.turn_on",
+                    "service_data": {
+                      "entity_id": [
+                        "light.garage_light",
+                        "light.outdoor_switch_2",
+                        "light.front_porch_lights",
+                        "light.front_walkway_lights",
+                        "light.upper_outdoor_lights",
+                        "light.left_outdoor_patio_lights",
+                        "light.center_outdoor_patio"
+                      ]
+                    }
                   },
+                  "double_tap_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.garage_light",
+                        "light.outdoor_switch_2",
+                        "light.front_porch_lights",
+                        "light.front_walkway_lights",
+                        "light.upper_outdoor_lights",
+                        "light.left_outdoor_patio_lights",
+                        "light.center_outdoor_patio"
+                      ]
+                    }
+                  },
+                  "hold_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.garage_light",
+                        "light.outdoor_switch_2",
+                        "light.front_porch_lights",
+                        "light.front_walkway_lights",
+                        "light.upper_outdoor_lights",
+                        "light.left_outdoor_patio_lights",
+                        "light.center_outdoor_patio"
+                      ]
+                    }
+                  },
+                  "label": "[[[ const entityIds = [\"light.garage_light\",\"light.outdoor_switch_2\",\"light.front_porch_lights\",\"light.front_walkway_lights\",\"light.upper_outdoor_lights\",\"light.left_outdoor_patio_lights\",\"light.center_outdoor_patio\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">Outdoor</span>' + '<span style=\"font-size:22px;font-weight:300;color:#eef2f8;letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:13px;color:#4a5570;font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>' + '<div style=\"display:flex;gap:6px;\">' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(245,166,35,0.4);background:rgba(245,166,35,0.08);color:#f5a623;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All On</span>' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(74,85,112,0.3);background:rgba(74,85,112,0.06);color:#4a5570;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All Off</span>' + '</div>' + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
-                        "background": "transparent"
+                        "background": "#10151f"
                       },
                       {
-                        "border": "none"
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(0,212,240,0.18)"
                       },
                       {
                         "box-shadow": "none"
                       },
                       {
-                        "padding": "14px 4px 4px"
-                      },
-                      {
-                        "align-items": "flex-start"
+                        "margin-bottom": "6px"
                       }
                     ],
-                    "name": [
-                      {
-                        "font-size": "10px"
-                      },
-                      {
-                        "font-weight": "700"
-                      },
-                      {
-                        "letter-spacing": "0.14em"
-                      },
-                      {
-                        "text-transform": "uppercase"
-                      },
-                      {
-                        "color": "#6a8090"
-                      },
-                      {
-                        "text-align": "left"
-                      },
+                    "label": [
                       {
                         "width": "100%"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "#6a8090"
                       },
                       {
-                        "width": "16px"
+                        "white-space": "normal"
                       }
                     ]
                   },
-                  "show_icon": false
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }\n"
+                  }
                 },
                 {
                   "type": "grid",
@@ -1953,7 +2199,7 @@
                     {
                       "type": "custom:button-card",
                       "entity": "light.front_walkway_lights",
-                      "name": "Front Walk",
+                      "name": "Walkway",
                       "show_state": false,
                       "show_icon": true,
                       "size": "20px",
@@ -2202,63 +2448,74 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "name": "Bedrooms",
-                  "icon": "mdi:bed",
+                  "show_name": false,
                   "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
                   "tap_action": {
-                    "action": "none"
+                    "action": "call-service",
+                    "service": "light.turn_on",
+                    "service_data": {
+                      "entity_id": [
+                        "light.benjamins_hatch_light",
+                        "light.bens_light"
+                      ]
+                    }
                   },
+                  "double_tap_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.benjamins_hatch_light",
+                        "light.bens_light"
+                      ]
+                    }
+                  },
+                  "hold_action": {
+                    "action": "call-service",
+                    "service": "light.turn_off",
+                    "service_data": {
+                      "entity_id": [
+                        "light.benjamins_hatch_light",
+                        "light.bens_light"
+                      ]
+                    }
+                  },
+                  "label": "[[[ const entityIds = [\"light.benjamins_hatch_light\",\"light.bens_light\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">Bedrooms</span>' + '<span style=\"font-size:22px;font-weight:300;color:#eef2f8;letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:13px;color:#4a5570;font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>' + '<div style=\"display:flex;gap:6px;\">' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(245,166,35,0.4);background:rgba(245,166,35,0.08);color:#f5a623;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All On</span>' + '<span style=\"height:30px;padding:0 10px;border-radius:8px;border:1px solid rgba(74,85,112,0.3);background:rgba(74,85,112,0.06);color:#4a5570;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;cursor:pointer;\">All Off</span>' + '</div>' + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
-                        "background": "transparent"
+                        "background": "#10151f"
                       },
                       {
-                        "border": "none"
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(0,212,240,0.18)"
                       },
                       {
                         "box-shadow": "none"
                       },
                       {
-                        "padding": "14px 4px 4px"
-                      },
-                      {
-                        "align-items": "flex-start"
+                        "margin-bottom": "6px"
                       }
                     ],
-                    "name": [
-                      {
-                        "font-size": "10px"
-                      },
-                      {
-                        "font-weight": "700"
-                      },
-                      {
-                        "letter-spacing": "0.14em"
-                      },
-                      {
-                        "text-transform": "uppercase"
-                      },
-                      {
-                        "color": "#6a8090"
-                      },
-                      {
-                        "text-align": "left"
-                      },
+                    "label": [
                       {
                         "width": "100%"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "#6a8090"
                       },
                       {
-                        "width": "16px"
+                        "white-space": "normal"
                       }
                     ]
                   },
-                  "show_icon": false
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }\n"
+                  }
                 },
                 {
                   "type": "grid",
@@ -2466,7 +2723,7 @@
                   "tap_action": {
                     "action": "none"
                   },
-                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -2496,7 +2753,7 @@
                         "white-space": "normal"
                       },
                       {
-                        "font-family": "'DM Sans', system-ui, sans-serif"
+                        "font-family": "system-ui, -apple-system, sans-serif"
                       }
                     ]
                   }
@@ -2678,7 +2935,7 @@
                   "tap_action": {
                     "action": "none"
                   },
-                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "label": "[[[  const d = new Date();  const hh = d.getHours() % 12 || 12;  const mm = String(d.getMinutes()).padStart(2,'0');  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';  const time = hh + ':' + mm + ' ' + ampm;  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';  const wx = states['weather.forecast_home'] || {};  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';  const cond = wx.state || '';  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';  function avatar(entity, initials) {    const home = (states[entity] || {}).state === 'home';    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';  }  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +        alarmLabel +      '</div>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;\">' +      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +    '</div>' +    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +      avatar('person.chris', 'C') +      avatar('person.claire', 'CL') +      avatar('person.benjamin', 'B') +    '</div>' +  '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -2708,7 +2965,7 @@
                         "white-space": "normal"
                       },
                       {
-                        "font-family": "'DM Sans', system-ui, sans-serif"
+                        "font-family": "system-ui, -apple-system, sans-serif"
                       }
                     ]
                   }
@@ -2720,19 +2977,49 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:mushroom-media-player-card",
+                  "type": "custom:button-card",
                   "entity": "media_player.benjamins_hatch_media_player",
-                  "name": "Hatch",
-                  "fill_container": false,
-                  "use_media_info": true,
-                  "show_volume_level": true,
-                  "media_controls": [
-                    "on_off",
-                    "previous",
-                    "play_pause_stop",
-                    "next"
-                  ],
-                  "collapsible_controls": false
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "more-info"
+                  },
+                  "label": "[[[ const e = entity || {}; const state = e.state || 'unavailable'; const isPlaying = state === 'playing'; const isPaused = state === 'paused'; const isIdle = state === 'idle'; const attrs = e.attributes || {}; const track = attrs.media_title || (isPlaying || isPaused ? 'Unknown Track' : 'Nothing Playing'); const artist = attrs.media_artist || ''; const room = \"Benjamin's Hatch Speaker\"; const stateLabel = {playing:'Playing',paused:'Paused',idle:'Idle',unavailable:'Unavailable',off:'Off'}[state] || state; const stateColor = isPlaying ? '#4d8ef0' : isPaused ? '#f5a623' : '#4a5570'; const stateColorRgb = isPlaying ? '77,142,240' : isPaused ? '245,166,35' : '74,85,112'; const volPct = attrs.volume_level != null ? Math.round(attrs.volume_level * 100) : 0; return '<div style=\"padding:14px 16px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;\">' + '<div style=\"display:flex;align-items:center;gap:14px;\">' + '<div style=\"width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,#1a1040 0%,#0d2030 100%);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;\">' + '<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#4a5570\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg>' + '</div>' + '<div style=\"flex:1;min-width:0;\">' + '<div style=\"font-size:14px;font-weight:600;color:#eef2f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + track + '</div>' + (artist ? '<div style=\"font-size:11px;color:#8a9ab8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + artist + '</div>' : '') + '<div style=\"font-size:10px;color:#4a5570;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;\">' + room + '</div>' + '</div>' + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:12px;border:1px solid rgba(' + stateColorRgb + ',0.35);background:rgba(' + stateColorRgb + ',0.10);color:' + stateColor + ';flex-shrink:0;\">' + stateLabel + '</span>' + '</div>' + (volPct > 0 ? ('<div style=\"padding:0 2px;\"><div style=\"height:3px;background:#1c2438;border-radius:3px;overflow:hidden;\"><div style=\"height:100%;width:' + volPct + '%;background:linear-gradient(to right,#4d8ef0,#00d4f0);border-radius:3px;\"></div></div><div style=\"font-size:10px;color:#4a5570;margin-top:3px;\">Volume: ' + volPct + '%</div></div>') : '<div style=\"font-size:11px;color:#4a5570;text-align:center;padding:4px 0;\">' + (state === 'unavailable' ? 'Speaker unavailable' : state === 'off' ? 'Speaker is off' : 'Ready') + '</div>') + '</div>'; ]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#10151f"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(255,255,255,0.06)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "overflow": "hidden"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      }
+                    ]
+                  },
+                  "card_mod": {
+                    "style": "ha-card { border-left: 3px solid #4d8ef0; border-radius: 14px; }\n"
+                  }
                 }
               ]
             }
@@ -2790,7 +3077,11 @@
           }
         }
       ],
-      "resources": []
+      "resources": [],
+      "kiosk_mode": {
+        "hide_header": true,
+        "hide_sidebar": true
+      }
     }
   }
 }
