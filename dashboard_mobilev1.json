@@ -23,40 +23,47 @@
                   "show_name": false,
                   "show_state": false,
                   "show_icon": false,
+                  "show_label": true,
                   "tap_action": {
                     "action": "none"
                   },
-                  "custom_fields": {
-                    "status_row": "[[[ var alarm = states['alarm_control_panel.kuprycz_home']; var chris = states['person.chris']; var claire = states['person.claire']; var alarmState = alarm ? alarm.state : 'unknown'; var alarmColors = {'disarmed': ['#10d090','rgba(16,208,144,0.10)','rgba(16,208,144,0.30)'], 'armed_home': ['#f5a623','rgba(245,166,35,0.10)','rgba(245,166,35,0.30)'], 'armed_away': ['#4d8ef0','rgba(77,142,240,0.10)','rgba(77,142,240,0.30)'], 'triggered': ['#f04060','rgba(240,64,96,0.10)','rgba(240,64,96,0.30)']}; var ac = alarmColors[alarmState] || ['#8a9ab8','rgba(138,154,184,0.10)','rgba(138,154,184,0.20)']; var alarmLabel = alarmState === 'disarmed' ? 'Disarmed' : alarmState === 'armed_home' ? 'Armed Home' : alarmState === 'armed_away' ? 'Armed Away' : alarmState === 'triggered' ? 'TRIGGERED' : alarmState; var chrisHome = chris && chris.state === 'home'; var claireHome = claire && claire.state === 'home'; var chrBg = chrisHome ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)'; var chrBorder = chrisHome ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)'; var chrColor = chrisHome ? '#10d090' : '#4a5570'; var clBg = claireHome ? 'rgba(16,208,144,0.12)' : 'rgba(74,85,112,0.08)'; var clBorder = claireHome ? 'rgba(16,208,144,0.50)' : 'rgba(74,85,112,0.40)'; var clColor = claireHome ? '#10d090' : '#4a5570'; return '<div style=\"display:flex;align-items:center;justify-content:space-between;padding:4px 0;\"><div style=\"display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;border:1px solid ' + ac[2] + ';background:' + ac[1] + ';color:' + ac[0] + ';\"><span style=\"width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;\"></span><span style=\"font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;\">' + alarmLabel + '</span></div><div style=\"display:flex;gap:5px;\"><div style=\"width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:2px solid ' + chrBorder + ';background:' + chrBg + ';color:' + chrColor + ';\">C</div><div style=\"width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:2px solid ' + clBorder + ';background:' + clBg + ';color:' + clColor + ';\">CL</div></div></div>'; ]]]"
-                  },
+                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
                   "styles": {
                     "card": [
                       {
-                        "padding": "4px 16px 8px"
+                        "background": "#0f1117"
                       },
                       {
-                        "background": "transparent"
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "12px 16px"
                       },
                       {
                         "border": "none"
                       },
                       {
                         "box-shadow": "none"
+                      },
+                      {
+                        "margin-bottom": "4px"
                       }
                     ],
-                    "custom_fields": {
-                      "status_row": [
-                        {
-                          "width": "100%"
-                        },
-                        {
-                          "justify-self": "stretch"
-                        }
-                      ]
-                    }
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
                   }
                 }
-              ]
+              ],
+              "sticky": true
             },
             {
               "title": "",
@@ -900,28 +907,6 @@
                   }
                 }
               ]
-            },
-            {
-              "title": "",
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:mushroom-media-player-card",
-                  "entity": "media_player.benjamins_hatch_media_player",
-                  "name": "Hatch",
-                  "fill_container": false,
-                  "use_media_info": true,
-                  "show_volume_level": true,
-                  "media_controls": [
-                    "play_pause_stop",
-                    "previous",
-                    "next"
-                  ],
-                  "card_mod": {
-                    "style": "ha-card { background: #0f1117 !important; border: 1px solid rgba(0,212,240,0.15) !important; border-radius: 14px !important; }"
-                  }
-                }
-              ]
             }
           ],
           "footer": {
@@ -984,11 +969,62 @@
           "max_columns": 1,
           "sections": [
             {
+              "title": "",
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "12px 16px"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sticky": true
+            },
+            {
               "cards": [
                 {
                   "type": "custom:mushroom-climate-card",
                   "entity": "climate.daikin",
-                  "name": "Living Room · Daikin",
+                  "name": "Living Room Â· Daikin",
                   "show_temperature_control": true,
                   "fill_container": false,
                   "card_mod": {
@@ -1103,6 +1139,57 @@
           "type": "sections",
           "max_columns": 1,
           "sections": [
+            {
+              "title": "",
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "12px 16px"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sticky": true
+            },
             {
               "type": "grid",
               "cards": [
@@ -2367,6 +2454,57 @@
           "max_columns": 1,
           "sections": [
             {
+              "title": "",
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "12px 16px"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sticky": true
+            },
+            {
               "type": "grid",
               "cards": [
                 {
@@ -2528,6 +2666,57 @@
           "max_columns": 1,
           "sections": [
             {
+              "title": "",
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "label": "[[[\n  const d = new Date();\n  const hh = d.getHours() % 12 || 12;\n  const mm = String(d.getMinutes()).padStart(2,'0');\n  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';\n  const time = hh + ':' + mm + ' ' + ampm;\n  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n  const dateStr = days[d.getDay()] + ' \\u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();\n  const alarmState = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown';\n  const alarmBg = {disarmed:'rgba(16,208,144,0.12)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarmState] || 'rgba(100,116,139,0.15)';\n  const alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarmState] || '#94a3b8';\n  const alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarmState] || 'Unknown';\n  const wx = states['weather.forecast_home'] || {};\n  const temp = wx.attributes && wx.attributes.temperature != null ? Math.round(wx.attributes.temperature) + '\\u00b0' : '--\\u00b0';\n  const cond = wx.state || '';\n  const condStr = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'}[cond] || cond || '--';\n  const weatherIcon = {sunny:'\\u2600\\ufe0f','clear-night':'\\ud83c\\udf19',partlycloudy:'\\u26c5',cloudy:'\\u2601\\ufe0f',fog:'\\ud83c\\udf2b\\ufe0f',rainy:'\\ud83c\\udf27\\ufe0f',pouring:'\\u26c8\\ufe0f',snowy:'\\u2744\\ufe0f','snowy-rainy':'\\ud83c\\udf28\\ufe0f',hail:'\\ud83c\\udf28\\ufe0f',lightning:'\\u26a1','lightning-rainy':'\\u26c8\\ufe0f',windy:'\\ud83c\\udf2c\\ufe0f','windy-variant':'\\ud83c\\udf2c\\ufe0f',exceptional:'\\ud83c\\udf21\\ufe0f'}[cond] || '\\ud83c\\udfe1';\n  function avatar(entity, initials) {\n    const home = (states[entity] || {}).state === 'home';\n    return '<div style=\"width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + (home?'rgba(16,208,144,0.12)':'rgba(74,85,112,0.08)') + ';color:' + (home?'#10d090':'#4a5570') + ';border:1.5px solid ' + (home?'rgba(16,208,144,0.50)':'rgba(74,85,112,0.40)') + ';flex-shrink:0;\">' + initials + '</div>';\n  }\n  return '<div style=\"display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:5px 8px;width:100%;\">' +\n    '<div style=\"display:flex;flex-direction:column;gap:1px;\">' +\n      '<span style=\"font-size:26px;font-weight:700;color:#f1f5f9;line-height:1.1;font-variant-numeric:tabular-nums;\">' + time + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;letter-spacing:0.04em;\">' + dateStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;justify-content:flex-end;\">' +\n      '<div style=\"display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:600;background:' + alarmBg + ';color:' + alarmColor + ';white-space:nowrap;\">' +\n        '<span style=\"width:7px;height:7px;border-radius:50%;background:' + alarmColor + ';flex-shrink:0;\"></span>' +\n        alarmLabel +\n      '</div>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;\">' +\n      '<span style=\"font-size:18px;line-height:1;\">' + weatherIcon + '</span>' +\n      '<span style=\"font-size:15px;font-weight:600;color:#f1f5f9;\">' + temp + '</span>' +\n      '<span style=\"font-size:10px;color:#64748b;\">' + condStr + '</span>' +\n    '</div>' +\n    '<div style=\"display:flex;align-items:center;gap:5px;justify-content:flex-end;\">' +\n      avatar('person.chris', 'C') +\n      avatar('person.claire', 'CL') +\n      avatar('person.benjamin', 'B') +\n    '</div>' +\n  '</div>';\n]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#0f1117"
+                      },
+                      {
+                        "border-radius": "16px"
+                      },
+                      {
+                        "padding": "12px 16px"
+                      },
+                      {
+                        "border": "none"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "margin-bottom": "4px"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "font-family": "'DM Sans', system-ui, sans-serif"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sticky": true
+            },
+            {
               "type": "grid",
               "cards": [
                 {
@@ -2601,11 +2790,7 @@
           }
         }
       ],
-      "resources": [],
-      "kiosk_mode": {
-        "hide_header": true,
-        "hide_sidebar": true
-      }
+      "resources": []
     }
   }
 }
