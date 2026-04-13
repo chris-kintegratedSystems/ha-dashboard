@@ -1,0 +1,48 @@
+# ─── KIOSK MODE PACKAGE ──────────────────────────────────────────────────────
+# Controls kiosk display mode on mobile and tablet dashboards.
+# Mobile:  input_boolean.kiosk_mode_mobile  -> sends companion app notification
+# Tablet:  input_boolean.kiosk_mode_tablet  -> (manual toggle on tablet only)
+# ─────────────────────────────────────────────────────────────────────────────
+
+input_boolean:
+  kiosk_mode_mobile:
+    name: Kiosk Mode Mobile
+    icon: mdi:tablet-dashboard
+
+  kiosk_mode_tablet:
+    name: Kiosk Mode Tablet
+    icon: mdi:tablet-dashboard
+
+automation:
+  - id: kiosk_mode_mobile_on
+    alias: "Kiosk Mode Mobile — Turn On"
+    description: "When kiosk mode toggled ON, send companion notification with dashboard URL"
+    trigger:
+      - platform: state
+        entity_id: input_boolean.kiosk_mode_mobile
+        to: "on"
+    action:
+      - service: notify.mobile_app_chriss_iphone
+        data:
+          title: "Kiosk Mode ON"
+          message: "Tap to open kiosk dashboard"
+          data:
+            url: "/dashboard-mobilev1/home"
+            push:
+              sound: default
+
+  - id: kiosk_mode_mobile_off
+    alias: "Kiosk Mode Mobile — Turn Off"
+    description: "When kiosk mode toggled OFF, send dismiss notification"
+    trigger:
+      - platform: state
+        entity_id: input_boolean.kiosk_mode_mobile
+        to: "off"
+    action:
+      - service: notify.mobile_app_chriss_iphone
+        data:
+          title: "Kiosk Mode OFF"
+          message: "Kiosk mode has been disabled."
+          data:
+            push:
+              sound: default
