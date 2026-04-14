@@ -354,6 +354,10 @@
 
     const css = `#view { padding-top: ${clearance}px !important; }`;
     injectShadowCSS(huiShadow, 'kis-header-clearance', css);
+    // Always move to end of shadow root — guarantees this rule wins the
+    // cascade over kis-hui-patch (padding-top:0) regardless of injection order.
+    const clearanceEl = huiShadow.querySelector('#kis-header-clearance');
+    if (clearanceEl) huiShadow.appendChild(clearanceEl);
   }
 
   // ─── Header content rendering ──────────────────────────────────────────────
