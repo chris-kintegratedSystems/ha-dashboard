@@ -1,22 +1,22 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation Bar  v5
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v7
  * Loaded via frontend: extra_module_url in configuration.yaml.
- * Injects a real DOM element into document.body (completely outside HA's
+ * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
  *
- * v5 changes:
- *  - Targeted fix for hui-sections-view scroll (HA 2024+ sections layout).
- *  - Added overflow-y: auto + -webkit-overflow-scrolling: touch to the
- *    ha-app-layout content container so iOS can scroll.
- *  - Also resets html/body overflow so iOS WebView doesn't block scroll.
- *  - Traverses into hui-sections-view shadow root if accessible.
+ * v7 changes:
+ *  - Inject global CSS into document.head to hide HA's native app-header
+ *    (more reliable than shadow DOM injection alone — handles timing edge cases).
+ *  - Raise #kis-header-bar z-index above the nav bar.
+ *  - Remove overly-broad .header selector from hui-root shadow patch.
  */
 (function () {
   'use strict';
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
-  const NAV_H = 80; // px — nav bar height + safe-area buffer
+  const NAV_H    = 80; // px — bottom nav bar height + safe-area buffer
+  const HEADER_H = 96; // px — top header bar height
 
   const PAGES = [
     { label: 'Home',    icon: 'mdi:home-variant',   slug: 'home' },
@@ -26,6 +26,7 @@
     { label: 'Media',   icon: 'mdi:music-note',      slug: 'media' },
   ];
 
+  // ─── Styles: bottom nav ────────────────────────────────────────────────────
   const NAV_CSS = `
     #kis-nav-bar {
       position: fixed !important;
@@ -46,9 +47,7 @@
       transform: translateZ(0);
       will-change: transform;
     }
-    #kis-nav-bar[hidden] {
-      display: none !important;
-    }
+    #kis-nav-bar[hidden] { display: none !important; }
     #kis-nav-bar .knb-btn {
       flex: 1;
       display: flex;
@@ -66,13 +65,8 @@
       position: relative;
       transition: color 0.15s ease;
     }
-    #kis-nav-bar .knb-btn.knb-active {
-      color: #00d4f0;
-    }
-    #kis-nav-bar .knb-btn ha-icon {
-      --mdc-icon-size: 24px;
-      display: block;
-    }
+    #kis-nav-bar .knb-btn.knb-active { color: #00d4f0; }
+    #kis-nav-bar .knb-btn ha-icon { --mdc-icon-size: 24px; display: block; }
     #kis-nav-bar .knb-label {
       font-size: 9px;
       font-weight: 600;
@@ -91,19 +85,127 @@
       opacity: 0;
       transition: opacity 0.15s ease;
     }
-    #kis-nav-bar .knb-btn.knb-active .knb-pill {
-      opacity: 1;
+    #kis-nav-bar .knb-btn.knb-active .knb-pill { opacity: 1; }
+  `;
+
+  // ─── Styles: top header bar ────────────────────────────────────────────────
+  const HEADER_CSS = `
+    #kis-header-bar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 10000001 !important;
+      background: #0f1117;
+      padding: 10px 16px 10px;
+      padding-top: calc(10px + env(safe-area-inset-top, 0px));
+      box-sizing: border-box;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: transform;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    #kis-header-bar[hidden] { display: none !important; }
+    #kis-header-bar .kh-row1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+    }
+    #kis-header-bar .kh-clock {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #f1f5f9;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    #kis-header-bar .kh-ampm {
+      font-size: 14px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+    #kis-header-bar .kh-date {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #475569;
+      margin-top: 2px;
+    }
+    #kis-header-bar .kh-alarm {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 20px;
+      border: 1px solid rgba(100,116,139,0.3);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: #94a3b8;
+      background: rgba(100,116,139,0.15);
+    }
+    #kis-header-bar .kh-alarm-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    #kis-header-bar .kh-row2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 7px;
+    }
+    #kis-header-bar .kh-weather {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #kis-header-bar .kh-weather-icon { font-size: 18px; line-height: 1; }
+    #kis-header-bar .kh-weather-temp {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f1f5f9;
+      font-variant-numeric: tabular-nums;
+    }
+    #kis-header-bar .kh-weather-desc {
+      font-size: 10px;
+      color: #64748b;
+      letter-spacing: 0.05em;
+    }
+    #kis-header-bar .kh-presence { display: flex; gap: 5px; align-items: center; }
+    #kis-header-bar .kh-person {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      background: rgba(100,116,139,0.1);
+      color: #64748b;
+      border: 2px solid #334155;
+    }
+    #kis-header-bar .kh-person.home {
+      background: rgba(16,208,144,0.15);
+      color: #10d090;
+      border-color: rgba(16,208,144,0.6);
     }
   `;
 
-  // Injected into hui-root shadow: hide HA header, make #view scrollable
+  // ─── Shadow CSS patches ────────────────────────────────────────────────────
   function getHuiRootCSS() {
     return `
-      app-header,
-      .header,
-      [id="header"] {
-        display: none !important;
-      }
+      app-header { display: none !important; }
       ha-app-layout {
         --header-height: 0px !important;
         --app-header-height: 0px !important;
@@ -114,29 +216,24 @@
         overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch !important;
         padding-bottom: ${NAV_H}px !important;
-        padding-top: 0 !important;
+        padding-top: ${HEADER_H}px !important;
         margin-top: 0 !important;
         box-sizing: border-box;
       }
-      hui-sections-view,
-      hui-masonry-view,
-      hui-panel-view {
+      hui-sections-view, hui-masonry-view, hui-panel-view {
         padding-top: 0 !important;
         margin-top: 0 !important;
       }
     `;
   }
 
-  // Injected into ha-app-layout shadow: fix content container height + scroll
   function getAppLayoutCSS() {
     return `
       :host {
         --header-height: 0px !important;
         --app-header-height: 0px !important;
       }
-      #contentContainer,
-      [part="content"],
-      .content {
+      #contentContainer, [part="content"], .content {
         padding-top: 0 !important;
         margin-top: 0 !important;
         overflow-y: visible !important;
@@ -144,7 +241,6 @@
     `;
   }
 
-  // Injected into hui-sections-view shadow (if accessible): add bottom padding
   function getSectionsViewCSS() {
     return `
       :host {
@@ -154,22 +250,20 @@
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
       }
-      .container,
-      .sections-container,
-      [class*="container"] {
+      .container, .sections-container, [class*="container"] {
         padding-top: 0 !important;
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
       }
+      /* intentionally blank — sections are light DOM, hidden via JS below */
     `;
   }
 
-  /**
-   * Inject a <style> tag into a shadow root, keyed by id to avoid duplicates.
-   */
+  // ─── Helpers ───────────────────────────────────────────────────────────────
   function injectShadowCSS(shadowRoot, id, css) {
     if (!shadowRoot) return false;
-    if (shadowRoot.querySelector('#' + id)) return true; // already injected
+    const existing = shadowRoot.querySelector('#' + id);
+    if (existing) { existing.textContent = css; return true; } // update on re-patch
     const style = document.createElement('style');
     style.id = id;
     style.textContent = css;
@@ -192,10 +286,6 @@
     window.dispatchEvent(new CustomEvent('location-changed', { bubbles: true, composed: true }));
   }
 
-  /**
-   * Ensure html/body don't block iOS scroll.
-   * HA sometimes sets overflow:hidden on body to prevent double-scroll.
-   */
   function fixBodyScroll() {
     document.documentElement.style.removeProperty('overflow');
     document.body.style.removeProperty('overflow');
@@ -203,10 +293,86 @@
     document.body.style.height = '100%';
   }
 
-  /**
-   * Traverse HA's shadow DOM and inject CSS patches.
-   * Retried with backoff because HA renders asynchronously.
-   */
+  // ─── Header content rendering ──────────────────────────────────────────────
+  function getHass() {
+    try { return document.querySelector('home-assistant').hass; } catch (e) { return null; }
+  }
+
+  function getState(hass, entity) {
+    return hass && hass.states && hass.states[entity];
+  }
+
+  function renderHeaderContent() {
+    const bar = document.getElementById('kis-header-bar');
+    if (!bar) return;
+
+    const hass = getHass();
+
+    // Clock + date
+    const now = new Date();
+    const h12 = now.getHours() % 12 || 12;
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+    const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dateStr = DAYS[now.getDay()] + ' · ' + MONTHS[now.getMonth()] + ' ' + now.getDate();
+
+    // Alarm
+    const alarmEnt = getState(hass, 'alarm_control_panel.kuprycz_home');
+    const alarmState = alarmEnt ? alarmEnt.state : null;
+    const ALARM_COLORS = {
+      disarmed:   { bg:'rgba(16,208,144,0.1)',  color:'#10d090', border:'rgba(16,208,144,0.3)',  label:'Disarmed'   },
+      armed_away: { bg:'rgba(239,68,68,0.15)',  color:'#ef4444', border:'rgba(239,68,68,0.3)',   label:'Armed Away' },
+      armed_home: { bg:'rgba(245,158,11,0.15)', color:'#f59e0b', border:'rgba(245,158,11,0.3)',  label:'Armed Home' },
+      arming:     { bg:'rgba(245,158,11,0.15)', color:'#f59e0b', border:'rgba(245,158,11,0.3)',  label:'Arming'     },
+      pending:    { bg:'rgba(245,158,11,0.15)', color:'#f59e0b', border:'rgba(245,158,11,0.3)',  label:'Pending'    },
+      triggered:  { bg:'rgba(239,68,68,0.25)',  color:'#ef4444', border:'rgba(239,68,68,0.4)',   label:'TRIGGERED'  },
+    };
+    const alarm = ALARM_COLORS[alarmState] || { bg:'rgba(100,116,139,0.15)', color:'#94a3b8', border:'rgba(100,116,139,0.3)', label:'Unknown' };
+
+    // Weather
+    const wxEnt = getState(hass, 'weather.forecast_home');
+    const temp = wxEnt && wxEnt.attributes && wxEnt.attributes.temperature;
+    const tempStr = temp != null ? Math.round(temp) + '°' : '--°';
+    const cond = wxEnt ? wxEnt.state : '';
+    const WX_LABELS = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'};
+    const WX_ICONS  = {sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'};
+    const condLabel = WX_LABELS[cond] || cond || '--';
+    const wxIcon    = WX_ICONS[cond]  || '🌤️';
+
+    // Presence
+    function personHome(entity) {
+      const ent = getState(hass, entity);
+      return ent && ent.state === 'home';
+    }
+
+    // Build DOM content
+    bar.innerHTML = `
+      <div class="kh-row1">
+        <div>
+          <div class="kh-clock">${h12}:${min} <span class="kh-ampm">${ampm}</span></div>
+          <div class="kh-date">${dateStr}</div>
+        </div>
+        <div class="kh-alarm" style="background:${alarm.bg};color:${alarm.color};border-color:${alarm.border};">
+          <span class="kh-alarm-dot"></span>${alarm.label}
+        </div>
+      </div>
+      <div class="kh-row2">
+        <div class="kh-weather">
+          <span class="kh-weather-icon">${wxIcon}</span>
+          <span class="kh-weather-temp">${tempStr}</span>
+          <span class="kh-weather-desc">Dallas · ${condLabel}</span>
+        </div>
+        <div class="kh-presence">
+          <div class="kh-person${personHome('person.chris')    ? ' home' : ''}">C</div>
+          <div class="kh-person${personHome('person.claire')   ? ' home' : ''}">CL</div>
+          <div class="kh-person${personHome('person.benjamin') ? ' home' : ''}">B</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Layout patches ────────────────────────────────────────────────────────
   function patchHALayout(attempt) {
     attempt = attempt || 0;
     const maxAttempts = 30;
@@ -222,7 +388,6 @@
       const main = ha.shadowRoot.querySelector('home-assistant-main');
       if (!main?.shadowRoot) throw new Error('no main');
 
-      // HA drawer wraps the panel on newer versions; fall back to direct query
       let panel = null;
       const drawer = main.shadowRoot.querySelector('ha-drawer');
       if (drawer) panel = drawer.querySelector('ha-panel-lovelace');
@@ -234,23 +399,19 @@
 
       const huiShadow = huiRoot.shadowRoot;
 
-      // Patch 1: hui-root — hide header, make #view the scroll container
       injectShadowCSS(huiShadow, 'kis-hui-patch', getHuiRootCSS());
 
-      // Patch 2: ha-app-layout content container — clear top padding
       const appLayout = huiShadow.querySelector('ha-app-layout');
       if (appLayout?.shadowRoot) {
         injectShadowCSS(appLayout.shadowRoot, 'kis-applayout-patch', getAppLayoutCSS());
       }
 
-      // Patch 3: hui-sections-view — add bottom clearance inside sections shadow
       const viewEl = huiShadow.querySelector('#view');
       if (viewEl) {
         const sectionsView = viewEl.querySelector('hui-sections-view');
         if (sectionsView?.shadowRoot) {
           injectShadowCSS(sectionsView.shadowRoot, 'kis-sections-patch', getSectionsViewCSS());
         }
-        // If sections-view doesn't have shadow root, add padding to the element directly
         if (sectionsView && !sectionsView._kisPadded) {
           sectionsView.style.setProperty('padding-bottom', NAV_H + 'px', 'important');
           sectionsView._kisPadded = true;
@@ -265,20 +426,21 @@
     }
   }
 
+  // ─── Sync visibility / active state ───────────────────────────────────────
   function syncState() {
-    const nav = document.getElementById('kis-nav-bar');
-    if (!nav) return;
+    const nav    = document.getElementById('kis-nav-bar');
+    const header = document.getElementById('kis-header-bar');
+    if (!nav || !header) return;
 
     if (onMobileDashboard()) {
       nav.removeAttribute('hidden');
+      header.removeAttribute('hidden');
       const activeSlug = getActiveSlug();
       nav.querySelectorAll('.knb-btn').forEach((btn) => {
         btn.classList.toggle('knb-active', btn.dataset.slug === activeSlug);
       });
-      // Re-patch on every navigation — HA re-renders view elements
-      // Reset _kisPadded so sections-view inline style re-applies on new view renders
+      renderHeaderContent();
       setTimeout(() => {
-        // Clear cached patch flags so re-navigation re-applies patches
         document.querySelectorAll('hui-sections-view').forEach(el => {
           delete el._kisPadded;
         });
@@ -286,24 +448,30 @@
       }, 100);
     } else {
       nav.setAttribute('hidden', '');
+      header.setAttribute('hidden', '');
     }
   }
 
+  // ─── Injection ─────────────────────────────────────────────────────────────
   function inject() {
     if (document.getElementById('kis-nav-bar')) {
       syncState();
       return;
     }
 
+    // Inject shared styles + global app-header hide (fallback for timing edge cases)
     const styleEl = document.createElement('style');
-    styleEl.id = 'kis-nav-styles';
-    styleEl.textContent = NAV_CSS;
+    styleEl.id = 'kis-styles';
+    styleEl.textContent = NAV_CSS + HEADER_CSS + `
+      /* Global: hide HA native toolbar so kis-header-bar is always unobstructed */
+      app-header { display: none !important; }
+    `;
     document.head.appendChild(styleEl);
 
+    // Build bottom nav
     const nav = document.createElement('div');
     nav.id = 'kis-nav-bar';
     if (!onMobileDashboard()) nav.setAttribute('hidden', '');
-
     PAGES.forEach((page) => {
       const btn = document.createElement('button');
       btn.className = 'knb-btn';
@@ -313,17 +481,29 @@
       btn.addEventListener('click', () => navigate(page.slug));
       nav.appendChild(btn);
     });
-
     document.body.appendChild(nav);
+
+    // Build top header
+    const header = document.createElement('div');
+    header.id = 'kis-header-bar';
+    if (!onMobileDashboard()) header.setAttribute('hidden', '');
+    document.body.appendChild(header);
+
     syncState();
 
     window.addEventListener('location-changed', syncState);
     window.addEventListener('popstate', syncState);
 
+    // Update header content every second (live clock + entity states)
+    setInterval(() => {
+      if (onMobileDashboard()) renderHeaderContent();
+    }, 1000);
+
     // Initial layout patch with retry
     setTimeout(() => patchHALayout(0), 500);
   }
 
+  // ─── Boot ──────────────────────────────────────────────────────────────────
   function boot() {
     if (customElements.get('ha-icon')) {
       inject();
