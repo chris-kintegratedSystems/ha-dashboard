@@ -16,7 +16,7 @@
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H    = 80; // px — bottom nav bar height + safe-area buffer
-  const HEADER_H = 88; // px — top header bar content height (excludes safe-area-inset-top)
+  const HEADER_H = 120; // px — top header bar content height (excludes safe-area-inset-top)
 
   const PAGES = [
     { label: 'Home',    icon: 'mdi:home-variant',   slug: 'home' },

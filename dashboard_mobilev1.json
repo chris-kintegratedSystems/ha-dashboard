@@ -348,9 +348,6 @@
                       }
                     }
                   ],
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }\nha-card { margin-top: 8px; }"
-                  }
                 }
               ]
             },
@@ -1194,9 +1191,6 @@
                       }
                     ]
                   },
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }"
-                  }
                 },
                 {
                   "type": "custom:button-card",
@@ -1592,7 +1586,7 @@
                     ]
                   },
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }\nha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }"
+                    "style": "ha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }"
                   }
                 },
                 {
@@ -2918,7 +2912,7 @@
                   "show_name": true,
                   "fit_mode": "cover",
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }\nha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '● LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }"
+                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '● LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3197,9 +3191,6 @@
                       ]
                     }
                   },
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }"
-                  }
                 },
                 {
                   "type": "conditional",
