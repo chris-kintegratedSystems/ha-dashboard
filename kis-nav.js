@@ -218,9 +218,13 @@
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
       }
-      hui-sections-view, hui-masonry-view, hui-panel-view {
+      hui-masonry-view, hui-panel-view {
         padding-top: 0 !important;
         margin-top: 0 !important;
+      }
+      hui-sections-view {
+        padding-top: 0 !important;
+        /* margin-top applied dynamically by applyDynamicHeaderClearance */
       }
     `;
   }
@@ -243,7 +247,7 @@
     return `
       :host {
         display: block;
-        margin-top: 0 !important;
+        /* margin-top controlled from outside via element.style */
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
       }
@@ -358,14 +362,22 @@
     const viewEl = huiShadow.querySelector('#view');
     const sectionsView = viewEl && viewEl.querySelector('hui-sections-view');
 
-    if (sectionsView && sectionsView.shadowRoot) {
-      // PRIMARY FIX: patch .wrapper inside sections-view shadow root.
-      // This is the actual scroll container — #view padding has no effect here.
-      const wrapCSS = `
-        .wrapper { margin-top: ${clearance}px !important; }
-        .wrapper.top-margin { margin-top: ${clearance}px !important; }
-      `;
-      injectShadowCSS(sectionsView.shadowRoot, 'kis-sections-clearance', wrapCSS);
+    if (sectionsView) {
+      // PRIMARY FIX: apply clearance directly to the sections-view ELEMENT, not
+      // inside its shadow root. This moves the entire scroll container (including
+      // its own internal sticky elements) below the fixed header bar.
+      // Sticky cards inside sections-view use :host as their scroll container;
+      // with :host starting at clearance from viewport top, top:0 sticky elements
+      // naturally stick at the bottom of kis-header-bar. ✓
+      sectionsView.style.setProperty('margin-top', clearance + 'px', 'important');
+      sectionsView.style.setProperty('height', `calc(100vh - ${NAV_H + clearance}px)`, 'important');
+      sectionsView.style.setProperty('overflow-y', 'auto', 'important');
+
+      // Remove any stale .wrapper injection from prior approach.
+      if (sectionsView.shadowRoot) {
+        const old = sectionsView.shadowRoot.querySelector('#kis-sections-clearance');
+        if (old) old.remove();
+      }
 
       // Zero out #view padding-top to prevent any double-stacking.
       injectShadowCSS(huiShadow, 'kis-header-clearance', '#view { padding-top: 0 !important; }');
