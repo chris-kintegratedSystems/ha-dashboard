@@ -97,7 +97,7 @@
       right: 0 !important;
       z-index: 10000001 !important;
       background: #0f1117;
-      padding: 10px 16px 10px;
+      padding: 10px 16px 18px;
       padding-top: calc(10px + env(safe-area-inset-top, 0px));
       box-sizing: border-box;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
