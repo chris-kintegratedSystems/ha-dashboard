@@ -295,8 +295,12 @@
   // ─── Safe area inset top (WKWebView fix) ──────────────────────────────────
   // WKWebView with contentInsetAdjustmentBehavior=never does not expose
   // env(safe-area-inset-top) at page load time, so CSS-only usage returns 0.
-  // Fix: inject --sait via env() then read the computed value after 500ms
-  // once WKWebView has settled, then lock it in as a hardcoded px value.
+  // Fix: inject --sait via env() so CSS uses it immediately, then after 500ms
+  // use a probe element to read the resolved px value (getComputedStyle on a
+  // custom property returns the literal token, not a resolved px value, so we
+  // must read a concrete CSS property like 'top' to get the actual number).
+  // Only lock in as a hardcoded px value if non-zero — never override with 0,
+  // because that would strip the notch padding the CSS env() already applied.
   function initSafeAreaTop() {
     const existing = document.getElementById('kis-sait');
     if (existing) return;
@@ -306,9 +310,19 @@
     document.head.appendChild(saitStyle);
 
     setTimeout(() => {
-      const raw = getComputedStyle(document.documentElement).getPropertyValue('--sait').trim();
-      const px = parseFloat(raw) || 0;
-      document.documentElement.style.setProperty('--sait', px + 'px');
+      // Read env(safe-area-inset-top) via a probe element so the browser
+      // resolves env() into a concrete px value (reliable across WebKit versions).
+      const probe = document.createElement('div');
+      probe.style.cssText = 'position:fixed;top:env(safe-area-inset-top,0px);left:0;width:0;height:0;opacity:0;pointer-events:none;';
+      document.body.appendChild(probe);
+      const px = parseFloat(getComputedStyle(probe).top) || 0;
+      probe.remove();
+      // Only lock in the inline value if non-zero. If env() returned 0 (device
+      // has no notch, or WKWebView hasn't settled yet), leave the CSS rule in
+      // place so it remains live — never override with 0 and strip notch padding.
+      if (px > 0) {
+        document.documentElement.style.setProperty('--sait', px + 'px');
+      }
       applyDynamicHeaderClearance();
     }, 500);
   }
