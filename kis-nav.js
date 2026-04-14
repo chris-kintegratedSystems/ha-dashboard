@@ -313,6 +313,49 @@
     }, 500);
   }
 
+  // ─── View header clearance (sticky HA view header → sections gap) ──────────
+  // HA sections-view renders a sticky header card (from the view `header` config
+  // property). The sections grid below it needs explicit clearance = that header's
+  // rendered height, or the first section starts UNDER the sticky header.
+  // HA's own mechanism: --ha-view-sections-extra-top-margin → .wrapper.top-margin
+  // We measure the actual rendered height and set this variable + patch the spacer.
+  function applyViewHeaderClearance(sectionsView, attempt) {
+    attempt = attempt || 0;
+    if (!sectionsView || !sectionsView.shadowRoot) return;
+
+    // Try known selectors for the view header across HA versions
+    const HEADER_SELS = [
+      'hui-view-header',          // HA 2024.11+ dedicated element
+      '.header',                  // common container class
+      '.header-scrollable',
+      '[class*="view-header"]',
+    ];
+    let viewHeaderEl = null;
+    for (const sel of HEADER_SELS) {
+      const el = sectionsView.shadowRoot.querySelector(sel);
+      if (el && el.getBoundingClientRect().height > 5) {
+        viewHeaderEl = el;
+        break;
+      }
+    }
+    if (!viewHeaderEl) {
+      if (attempt < 8) setTimeout(() => applyViewHeaderClearance(sectionsView, attempt + 1), 300);
+      return;
+    }
+
+    const viewHeaderH = Math.ceil(viewHeaderEl.getBoundingClientRect().height);
+
+    // Set HA's CSS variable so .wrapper.top-margin pushes sections below the header
+    sectionsView.style.setProperty('--ha-view-sections-extra-top-margin', viewHeaderH + 'px');
+
+    // Also directly patch the spacer element as a fallback
+    injectShadowCSS(sectionsView.shadowRoot, 'kis-view-header-clearance', `
+      .wrapper.top-margin, .top-margin {
+        margin-top: ${viewHeaderH}px !important;
+      }
+    `);
+  }
+
   // ─── Dynamic header clearance ──────────────────────────────────────────────
   // hui-sections-view scrolls INTERNALLY (overflow-y on :host). padding-top on
   // #view (the outer container) has no effect. The built-in clearance mechanism
@@ -372,6 +415,9 @@
       sectionsView.style.setProperty('margin-top', clearance + 'px', 'important');
       sectionsView.style.setProperty('height', `calc(100vh - ${NAV_H + clearance}px)`, 'important');
       sectionsView.style.setProperty('overflow-y', 'auto', 'important');
+
+      // Measure sticky view header inside sections-view and push sections below it.
+      setTimeout(() => applyViewHeaderClearance(sectionsView), 150);
 
       // Remove any stale .wrapper injection from prior approach.
       if (sectionsView.shadowRoot) {
