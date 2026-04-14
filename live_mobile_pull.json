@@ -347,10 +347,7 @@
                         }
                       }
                     }
-                  ],
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }\nha-card { margin-top: 8px; }"
-                  }
+                  ]
                 }
               ]
             },
@@ -887,61 +884,38 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "template",
-                      "content": "{% set alarm = states('alarm_control_panel.kuprycz_home') %}{% set alarmLabel = {'disarmed':'Disarmed','armed_away':'Armed Away','armed_home':'Armed Home','arming':'Arming','pending':'Pending','triggered':'TRIGGERED'}[alarm] | default('Unknown') %}{{ 'Alarm: ' + alarmLabel }}",
-                      "icon": "{% set alarm = states('alarm_control_panel.kuprycz_home') %}{{ {'disarmed':'mdi:shield-off','armed_away':'mdi:shield-lock','armed_home':'mdi:shield-home','arming':'mdi:shield-sync','pending':'mdi:shield-alert','triggered':'mdi:shield-alert'}[alarm] | default('mdi:shield-off') }}",
-                      "icon_color": "{% set alarm = states('alarm_control_panel.kuprycz_home') %}{{ {'disarmed':'#10d090','armed_away':'#4d8ef0','armed_home':'#f5a623','arming':'#f5a623','pending':'#f5a623','triggered':'#f04060'}[alarm] | default('#8a9ab8') }}",
-                      "tap_action": {
-                        "action": "more-info",
-                        "entity": "alarm_control_panel.kuprycz_home"
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "none"
+                  },
+                  "custom_fields": {
+                    "chips": "[[[ var front = states['lock.front_door_lock']; var back = states['lock.back_door_lock']; var gem = states['lock.gemelli_door_lock']; var lg = states['cover.ratgdov25i_1746c3_door']; var rg = states['cover.ratgdov25i_1746b4_door']; var alarm = (states['alarm_control_panel.kuprycz_home'] || {}).state || 'unknown'; var allLocked = front && front.state==='locked' && back && back.state==='locked' && gem && gem.state==='locked'; var garageOk = (!lg || lg.state==='closed') && (!rg || rg.state==='closed'); var secureAll = allLocked && garageOk; var lightList = ['light.countertop_lights','light.kitchen_chandelier','light.kitchen_ceilings_lights','light.kitchen_island_light','light.living_room_ceiling','light.living_room_lamp_2','light.garage_light','light.outdoor_switch_2','light.front_porch_lights','light.front_walkway_lights','light.upper_outdoor_lights','light.left_outdoor_patio_lights','light.center_outdoor_patio','light.benjamins_hatch_light','light.bens_light']; var activeLights = lightList.filter(function(e){return states[e]&&states[e].state==='on';}).length; var daikin = states['climate.daikin']; var curTemp = daikin && daikin.attributes && daikin.attributes.current_temperature ? Math.round(daikin.attributes.current_temperature) : '--'; var alarmColor = {disarmed:'#10d090',armed_away:'#4d8ef0',armed_home:'#f5a623',arming:'#f5a623',pending:'#f5a623',triggered:'#f04060'}[alarm] || '#8a9ab8'; var alarmBg = {disarmed:'rgba(16,208,144,0.10)',armed_away:'rgba(77,142,240,0.10)',armed_home:'rgba(245,166,35,0.10)',arming:'rgba(245,166,35,0.10)',pending:'rgba(245,166,35,0.10)',triggered:'rgba(240,64,96,0.15)'}[alarm] || 'rgba(74,85,112,0.10)'; var alarmBorder = {disarmed:'rgba(16,208,144,0.30)',armed_away:'rgba(77,142,240,0.30)',armed_home:'rgba(245,166,35,0.30)',arming:'rgba(245,166,35,0.30)',pending:'rgba(245,166,35,0.30)',triggered:'rgba(240,64,96,0.30)'}[alarm] || 'rgba(74,85,112,0.20)'; var alarmLabel = {disarmed:'Disarmed',armed_away:'Armed Away',armed_home:'Armed Home',arming:'Arming',pending:'Pending',triggered:'TRIGGERED'}[alarm] || 'Unknown'; var lockColor = secureAll ? '#10d090' : '#f04060'; var lockBg = secureAll ? 'rgba(16,208,144,0.10)' : 'rgba(240,64,96,0.10)'; var lockBorder = secureAll ? 'rgba(16,208,144,0.30)' : 'rgba(240,64,96,0.30)'; var lockLabel = secureAll ? 'All Secure' : (allLocked ? 'Garage Open' : 'Check Locks'); var litColor = activeLights > 0 ? '#00d4f0' : '#4a5570'; var litBg = activeLights > 0 ? 'rgba(0,212,240,0.10)' : 'rgba(74,85,112,0.10)'; var litBorder = activeLights > 0 ? 'rgba(0,212,240,0.25)' : 'rgba(74,85,112,0.15)'; return '<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:2px 0;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + alarmBorder + ';background:' + alarmBg + ';color:' + alarmColor + ';\">' + 'Alarm: ' + alarmLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + lockBorder + ';background:' + lockBg + ';color:' + lockColor + ';\">' + lockLabel + '</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid ' + litBorder + ';background:' + litBg + ';color:' + litColor + ';\">' + activeLights + ' Lights On</span>' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(245,166,35,0.30);background:rgba(245,166,35,0.08);color:#f5a623;\">' + curTemp + 'Â°F</span>' + '</div>'; ]]]"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "12px 16px 12px 20px"
+                      },
+                      {
+                        "border-radius": "12px"
+                      },
+                      {
+                        "border-left": "3px solid #00d4f0"
                       }
-                    },
-                    {
-                      "type": "template",
-                      "content": "{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if f and b and g and lg and rg %}All Secure{% elif not (f and b and g) %}Check Locks{% elif not (lg and rg) %}Garage Open{% else %}Check{% endif %}",
-                      "icon": "mdi:lock",
-                      "icon_color": "{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if f and b and g and lg and rg %}#10d090{% else %}#f04060{% endif %}",
-                      "tap_action": {
-                        "action": "navigate",
-                        "navigation_path": "/dashboard-mobilev1/home"
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "content": "{% set on_lights = states.light | selectattr('state','eq','on') | list | count %}{{ on_lights }} Lights On",
-                      "icon": "mdi:lightbulb-group",
-                      "icon_color": "{% set on_lights = states.light | selectattr('state','eq','on') | list | count %}{% if on_lights > 0 %}#00d4f0{% else %}#4a5570{% endif %}",
-                      "tap_action": {
-                        "action": "navigate",
-                        "navigation_path": "/dashboard-mobilev1/lights"
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "content": "{% set t = state_attr('climate.daikin','current_temperature') %}{% if t != None %}{{ t | round(0) | int }}°F{% else %}--°F{% endif %}",
-                      "icon": "mdi:thermometer",
-                      "icon_color": "#f5a623",
-                      "tap_action": {
-                        "action": "navigate",
-                        "navigation_path": "/dashboard-mobilev1/climate"
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:tablet-dashboard",
-                      "icon_color": "{% if is_state('input_boolean.kiosk_mode_mobile','on') %}#10d090{% else %}#4a5570{% endif %}",
-                      "content": "{% if is_state('input_boolean.kiosk_mode_mobile','on') %}Kiosk{% else %}Kiosk Off{% endif %}",
-                      "tap_action": {
-                        "action": "toggle",
-                        "entity": "input_boolean.kiosk_mode_mobile"
-                      }
+                    ],
+                    "custom_fields": {
+                      "chips": [
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "justify-self": "stretch"
+                        }
+                      ]
                     }
-                  ],
-                  "card_mod": {
-                    "style": "ha-card { background: #0b0e17; border: none; border-left: 3px solid #00d4f0; border-radius: 12px; padding: 12px 16px 12px 20px; box-shadow: none; }\n"
                   }
                 }
               ]
@@ -1084,16 +1058,7 @@
                       "border-radius": "16px"
                     },
                     {
-                      "padding-top": "max(env(safe-area-inset-top), 70px)"
-                    },
-                    {
-                      "padding-right": "16px"
-                    },
-                    {
-                      "padding-bottom": "12px"
-                    },
-                    {
-                      "padding-left": "16px"
+                      "padding": "12px 16px"
                     },
                     {
                       "border": "none"
@@ -1119,8 +1084,7 @@
                 }
               }
             ]
-          },
-          "background": "#070910"
+          }
         },
         {
           "title": "Climate",
@@ -1157,7 +1121,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Living Room · Daikin\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Living Room Â· Daikin\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1193,9 +1157,6 @@
                         "text-align": "left"
                       }
                     ]
-                  },
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
                   }
                 },
                 {
@@ -1224,7 +1185,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Gemelli Suite\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Gemelli Suite\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1288,7 +1249,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Master Bedroom\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Master Bedroom\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1352,7 +1313,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Upstairs\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'#00d4f0',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,#00d4f0)' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Upstairs\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a5570;\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">âˆ’</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:44px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:#eef2f8;font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:#4a5570;margin-top:1px;\">Set â†’ <strong style=\"color:#8a9ab8;\">' + setpoint + 'Â°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:#00d4f0;\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -1470,16 +1431,7 @@
                       "border-radius": "16px"
                     },
                     {
-                      "padding-top": "max(env(safe-area-inset-top), 12px)"
-                    },
-                    {
-                      "padding-right": "16px"
-                    },
-                    {
-                      "padding-bottom": "12px"
-                    },
-                    {
-                      "padding-left": "16px"
+                      "padding": "12px 16px"
                     },
                     {
                       "border": "none"
@@ -1505,8 +1457,7 @@
                 }
               }
             ]
-          },
-          "background": "#070910"
+          }
         },
         {
           "title": "Lights",
@@ -1592,7 +1543,7 @@
                     ]
                   },
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }\nha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }"
+                    "style": "ha-card { border-left: 3px solid #00d4f0; border-radius: 14px; }\n"
                   }
                 },
                 {
@@ -2861,16 +2812,7 @@
                       "border-radius": "16px"
                     },
                     {
-                      "padding-top": "max(env(safe-area-inset-top), 12px)"
-                    },
-                    {
-                      "padding-right": "16px"
-                    },
-                    {
-                      "padding-bottom": "12px"
-                    },
-                    {
-                      "padding-left": "16px"
+                      "padding": "12px 16px"
                     },
                     {
                       "border": "none"
@@ -2896,8 +2838,7 @@
                 }
               }
             ]
-          },
-          "background": "#070910"
+          }
         },
         {
           "title": "Cameras",
@@ -2918,7 +2859,7 @@
                   "show_name": true,
                   "fit_mode": "cover",
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }\nha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '● LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }"
+                    "style": "ha-card { height: 30vh; position: relative; overflow: hidden; }\nha-card::before { content: '● LIVE'; position: absolute; top: 10px; left: 10px; z-index: 50; background: rgba(240,64,96,0.85); color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; border-radius: 4px; pointer-events: none; }\n"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3085,16 +3026,7 @@
                       "border-radius": "16px"
                     },
                     {
-                      "padding-top": "max(env(safe-area-inset-top), 12px)"
-                    },
-                    {
-                      "padding-right": "16px"
-                    },
-                    {
-                      "padding-bottom": "12px"
-                    },
-                    {
-                      "padding-left": "16px"
+                      "padding": "12px 16px"
                     },
                     {
                       "border": "none"
@@ -3120,8 +3052,7 @@
                 }
               }
             ]
-          },
-          "background": "#070910"
+          }
         },
         {
           "title": "Media",
@@ -3134,165 +3065,55 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "conditional",
-                  "conditions": [
-                    {
-                      "entity": "media_player.benjamins_hatch_media_player",
-                      "state_not": "unavailable"
-                    },
-                    {
-                      "entity": "media_player.benjamins_hatch_media_player",
-                      "state_not": "off"
-                    }
-                  ],
-                  "card": {
-                    "type": "custom:button-card",
-                    "entity": "media_player.benjamins_hatch_media_player",
-                    "show_name": false,
-                    "show_state": false,
-                    "show_icon": false,
-                    "show_label": true,
-                    "tap_action": {
-                      "action": "call-service",
-                      "service": "media_player.media_play_pause",
-                      "service_data": {
-                        "entity_id": "media_player.benjamins_hatch_media_player"
-                      }
-                    },
-                    "hold_action": {
-                      "action": "more-info"
-                    },
-                    "label": "[[[ const e = entity || {}; const state = e.state || 'unavailable'; const isPlaying = state === 'playing'; const isPaused = state === 'paused'; const attrs = e.attributes || {}; const track = attrs.media_title || (isPlaying || isPaused ? 'Unknown Track' : (state === 'idle' ? 'Nothing Playing' : 'Unavailable')); const artist = attrs.media_artist || ''; const stateLabel = {playing:'Playing',paused:'Paused',idle:'Idle',unavailable:'Unavailable',off:'Off'}[state] || state; const stateColorRgb = isPlaying ? '77,142,240' : isPaused ? '245,166,35' : '74,85,112'; const volPct = attrs.volume_level != null ? Math.round(attrs.volume_level * 100) : 0; const dur = attrs.media_duration || 0; const pos = attrs.media_position || 0; const updAt = attrs.media_position_updated_at; const elapsed = (isPlaying && updAt) ? pos + (Date.now() - new Date(updAt).getTime()) / 1000 : pos; const pct = dur > 0 ? Math.min(100, Math.round(elapsed / dur * 100)) : 0; const fmt = s => { const m = Math.floor(s/60); return m + ':' + String(Math.floor(s%60)).padStart(2,'0'); }; const playIconSvg = isPlaying   ? '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'none\\' stroke=\\'#00d4f0\\' stroke-width=\\'2.5\\' stroke-linecap=\\'round\\'><rect x=\\'6\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/><rect x=\\'14\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/></svg>'   : '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'#00d4f0\\' stroke=\\'none\\'><polygon points=\\'5,3 19,12 5,21\\'/></svg>'; const artUrl = attrs.entity_picture || null; const artHtml = artUrl   ? '<img src=\"' + artUrl + '\" style=\"width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;\" />'   : '<div style=\"width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#1a1040,#0d2030);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;\"><svg width=\\'20\\' height=\\'20\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'1.5\\'><path d=\\'M9 18V5l12-2v13\\'/><circle cx=\\'6\\' cy=\\'18\\' r=\\'3\\'/><circle cx=\\'18\\' cy=\\'16\\' r=\\'3\\'/></svg></div>'; return '<div style=\"padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-around;padding:4px 0 12px;\">'   + '<div style=\"width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'19 20 9 12 19 4 19 20\\'/><line x1=\\'5\\' y1=\\'19\\' x2=\\'5\\' y2=\\'5\\'/></svg>'   + '</div>'   + '<div style=\"width:52px;height:52px;border-radius:50%;background:rgba(0,212,240,0.10);border:1px solid rgba(0,212,240,0.20);display:flex;align-items:center;justify-content:center;\">' + playIconSvg + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'5 4 15 12 5 20 5 4\\'/><line x1=\\'19\\' y1=\\'5\\' x2=\\'19\\' y2=\\'19\\'/></svg>'   + '</div>'   + '</div>'   + '<div style=\"display:flex;align-items:center;gap:12px;padding-top:0;\">'   + artHtml   + '<div style=\"flex:1;min-width:0;\">'   + '<div style=\"font-size:13px;font-weight:600;color:#eef2f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + track + '</div>'   + (artist ? '<div style=\"font-size:11px;color:#8a9ab8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + artist + '</div>' : '')   + '<div style=\"font-size:9px;color:#4a5570;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;\">Benjamin\\'s Room</div>'   + '</div>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:10px;border:1px solid rgba(' + stateColorRgb + ',0.35);background:rgba(' + stateColorRgb + ',0.10);color:rgb(' + stateColorRgb + ');flex-shrink:0;\">' + stateLabel + '</span>'   + '</div>'   + (dur > 0 ? '<div style=\"padding:10px 0 0;\"><div style=\"height:2px;background:#1c2438;border-radius:3px;\"><div style=\"height:100%;width:' + pct + '%;background:linear-gradient(to right,#4d8ef0,#00d4f0);border-radius:3px;\"></div></div><div style=\"display:flex;justify-content:space-between;margin-top:4px;\"><span style=\"font-size:9px;color:#4a5570;font-variant-numeric:tabular-nums;\">' + fmt(elapsed) + '</span><span style=\"font-size:9px;color:#4a5570;font-variant-numeric:tabular-nums;\">' + fmt(dur) + '</span></div></div>' : '')   + (volPct > 0 ? '<div style=\"display:flex;align-items:center;gap:8px;padding:8px 0 0;\"><svg width=\\'12\\' height=\\'12\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'2\\'><polygon points=\\'11 5 6 9 2 9 2 15 6 15 11 19 11 5\\'/><path d=\\'M15.54 8.46a5 5 0 0 1 0 7.07\\'/></svg><div style=\\'flex:1;height:2px;background:#1c2438;border-radius:3px;\\'><div style=\\'height:100%;width:' + volPct + '%;background:linear-gradient(to right,#4d8ef0,#00d4f0);border-radius:3px;\\'></div></div><span style=\\'font-size:9px;color:#4a5570;\\'>' + volPct + '%</span></div>' : '')   + '</div>'; ]]]",
-                    "styles": {
-                      "card": [
-                        {
-                          "background": "#10151f"
-                        },
-                        {
-                          "border-radius": "14px"
-                        },
-                        {
-                          "padding": "0px"
-                        },
-                        {
-                          "border": "1px solid rgba(255,255,255,0.06)"
-                        },
-                        {
-                          "box-shadow": "none"
-                        },
-                        {
-                          "border-left": "3px solid #4d8ef0"
-                        }
-                      ],
-                      "label": [
-                        {
-                          "width": "100%"
-                        },
-                        {
-                          "white-space": "normal"
-                        },
-                        {
-                          "text-align": "left"
-                        }
-                      ]
+                  "type": "custom:button-card",
+                  "entity": "media_player.benjamins_hatch_media_player",
+                  "show_name": false,
+                  "show_state": false,
+                  "show_icon": false,
+                  "show_label": true,
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "media_player.media_play_pause",
+                    "service_data": {
+                      "entity_id": "media_player.benjamins_hatch_media_player"
                     }
                   },
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "conditions": [
-                    {
-                      "entity": "media_player.benjamins_hatch_media_player",
-                      "state": "unavailable"
-                    }
-                  ],
-                  "card": {
-                    "type": "custom:button-card",
-                    "show_name": false,
-                    "show_state": false,
-                    "show_icon": false,
-                    "show_label": true,
-                    "tap_action": {
-                      "action": "none"
-                    },
-                    "label": "[[[ return '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 20px;\"><svg width=\"56\" height=\"56\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2a3448\" stroke-width=\"1\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg><div style=\"font-size:15px;font-weight:500;color:#4a5570;letter-spacing:0.06em;\">Nothing Playing</div><div style=\"font-size:12px;color:#2a3448;margin-top:4px;\">Benjamin's Room</div></div>'; ]]]",
-                    "styles": {
-                      "card": [
-                        {
-                          "background": "#0b0e17"
-                        },
-                        {
-                          "border-radius": "14px"
-                        },
-                        {
-                          "border": "1px solid rgba(255,255,255,0.04)"
-                        },
-                        {
-                          "box-shadow": "none"
-                        },
-                        {
-                          "min-height": "200px"
-                        }
-                      ],
-                      "label": [
-                        {
-                          "width": "100%"
-                        },
-                        {
-                          "white-space": "normal"
-                        }
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "conditions": [
-                    {
-                      "entity": "media_player.benjamins_hatch_media_player",
-                      "state": "off"
-                    }
-                  ],
-                  "card": {
-                    "type": "custom:button-card",
-                    "show_name": false,
-                    "show_state": false,
-                    "show_icon": false,
-                    "show_label": true,
-                    "tap_action": {
-                      "action": "none"
-                    },
-                    "label": "[[[ return '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 20px;\"><svg width=\"56\" height=\"56\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2a3448\" stroke-width=\"1\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg><div style=\"font-size:15px;font-weight:500;color:#4a5570;letter-spacing:0.06em;\">Nothing Playing</div><div style=\"font-size:12px;color:#2a3448;margin-top:4px;\">Benjamin's Room</div></div>'; ]]]",
-                    "styles": {
-                      "card": [
-                        {
-                          "background": "#0b0e17"
-                        },
-                        {
-                          "border-radius": "14px"
-                        },
-                        {
-                          "border": "1px solid rgba(255,255,255,0.04)"
-                        },
-                        {
-                          "box-shadow": "none"
-                        },
-                        {
-                          "min-height": "200px"
-                        }
-                      ],
-                      "label": [
-                        {
-                          "width": "100%"
-                        },
-                        {
-                          "white-space": "normal"
-                        }
-                      ]
-                    }
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "label": "[[[ const e = entity || {}; const state = e.state || 'unavailable'; const isPlaying = state === 'playing'; const isPaused = state === 'paused'; const attrs = e.attributes || {}; const track = attrs.media_title || (isPlaying || isPaused ? 'Unknown Track' : (state === 'idle' ? 'Nothing Playing' : 'Unavailable')); const artist = attrs.media_artist || ''; const stateLabel = {playing:'Playing',paused:'Paused',idle:'Idle',unavailable:'Unavailable',off:'Off'}[state] || state; const stateColorRgb = isPlaying ? '77,142,240' : isPaused ? '245,166,35' : '74,85,112'; const volPct = attrs.volume_level != null ? Math.round(attrs.volume_level * 100) : 0; const dur = attrs.media_duration || 0; const pos = attrs.media_position || 0; const updAt = attrs.media_position_updated_at; const elapsed = (isPlaying && updAt) ? pos + (Date.now() - new Date(updAt).getTime()) / 1000 : pos; const pct = dur > 0 ? Math.min(100, Math.round(elapsed / dur * 100)) : 0; const fmt = s => { const m = Math.floor(s/60); return m + ':' + String(Math.floor(s%60)).padStart(2,'0'); }; const playIconSvg = isPlaying   ? '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'none\\' stroke=\\'#00d4f0\\' stroke-width=\\'2.5\\' stroke-linecap=\\'round\\'><rect x=\\'6\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/><rect x=\\'14\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/></svg>'   : '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'#00d4f0\\' stroke=\\'none\\'><polygon points=\\'5,3 19,12 5,21\\'/></svg>'; const artUrl = attrs.entity_picture || null; const artHtml = artUrl   ? '<img src=\"' + artUrl + '\" style=\"width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;\" />'   : '<div style=\"width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#1a1040,#0d2030);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;\"><svg width=\\'20\\' height=\\'20\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'1.5\\'><path d=\\'M9 18V5l12-2v13\\'/><circle cx=\\'6\\' cy=\\'18\\' r=\\'3\\'/><circle cx=\\'18\\' cy=\\'16\\' r=\\'3\\'/></svg></div>'; return '<div style=\"padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-around;padding:4px 0 12px;\">'   + '<div style=\"width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'19 20 9 12 19 4 19 20\\'/><line x1=\\'5\\' y1=\\'19\\' x2=\\'5\\' y2=\\'5\\'/></svg>'   + '</div>'   + '<div style=\"width:52px;height:52px;border-radius:50%;background:rgba(0,212,240,0.10);border:1px solid rgba(0,212,240,0.20);display:flex;align-items:center;justify-content:center;\">' + playIconSvg + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'5 4 15 12 5 20 5 4\\'/><line x1=\\'19\\' y1=\\'5\\' x2=\\'19\\' y2=\\'19\\'/></svg>'   + '</div>'   + '</div>'   + '<div style=\"display:flex;align-items:center;gap:12px;padding-top:0;\">'   + artHtml   + '<div style=\"flex:1;min-width:0;\">'   + '<div style=\"font-size:13px;font-weight:600;color:#eef2f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + track + '</div>'   + (artist ? '<div style=\"font-size:11px;color:#8a9ab8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + artist + '</div>' : '')   + '<div style=\"font-size:9px;color:#4a5570;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;\">Benjamin\\'s Room</div>'   + '</div>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:10px;border:1px solid rgba(' + stateColorRgb + ',0.35);background:rgba(' + stateColorRgb + ',0.10);color:rgb(' + stateColorRgb + ');flex-shrink:0;\">' + stateLabel + '</span>'   + '</div>'   + (dur > 0 ? '<div style=\"padding:10px 0 0;\"><div style=\"height:2px;background:#1c2438;border-radius:3px;\"><div style=\"height:100%;width:' + pct + '%;background:linear-gradient(to right,#4d8ef0,#00d4f0);border-radius:3px;\"></div></div><div style=\"display:flex;justify-content:space-between;margin-top:4px;\"><span style=\"font-size:9px;color:#4a5570;font-variant-numeric:tabular-nums;\">' + fmt(elapsed) + '</span><span style=\"font-size:9px;color:#4a5570;font-variant-numeric:tabular-nums;\">' + fmt(dur) + '</span></div></div>' : '')   + (volPct > 0 ? '<div style=\"display:flex;align-items:center;gap:8px;padding:8px 0 0;\"><svg width=\\'12\\' height=\\'12\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'2\\'><polygon points=\\'11 5 6 9 2 9 2 15 6 15 11 19 11 5\\'/><path d=\\'M15.54 8.46a5 5 0 0 1 0 7.07\\'/></svg><div style=\\'flex:1;height:2px;background:#1c2438;border-radius:3px;\\'><div style=\\'height:100%;width:' + volPct + '%;background:linear-gradient(to right,#4d8ef0,#00d4f0);border-radius:3px;\\'></div></div><span style=\\'font-size:9px;color:#4a5570;\\'>' + volPct + '%</span></div>' : '')   + '</div>'; ]]]",
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "#10151f"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "padding": "0px"
+                      },
+                      {
+                        "border": "1px solid rgba(255,255,255,0.06)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "border-left": "3px solid #4d8ef0"
+                      }
+                    ],
+                    "label": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "white-space": "normal"
+                      },
+                      {
+                        "text-align": "left"
+                      }
+                    ]
                   }
                 }
               ]
@@ -3375,16 +3196,7 @@
                       "border-radius": "16px"
                     },
                     {
-                      "padding-top": "max(env(safe-area-inset-top), 12px)"
-                    },
-                    {
-                      "padding-right": "16px"
-                    },
-                    {
-                      "padding-bottom": "12px"
-                    },
-                    {
-                      "padding-left": "16px"
+                      "padding": "12px 16px"
                     },
                     {
                       "border": "none"
@@ -3410,8 +3222,7 @@
                 }
               }
             ]
-          },
-          "background": "#070910"
+          }
         }
       ],
       "resources": [],

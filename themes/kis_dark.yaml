@@ -1,0 +1,74 @@
+kis-dark:
+  # ── Page / Shell ─────────────────────────────────────────────
+  primary-background-color: "#070910"
+  secondary-background-color: "#0b0e17"
+  lovelace-background: "#070910"
+
+  # ── Cards ────────────────────────────────────────────────────
+  card-background-color: "#10151f"
+  ha-card-background: "#10151f"
+  ha-card-border-color: "rgba(255,255,255,0.06)"
+  ha-card-border-width: "1px"
+  ha-card-border-radius: "16px"
+  ha-card-box-shadow: "none"
+
+  # ── Text ─────────────────────────────────────────────────────
+  primary-text-color: "#eef2f8"
+  secondary-text-color: "#8a9ab8"
+  disabled-text-color: "#4a5570"
+  text-primary-color: "#eef2f8"
+  text-light-primary-color: "#eef2f8"
+
+  # ── Accents / Brand ──────────────────────────────────────────
+  accent-color: "#00d4f0"
+  primary-color: "#00d4f0"
+  light-primary-color: "rgba(0,212,240,0.18)"
+  dark-primary-color: "#00b4ce"
+
+  # ── Sidebar ──────────────────────────────────────────────────
+  sidebar-background-color: "#0b0e17"
+  sidebar-text-color: "#8a9ab8"
+  sidebar-selected-text-color: "#00d4f0"
+  sidebar-selected-background-color: "rgba(0,212,240,0.10)"
+  sidebar-icon-color: "#4a5570"
+  sidebar-selected-icon-color: "#00d4f0"
+  sidebar-border-color: "rgba(255,255,255,0.06)"
+
+  # ── Header ───────────────────────────────────────────────────
+  app-header-background-color: "rgba(7,9,16,0.95)"
+  app-header-text-color: "#eef2f8"
+  app-header-selection-bar-color: "#00d4f0"
+
+  # ── Inputs / Toggles ─────────────────────────────────────────
+  paper-toggle-button-checked-button-color: "#00d4f0"
+  paper-toggle-button-checked-bar-color: "rgba(0,212,240,0.4)"
+  paper-toggle-button-unchecked-button-color: "#4a5570"
+  paper-toggle-button-unchecked-bar-color: "rgba(74,85,112,0.4)"
+
+  # ── Dividers / Borders ───────────────────────────────────────
+  divider-color: "rgba(255,255,255,0.06)"
+  primary-border-color: "rgba(255,255,255,0.06)"
+
+  # ── State colors ─────────────────────────────────────────────
+  success-color: "#10d090"
+  warning-color: "#f5a623"
+  error-color: "#f04060"
+  info-color: "#4d8ef0"
+
+  # ── Slider / Range ───────────────────────────────────────────
+  paper-slider-active-color: "#00d4f0"
+  paper-slider-knob-color: "#00d4f0"
+  paper-slider-pin-color: "#00d4f0"
+
+  # ── Ripple ───────────────────────────────────────────────────
+  paper-ripple-opacity: "0.1"
+
+  # ── Sticky header clearance (card-mod global) ────────────────
+  # The sections sticky header is ~165px tall (safe-area + content).
+  # card-mod-view injects this CSS into every hui-view shadow root globally.
+  # This is the ONE authoritative place for header clearance — applies to all pages.
+  card-mod-view: |
+    :host {
+      --sticky-header-clearance: calc(max(env(safe-area-inset-top), 70px) + 95px);
+    }
+

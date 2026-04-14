@@ -402,10 +402,7 @@
                         }
                       }
                     }
-                  ],
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
-                  }
+                  ]
                 }
               ]
             },
@@ -680,22 +677,12 @@
                             },
                             {
                               "type": "template",
-                              "content": "{% set temps = [state_attr('climate.daikin','current_temperature'), state_attr('climate.gemelli','current_temperature'), state_attr('climate.master','current_temperature'), state_attr('climate.upstairs','current_temperature')] | select('!=', None) | list %}{% if temps | length > 0 %}{{ ((temps | sum) / (temps | length)) | round(0) | int }}°F Avg{% else %}--°F Avg{% endif %}",
+                              "content": "{% set temps = [state_attr('climate.daikin','current_temperature'), state_attr('climate.gemelli','current_temperature'), state_attr('climate.master','current_temperature'), state_attr('climate.upstairs','current_temperature')] | select('!=', None) | list %}{% if temps | length > 0 %}{{ ((temps | sum) / (temps | length)) | round(0) | int }}Â°F Avg{% else %}--Â°F Avg{% endif %}",
                               "icon": "mdi:thermometer",
                               "icon_color": "amber",
                               "tap_action": {
                                 "action": "navigate",
                                 "navigation_path": "/dashboard-tabletv1/climate"
-                              }
-                            },
-                            {
-                              "type": "template",
-                              "icon": "mdi:tablet-dashboard",
-                              "icon_color": "{% if is_state('input_boolean.kiosk_mode_tablet', 'on') %}green{% else %}disabled{% endif %}",
-                              "content": "{% if is_state('input_boolean.kiosk_mode_tablet', 'on') %}KIOSK{% else %}KIOSK OFF{% endif %}",
-                              "tap_action": {
-                                "action": "toggle",
-                                "entity": "input_boolean.kiosk_mode_tablet"
                               }
                             }
                           ],
@@ -848,7 +835,7 @@
                   "entity": "climate.daikin",
                   "name": "Living Room â€” Daikin",
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }\nha-card { height: 40vh; }"
+                    "style": "ha-card { height: 40vh; }\n"
                   }
                 },
                 {
@@ -1018,10 +1005,7 @@
                       "entity": "light.kitchen_island_light",
                       "name": "Island"
                     }
-                  ],
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
-                  }
+                  ]
                 },
                 {
                   "type": "entities",
@@ -1219,7 +1203,7 @@
                   "show_name": true,
                   "fit_mode": "cover",
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }\nha-card { height: 38vh; }"
+                    "style": "ha-card { height: 38vh; }\n"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -1441,62 +1425,11 @@
                     }
                   ],
                   "card": {
-                    "type": "custom:button-card",
+                    "type": "media-control",
                     "entity": "media_player.benjamins_hatch_media_player",
-                    "show_name": false,
-                    "show_state": false,
-                    "show_icon": false,
-                    "show_label": true,
-                    "tap_action": {
-                      "action": "call-service",
-                      "service": "media_player.media_play_pause",
-                      "service_data": {
-                        "entity_id": "media_player.benjamins_hatch_media_player"
-                      }
-                    },
-                    "hold_action": {
-                      "action": "more-info"
-                    },
-                    "label": "[[[ const e = entity || {}; const state = e.state || 'unavailable'; const isPlaying = state === 'playing'; const isPaused = state === 'paused'; const attrs = e.attributes || {}; const track = attrs.media_title || (isPlaying || isPaused ? 'Unknown Track' : (state === 'idle' ? 'Nothing Playing' : 'Unavailable')); const artist = attrs.media_artist || ''; const stateLabel = {playing:'Playing',paused:'Paused',idle:'Idle',unavailable:'Unavailable',off:'Off'}[state] || state; const stateColorRgb = isPlaying ? '77,142,240' : isPaused ? '245,166,35' : '74,85,112'; const volPct = attrs.volume_level != null ? Math.round(attrs.volume_level * 100) : 0; const dur = attrs.media_duration || 0; const pos = attrs.media_position || 0; const updAt = attrs.media_position_updated_at; const elapsed = (isPlaying && updAt) ? pos + (Date.now() - new Date(updAt).getTime()) / 1000 : pos; const pct = dur > 0 ? Math.min(100, Math.round(elapsed / dur * 100)) : 0; const fmt = s => { const m = Math.floor(s/60); return m + ':' + String(Math.floor(s%60)).padStart(2,'0'); }; const playIconSvg = isPlaying   ? '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'none\\' stroke=\\'#00d4f0\\' stroke-width=\\'2.5\\' stroke-linecap=\\'round\\'><rect x=\\'6\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/><rect x=\\'14\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/></svg>'   : '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'#00d4f0\\' stroke=\\'none\\'><polygon points=\\'5,3 19,12 5,21\\'/></svg>'; const artUrl = attrs.entity_picture || null; const artHtml = artUrl   ? '<img src=\"' + artUrl + '\" style=\"width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;\" />'   : '<div style=\"width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#1a1040,#0d2030);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;\"><svg width=\\'20\\' height=\\'20\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'1.5\\'><path d=\\'M9 18V5l12-2v13\\'/><circle cx=\\'6\\' cy=\\'18\\' r=\\'3\\'/><circle cx=\\'18\\' cy=\\'16\\' r=\\'3\\'/></svg></div>'; return '<div style=\"padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-around;padding:4px 0 12px;\">'   + '<div style=\"width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'19 20 9 12 19 4 19 20\\'/><line x1=\\'5\\' y1=\\'19\\' x2=\\'5\\' y2=\\'5\\'/></svg>'   + '</div>'   + '<div style=\"width:52px;height:52px;border-radius:50%;background:rgba(0,212,240,0.10);border:1px solid rgba(0,212,240,0.20);display:flex;align-items:center;justify-content:center;\">' + playIconSvg + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'5 4 15 12 5 20 5 4\\'/><line x1=\\'19\\' y1=\\'5\\' x2=\\'19\\' y2=\\'19\\'/></svg>'   + '</div>'   + '</div>'   + '<div style=\"display:flex;align-items:center;gap:12px;padding-top:0;\">'   + artHtml   + '<div style=\"flex:1;min-width:0;\">'   + '<div style=\"font-size:13px;font-weight:600;color:#eef2f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + track + '</div>'   + (artist ? '<div style=\"font-size:11px;color:#8a9ab8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + artist + '</div>' : '')   + '<div style=\"font-size:9px;color:#4a5570;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;\">Benjamin\\'s Room</div>'   + '</div>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:10px;border:1px solid rgba(' + stateColorRgb + ',0.35);background:rgba(' + stateColorRgb + ',0.10);color:rgb(' + stateColorRgb + ');flex-shrink:0;\">' + stateLabel + '</span>'   + '</div>'   + (dur > 0 ? '<div style=\"padding:10px 0 0;\"><div style=\"height:2px;background:#1c2438;border-radius:3px;\"><div style=\"height:100%;width:' + pct + '%;background:linear-gradient(to right,#4d8ef0,#00d4f0);border-radius:3px;\"></div></div><div style=\"display:flex;justify-content:space-between;margin-top:4px;\"><span style=\"font-size:9px;color:#4a5570;font-variant-numeric:tabular-nums;\">' + fmt(elapsed) + '</span><span style=\"font-size:9px;color:#4a5570;font-variant-numeric:tabular-nums;\">' + fmt(dur) + '</span></div></div>' : '')   + (volPct > 0 ? '<div style=\"display:flex;align-items:center;gap:8px;padding:8px 0 0;\"><svg width=\\'12\\' height=\\'12\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'2\\'><polygon points=\\'11 5 6 9 2 9 2 15 6 15 11 19 11 5\\'/><path d=\\'M15.54 8.46a5 5 0 0 1 0 7.07\\'/></svg><div style=\\'flex:1;height:2px;background:#1c2438;border-radius:3px;\\'><div style=\\'height:100%;width:' + volPct + '%;background:linear-gradient(to right,#4d8ef0,#00d4f0);border-radius:3px;\\'></div></div><span style=\\'font-size:9px;color:#4a5570;\\'>' + volPct + '%</span></div>' : '')   + '</div>'; ]]]",
-                    "styles": {
-                      "card": [
-                        {
-                          "background": "#10151f"
-                        },
-                        {
-                          "border-radius": "20px"
-                        },
-                        {
-                          "padding": "0px"
-                        },
-                        {
-                          "border": "1px solid rgba(255,255,255,0.06)"
-                        },
-                        {
-                          "box-shadow": "none"
-                        },
-                        {
-                          "border-left": "3px solid #4d8ef0"
-                        },
-                        {
-                          "min-height": "22vh"
-                        }
-                      ],
-                      "label": [
-                        {
-                          "width": "100%"
-                        },
-                        {
-                          "white-space": "normal"
-                        },
-                        {
-                          "text-align": "left"
-                        }
-                      ]
+                    "card_mod": {
+                      "style": "ha-card { min-height: 22vh; }\n"
                     }
-                  },
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
                   }
                 },
                 {
@@ -1739,9 +1672,6 @@
                         "font-size": "15px"
                       }
                     ]
-                  },
-                  "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
                   }
                 },
                 {
