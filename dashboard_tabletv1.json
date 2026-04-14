@@ -404,7 +404,7 @@
                     }
                   ],
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
+                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }"
                   }
                 }
               ]
@@ -848,7 +848,7 @@
                   "entity": "climate.daikin",
                   "name": "Living Room â€” Daikin",
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }\nha-card { height: 40vh; }"
+                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }\nha-card { height: 40vh; }"
                   }
                 },
                 {
@@ -1020,7 +1020,7 @@
                     }
                   ],
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
+                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }"
                   }
                 },
                 {
@@ -1219,7 +1219,7 @@
                   "show_name": true,
                   "fit_mode": "cover",
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }\nha-card { height: 38vh; }"
+                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }\nha-card { height: 38vh; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -1496,7 +1496,7 @@
                     }
                   },
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
+                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }"
                   }
                 },
                 {
@@ -1741,7 +1741,7 @@
                     ]
                   },
                   "card_mod": {
-                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 95px); }"
+                    "style": ":host { margin-top: calc(max(env(safe-area-inset-top), 70px) + 140px); }"
                   }
                 },
                 {
