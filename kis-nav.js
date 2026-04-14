@@ -439,6 +439,9 @@
   }
 
   // ─── Header content rendering ──────────────────────────────────────────────
+  // Track weather state to detect first load and re-trigger clearance measurement.
+  let _prevWeatherKey = null;
+
   function getHass() {
     try { return document.querySelector('home-assistant').hass; } catch (e) { return null; }
   }
@@ -518,6 +521,16 @@
 
     // Re-measure after content renders (innerHTML changes height)
     requestAnimationFrame(applyDynamicHeaderClearance);
+
+    // Re-measure when weather state changes (covers the async first-load case:
+    // applyDynamicHeaderClearance may have fired before weather data was available,
+    // so any change in weather key triggers an additional deferred re-measurement).
+    const weatherKey = cond + '|' + tempStr;
+    if (weatherKey !== _prevWeatherKey) {
+      _prevWeatherKey = weatherKey;
+      setTimeout(applyDynamicHeaderClearance, 50);
+      setTimeout(applyDynamicHeaderClearance, 200);
+    }
   }
 
   // ─── Layout patches ────────────────────────────────────────────────────────
