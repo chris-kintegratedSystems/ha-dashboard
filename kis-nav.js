@@ -98,7 +98,7 @@
       z-index: 10000001 !important;
       background: #0f1117;
       padding: 10px 16px 18px;
-      padding-top: calc(10px + env(safe-area-inset-top, 0px));
+      padding-top: calc(10px + var(--sait, 0px));
       box-sizing: border-box;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       -webkit-transform: translateZ(0);
@@ -290,6 +290,27 @@
     document.body.style.removeProperty('overflow');
     document.documentElement.style.height = '100%';
     document.body.style.height = '100%';
+  }
+
+  // ─── Safe area inset top (WKWebView fix) ──────────────────────────────────
+  // WKWebView with contentInsetAdjustmentBehavior=never does not expose
+  // env(safe-area-inset-top) at page load time, so CSS-only usage returns 0.
+  // Fix: inject --sait via env() then read the computed value after 500ms
+  // once WKWebView has settled, then lock it in as a hardcoded px value.
+  function initSafeAreaTop() {
+    const existing = document.getElementById('kis-sait');
+    if (existing) return;
+    const saitStyle = document.createElement('style');
+    saitStyle.id = 'kis-sait';
+    saitStyle.textContent = ':root { --sait: env(safe-area-inset-top, 0px); }';
+    document.head.appendChild(saitStyle);
+
+    setTimeout(() => {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue('--sait').trim();
+      const px = parseFloat(raw) || 0;
+      document.documentElement.style.setProperty('--sait', px + 'px');
+      applyDynamicHeaderClearance();
+    }, 500);
   }
 
   // ─── Dynamic header clearance ──────────────────────────────────────────────
@@ -506,6 +527,9 @@
       syncState();
       return;
     }
+
+    // Resolve safe-area-inset-top via CSS custom property (WKWebView fix)
+    initSafeAreaTop();
 
     // Inject shared styles + global app-header hide
     const styleEl = document.createElement('style');
