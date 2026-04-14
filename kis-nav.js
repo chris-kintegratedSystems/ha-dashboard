@@ -101,6 +101,7 @@
       padding-top: calc(10px + env(safe-area-inset-top, 0px));
       box-sizing: border-box;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 8px;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
       will-change: transform;
