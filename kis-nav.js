@@ -1,22 +1,22 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v8
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v9
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
  *
- * v8 changes:
- *  - Fix #view padding-top to use calc(HEADER_H + env(safe-area-inset-top))
- *    so content is never hidden behind the header on Dynamic Island devices.
- *  - Reduce HEADER_H from 96 to 88 (content height only, safe area added separately).
- *  - Bump cache buster to ?v=7 in configuration.yaml.
+ * v9 changes:
+ *  - Dynamic header clearance: measures actual rendered header height via
+ *    getBoundingClientRect().bottom and injects padding-top into #view.
+ *  - Re-measures on every resize and orientationchange.
+ *  - Removed all static HEADER_H / padding-top / margin-top values that
+ *    were previously fighting this fix.
  */
 (function () {
   'use strict';
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
-  const NAV_H    = 80; // px — bottom nav bar height + safe-area buffer
-  const HEADER_H = 120; // px — top header bar content height (excludes safe-area-inset-top)
+  const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
 
   const PAGES = [
     { label: 'Home',    icon: 'mdi:home-variant',   slug: 'home' },
@@ -101,7 +101,6 @@
       padding-top: calc(10px + env(safe-area-inset-top, 0px));
       box-sizing: border-box;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      margin-bottom: 8px;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
       will-change: transform;
@@ -217,7 +216,7 @@
         overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch !important;
         padding-bottom: ${NAV_H}px !important;
-        padding-top: calc(${HEADER_H}px + env(safe-area-inset-top, 0px)) !important;
+        padding-top: 0 !important;
         margin-top: 0 !important;
         box-sizing: border-box;
       }
@@ -256,7 +255,6 @@
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
       }
-      /* intentionally blank — sections are light DOM, hidden via JS below */
     `;
   }
 
@@ -264,7 +262,7 @@
   function injectShadowCSS(shadowRoot, id, css) {
     if (!shadowRoot) return false;
     const existing = shadowRoot.querySelector('#' + id);
-    if (existing) { existing.textContent = css; return true; } // update on re-patch
+    if (existing) { existing.textContent = css; return true; }
     const style = document.createElement('style');
     style.id = id;
     style.textContent = css;
@@ -292,6 +290,50 @@
     document.body.style.removeProperty('overflow');
     document.documentElement.style.height = '100%';
     document.body.style.height = '100%';
+  }
+
+  // ─── Dynamic header clearance ──────────────────────────────────────────────
+  // Measures the actual rendered bottom edge of the fixed header and injects
+  // that value as padding-top on #view so content is never hidden behind it.
+  // No hardcoded pixel values — works across all devices and orientations.
+  function getHuiShadow() {
+    try {
+      const ha = document.querySelector('home-assistant');
+      const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+      let panel = null;
+      const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+      if (drawer) panel = drawer.querySelector('ha-panel-lovelace');
+      if (!panel) panel = main?.shadowRoot?.querySelector('ha-panel-lovelace');
+      const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
+      return huiRoot?.shadowRoot || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function applyDynamicHeaderClearance() {
+    if (!onMobileDashboard()) return;
+
+    const header = document.getElementById('kis-header-bar');
+    if (!header || header.hasAttribute('hidden')) return;
+
+    // getBoundingClientRect().bottom gives the exact pixel distance from the
+    // top of the viewport to the bottom edge of the fixed header bar.
+    const clearance = header.getBoundingClientRect().bottom;
+    if (!clearance) {
+      // Header not yet rendered — retry shortly
+      setTimeout(applyDynamicHeaderClearance, 100);
+      return;
+    }
+
+    const huiShadow = getHuiShadow();
+    if (!huiShadow) {
+      setTimeout(applyDynamicHeaderClearance, 200);
+      return;
+    }
+
+    const css = `#view { padding-top: ${clearance}px !important; }`;
+    injectShadowCSS(huiShadow, 'kis-header-clearance', css);
   }
 
   // ─── Header content rendering ──────────────────────────────────────────────
@@ -371,6 +413,9 @@
         </div>
       </div>
     `;
+
+    // Re-measure after content renders (innerHTML changes height)
+    requestAnimationFrame(applyDynamicHeaderClearance);
   }
 
   // ─── Layout patches ────────────────────────────────────────────────────────
@@ -419,6 +464,9 @@
         }
       }
 
+      // Layout is ready — apply dynamic header clearance
+      applyDynamicHeaderClearance();
+
     } catch (e) {
       if (attempt < maxAttempts) {
         const delay = Math.min(300 * (attempt + 1), 2000);
@@ -460,11 +508,10 @@
       return;
     }
 
-    // Inject shared styles + global app-header hide (fallback for timing edge cases)
+    // Inject shared styles + global app-header hide
     const styleEl = document.createElement('style');
     styleEl.id = 'kis-styles';
     styleEl.textContent = NAV_CSS + HEADER_CSS + `
-      /* Global: hide HA native toolbar so kis-header-bar is always unobstructed */
       app-header { display: none !important; }
     `;
     document.head.appendChild(styleEl);
@@ -494,6 +541,13 @@
 
     window.addEventListener('location-changed', syncState);
     window.addEventListener('popstate', syncState);
+
+    // Re-measure header clearance on any resize or orientation change
+    window.addEventListener('resize', applyDynamicHeaderClearance);
+    window.addEventListener('orientationchange', () => {
+      // Brief delay for orientation change to complete layout reflow
+      setTimeout(applyDynamicHeaderClearance, 150);
+    });
 
     // Update header content every second (live clock + entity states)
     setInterval(() => {
