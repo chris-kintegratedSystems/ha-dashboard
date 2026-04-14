@@ -7,7 +7,7 @@
  *
  * v9 changes:
  *  - Dynamic header clearance: measures actual rendered header height via
- *    getBoundingClientRect().bottom and injects padding-top into #view.
+ *    getBoundingClientRect().height and injects padding-top into #view.
  *  - Re-measures on every resize and orientationchange.
  *  - Removed all static HEADER_H / padding-top / margin-top values that
  *    were previously fighting this fix.
@@ -317,9 +317,8 @@
     const header = document.getElementById('kis-header-bar');
     if (!header || header.hasAttribute('hidden')) return;
 
-    // getBoundingClientRect().bottom gives the exact pixel distance from the
-    // top of the viewport to the bottom edge of the fixed header bar.
-    const clearance = header.getBoundingClientRect().bottom;
+    // getBoundingClientRect().height gives the actual rendered height of the header bar.
+    const clearance = header.getBoundingClientRect().height;
     if (!clearance) {
       // Header not yet rendered — retry shortly
       setTimeout(applyDynamicHeaderClearance, 100);
