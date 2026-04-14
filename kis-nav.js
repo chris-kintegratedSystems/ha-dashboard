@@ -555,6 +555,11 @@
 
     // Initial layout patch with retry
     setTimeout(() => patchHALayout(0), 500);
+
+    // Additional re-measurements to catch env(safe-area-inset-top) timing issues
+    setTimeout(applyDynamicHeaderClearance, 1000);
+    setTimeout(applyDynamicHeaderClearance, 2000);
+    setTimeout(applyDynamicHeaderClearance, 3500);
   }
 
   // ─── Boot ──────────────────────────────────────────────────────────────────
