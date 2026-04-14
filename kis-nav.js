@@ -1,22 +1,22 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v7
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v8
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
  *
- * v7 changes:
- *  - Inject global CSS into document.head to hide HA's native app-header
- *    (more reliable than shadow DOM injection alone — handles timing edge cases).
- *  - Raise #kis-header-bar z-index above the nav bar.
- *  - Remove overly-broad .header selector from hui-root shadow patch.
+ * v8 changes:
+ *  - Fix #view padding-top to use calc(HEADER_H + env(safe-area-inset-top))
+ *    so content is never hidden behind the header on Dynamic Island devices.
+ *  - Reduce HEADER_H from 96 to 88 (content height only, safe area added separately).
+ *  - Bump cache buster to ?v=7 in configuration.yaml.
  */
 (function () {
   'use strict';
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H    = 80; // px — bottom nav bar height + safe-area buffer
-  const HEADER_H = 96; // px — top header bar height
+  const HEADER_H = 88; // px — top header bar content height (excludes safe-area-inset-top)
 
   const PAGES = [
     { label: 'Home',    icon: 'mdi:home-variant',   slug: 'home' },
@@ -216,7 +216,7 @@
         overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch !important;
         padding-bottom: ${NAV_H}px !important;
-        padding-top: ${HEADER_H}px !important;
+        padding-top: calc(${HEADER_H}px + env(safe-area-inset-top, 0px)) !important;
         margin-top: 0 !important;
         box-sizing: border-box;
       }
