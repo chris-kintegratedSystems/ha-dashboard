@@ -216,8 +216,6 @@
         overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch !important;
         padding-bottom: ${NAV_H}px !important;
-        padding-top: 0 !important;
-        margin-top: 0 !important;
         box-sizing: border-box;
       }
       hui-sections-view, hui-masonry-view, hui-panel-view {
@@ -312,10 +310,12 @@
   }
 
   // ─── Dynamic header clearance ──────────────────────────────────────────────
-  // Measures the actual rendered bottom edge of the fixed header and injects
-  // that value as padding-top on #view so content is never hidden behind it.
-  // No hardcoded pixel values — works across all devices and orientations.
-  function getHuiShadow() {
+  // hui-sections-view scrolls INTERNALLY (overflow-y on :host). padding-top on
+  // #view (the outer container) has no effect. The built-in clearance mechanism
+  // is .wrapper.top-margin { margin-top: var(--ha-view-sections-extra-top-margin, 80px) }
+  // inside the sections-view shadow root. We patch this directly to match the
+  // actual measured header height. Re-runs on every page change and resize.
+  function getHuiRoot() {
     try {
       const ha = document.querySelector('home-assistant');
       const main = ha?.shadowRoot?.querySelector('home-assistant-main');
@@ -323,39 +323,61 @@
       const drawer = main?.shadowRoot?.querySelector('ha-drawer');
       if (drawer) panel = drawer.querySelector('ha-panel-lovelace');
       if (!panel) panel = main?.shadowRoot?.querySelector('ha-panel-lovelace');
-      const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
-      return huiRoot?.shadowRoot || null;
+      return panel?.shadowRoot?.querySelector('hui-root') || null;
     } catch (e) {
       return null;
     }
   }
 
-  function applyDynamicHeaderClearance() {
+  function getHuiShadow() {
+    const root = getHuiRoot();
+    return root?.shadowRoot || null;
+  }
+
+  function applyDynamicHeaderClearance(attempt) {
+    attempt = attempt || 0;
     if (!onMobileDashboard()) return;
 
     const header = document.getElementById('kis-header-bar');
     if (!header || header.hasAttribute('hidden')) return;
 
-    // getBoundingClientRect().height gives the actual rendered height of the header bar.
-    const clearance = header.getBoundingClientRect().height;
+    // Measure actual rendered header height — works across all devices/orientations.
+    const clearance = Math.ceil(header.getBoundingClientRect().height);
     if (!clearance) {
-      // Header not yet rendered — retry shortly
-      setTimeout(applyDynamicHeaderClearance, 100);
+      // Header not yet rendered — retry shortly.
+      setTimeout(() => applyDynamicHeaderClearance(attempt), 100);
       return;
     }
 
     const huiShadow = getHuiShadow();
     if (!huiShadow) {
-      setTimeout(applyDynamicHeaderClearance, 200);
+      if (attempt < 20) setTimeout(() => applyDynamicHeaderClearance(attempt + 1), 200);
       return;
     }
 
-    // Patch #view in hui-root shadow root — single source of clearance.
-    const viewCSS = `#view { padding-top: ${clearance}px !important; }`;
-    injectShadowCSS(huiShadow, 'kis-header-clearance', viewCSS);
-    // Always move to end — wins over any earlier padding-top:0 rules.
-    const clearanceEl = huiShadow.querySelector('#kis-header-clearance');
-    if (clearanceEl) huiShadow.appendChild(clearanceEl);
+    const viewEl = huiShadow.querySelector('#view');
+    const sectionsView = viewEl && viewEl.querySelector('hui-sections-view');
+
+    if (sectionsView && sectionsView.shadowRoot) {
+      // PRIMARY FIX: patch .wrapper inside sections-view shadow root.
+      // This is the actual scroll container — #view padding has no effect here.
+      const wrapCSS = `
+        .wrapper { margin-top: ${clearance}px !important; }
+        .wrapper.top-margin { margin-top: ${clearance}px !important; }
+      `;
+      injectShadowCSS(sectionsView.shadowRoot, 'kis-sections-clearance', wrapCSS);
+
+      // Zero out #view padding-top to prevent any double-stacking.
+      injectShadowCSS(huiShadow, 'kis-header-clearance', '#view { padding-top: 0 !important; }');
+    } else {
+      // Sections view not yet in DOM (page still loading) — retry.
+      // Also apply #view padding-top as fallback for masonry/panel view types.
+      const viewCSS = `#view { padding-top: ${clearance}px !important; }`;
+      injectShadowCSS(huiShadow, 'kis-header-clearance', viewCSS);
+      const clearanceEl = huiShadow.querySelector('#kis-header-clearance');
+      if (clearanceEl) huiShadow.appendChild(clearanceEl);
+      if (attempt < 15) setTimeout(() => applyDynamicHeaderClearance(attempt + 1), 200);
+    }
   }
 
   // ─── Header content rendering ──────────────────────────────────────────────
