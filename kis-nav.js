@@ -245,13 +245,11 @@
     return `
       :host {
         display: block;
-        padding-top: 0 !important;
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
       }
       .container, .sections-container, [class*="container"] {
-        padding-top: 0 !important;
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
       }
@@ -352,10 +350,10 @@
       return;
     }
 
-    const css = `#view { padding-top: ${clearance}px !important; }`;
-    injectShadowCSS(huiShadow, 'kis-header-clearance', css);
-    // Always move to end of shadow root — guarantees this rule wins the
-    // cascade over kis-hui-patch (padding-top:0) regardless of injection order.
+    // Patch #view in hui-root shadow root — single source of clearance.
+    const viewCSS = `#view { padding-top: ${clearance}px !important; }`;
+    injectShadowCSS(huiShadow, 'kis-header-clearance', viewCSS);
+    // Always move to end — wins over any earlier padding-top:0 rules.
     const clearanceEl = huiShadow.querySelector('#kis-header-clearance');
     if (clearanceEl) huiShadow.appendChild(clearanceEl);
   }
