@@ -18,7 +18,6 @@
               "title": "",
               "type": "grid",
               "cards": [
-
                 {
                   "type": "grid",
                   "columns": 3,
@@ -460,6 +459,53 @@
                 },
                 {
                   "type": "custom:button-card",
+                  "name": "DIAG: Tap for Header Info",
+                  "icon": "mdi:bug",
+                  "color": "#ff6b6b",
+                  "show_icon": true,
+                  "styles": {
+                    "card": [
+                      {
+                        "background": "rgba(255,107,107,0.10)"
+                      },
+                      {
+                        "border": "1px dashed rgba(255,107,107,0.4)"
+                      },
+                      {
+                        "border-radius": "12px"
+                      },
+                      {
+                        "padding": "12px"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "11px"
+                      },
+                      {
+                        "font-weight": "700"
+                      },
+                      {
+                        "color": "#ff6b6b"
+                      },
+                      {
+                        "text-transform": "uppercase"
+                      },
+                      {
+                        "letter-spacing": "0.08em"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "browser_mod.javascript",
+                    "service_data": {
+                      "code": "(function(){ var h = document.getElementById('kis-header-bar'); var r = h ? h.getBoundingClientRect() : null; var huiShadow = (function(){ try { var ha=document.querySelector('home-assistant'); var main=ha&&ha.shadowRoot&&ha.shadowRoot.querySelector('home-assistant-main'); var drawer=main&&main.shadowRoot&&main.shadowRoot.querySelector('ha-drawer'); var panel=drawer?drawer.querySelector('ha-panel-lovelace'):main&&main.shadowRoot&&main.shadowRoot.querySelector('ha-panel-lovelace'); var hui=panel&&panel.shadowRoot&&panel.shadowRoot.querySelector('hui-root'); return hui&&hui.shadowRoot; } catch(e){ return null; } }()); var view=huiShadow&&huiShadow.querySelector('#view'); var pt=view?getComputedStyle(view).paddingTop:'n/a'; var clStyle=huiShadow&&huiShadow.querySelector('#kis-header-clearance'); var injected=clStyle?clStyle.textContent.match(/padding-top:\\s*([\\d.]+)/):null; var msg=(r?'kis-header: h='+Math.round(r.height)+' top='+Math.round(r.top)+' bot='+Math.round(r.bottom):'kis-header: NOT FOUND')+' | #view paddingTop='+pt+' | injected='+(injected?injected[1]+'px':'none')+' | innerH='+window.innerHeight; var haEl=document.querySelector('home-assistant'); if(haEl&&haEl.hass){ haEl.hass.callService('persistent_notification','create',{title:'Header Diag',notification_id:'diag_live',message:msg}); } })()"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:button-card",
                   "entity": "lock.back_door_lock",
                   "name": "Back Door",
                   "show_state": false,
@@ -660,41 +706,6 @@
                   ],
                   "card_mod": {
                     "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n"
-                  }
-                }
-              ]
-            },
-            {
-              "title": "",
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:button-card",
-                  "name": "DIAG: Tap for Header Info",
-                  "icon": "mdi:bug",
-                  "color": "#ff6b6b",
-                  "show_icon": true,
-                  "styles": {
-                    "card": [
-                      { "background": "rgba(255,107,107,0.10)" },
-                      { "border": "1px dashed rgba(255,107,107,0.4)" },
-                      { "border-radius": "12px" },
-                      { "padding": "12px" }
-                    ],
-                    "name": [
-                      { "font-size": "11px" },
-                      { "font-weight": "700" },
-                      { "color": "#ff6b6b" },
-                      { "text-transform": "uppercase" },
-                      { "letter-spacing": "0.08em" }
-                    ]
-                  },
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "browser_mod.javascript",
-                    "service_data": {
-                      "code": "(function(){ var h = document.getElementById('kis-header-bar'); var r = h ? h.getBoundingClientRect() : null; var huiShadow = (function(){ try { var ha=document.querySelector('home-assistant'); var main=ha&&ha.shadowRoot&&ha.shadowRoot.querySelector('home-assistant-main'); var drawer=main&&main.shadowRoot&&main.shadowRoot.querySelector('ha-drawer'); var panel=drawer?drawer.querySelector('ha-panel-lovelace'):main&&main.shadowRoot&&main.shadowRoot.querySelector('ha-panel-lovelace'); var hui=panel&&panel.shadowRoot&&panel.shadowRoot.querySelector('hui-root'); return hui&&hui.shadowRoot; } catch(e){ return null; } }()); var view=huiShadow&&huiShadow.querySelector('#view'); var pt=view?getComputedStyle(view).paddingTop:'n/a'; var clStyle=huiShadow&&huiShadow.querySelector('#kis-header-clearance'); var injected=clStyle?clStyle.textContent.match(/padding-top:\\s*([\\d.]+)/):null; var msg=(r?'kis-header: h='+Math.round(r.height)+' top='+Math.round(r.top)+' bot='+Math.round(r.bottom):'kis-header: NOT FOUND')+' | #view paddingTop='+pt+' | injected='+(injected?injected[1]+'px':'none')+' | innerH='+window.innerHeight; var haEl=document.querySelector('home-assistant'); if(haEl&&haEl.hass){ haEl.hass.callService('persistent_notification','create',{title:'Header Diag',notification_id:'diag_live',message:msg}); } })()"
-                    }
                   }
                 }
               ]
@@ -1226,7 +1237,8 @@
                         "text-align": "left"
                       }
                     ]
-                  }},
+                  }
+                },
                 {
                   "type": "custom:button-card",
                   "entity": "climate.gemelli",
@@ -3225,7 +3237,8 @@
                         }
                       ]
                     }
-                  }},
+                  }
+                },
                 {
                   "type": "conditional",
                   "conditions": [
