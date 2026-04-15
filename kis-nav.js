@@ -1,16 +1,16 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v9
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v11
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
  *
- * v9 changes:
- *  - Dynamic header clearance: measures actual rendered header height via
- *    getBoundingClientRect().height and injects padding-top into #view.
- *  - Re-measures on every resize and orientationchange.
- *  - Removed all static HEADER_H / padding-top / margin-top values that
- *    were previously fighting this fix.
+ * v11 changes:
+ *  - Single-row header: left (clock+weather), right (person pills + alarm pill)
+ *  - 6-tab bottom nav: Home, Climate, Lights, Cameras, Media, Settings
+ *  - Person pills replace avatar circles — tappable, with dot status
+ *  - Nav label font-size reduced to 9px for 6-item fit
+ *  - Header height reduced to match nav bar (~68px + safe-area)
  */
 (function () {
   'use strict';
@@ -19,11 +19,12 @@
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
 
   const PAGES = [
-    { label: 'Home',    icon: 'mdi:home-variant',   slug: 'home' },
-    { label: 'Climate', icon: 'mdi:thermometer',     slug: 'climate' },
-    { label: 'Lights',  icon: 'mdi:lightbulb-group', slug: 'lights' },
-    { label: 'Cameras', icon: 'mdi:cctv',            slug: 'cameras' },
-    { label: 'Media',   icon: 'mdi:music-note',      slug: 'media' },
+    { label: 'Home',     icon: 'mdi:home-variant',   slug: 'home' },
+    { label: 'Climate',  icon: 'mdi:thermometer',     slug: 'climate' },
+    { label: 'Lights',   icon: 'mdi:lightbulb-group', slug: 'lights' },
+    { label: 'Cameras',  icon: 'mdi:cctv',            slug: 'cameras' },
+    { label: 'Media',    icon: 'mdi:music-note',      slug: 'media' },
+    { label: 'Settings', icon: 'mdi:cog',             slug: 'settings' },
   ];
 
   // ─── Styles: bottom nav ────────────────────────────────────────────────────
@@ -36,13 +37,13 @@
       z-index: 9999999 !important;
       display: flex;
       align-items: stretch;
-      background: rgba(7, 9, 16, 0.97);
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(7,9,16,0.95);
+      border-top: 1px solid rgba(255,255,255,0.06);
       padding-bottom: env(safe-area-inset-bottom, 0px);
-      min-height: 62px;
+      min-height: 68px;
       box-sizing: border-box;
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(24px) saturate(200%);
+      backdrop-filter: blur(24px) saturate(200%);
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
       will-change: transform;
@@ -54,7 +55,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 4px;
       background: none;
       border: none;
       cursor: pointer;
@@ -66,11 +67,11 @@
       transition: color 0.15s ease;
     }
     #kis-nav-bar .knb-btn.knb-active { color: #00d4f0; }
-    #kis-nav-bar .knb-btn ha-icon { --mdc-icon-size: 24px; display: block; }
+    #kis-nav-bar .knb-btn ha-icon { --mdc-icon-size: 22px; display: block; }
     #kis-nav-bar .knb-label {
       font-size: 9px;
       font-weight: 600;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1;
@@ -88,7 +89,7 @@
     #kis-nav-bar .knb-btn.knb-active .knb-pill { opacity: 1; }
   `;
 
-  // ─── Styles: top header bar ────────────────────────────────────────────────
+  // ─── Styles: top header bar (v11 single-row) ────────────────────────────────
   const HEADER_CSS = `
     #kis-header-bar {
       position: fixed !important;
@@ -96,109 +97,146 @@
       left: 0 !important;
       right: 0 !important;
       z-index: 10000001 !important;
-      background: #0f1117;
-      padding: 10px 16px 18px;
-      padding-top: calc(10px + var(--sait, 0px));
-      box-sizing: border-box;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-      will-change: transform;
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    #kis-header-bar[hidden] { display: none !important; }
-    #kis-header-bar .kh-row1 {
+      background: rgba(7,9,16,0.92);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 7px;
+      gap: 8px;
+      padding: 0 16px;
+      padding-top: calc(env(safe-area-inset-top, 0px));
+      min-height: 68px;
+      box-sizing: border-box;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: transform;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+    }
+    #kis-header-bar[hidden] { display: none !important; }
+
+    /* Left side: clock + weather */
+    #kis-header-bar .kh-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    #kis-header-bar .kh-clock-wrap {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
     }
     #kis-header-bar .kh-clock {
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 700;
       letter-spacing: -0.02em;
-      color: #f1f5f9;
+      color: #eef2f8;
       font-variant-numeric: tabular-nums;
       line-height: 1;
     }
     #kis-header-bar .kh-ampm {
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 600;
-      color: #94a3b8;
+      color: #8a9ab8;
     }
     #kis-header-bar .kh-date {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 500;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #475569;
-      margin-top: 2px;
+      color: #4a5570;
+      margin-top: 1px;
     }
+    #kis-header-bar .kh-weather {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #kis-header-bar .kh-weather-icon { font-size: 16px; line-height: 1; }
+    #kis-header-bar .kh-weather-temp {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Right side: person pills + alarm pill */
+    #kis-header-bar .kh-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 1;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    #kis-header-bar .kh-right::-webkit-scrollbar { display: none; }
+
+    #kis-header-bar .kh-person-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px 3px 5px;
+      border-radius: 14px;
+      background: rgba(16,21,31,0.72);
+      border: 1px solid rgba(255,255,255,0.06);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    #kis-header-bar .kh-pdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    #kis-header-bar .kh-pdot.home {
+      background: #10d090;
+      box-shadow: 0 0 4px #10d090;
+    }
+    #kis-header-bar .kh-pdot.away {
+      background: #4d8ef0;
+    }
+    #kis-header-bar .kh-pdot.unknown {
+      background: #4a5570;
+    }
+    #kis-header-bar .kh-pname {
+      font-size: 10px;
+      font-weight: 600;
+      color: #eef2f8;
+    }
+
     #kis-header-bar .kh-alarm {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 5px 11px;
-      border-radius: 20px;
+      gap: 5px;
+      padding: 4px 9px;
+      border-radius: 16px;
       border: 1px solid rgba(100,116,139,0.3);
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       white-space: nowrap;
       color: #94a3b8;
       background: rgba(100,116,139,0.15);
+      flex-shrink: 0;
     }
     #kis-header-bar .kh-alarm-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: currentColor;
       display: inline-block;
       flex-shrink: 0;
+      animation: kh-pulse 2s ease-in-out infinite;
     }
-    #kis-header-bar .kh-row2 {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding-top: 7px;
-    }
-    #kis-header-bar .kh-weather {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    #kis-header-bar .kh-weather-icon { font-size: 18px; line-height: 1; }
-    #kis-header-bar .kh-weather-temp {
-      font-size: 16px;
-      font-weight: 700;
-      color: #f1f5f9;
-      font-variant-numeric: tabular-nums;
-    }
-    #kis-header-bar .kh-weather-desc {
-      font-size: 10px;
-      color: #64748b;
-      letter-spacing: 0.05em;
-    }
-    #kis-header-bar .kh-presence { display: flex; gap: 5px; align-items: center; }
-    #kis-header-bar .kh-person {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 9px;
-      font-weight: 700;
-      background: rgba(100,116,139,0.1);
-      color: #64748b;
-      border: 2px solid #334155;
-    }
-    #kis-header-bar .kh-person.home {
-      background: rgba(16,208,144,0.15);
-      color: #10d090;
-      border-color: rgba(16,208,144,0.6);
+    @keyframes kh-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
     }
   `;
 
@@ -255,6 +293,10 @@
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
       }
+      /* Zero out HA's default 80px spacer for view headers (we use #kis-header-bar instead) */
+      .wrapper.top-margin, .top-margin, .wrapper {
+        margin-top: 0 !important;
+      }
     `;
   }
 
@@ -283,6 +325,11 @@
     const path = `${DASHBOARD_PREFIX}/${slug}`;
     window.history.pushState(null, '', path);
     window.dispatchEvent(new CustomEvent('location-changed', { bubbles: true, composed: true }));
+
+    // TODO: Nest camera autoplay on iOS — parked for future investigation.
+    // Nest WebRTC streams don't auto-start on non-initial views due to iOS
+    // autoplay policy. Streams work on tap. Muted autoplay approach tested
+    // but didn't resolve. Cameras work fine on the single-view dashboard.
   }
 
   function fixBodyScroll() {
@@ -327,55 +374,12 @@
     }, 500);
   }
 
-  // ─── View header clearance (sticky HA view header → sections gap) ──────────
-  // HA sections-view renders a sticky header card (from the view `header` config
-  // property). The sections grid below it needs explicit clearance = that header's
-  // rendered height, or the first section starts UNDER the sticky header.
-  // HA's own mechanism: --ha-view-sections-extra-top-margin → .wrapper.top-margin
-  // We measure the actual rendered height and set this variable + patch the spacer.
-  function applyViewHeaderClearance(sectionsView, attempt) {
-    attempt = attempt || 0;
-    if (!sectionsView || !sectionsView.shadowRoot) return;
-
-    // Try known selectors for the view header across HA versions
-    const HEADER_SELS = [
-      'hui-view-header',          // HA 2024.11+ dedicated element
-      '.header',                  // common container class
-      '.header-scrollable',
-      '[class*="view-header"]',
-    ];
-    let viewHeaderEl = null;
-    for (const sel of HEADER_SELS) {
-      const el = sectionsView.shadowRoot.querySelector(sel);
-      if (el && el.getBoundingClientRect().height > 5) {
-        viewHeaderEl = el;
-        break;
-      }
-    }
-    if (!viewHeaderEl) {
-      if (attempt < 8) setTimeout(() => applyViewHeaderClearance(sectionsView, attempt + 1), 300);
-      return;
-    }
-
-    const viewHeaderH = Math.ceil(viewHeaderEl.getBoundingClientRect().height);
-
-    // Set HA's CSS variable so .wrapper.top-margin pushes sections below the header
-    sectionsView.style.setProperty('--ha-view-sections-extra-top-margin', viewHeaderH + 'px');
-
-    // Also directly patch the spacer element as a fallback
-    injectShadowCSS(sectionsView.shadowRoot, 'kis-view-header-clearance', `
-      .wrapper.top-margin, .top-margin {
-        margin-top: ${viewHeaderH}px !important;
-      }
-    `);
-  }
-
   // ─── Dynamic header clearance ──────────────────────────────────────────────
-  // hui-sections-view scrolls INTERNALLY (overflow-y on :host). padding-top on
-  // #view (the outer container) has no effect. The built-in clearance mechanism
-  // is .wrapper.top-margin { margin-top: var(--ha-view-sections-extra-top-margin, 80px) }
-  // inside the sections-view shadow root. We patch this directly to match the
-  // actual measured header height. Re-runs on every page change and resize.
+  // #kis-header-bar is position:fixed at viewport top. hui-sections-view needs
+  // margin-top equal to the header's rendered height so content starts below it.
+  // HA's internal .wrapper.top-margin (default 80px for view headers) is zeroed
+  // out via getSectionsViewCSS() and --ha-view-sections-extra-top-margin: 0px.
+  // Re-runs on every page change, resize, and orientation change.
   function getHuiRoot() {
     try {
       const ha = document.querySelector('home-assistant');
@@ -430,13 +434,15 @@
       sectionsView.style.setProperty('height', `calc(100vh - ${NAV_H + clearance}px)`, 'important');
       sectionsView.style.setProperty('overflow-y', 'auto', 'important');
 
-      // Measure sticky view header inside sections-view and push sections below it.
-      setTimeout(() => applyViewHeaderClearance(sectionsView), 150);
+      // Zero out HA's default view-header spacer variable (no HA view header — we use #kis-header-bar)
+      sectionsView.style.setProperty('--ha-view-sections-extra-top-margin', '0px');
 
       // Remove any stale .wrapper injection from prior approach.
       if (sectionsView.shadowRoot) {
         const old = sectionsView.shadowRoot.querySelector('#kis-sections-clearance');
         if (old) old.remove();
+        const oldVh = sectionsView.shadowRoot.querySelector('#kis-view-header-clearance');
+        if (oldVh) oldVh.remove();
       }
 
       // Zero out #view padding-top to prevent any double-stacking.
@@ -483,12 +489,12 @@
     const alarmEnt = getState(hass, 'alarm_control_panel.kuprycz_home');
     const alarmState = alarmEnt ? alarmEnt.state : null;
     const ALARM_COLORS = {
-      disarmed:   { bg:'rgba(16,208,144,0.1)',  color:'#10d090', border:'rgba(16,208,144,0.3)',  label:'Disarmed'   },
-      armed_away: { bg:'rgba(239,68,68,0.15)',  color:'#ef4444', border:'rgba(239,68,68,0.3)',   label:'Armed Away' },
-      armed_home: { bg:'rgba(245,158,11,0.15)', color:'#f59e0b', border:'rgba(245,158,11,0.3)',  label:'Armed Home' },
-      arming:     { bg:'rgba(245,158,11,0.15)', color:'#f59e0b', border:'rgba(245,158,11,0.3)',  label:'Arming'     },
-      pending:    { bg:'rgba(245,158,11,0.15)', color:'#f59e0b', border:'rgba(245,158,11,0.3)',  label:'Pending'    },
-      triggered:  { bg:'rgba(239,68,68,0.25)',  color:'#ef4444', border:'rgba(239,68,68,0.4)',   label:'TRIGGERED'  },
+      disarmed:   { bg:'rgba(16,208,144,0.12)', color:'#10d090', border:'rgba(16,208,144,0.3)',  label:'Disarmed'   },
+      armed_away: { bg:'rgba(77,142,240,0.12)', color:'#4d8ef0', border:'rgba(77,142,240,0.3)',  label:'Armed Away' },
+      armed_home: { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Armed Home' },
+      arming:     { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Arming'     },
+      pending:    { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Pending'    },
+      triggered:  { bg:'rgba(240,64,96,0.15)',  color:'#f04060', border:'rgba(240,64,96,0.3)',   label:'TRIGGERED'  },
     };
     const alarm = ALARM_COLORS[alarmState] || { bg:'rgba(100,116,139,0.15)', color:'#94a3b8', border:'rgba(100,116,139,0.3)', label:'Unknown' };
 
@@ -502,33 +508,36 @@
     const condLabel = WX_LABELS[cond] || cond || '--';
     const wxIcon    = WX_ICONS[cond]  || '🌤️';
 
-    // Presence
-    function personHome(entity) {
+    // Presence — returns 'home', 'away', or 'unknown'
+    function personState(entity) {
       const ent = getState(hass, entity);
-      return ent && ent.state === 'home';
+      if (!ent) return 'unknown';
+      return ent.state === 'home' ? 'home' : 'away';
     }
 
-    // Build DOM content
+    function personPill(name, entity) {
+      const st = personState(entity);
+      return `<div class="kh-person-pill"><span class="kh-pdot ${st}"></span><span class="kh-pname">${name}</span></div>`;
+    }
+
+    // Build DOM content — single row
     bar.innerHTML = `
-      <div class="kh-row1">
-        <div>
+      <div class="kh-left">
+        <div class="kh-clock-wrap">
           <div class="kh-clock">${h12}:${min} <span class="kh-ampm">${ampm}</span></div>
           <div class="kh-date">${dateStr}</div>
         </div>
-        <div class="kh-alarm" style="background:${alarm.bg};color:${alarm.color};border-color:${alarm.border};">
-          <span class="kh-alarm-dot"></span>${alarm.label}
-        </div>
-      </div>
-      <div class="kh-row2">
         <div class="kh-weather">
           <span class="kh-weather-icon">${wxIcon}</span>
           <span class="kh-weather-temp">${tempStr}</span>
-          <span class="kh-weather-desc">Dallas · ${condLabel}</span>
         </div>
-        <div class="kh-presence">
-          <div class="kh-person${personHome('person.chris')    ? ' home' : ''}">C</div>
-          <div class="kh-person${personHome('person.claire')   ? ' home' : ''}">CL</div>
-          <div class="kh-person${personHome('person.benjamin') ? ' home' : ''}">B</div>
+      </div>
+      <div class="kh-right">
+        ${personPill('Chris', 'person.chris')}
+        ${personPill('Claire', 'person.claire')}
+        ${personPill('B', 'person.benjamin')}
+        <div class="kh-alarm" style="background:${alarm.bg};color:${alarm.color};border-color:${alarm.border};">
+          <span class="kh-alarm-dot"></span>${alarm.label}
         </div>
       </div>
     `;
