@@ -2993,6 +2993,72 @@
                     }
                   },
                   "name": "Living Room"
+                },
+                {
+                  "type": "picture-entity",
+                  "entity": "camera.nanit_benjamin",
+                  "camera_image": "camera.nanit_benjamin",
+                  "camera_view": "live",
+                  "show_state": false,
+                  "show_name": false,
+                  "fit_mode": "cover",
+                  "card_mod": {
+                    "style": "ha-card { height: 30vh; }"
+                  },
+                  "tap_action": {
+                    "action": "fire-dom-event",
+                    "browser_mod": {
+                      "service": "browser_mod.popup",
+                      "data": {
+                        "title": false,
+                        "dismissable": true,
+                        "content": {
+                          "type": "picture-entity",
+                          "entity": "camera.nanit_benjamin",
+                          "camera_image": "camera.nanit_benjamin",
+                          "camera_view": "live",
+                          "show_state": false,
+                          "show_name": false,
+                          "fit_mode": "cover"
+                        },
+                        "style": "--popup-border-radius: 0px; --popup-padding: 0px; --popup-min-width: 92vw; --popup-max-width: 92vw; --popup-background: black;"
+                      }
+                    }
+                  },
+                  "name": "Nanit Benjamin"
+                },
+                {
+                  "type": "picture-entity",
+                  "entity": "camera.nanit_travel",
+                  "camera_image": "camera.nanit_travel",
+                  "camera_view": "live",
+                  "show_state": false,
+                  "show_name": false,
+                  "fit_mode": "cover",
+                  "card_mod": {
+                    "style": "ha-card { height: 30vh; }"
+                  },
+                  "tap_action": {
+                    "action": "fire-dom-event",
+                    "browser_mod": {
+                      "service": "browser_mod.popup",
+                      "data": {
+                        "title": false,
+                        "dismissable": true,
+                        "content": {
+                          "type": "picture-entity",
+                          "entity": "camera.nanit_travel",
+                          "camera_image": "camera.nanit_travel",
+                          "camera_view": "live",
+                          "show_state": false,
+                          "show_name": false,
+                          "fit_mode": "cover"
+                        },
+                        "style": "--popup-border-radius: 0px; --popup-padding: 0px; --popup-min-width: 92vw; --popup-max-width: 92vw; --popup-background: black;"
+                      }
+                    }
+                  },
+                  "name": "Nanit Travel"
                 }
               ]
             }

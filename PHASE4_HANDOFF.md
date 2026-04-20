@@ -90,8 +90,21 @@ done on the current branches.
 
 After both PRs merge:
 
-1. SCP updated `dashboard_mobilev1.json` to `/config/.storage/` on the Pi.
-2. SCP updated `configuration.yaml` to `/config/` on the Pi.
+1. SCP `dashboard_mobilev1.json` to `/tmp/` on the Pi, then:
+   ```bash
+   sudo cp /tmp/dashboard_mobilev1.json \
+     /home/cooper5389/homeassistant/config/.storage/lovelace.dashboard_mobilev1
+   sudo chown root:root \
+     /home/cooper5389/homeassistant/config/.storage/lovelace.dashboard_mobilev1
+   sudo chmod 644 \
+     /home/cooper5389/homeassistant/config/.storage/lovelace.dashboard_mobilev1
+   ```
+   **Do NOT SCP to `/config/www/mobile_v1/`.** That directory is a
+   dead letter for dashboard JSONs — HA only reads Lovelace configs
+   from `.storage/`. See `ha-dashboard/CLAUDE.md` → "Critical Patterns
+   → dashboard target path" for the full anti-pattern write-up. This
+   cost ~an hour to debug on 2026-04-20 during the Nanit deploy.
+2. SCP `configuration.yaml` to `/config/` on the Pi.
 3. `sudo docker restart homeassistant` — HA caches Lovelace + config in
    memory and will not re-read files otherwise.
 4. `cd C:\Projects\kintegrated\projects\ha-dashboard && node qa-screenshot.js`
@@ -99,3 +112,27 @@ After both PRs merge:
 5. Hard refresh on real Tab S9 (Fully Kiosk) and real iPhone (HA Companion
    App). Confirm header + nav + home view render in both day and night
    themes. This is the final gate; Playwright is a floor, not a ceiling.
+
+---
+
+## 2026-04-20 session extensions (post-handoff)
+
+### Nanit integration — live
+Benjamin + Travel Nanit baby monitors are streaming into the Cameras
+page via a local `seangreenhalgh/nanit:v2.2.1` RTMP restream container
+on the Pi. `camera.nanit_benjamin` and `camera.nanit_travel` are live;
+secrets.yaml holds the two `nanit_*_rtmp` full-URL values. Motion /
+sound / crying events deferred — require an MQTT broker which the Pi
+does not yet have. See `ha-config/CLAUDE.md` → "Nanit Integration"
+for the full write-up and the path to enabling MQTT-driven motion.
+
+Three PRs landed the prep + docs:
+- `kis-team#2` — `nanit/docker-compose.yaml`
+- `ha-config#3` — ffmpeg camera entries + `secrets.yaml.example` + docs
+- `ha-dashboard#5` — two picture-entity cards on the Cameras page
+
+### Dashboard-target-path critical pattern — documented
+The Nanit deploy surfaced a dead-letter failure mode (JSON SCP'd to
+`/config/www/mobile_v1/` instead of `/config/.storage/lovelace.dashboard_mobilev1`).
+`ha-dashboard/CLAUDE.md` and `ha-config/CLAUDE.md` now carry an
+explicit anti-pattern callout so this cannot recur silently.
