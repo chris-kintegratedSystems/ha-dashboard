@@ -7,6 +7,31 @@
       "title": "mobileV1",
       "theme": "kis-dark",
       "button_card_templates": {
+        "cam_close": {
+          "show_name": false,
+          "icon": "mdi:close",
+          "tap_action": {
+            "action": "fire-dom-event",
+            "browser_mod": {
+              "service": "browser_mod.close_popup"
+            }
+          },
+          "styles": {
+            "card": [
+              { "background": "rgba(0,0,0,0.6)" },
+              { "border-radius": "12px" },
+              { "border": "none" },
+              { "width": "44px" },
+              { "height": "44px" },
+              { "padding": "0" },
+              { "box-shadow": "none" }
+            ],
+            "icon": [
+              { "color": "#ffffff" },
+              { "width": "22px" }
+            ]
+          }
+        },
         "cam_ctrl_disabled": {
           "show_name": false,
           "tap_action": { "action": "none" },
@@ -1031,7 +1056,7 @@
                             "show_name": false,
                             "fit_mode": "fill",
                             "card_mod": {
-                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #f04060; box-shadow: 0 0 12px rgba(240,64,96,0.4); border-radius: 12px; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #f04060; box-shadow: 0 0 12px rgba(240,64,96,0.4); border-radius: 12px; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                             },
                             "tap_action": {
                               "action": "fire-dom-event",
@@ -1046,23 +1071,31 @@
                                     "type": "picture-elements",
                                     "camera_image": "camera.doorbell",
                                     "camera_view": "live",
+                                    "card_mod": {
+                                      "style": "hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                                    },
                                     "elements": [
                                       {
                                         "type": "custom:button-card",
+                                        "template": "cam_close",
+                                        "style": { "top": "16px", "right": "16px" }
+                                      },
+                                      {
+                                        "type": "custom:button-card",
                                         "template": "cam_lock_front_door",
-                                        "style": { "bottom": "18px", "right": "116px" }
+                                        "style": { "bottom": "18px", "left": "calc(50% - 74px)" }
                                       },
                                       {
                                         "type": "custom:button-card",
                                         "template": "cam_ctrl_disabled",
                                         "icon": "mdi:microphone",
-                                        "style": { "bottom": "18px", "right": "64px" }
+                                        "style": { "bottom": "18px", "left": "calc(50% - 22px)" }
                                       },
                                       {
                                         "type": "custom:button-card",
                                         "template": "cam_ctrl_disabled",
                                         "icon": "mdi:volume-high",
-                                        "style": { "bottom": "18px", "right": "12px" }
+                                        "style": { "bottom": "18px", "left": "calc(50% + 30px)" }
                                       }
                                     ]
                                   }
@@ -1088,7 +1121,7 @@
                             "show_name": false,
                             "fit_mode": "fill",
                             "card_mod": {
-                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #00c8e8; box-shadow: 0 0 12px rgba(0,200,232,0.4); border-radius: 12px; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #00c8e8; box-shadow: 0 0 12px rgba(0,200,232,0.4); border-radius: 12px; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                             },
                             "tap_action": {
                               "action": "fire-dom-event",
@@ -1106,15 +1139,20 @@
                                     "elements": [
                                       {
                                         "type": "custom:button-card",
+                                        "template": "cam_close",
+                                        "style": { "top": "16px", "right": "16px" }
+                                      },
+                                      {
+                                        "type": "custom:button-card",
                                         "template": "cam_ctrl_disabled",
                                         "icon": "mdi:microphone",
-                                        "style": { "bottom": "18px", "right": "64px" }
+                                        "style": { "bottom": "18px", "left": "calc(50% - 48px)" }
                                       },
                                       {
                                         "type": "custom:button-card",
                                         "template": "cam_ctrl_disabled",
                                         "icon": "mdi:volume-high",
-                                        "style": { "bottom": "18px", "right": "12px" }
+                                        "style": { "bottom": "18px", "left": "calc(50% + 4px)" }
                                       }
                                     ]
                                   }
@@ -1140,7 +1178,7 @@
                             "show_name": false,
                             "fit_mode": "fill",
                             "card_mod": {
-                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #00c8e8; box-shadow: 0 0 12px rgba(0,200,232,0.4); border-radius: 12px; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #00c8e8; box-shadow: 0 0 12px rgba(0,200,232,0.4); border-radius: 12px; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                             },
                             "tap_action": {
                               "action": "fire-dom-event",
@@ -1158,15 +1196,20 @@
                                     "elements": [
                                       {
                                         "type": "custom:button-card",
+                                        "template": "cam_close",
+                                        "style": { "top": "16px", "right": "16px" }
+                                      },
+                                      {
+                                        "type": "custom:button-card",
                                         "template": "cam_ctrl_disabled",
                                         "icon": "mdi:microphone",
-                                        "style": { "bottom": "18px", "right": "64px" }
+                                        "style": { "bottom": "18px", "left": "calc(50% - 48px)" }
                                       },
                                       {
                                         "type": "custom:button-card",
                                         "template": "cam_ctrl_disabled",
                                         "icon": "mdi:volume-high",
-                                        "style": { "bottom": "18px", "right": "12px" }
+                                        "style": { "bottom": "18px", "left": "calc(50% + 4px)" }
                                       }
                                     ]
                                   }
@@ -2999,7 +3042,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3014,23 +3057,31 @@
                           "type": "picture-elements",
                           "camera_image": "camera.doorbell",
                           "camera_view": "live",
+                          "card_mod": {
+                            "style": "hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                          },
                           "elements": [
                             {
                               "type": "custom:button-card",
+                              "template": "cam_close",
+                              "style": { "top": "16px", "right": "16px" }
+                            },
+                            {
+                              "type": "custom:button-card",
                               "template": "cam_lock_front_door",
-                              "style": { "bottom": "18px", "right": "116px" }
+                              "style": { "bottom": "18px", "left": "calc(50% - 74px)" }
                             },
                             {
                               "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:microphone",
-                              "style": { "bottom": "18px", "right": "64px" }
+                              "style": { "bottom": "18px", "left": "calc(50% - 22px)" }
                             },
                             {
                               "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:volume-high",
-                              "style": { "bottom": "18px", "right": "12px" }
+                              "style": { "bottom": "18px", "left": "calc(50% + 30px)" }
                             }
                           ]
                         }
@@ -3048,7 +3099,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3066,15 +3117,20 @@
                           "elements": [
                             {
                               "type": "custom:button-card",
+                              "template": "cam_close",
+                              "style": { "top": "16px", "right": "16px" }
+                            },
+                            {
+                              "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:microphone",
-                              "style": { "bottom": "18px", "right": "64px" }
+                              "style": { "bottom": "18px", "left": "calc(50% - 48px)" }
                             },
                             {
                               "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:volume-high",
-                              "style": { "bottom": "18px", "right": "12px" }
+                              "style": { "bottom": "18px", "left": "calc(50% + 4px)" }
                             }
                           ]
                         }
@@ -3092,7 +3148,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3110,15 +3166,20 @@
                           "elements": [
                             {
                               "type": "custom:button-card",
+                              "template": "cam_close",
+                              "style": { "top": "16px", "right": "16px" }
+                            },
+                            {
+                              "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:microphone",
-                              "style": { "bottom": "18px", "right": "64px" }
+                              "style": { "bottom": "18px", "left": "calc(50% - 48px)" }
                             },
                             {
                               "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:volume-high",
-                              "style": { "bottom": "18px", "right": "12px" }
+                              "style": { "bottom": "18px", "left": "calc(50% + 4px)" }
                             }
                           ]
                         }
@@ -3136,7 +3197,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3154,15 +3215,20 @@
                           "elements": [
                             {
                               "type": "custom:button-card",
+                              "template": "cam_close",
+                              "style": { "top": "16px", "right": "16px" }
+                            },
+                            {
+                              "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:microphone",
-                              "style": { "bottom": "18px", "right": "64px" }
+                              "style": { "bottom": "18px", "left": "calc(50% - 48px)" }
                             },
                             {
                               "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:volume-high",
-                              "style": { "bottom": "18px", "right": "12px" }
+                              "style": { "bottom": "18px", "left": "calc(50% + 4px)" }
                             }
                           ]
                         }
@@ -3180,7 +3246,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; } hui-image { height: 100% !important; } hui-image img, hui-image div { height: 100% !important; }"
+                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3198,15 +3264,20 @@
                           "elements": [
                             {
                               "type": "custom:button-card",
+                              "template": "cam_close",
+                              "style": { "top": "16px", "right": "16px" }
+                            },
+                            {
+                              "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:microphone",
-                              "style": { "bottom": "18px", "right": "64px" }
+                              "style": { "bottom": "18px", "left": "calc(50% - 48px)" }
                             },
                             {
                               "type": "custom:button-card",
                               "template": "cam_ctrl_disabled",
                               "icon": "mdi:volume-high",
-                              "style": { "bottom": "18px", "right": "12px" }
+                              "style": { "bottom": "18px", "left": "calc(50% + 4px)" }
                             }
                           ]
                         }
