@@ -3138,11 +3138,13 @@
           "title": "Cameras",
           "path": "cameras",
           "icon": "mdi:cctv",
-          "type": "sections",
-          "max_columns": 1,
-          "sections": [
+          "type": "panel",
+          "badges": [],
+          "cards": [
             {
               "type": "grid",
+              "columns": 2,
+              "square": false,
               "cards": [
                 {
                   "type": "picture-entity",
@@ -3153,7 +3155,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh !important; min-height: 30vh !important; max-height: 30vh !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
+                    "style": "ha-card { aspect-ratio: 16/9 !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3212,9 +3214,7 @@
                     }
                   },
                   "name": "Doorbell",
-                  "grid_options": {
-                    "columns": 6
-                  }
+                  "aspect_ratio": "16:9"
                 },
                 {
                   "type": "picture-entity",
@@ -3225,7 +3225,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh !important; min-height: 30vh !important; max-height: 30vh !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
+                    "style": "ha-card { aspect-ratio: 16/9 !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3276,9 +3276,7 @@
                     }
                   },
                   "name": "Izzy",
-                  "grid_options": {
-                    "columns": 6
-                  }
+                  "aspect_ratio": "16:9"
                 },
                 {
                   "type": "picture-entity",
@@ -3289,7 +3287,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh !important; min-height: 30vh !important; max-height: 30vh !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
+                    "style": "ha-card { aspect-ratio: 16/9 !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3340,9 +3338,7 @@
                     }
                   },
                   "name": "Living Room",
-                  "grid_options": {
-                    "columns": 6
-                  }
+                  "aspect_ratio": "16:9"
                 },
                 {
                   "type": "picture-entity",
@@ -3353,7 +3349,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh !important; min-height: 30vh !important; max-height: 30vh !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
+                    "style": "ha-card { aspect-ratio: 16/9 !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3404,9 +3400,7 @@
                     }
                   },
                   "name": "Nanit Benjamin",
-                  "grid_options": {
-                    "columns": 6
-                  }
+                  "aspect_ratio": "16:9"
                 },
                 {
                   "type": "picture-entity",
@@ -3417,7 +3411,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh !important; min-height: 30vh !important; max-height: 30vh !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
+                    "style": "ha-card { aspect-ratio: 16/9 !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3468,70 +3462,11 @@
                     }
                   },
                   "name": "Nanit Travel",
-                  "grid_options": {
-                    "columns": 6
-                  }
+                  "aspect_ratio": "16:9"
                 }
               ]
             }
-          ],
-          "footer": {
-            "type": "custom:mushroom-chips-card",
-            "alignment": "center",
-            "chips": [
-              {
-                "type": "template",
-                "icon": "mdi:home",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/home"
-                },
-                "content": "Home"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:thermostat",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/climate"
-                },
-                "content": "Climate"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:lightbulb",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/lights"
-                },
-                "content": "Lights"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:cctv",
-                "icon_color": "cyan",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/cameras"
-                },
-                "content": "Cameras"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:speaker",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/media"
-                },
-                "content": "Media"
-              }
-            ]
-          },
-          "background": "var(--lovelace-background, #070910)"
+          ]
         },
         {
           "title": "Media",
