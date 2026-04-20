@@ -19,6 +19,90 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "binary_sensor.doorbell_motion",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.doorbell",
+                    "camera_image": "camera.doorbell",
+                    "camera_view": "auto",
+                    "show_state": false,
+                    "show_name": true,
+                    "name": "Doorbell Motion",
+                    "fit_mode": "cover",
+                    "card_mod": {
+                      "style": "ha-card { height: 24vh; border: 2px solid #f04060; box-shadow: 0 0 12px rgba(240,64,96,0.4); }"
+                    },
+                    "tap_action": {
+                      "action": "navigate",
+                      "navigation_path": "/dashboard-mobilev1/cameras"
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "binary_sensor.living_room_camera_motion",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.living_room_camera",
+                    "camera_image": "camera.living_room_camera",
+                    "camera_view": "auto",
+                    "show_state": false,
+                    "show_name": true,
+                    "name": "Living Room Motion",
+                    "fit_mode": "cover",
+                    "card_mod": {
+                      "style": "ha-card { height: 24vh; border: 2px solid #f04060; box-shadow: 0 0 12px rgba(240,64,96,0.4); }"
+                    },
+                    "tap_action": {
+                      "action": "navigate",
+                      "navigation_path": "/dashboard-mobilev1/cameras"
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "binary_sensor.izzy_camera_motion",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.izzy_camera",
+                    "camera_image": "camera.izzy_camera",
+                    "camera_view": "auto",
+                    "show_state": false,
+                    "show_name": true,
+                    "name": "Izzy Camera Motion",
+                    "fit_mode": "cover",
+                    "card_mod": {
+                      "style": "ha-card { height: 24vh; border: 2px solid #f04060; box-shadow: 0 0 12px rgba(240,64,96,0.4); }"
+                    },
+                    "tap_action": {
+                      "action": "navigate",
+                      "navigation_path": "/dashboard-mobilev1/cameras"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "title": "",
+              "type": "grid",
+              "cards": [
+                {
                   "type": "markdown",
                   "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SCENES</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
                   "card_mod": {
@@ -50,6 +134,12 @@
                           },
                           {
                             "flex-direction": "column"
+                          },
+                          {
+                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_good_morning';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #f5a623':'1px solid rgba(255,255,255,0.06)'; ]]]"
+                          },
+                          {
+                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_good_morning';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(245,166,35,0.45)':'none'; ]]]"
                           }
                         ],
                         "name": [
@@ -74,14 +164,11 @@
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border: 1px solid var(--ha-card-border-color, rgba(255,255,255,0.06)); border-radius: 14px; }\n #icon { background: rgba(245,166,35,0.25); border-radius: 12px; padding: 10px; }\n"
+                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(245,166,35,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "scene.turn_on",
-                        "service_data": {
-                          "entity_id": "scene.morning_mode"
-                        }
+                        "service": "script.scene_good_morning"
                       }
                     },
                     {
@@ -104,6 +191,12 @@
                           },
                           {
                             "flex-direction": "column"
+                          },
+                          {
+                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_good_night';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #9d6ef0':'1px solid rgba(255,255,255,0.06)'; ]]]"
+                          },
+                          {
+                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_good_night';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(157,110,240,0.45)':'none'; ]]]"
                           }
                         ],
                         "name": [
@@ -128,14 +221,11 @@
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border: 1px solid var(--ha-card-border-color, rgba(255,255,255,0.06)); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 12px; padding: 10px; }\n"
+                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "scene.turn_on",
-                        "service_data": {
-                          "entity_id": "scene.night_mode"
-                        }
+                        "service": "script.scene_good_night"
                       }
                     },
                     {
@@ -158,6 +248,12 @@
                           },
                           {
                             "flex-direction": "column"
+                          },
+                          {
+                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_away_mode';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #f04060':'1px solid rgba(255,255,255,0.06)'; ]]]"
+                          },
+                          {
+                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_away_mode';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(240,64,96,0.45)':'none'; ]]]"
                           }
                         ],
                         "name": [
@@ -182,14 +278,11 @@
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border: 1px solid var(--ha-card-border-color, rgba(255,255,255,0.06)); border-radius: 14px; }\n #icon { background: rgba(240,64,96,0.25); border-radius: 12px; padding: 10px; }\n"
+                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(240,64,96,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "scene.turn_on",
-                        "service_data": {
-                          "entity_id": "scene.chill_mode"
-                        }
+                        "service": "script.scene_away_mode"
                       }
                     },
                     {
@@ -212,6 +305,12 @@
                           },
                           {
                             "flex-direction": "column"
+                          },
+                          {
+                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_welcome_home';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #10d090':'1px solid rgba(255,255,255,0.06)'; ]]]"
+                          },
+                          {
+                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_welcome_home';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(16,208,144,0.45)':'none'; ]]]"
                           }
                         ],
                         "name": [
@@ -236,14 +335,11 @@
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border: 1px solid var(--ha-card-border-color, rgba(255,255,255,0.06)); border-radius: 14px; }\n #icon { background: rgba(16,208,144,0.25); border-radius: 12px; padding: 10px; }\n"
+                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(16,208,144,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "scene.turn_on",
-                        "service_data": {
-                          "entity_id": "scene.day_mode"
-                        }
+                        "service": "script.scene_welcome_home"
                       }
                     },
                     {
@@ -266,6 +362,12 @@
                           },
                           {
                             "flex-direction": "column"
+                          },
+                          {
+                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_movie_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #4d8ef0':'1px solid rgba(255,255,255,0.06)'; ]]]"
+                          },
+                          {
+                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_movie_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(77,142,240,0.45)':'none'; ]]]"
                           }
                         ],
                         "name": [
@@ -290,14 +392,11 @@
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border: 1px solid var(--ha-card-border-color, rgba(255,255,255,0.06)); border-radius: 14px; }\n #icon { background: rgba(77,142,240,0.25); border-radius: 12px; padding: 10px; }\n"
+                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(77,142,240,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "scene.turn_on",
-                        "service_data": {
-                          "entity_id": "scene.chill_mode"
-                        }
+                        "service": "script.scene_movie_time"
                       }
                     },
                     {
@@ -320,6 +419,12 @@
                           },
                           {
                             "flex-direction": "column"
+                          },
+                          {
+                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_dinner_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #9d6ef0':'1px solid rgba(255,255,255,0.06)'; ]]]"
+                          },
+                          {
+                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_dinner_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(157,110,240,0.45)':'none'; ]]]"
                           }
                         ],
                         "name": [
@@ -344,14 +449,11 @@
                         ]
                       },
                       "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border: 1px solid var(--ha-card-border-color, rgba(255,255,255,0.06)); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 12px; padding: 10px; }\n"
+                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "scene.turn_on",
-                        "service_data": {
-                          "entity_id": "scene.dinner_time"
-                        }
+                        "service": "script.scene_dinner_time"
                       }
                     }
                   ]
