@@ -1,22 +1,32 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v11
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v16
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
  *
- * v11 changes:
- *  - Single-row header: left (clock+weather), right (person pills + alarm pill)
- *  - 6-tab bottom nav: Home, Climate, Lights, Cameras, Media, Settings
- *  - Person pills replace avatar circles — tappable, with dot status
- *  - Nav label font-size reduced to 9px for 6-item fit
- *  - Header height reduced to match nav bar (~68px + safe-area)
+ * v16 changes:
+ *  - Nav bar: background highlight indicator replaces pill (iOS 17+ style)
+ *  - Nav bar: expanded tap targets (12px 4px 10px padding)
+ *  - Nav bar: notification badge on Settings icon (urgent red / advisory amber)
+ *  - Mini-player: persistent Now Playing bar above nav on all pages
+ *  - Performance: targeted DOM updates instead of innerHTML rebuild every second
+ *  - Performance: throttled clearance measurement (resize/orientation only)
+ *
+ * v12 changes:
+ *  - Day/night theme-aware: detects hass.themes.darkMode, applies day palette
+ *  - Alarm pill tappable: opens HA more-info dialog via event delegation
  */
 (function () {
   'use strict';
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
+  const MEDIA_PLAYER_ENTITY = 'media_player.benjamins_hatch_media_player';
+
+  // Badge entity groups — urgent (red) conditions
+  const BADGE_LOCKS = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door_lock'];
+  const BADGE_GARAGES = ['cover.ratgdov25i_1746c3_door', 'cover.ratgdov25i_1746b4_door'];
 
   const PAGES = [
     { label: 'Home',     icon: 'mdi:home-variant',   slug: 'home' },
@@ -59,14 +69,19 @@
       background: none;
       border: none;
       cursor: pointer;
-      padding: 8px 4px 6px;
+      padding: 12px 4px 10px;
+      margin: 4px 2px;
       color: #4a5570;
       -webkit-tap-highlight-color: transparent;
       outline: none;
       position: relative;
-      transition: color 0.15s ease;
+      transition: color 0.15s ease, background 0.15s ease;
+      border-radius: 12px;
     }
-    #kis-nav-bar .knb-btn.knb-active { color: #00d4f0; }
+    #kis-nav-bar .knb-btn.knb-active {
+      color: #00d4f0;
+      background: rgba(0,212,240,0.08);
+    }
     #kis-nav-bar .knb-btn ha-icon { --mdc-icon-size: 22px; display: block; }
     #kis-nav-bar .knb-label {
       font-size: 9px;
@@ -76,17 +91,120 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1;
     }
-    #kis-nav-bar .knb-pill {
+
+    /* ── Notification badge ── */
+    #kis-nav-bar .knb-badge {
       position: absolute;
-      bottom: 5px;
-      width: 28px;
-      height: 3px;
-      background: #00d4f0;
-      border-radius: 3px;
-      opacity: 0;
-      transition: opacity 0.15s ease;
+      top: 4px;
+      right: calc(50% - 18px);
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      border: 2px solid rgba(7,9,16,0.92);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1;
+      pointer-events: none;
     }
-    #kis-nav-bar .knb-btn.knb-active .knb-pill { opacity: 1; }
+    #kis-nav-bar .knb-badge.urgent { background: #f04060; }
+    #kis-nav-bar .knb-badge.advisory { background: #f5a623; }
+    #kis-nav-bar .knb-badge[hidden] { display: none; }
+
+    /* ── Day mode overrides ── */
+    #kis-nav-bar[data-kis-day] {
+      background: rgba(255,255,255,0.96);
+      border-top: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 -1px 3px rgba(0,0,0,0.06), 0 -4px 12px rgba(0,0,0,0.03);
+    }
+    #kis-nav-bar[data-kis-day] .knb-btn { color: #7a8698; }
+    #kis-nav-bar[data-kis-day] .knb-btn.knb-active {
+      color: #0088a8;
+      background: rgba(0,136,168,0.08);
+    }
+    #kis-nav-bar[data-kis-day] .knb-badge { border-color: rgba(255,255,255,0.96); }
+    #kis-nav-bar[data-kis-day] .knb-badge.urgent { background: #c02840; }
+    #kis-nav-bar[data-kis-day] .knb-badge.advisory { background: #c07808; }
+
+    /* ── Mini-player ── */
+    #kis-mini-player {
+      position: fixed !important;
+      bottom: 80px !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 9999998 !important;
+      background: rgba(11,14,23,0.95);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      padding: 8px 14px;
+      gap: 10px;
+      height: 52px;
+      box-sizing: border-box;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+    }
+    #kis-mini-player[hidden] {
+      transform: translateY(100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    #kis-mini-player .kmp-art {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: #151c2a; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; overflow: hidden;
+    }
+    #kis-mini-player .kmp-art img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    #kis-mini-player .kmp-info { flex: 1; min-width: 0; }
+    #kis-mini-player .kmp-track {
+      font-size: 12px; font-weight: 600; color: #eef2f8;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    #kis-mini-player .kmp-artist {
+      font-size: 10px; color: #8a9ab8;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    #kis-mini-player .kmp-play {
+      background: none; border: none; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+      padding: 4px; display: flex; align-items: center;
+    }
+    #kis-mini-player .kmp-play ha-icon {
+      --mdc-icon-size: 24px; color: #00d4f0;
+    }
+    #kis-mini-player .kmp-progress {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: #1c2438;
+    }
+    #kis-mini-player .kmp-progress-fill {
+      height: 100%; background: #00d4f0; border-radius: 1px;
+      transition: width 1s linear;
+    }
+
+    /* ── Mini-player day mode ── */
+    #kis-mini-player[data-kis-day] {
+      background: rgba(255,255,255,0.96);
+      border-top: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 -1px 3px rgba(0,0,0,0.06);
+    }
+    #kis-mini-player[data-kis-day] .kmp-art { background: #e4e8f0; }
+    #kis-mini-player[data-kis-day] .kmp-track { color: #1a2030; }
+    #kis-mini-player[data-kis-day] .kmp-artist { color: #4a5a72; }
+    #kis-mini-player[data-kis-day] .kmp-play ha-icon { color: #0088a8; }
+    #kis-mini-player[data-kis-day] .kmp-progress { background: #c0c8d4; }
+    #kis-mini-player[data-kis-day] .kmp-progress-fill { background: #0088a8; }
   `;
 
   // ─── Styles: top header bar (v11 single-row) ────────────────────────────────
@@ -185,6 +303,8 @@
       border: 1px solid rgba(255,255,255,0.06);
       white-space: nowrap;
       flex-shrink: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
     #kis-header-bar .kh-pdot {
       width: 7px;
@@ -224,6 +344,8 @@
       color: #94a3b8;
       background: rgba(100,116,139,0.15);
       flex-shrink: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
     #kis-header-bar .kh-alarm-dot {
       width: 5px;
@@ -238,6 +360,28 @@
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(0.7); }
     }
+
+    /* ── Day mode overrides ── */
+    #kis-header-bar[data-kis-day] {
+      background: rgba(255,255,255,0.96);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03);
+    }
+    #kis-header-bar[data-kis-day] .kh-clock { color: #1a2030; }
+    #kis-header-bar[data-kis-day] .kh-ampm { color: #4a5a72; }
+    #kis-header-bar[data-kis-day] .kh-date { color: #7a8698; }
+    #kis-header-bar[data-kis-day] .kh-weather-temp { color: #1a2030; }
+    #kis-header-bar[data-kis-day] .kh-person-pill {
+      background: rgba(255,255,255,0.88);
+      border-color: rgba(0,0,0,0.05);
+    }
+    #kis-header-bar[data-kis-day] .kh-pdot.home {
+      background: #089464;
+      box-shadow: 0 0 4px #089464;
+    }
+    #kis-header-bar[data-kis-day] .kh-pdot.away { background: #2d6bc4; }
+    #kis-header-bar[data-kis-day] .kh-pdot.unknown { background: #7a8698; }
+    #kis-header-bar[data-kis-day] .kh-pname { color: #1a2030; }
   `;
 
   // ─── Shadow CSS patches ────────────────────────────────────────────────────
@@ -470,11 +614,171 @@
     return hass && hass.states && hass.states[entity];
   }
 
+  // ─── Badge computation ────────────────────────────────────────────────────
+  function updateBadge(hass) {
+    const badge = document.querySelector('#kis-nav-bar .knb-badge');
+    if (!badge) return;
+
+    let urgent = 0;
+    let advisory = 0;
+
+    if (hass) {
+      // Unlocked doors → urgent
+      BADGE_LOCKS.forEach(id => {
+        const ent = getState(hass, id);
+        if (ent && ent.state === 'unlocked') urgent++;
+      });
+      // Open garages → urgent
+      BADGE_GARAGES.forEach(id => {
+        const ent = getState(hass, id);
+        if (ent && ent.state === 'open') urgent++;
+      });
+      // Alarm disarmed while everyone is away → urgent
+      const alarm = getState(hass, 'alarm_control_panel.kuprycz_home');
+      const chris = getState(hass, 'person.chris');
+      const claire = getState(hass, 'person.claire');
+      if (alarm && alarm.state === 'disarmed') {
+        const allAway = (!chris || chris.state !== 'home') && (!claire || claire.state !== 'home');
+        if (allAway) urgent++;
+      }
+    }
+
+    const total = urgent + advisory;
+    if (total === 0) {
+      badge.setAttribute('hidden', '');
+    } else {
+      badge.removeAttribute('hidden');
+      badge.textContent = total > 9 ? '9+' : String(total);
+      badge.className = 'knb-badge ' + (urgent > 0 ? 'urgent' : 'advisory');
+    }
+  }
+
+  // ─── Mini-player rendering ──────────────────────────────────────────────────
+  let _prevMediaState = null;
+
+  function updateMiniPlayer(hass, isDayMode) {
+    const player = document.getElementById('kis-mini-player');
+    if (!player) return;
+
+    // Propagate day mode
+    if (isDayMode) {
+      player.setAttribute('data-kis-day', '');
+    } else {
+      player.removeAttribute('data-kis-day');
+    }
+
+    const ent = hass ? getState(hass, MEDIA_PLAYER_ENTITY) : null;
+    const state = ent ? ent.state : 'off';
+    const isActive = state === 'playing' || state === 'paused';
+
+    if (!isActive) {
+      if (_prevMediaState !== 'hidden') {
+        player.setAttribute('hidden', '');
+        _prevMediaState = 'hidden';
+      }
+      return;
+    }
+
+    if (_prevMediaState === 'hidden') {
+      player.removeAttribute('hidden');
+    }
+    _prevMediaState = state;
+
+    const attrs = ent.attributes || {};
+    const track = attrs.media_title || 'Unknown';
+    const artist = attrs.media_artist || '';
+    const art = attrs.entity_picture || '';
+
+    // Targeted updates — only touch changed elements
+    const trackEl = player.querySelector('.kmp-track');
+    if (trackEl && trackEl.textContent !== track) trackEl.textContent = track;
+
+    const artistEl = player.querySelector('.kmp-artist');
+    if (artistEl && artistEl.textContent !== artist) artistEl.textContent = artist;
+
+    // Album art
+    const artBox = player.querySelector('.kmp-art');
+    if (artBox) {
+      if (art) {
+        const img = artBox.querySelector('img');
+        if (img) {
+          if (img.src !== art) img.src = art;
+        } else {
+          artBox.innerHTML = `<img src="${art}" alt="">`;
+        }
+      } else {
+        if (!artBox.querySelector('ha-icon')) {
+          artBox.innerHTML = '<ha-icon icon="mdi:music-note"></ha-icon>';
+        }
+      }
+    }
+
+    // Play/pause icon
+    const playIcon = player.querySelector('.kmp-play ha-icon');
+    const targetIcon = state === 'playing' ? 'mdi:pause' : 'mdi:play';
+    if (playIcon && playIcon.getAttribute('icon') !== targetIcon) {
+      playIcon.setAttribute('icon', targetIcon);
+    }
+
+    // Progress bar
+    const duration = attrs.media_duration || 0;
+    const position = attrs.media_position || 0;
+    const pct = duration > 0 ? Math.min(100, (position / duration) * 100) : 0;
+    const fill = player.querySelector('.kmp-progress-fill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+
+  // Alarm color maps (hoisted out of render loop for performance)
+  const ALARM_NIGHT = {
+    disarmed:   { bg:'rgba(16,208,144,0.12)', color:'#10d090', border:'rgba(16,208,144,0.3)',  label:'Disarmed'   },
+    armed_away: { bg:'rgba(77,142,240,0.12)', color:'#4d8ef0', border:'rgba(77,142,240,0.3)',  label:'Armed Away' },
+    armed_home: { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Armed Home' },
+    arming:     { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Arming'     },
+    pending:    { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Pending'    },
+    triggered:  { bg:'rgba(240,64,96,0.15)',  color:'#f04060', border:'rgba(240,64,96,0.3)',   label:'TRIGGERED'  },
+  };
+  const ALARM_DAY = {
+    disarmed:   { bg:'rgba(8,148,100,0.10)',  color:'#089464', border:'rgba(8,148,100,0.35)',  label:'Disarmed'   },
+    armed_away: { bg:'rgba(45,107,196,0.10)', color:'#2d6bc4', border:'rgba(45,107,196,0.35)', label:'Armed Away' },
+    armed_home: { bg:'rgba(192,120,8,0.10)',  color:'#c07808', border:'rgba(192,120,8,0.35)',  label:'Armed Home' },
+    arming:     { bg:'rgba(192,120,8,0.10)',  color:'#c07808', border:'rgba(192,120,8,0.35)',  label:'Arming'     },
+    pending:    { bg:'rgba(192,120,8,0.10)',  color:'#c07808', border:'rgba(192,120,8,0.35)',  label:'Pending'    },
+    triggered:  { bg:'rgba(192,40,64,0.10)',  color:'#c02840', border:'rgba(192,40,64,0.35)',  label:'TRIGGERED'  },
+  };
+  const ALARM_UNKNOWN_NIGHT = { bg:'rgba(100,116,139,0.15)', color:'#94a3b8', border:'rgba(100,116,139,0.3)',  label:'Unknown' };
+  const ALARM_UNKNOWN_DAY   = { bg:'rgba(122,134,152,0.10)', color:'#4a5a72', border:'rgba(122,134,152,0.25)', label:'Unknown' };
+
+  const WX_LABELS = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'};
+  const WX_ICONS  = {sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'};
+
+  let _headerInitialized = false;
+
+  function personState(hass, entity) {
+    const ent = getState(hass, entity);
+    if (!ent) return 'unknown';
+    return ent.state === 'home' ? 'home' : 'away';
+  }
+
   function renderHeaderContent() {
     const bar = document.getElementById('kis-header-bar');
     if (!bar) return;
 
     const hass = getHass();
+
+    // Theme detection — toggle day mode attribute on header + nav + mini-player
+    const activeTheme = (hass && hass.themes && hass.themes.theme)
+      || (hass && hass.selectedTheme && hass.selectedTheme.theme)
+      || '';
+    const isDayMode = activeTheme === 'kis-day'
+      || (activeTheme === '' && hass && hass.themes && hass.themes.darkMode === false);
+    const navBar = document.getElementById('kis-nav-bar');
+    if (isDayMode) {
+      bar.setAttribute('data-kis-day', '');
+      if (navBar) navBar.setAttribute('data-kis-day', '');
+    } else {
+      bar.removeAttribute('data-kis-day');
+      if (navBar) navBar.removeAttribute('data-kis-day');
+    }
 
     // Clock + date
     const now = new Date();
@@ -488,72 +792,92 @@
     // Alarm
     const alarmEnt = getState(hass, 'alarm_control_panel.kuprycz_home');
     const alarmState = alarmEnt ? alarmEnt.state : null;
-    const ALARM_COLORS = {
-      disarmed:   { bg:'rgba(16,208,144,0.12)', color:'#10d090', border:'rgba(16,208,144,0.3)',  label:'Disarmed'   },
-      armed_away: { bg:'rgba(77,142,240,0.12)', color:'#4d8ef0', border:'rgba(77,142,240,0.3)',  label:'Armed Away' },
-      armed_home: { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Armed Home' },
-      arming:     { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Arming'     },
-      pending:    { bg:'rgba(245,166,35,0.12)', color:'#f5a623', border:'rgba(245,166,35,0.3)',  label:'Pending'    },
-      triggered:  { bg:'rgba(240,64,96,0.15)',  color:'#f04060', border:'rgba(240,64,96,0.3)',   label:'TRIGGERED'  },
-    };
-    const alarm = ALARM_COLORS[alarmState] || { bg:'rgba(100,116,139,0.15)', color:'#94a3b8', border:'rgba(100,116,139,0.3)', label:'Unknown' };
+    const ALARM_COLORS = isDayMode ? ALARM_DAY : ALARM_NIGHT;
+    const alarm = ALARM_COLORS[alarmState] || (isDayMode ? ALARM_UNKNOWN_DAY : ALARM_UNKNOWN_NIGHT);
 
     // Weather
     const wxEnt = getState(hass, 'weather.forecast_home');
     const temp = wxEnt && wxEnt.attributes && wxEnt.attributes.temperature;
     const tempStr = temp != null ? Math.round(temp) + '°' : '--°';
     const cond = wxEnt ? wxEnt.state : '';
-    const WX_LABELS = {sunny:'Sunny','clear-night':'Clear',partlycloudy:'Partly Cloudy',cloudy:'Cloudy',fog:'Foggy',rainy:'Rainy',pouring:'Heavy Rain',snowy:'Snowy','snowy-rainy':'Sleet',hail:'Hail',lightning:'Lightning','lightning-rainy':'Storms',windy:'Windy','windy-variant':'Windy',exceptional:'Unusual'};
-    const WX_ICONS  = {sunny:'☀️','clear-night':'🌙',partlycloudy:'⛅',cloudy:'☁️',fog:'🌫️',rainy:'🌧️',pouring:'⛈️',snowy:'❄️','snowy-rainy':'🌨️',hail:'🌨️',lightning:'⚡','lightning-rainy':'⛈️',windy:'🌬️','windy-variant':'🌬️',exceptional:'🌡️'};
-    const condLabel = WX_LABELS[cond] || cond || '--';
-    const wxIcon    = WX_ICONS[cond]  || '🌤️';
+    const wxIcon = WX_ICONS[cond] || '🌤️';
 
-    // Presence — returns 'home', 'away', or 'unknown'
-    function personState(entity) {
-      const ent = getState(hass, entity);
-      if (!ent) return 'unknown';
-      return ent.state === 'home' ? 'home' : 'away';
+    // Presence
+    const chrisSt  = personState(hass, 'person.chris');
+    const claireSt = personState(hass, 'person.claire');
+
+    // ── Initial render (once) — build the DOM skeleton ──
+    if (!_headerInitialized) {
+      bar.innerHTML = `
+        <div class="kh-left">
+          <div class="kh-clock-wrap">
+            <div class="kh-clock"><span data-kis="time">${h12}:${min}</span> <span class="kh-ampm" data-kis="ampm">${ampm}</span></div>
+            <div class="kh-date" data-kis="date">${dateStr}</div>
+          </div>
+          <div class="kh-weather">
+            <span class="kh-weather-icon" data-kis="wx-icon">${wxIcon}</span>
+            <span class="kh-weather-temp" data-kis="wx-temp">${tempStr}</span>
+          </div>
+        </div>
+        <div class="kh-right">
+          <div class="kh-person-pill" data-entity="person.chris"><span class="kh-pdot ${chrisSt}" data-kis="chris-dot"></span><span class="kh-pname">Chris</span></div>
+          <div class="kh-person-pill" data-entity="person.claire"><span class="kh-pdot ${claireSt}" data-kis="claire-dot"></span><span class="kh-pname">Claire</span></div>
+          <div class="kh-alarm" data-kis="alarm" style="background:${alarm.bg};color:${alarm.color};border-color:${alarm.border};">
+            <span class="kh-alarm-dot"></span><span data-kis="alarm-label">${alarm.label}</span>
+          </div>
+        </div>
+      `;
+      _headerInitialized = true;
+      requestAnimationFrame(applyDynamicHeaderClearance);
+    } else {
+      // ── Targeted updates — only touch changed text/styles ──
+      const q = (sel) => bar.querySelector(sel);
+
+      const timeEl = q('[data-kis="time"]');
+      const timeStr = h12 + ':' + min;
+      if (timeEl && timeEl.textContent !== timeStr) timeEl.textContent = timeStr;
+
+      const ampmEl = q('[data-kis="ampm"]');
+      if (ampmEl && ampmEl.textContent !== ampm) ampmEl.textContent = ampm;
+
+      const dateEl = q('[data-kis="date"]');
+      if (dateEl && dateEl.textContent !== dateStr) dateEl.textContent = dateStr;
+
+      const wxIconEl = q('[data-kis="wx-icon"]');
+      if (wxIconEl && wxIconEl.textContent !== wxIcon) wxIconEl.textContent = wxIcon;
+
+      const wxTempEl = q('[data-kis="wx-temp"]');
+      if (wxTempEl && wxTempEl.textContent !== tempStr) wxTempEl.textContent = tempStr;
+
+      // Alarm pill — update style + label
+      const alarmEl = q('[data-kis="alarm"]');
+      if (alarmEl) {
+        alarmEl.style.background = alarm.bg;
+        alarmEl.style.color = alarm.color;
+        alarmEl.style.borderColor = alarm.border;
+        const labelEl = q('[data-kis="alarm-label"]');
+        if (labelEl && labelEl.textContent !== alarm.label) labelEl.textContent = alarm.label;
+      }
+
+      // Person dots — update class
+      const chrisDot = q('[data-kis="chris-dot"]');
+      if (chrisDot) chrisDot.className = 'kh-pdot ' + chrisSt;
+
+      const claireDot = q('[data-kis="claire-dot"]');
+      if (claireDot) claireDot.className = 'kh-pdot ' + claireSt;
     }
 
-    function personPill(name, entity) {
-      const st = personState(entity);
-      return `<div class="kh-person-pill"><span class="kh-pdot ${st}"></span><span class="kh-pname">${name}</span></div>`;
-    }
-
-    // Build DOM content — single row
-    bar.innerHTML = `
-      <div class="kh-left">
-        <div class="kh-clock-wrap">
-          <div class="kh-clock">${h12}:${min} <span class="kh-ampm">${ampm}</span></div>
-          <div class="kh-date">${dateStr}</div>
-        </div>
-        <div class="kh-weather">
-          <span class="kh-weather-icon">${wxIcon}</span>
-          <span class="kh-weather-temp">${tempStr}</span>
-        </div>
-      </div>
-      <div class="kh-right">
-        ${personPill('Chris', 'person.chris')}
-        ${personPill('Claire', 'person.claire')}
-        ${personPill('B', 'person.benjamin')}
-        <div class="kh-alarm" style="background:${alarm.bg};color:${alarm.color};border-color:${alarm.border};">
-          <span class="kh-alarm-dot"></span>${alarm.label}
-        </div>
-      </div>
-    `;
-
-    // Re-measure after content renders (innerHTML changes height)
-    requestAnimationFrame(applyDynamicHeaderClearance);
-
-    // Re-measure when weather state changes (covers the async first-load case:
-    // applyDynamicHeaderClearance may have fired before weather data was available,
-    // so any change in weather key triggers an additional deferred re-measurement).
+    // Re-measure when weather state changes (covers async first-load)
     const weatherKey = cond + '|' + tempStr;
     if (weatherKey !== _prevWeatherKey) {
       _prevWeatherKey = weatherKey;
-      setTimeout(applyDynamicHeaderClearance, 50);
+      requestAnimationFrame(applyDynamicHeaderClearance);
       setTimeout(applyDynamicHeaderClearance, 200);
     }
+
+    // Update badge + mini-player on each tick
+    updateBadge(hass);
+    updateMiniPlayer(hass, isDayMode);
   }
 
   // ─── Layout patches ────────────────────────────────────────────────────────
@@ -636,6 +960,10 @@
     } else {
       nav.setAttribute('hidden', '');
       header.setAttribute('hidden', '');
+      const player = document.getElementById('kis-mini-player');
+      if (player) player.setAttribute('hidden', '');
+      _headerInitialized = false;
+      _prevMediaState = null;
     }
   }
 
@@ -666,11 +994,54 @@
       btn.className = 'knb-btn';
       btn.dataset.slug = page.slug;
       btn.setAttribute('aria-label', page.label);
-      btn.innerHTML = `<ha-icon icon="${page.icon}"></ha-icon><span class="knb-label">${page.label}</span><div class="knb-pill"></div>`;
+      btn.innerHTML = `<ha-icon icon="${page.icon}"></ha-icon><span class="knb-label">${page.label}</span>`;
+      if (page.slug === 'settings') {
+        const badge = document.createElement('span');
+        badge.className = 'knb-badge';
+        badge.setAttribute('hidden', '');
+        btn.appendChild(badge);
+      }
       btn.addEventListener('click', () => navigate(page.slug));
       nav.appendChild(btn);
     });
     document.body.appendChild(nav);
+
+    // Build mini-player (above nav bar, below header)
+    const player = document.createElement('div');
+    player.id = 'kis-mini-player';
+    player.setAttribute('hidden', '');
+    player.innerHTML = `
+      <div class="kmp-art"><ha-icon icon="mdi:music-note"></ha-icon></div>
+      <div class="kmp-info">
+        <div class="kmp-track">Not playing</div>
+        <div class="kmp-artist"></div>
+      </div>
+      <button class="kmp-play" aria-label="Play/Pause">
+        <ha-icon icon="mdi:play"></ha-icon>
+      </button>
+      <div class="kmp-progress"><div class="kmp-progress-fill" style="width:0%"></div></div>
+    `;
+    player.querySelector('.kmp-play').addEventListener('click', () => {
+      const hass = getHass();
+      if (!hass) return;
+      const ent = getState(hass, MEDIA_PLAYER_ENTITY);
+      if (!ent) return;
+      hass.callService('media_player', ent.state === 'playing' ? 'media_pause' : 'media_play', {
+        entity_id: MEDIA_PLAYER_ENTITY,
+      });
+    });
+    // Tap anywhere on mini-player (except play button) opens more-info
+    player.addEventListener('click', (e) => {
+      if (e.target.closest('.kmp-play')) return;
+      const ha = document.querySelector('home-assistant');
+      if (ha) {
+        ha.dispatchEvent(new CustomEvent('hass-more-info', {
+          bubbles: true, composed: true,
+          detail: { entityId: MEDIA_PLAYER_ENTITY },
+        }));
+      }
+    });
+    document.body.appendChild(player);
 
     // Build top header
     const header = document.createElement('div');
@@ -678,22 +1049,86 @@
     if (!onMobileDashboard()) header.setAttribute('hidden', '');
     document.body.appendChild(header);
 
+    // Event delegation: pill clicks → open HA more-info dialog
+    header.addEventListener('click', (e) => {
+      let entityId = null;
+
+      // Alarm pill → alarm control panel
+      const alarmEl = e.target.closest('.kh-alarm');
+      if (alarmEl) {
+        entityId = 'alarm_control_panel.kuprycz_home';
+      }
+
+      // Person pill → person entity (shows map location)
+      const personEl = e.target.closest('.kh-person-pill');
+      if (personEl && personEl.dataset.entity) {
+        entityId = personEl.dataset.entity;
+      }
+
+      if (entityId) {
+        const ha = document.querySelector('home-assistant');
+        if (ha) {
+          ha.dispatchEvent(new CustomEvent('hass-more-info', {
+            bubbles: true,
+            composed: true,
+            detail: { entityId: entityId },
+          }));
+        }
+      }
+    });
+
     syncState();
 
     window.addEventListener('location-changed', syncState);
     window.addEventListener('popstate', syncState);
 
     // Re-measure header clearance on any resize or orientation change
-    window.addEventListener('resize', applyDynamicHeaderClearance);
+    window.addEventListener('resize', () => {
+      applyDynamicHeaderClearance();
+      // Re-patch HA layout after resize to handle section column reflow
+      setTimeout(() => patchHALayout(0), 200);
+    });
     window.addEventListener('orientationchange', () => {
-      // Brief delay for orientation change to complete layout reflow
-      setTimeout(applyDynamicHeaderClearance, 150);
+      // Orientation change: delay for reflow, then re-measure + re-patch fully.
+      // HA sections-view may need a fresh patch for new column count.
+      setTimeout(() => {
+        applyDynamicHeaderClearance();
+        // Clear stale padding flags so patchHALayout re-applies
+        document.querySelectorAll('hui-sections-view').forEach(el => {
+          delete el._kisPadded;
+        });
+        patchHALayout(0);
+        // Second pass after HA finishes internal reflow
+        setTimeout(() => {
+          applyDynamicHeaderClearance();
+          patchHALayout(0);
+        }, 500);
+      }, 150);
     });
 
     // Update header content every second (live clock + entity states)
     setInterval(() => {
       if (onMobileDashboard()) renderHeaderContent();
     }, 1000);
+
+    // Instant theme sync: watch for CSS variable changes on documentElement.
+    // When HA switches themes, it updates inline style on <html> — this fires
+    // immediately (no 1-second polling delay for header/nav bar theme toggle).
+    const themeObserver = new MutationObserver(() => {
+      if (onMobileDashboard()) renderHeaderContent();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['style'],
+    });
+    // Also observe the home-assistant element for theme attribute changes
+    const haEl = document.querySelector('home-assistant');
+    if (haEl) {
+      themeObserver.observe(haEl, {
+        attributes: true,
+        attributeFilter: ['style'],
+      });
+    }
 
     // Initial layout patch with retry
     setTimeout(() => patchHALayout(0), 500);

@@ -34,6 +34,7 @@ const OUT_DIR = path.join(__dirname, 'qa-screenshots');
 const DEVICES = [
   { name: 'iphone',  width: 393, height: 852, scale: 3 },
   { name: 'tabs9',   width: 1280, height: 800, scale: 2 },
+  { name: 'tabs9-portrait', width: 800, height: 1280, scale: 2 },
 ];
 
 (async () => {
