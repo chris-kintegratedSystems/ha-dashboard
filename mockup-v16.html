@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIS mobilev1 — v16 Design Mockup</title>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   KIS Dashboard v16 — Interactive Design Mockup
+   Covers: All 6 pages, iPhone + Tablet, Day/Night modes
+   ═══════════════════════════════════════════════════════════ */
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #111; color: #eef2f8; overflow-x: hidden; }
+
+/* ── MODE TOKENS ─────────────────────────────────────────── */
+:root {
+  --obsidian: #070910; --surface-0: #0b0e17; --surface-1: #10151f;
+  --surface-2: #151c2a; --surface-3: #1c2438;
+  --text-hi: #eef2f8; --text-mid: #8a9ab8; --text-lo: #4a5570;
+  --cyan: #00d4f0; --green: #10d090; --amber: #f5a623;
+  --red: #f04060; --blue: #4d8ef0; --violet: #9d6ef0;
+  --glass-bg: rgba(16,21,31,0.72); --glass-border: rgba(255,255,255,0.06);
+  --glass-shadow: none;
+  --bar-bg: rgba(7,9,16,0.95); --bar-border: rgba(255,255,255,0.06);
+  --bar-shadow: none;
+  --card-radius: 14px; --gap: 12px; --page-pad: 16px;
+  --nav-inactive: #4a5570; --nav-active: #00d4f0;
+  --badge-border: rgba(7,9,16,0.92);
+}
+[data-mode="day"] {
+  --obsidian: #eef1f5; --surface-0: #e4e8f0; --surface-1: #d8dee8;
+  --surface-2: #ccd4e0; --surface-3: #c0c8d4;
+  --text-hi: #1a2030; --text-mid: #4a5a72; --text-lo: #7a8698;
+  --cyan: #0088a8; --green: #089464; --amber: #c07808;
+  --red: #c02840; --blue: #2d6bc4; --violet: #6840b0;
+  --glass-bg: rgba(255,255,255,0.88); --glass-border: rgba(0,0,0,0.05);
+  --glass-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  --bar-bg: rgba(255,255,255,0.96); --bar-border: rgba(0,0,0,0.04);
+  --bar-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03);
+  --nav-inactive: #7a8698; --nav-active: #0088a8;
+  --badge-border: rgba(255,255,255,0.96);
+}
+
+/* ── CONTROL BAR (top of page) ───────────────────────────── */
+.ctrl-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10000;
+  background: #1a1a2e; padding: 10px 16px; display: flex; align-items: center;
+  gap: 12px; flex-wrap: wrap; border-bottom: 1px solid #333;
+}
+.ctrl-bar label { font-size: 11px; color: #8a9ab8; text-transform: uppercase; letter-spacing: 0.1em; }
+.ctrl-bar select, .ctrl-bar button {
+  background: #252540; color: #eef2f8; border: 1px solid #444; border-radius: 6px;
+  padding: 6px 12px; font-size: 12px; cursor: pointer;
+}
+.ctrl-bar button.active { background: var(--cyan); color: #070910; border-color: var(--cyan); }
+.ctrl-bar .sep { width: 1px; height: 24px; background: #333; }
+
+/* ── DEVICE FRAME ────────────────────────────────────────── */
+.device-frame {
+  margin: 70px auto 40px; border: 3px solid #333; border-radius: 32px;
+  overflow: hidden; position: relative; background: var(--obsidian);
+  transition: width 0.3s, height 0.3s;
+}
+.device-frame.iphone { width: 390px; height: 844px; }
+.device-frame.tablet-landscape { width: 1194px; height: 834px; }
+
+.device-inner {
+  width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;
+  position: relative; scrollbar-width: none;
+}
+.device-inner::-webkit-scrollbar { display: none; }
+
+/* ── HEADER BAR ──────────────────────────────────────────── */
+.header-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bar-bg); backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--bar-border);
+  box-shadow: var(--bar-shadow);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; min-height: 64px;
+}
+.hb-left { display: flex; align-items: center; gap: 12px; }
+.hb-clock { font-size: 22px; font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; }
+.hb-ampm { font-size: 11px; font-weight: 600; color: var(--text-mid); }
+.hb-date { font-size: 9px; font-weight: 500; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 1px; }
+.hb-weather { display: flex; align-items: center; gap: 5px; }
+.hb-weather-temp { font-size: 14px; font-weight: 700; color: var(--text-hi); }
+.hb-right { display: flex; align-items: center; gap: 6px; }
+.hb-pill {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 8px 3px 5px; border-radius: 14px;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  cursor: pointer; white-space: nowrap;
+}
+.hb-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.hb-dot.home { background: var(--green); box-shadow: 0 0 4px var(--green); }
+.hb-dot.away { background: var(--blue); }
+.hb-pname { font-size: 10px; font-weight: 600; color: var(--text-hi); }
+.hb-alarm {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: 16px; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; cursor: pointer;
+}
+
+/* ── PAGE CONTENT ────────────────────────────────────────── */
+.page-content { padding: var(--page-pad); padding-bottom: 100px; background: var(--obsidian); min-height: calc(100% - 64px - 72px); }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── SECTION HEADER ──────────────────────────────────────── */
+.section-hdr {
+  font-size: 10px; font-weight: 600; color: var(--text-lo);
+  text-transform: uppercase; letter-spacing: 0.15em;
+  margin: 20px 0 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.section-hdr:first-child { margin-top: 0; }
+
+/* ── CARDS ────────────────────────────────────────────────── */
+.card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius); padding: 14px; margin-bottom: var(--gap);
+  cursor: pointer; transition: transform 0.12s ease, box-shadow 0.12s;
+  box-shadow: var(--glass-shadow); -webkit-tap-highlight-color: transparent;
+}
+.card:active { transform: scale(0.97); }
+.card-label { font-size: 13px; font-weight: 600; color: var(--text-hi); }
+.card-sub { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+.card-icon { font-size: 20px; }
+
+/* ── GRID LAYOUTS ────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap); }
+.tablet-landscape .grid-2-tablet { grid-template-columns: 1fr 1fr; }
+.tablet-landscape .grid-3-tablet { grid-template-columns: repeat(3, 1fr); }
+.tablet-landscape .home-landscape {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--gap);
+}
+.tablet-landscape .home-landscape .scenes-row { grid-column: 1 / -1; }
+.tablet-landscape .home-landscape .camera-col { display: block; }
+
+/* ── SCENES ──────────────────────────────────────────────── */
+.scenes-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tablet-landscape .scenes-row { grid-template-columns: repeat(6, 1fr); }
+.scene-card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer;
+  transition: transform 0.12s, border-color 0.2s, background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.scene-card:active { transform: scale(0.95); }
+.scene-card.active { border-width: 2px; }
+.scene-card .sc-icon { font-size: 24px; margin-bottom: 4px; }
+.scene-card .sc-label { font-size: 10px; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── LOCK / GARAGE CARDS ─────────────────────────────────── */
+.status-card {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius); padding: 12px 14px; margin-bottom: var(--gap);
+  cursor: pointer; transition: transform 0.12s; -webkit-tap-highlight-color: transparent;
+}
+.status-card:active { transform: scale(0.97); }
+.sc-left { display: flex; align-items: center; gap: 10px; }
+.sc-icon-wrap {
+  width: 40px; height: 40px; border-radius: 10px; display: flex;
+  align-items: center; justify-content: center; font-size: 18px;
+}
+.sc-info .sc-name { font-size: 13px; font-weight: 600; color: var(--text-hi); }
+.sc-info .sc-state { font-size: 10px; color: var(--text-mid); }
+.sc-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 8px;
+}
+
+/* ── CLIMATE CARDS ───────────────────────────────────────── */
+.climate-card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius); padding: 16px; margin-bottom: var(--gap);
+  cursor: pointer; transition: transform 0.12s; -webkit-tap-highlight-color: transparent;
+}
+.climate-card:active { transform: scale(0.97); }
+.cc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.cc-name { font-size: 11px; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.08em; }
+.cc-mode { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; }
+.cc-temp { font-size: 48px; font-weight: 700; color: var(--text-hi); text-align: center; line-height: 1; }
+.cc-set { font-size: 11px; color: var(--text-lo); text-align: center; margin-top: 4px; }
+.cc-controls { display: flex; justify-content: center; gap: 24px; margin-top: 12px; }
+.cc-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--glass-border);
+  background: var(--surface-2); color: var(--text-mid); font-size: 18px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+
+/* ── ROOM LIGHT CARDS (NEW DESIGN) ───────────────────────── */
+.room-card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius); overflow: hidden; margin-bottom: var(--gap);
+  box-shadow: var(--glass-shadow);
+}
+.room-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; background: rgba(255,255,255,0.02); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+[data-mode="day"] .room-header { background: rgba(0,0,0,0.02); }
+.room-name { font-size: 13px; font-weight: 700; color: var(--text-hi); text-transform: uppercase; letter-spacing: 0.08em; }
+.room-count { font-size: 11px; color: var(--text-lo); margin-left: 8px; }
+.room-master {
+  width: 40px; height: 22px; border-radius: 11px; border: none; cursor: pointer;
+  position: relative; transition: background 0.2s;
+}
+.room-master.on { background: var(--cyan); }
+.room-master.off { background: var(--surface-3); }
+.room-master::after {
+  content: ''; position: absolute; top: 2px; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff; transition: left 0.2s;
+}
+.room-master.on::after { left: 20px; }
+.room-master.off::after { left: 2px; }
+.room-lights { border-top: 1px solid var(--glass-border); }
+.room-lights.collapsed { display: none; }
+.light-row {
+  display: flex; align-items: center; padding: 10px 14px; gap: 10px;
+  border-bottom: 1px solid var(--glass-border); cursor: pointer;
+  transition: background 0.15s; -webkit-tap-highlight-color: transparent;
+}
+.light-row:last-child { border-bottom: none; }
+.light-row:active { background: rgba(255,255,255,0.03); }
+[data-mode="day"] .light-row:active { background: rgba(0,0,0,0.03); }
+.lr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.lr-dot.on { background: var(--amber); }
+.lr-dot.off { background: var(--text-lo); }
+.lr-name { font-size: 13px; color: var(--text-hi); flex: 1; }
+.lr-slider {
+  width: 80px; height: 4px; border-radius: 2px; background: var(--surface-3);
+  position: relative; overflow: hidden;
+}
+.lr-slider-fill { height: 100%; border-radius: 2px; background: var(--amber); }
+.lr-toggle {
+  width: 36px; height: 20px; border-radius: 10px; border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.lr-toggle.on { background: var(--cyan); }
+.lr-toggle.off { background: var(--surface-3); }
+.lr-toggle::after {
+  content: ''; position: absolute; top: 2px; width: 16px; height: 16px;
+  border-radius: 50%; background: #fff; transition: left 0.2s;
+}
+.lr-toggle.on::after { left: 18px; }
+.lr-toggle.off::after { left: 2px; }
+.room-chevron { font-size: 14px; color: var(--text-lo); margin-left: 4px; cursor: pointer; }
+
+/* ── CAMERA CARDS ────────────────────────────────────────── */
+.camera-card {
+  background: #080c14; border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius); overflow: hidden; margin-bottom: var(--gap);
+  cursor: pointer;
+}
+.cam-feed { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #0a1020, #141e30); display: flex; align-items: center; justify-content: center; color: var(--text-lo); font-size: 12px; position: relative; }
+.cam-feed .cam-label { position: absolute; bottom: 8px; right: 10px; font-size: 10px; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; }
+.cam-feed .motion-badge { position: absolute; top: 8px; left: 10px; font-size: 9px; font-weight: 700; color: #fff; background: var(--red); padding: 2px 8px; border-radius: 8px; text-transform: uppercase; animation: pulse-badge 1.5s ease-in-out infinite; }
+@keyframes pulse-badge { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+/* ── MEDIA / NOW PLAYING ─────────────────────────────────── */
+.media-card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius); padding: 14px; margin-bottom: var(--gap);
+}
+.mc-player { display: flex; align-items: center; gap: 12px; }
+.mc-art { width: 48px; height: 48px; border-radius: 8px; background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.mc-info { flex: 1; }
+.mc-track { font-size: 13px; font-weight: 600; color: var(--text-hi); }
+.mc-artist { font-size: 11px; color: var(--text-mid); }
+.mc-controls { display: flex; align-items: center; gap: 16px; margin-top: 10px; }
+.mc-btn { background: none; border: none; color: var(--text-mid); font-size: 20px; cursor: pointer; }
+.mc-btn.play { color: var(--cyan); font-size: 28px; }
+.mc-progress { flex: 1; height: 3px; background: var(--surface-3); border-radius: 2px; overflow: hidden; }
+.mc-progress-fill { width: 35%; height: 100%; background: var(--cyan); border-radius: 2px; }
+
+/* ── MINI PLAYER (persistent above nav) ──────────────────── */
+.mini-player {
+  position: absolute; bottom: 72px; left: 0; right: 0; z-index: 90;
+  background: var(--bar-bg); backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--bar-border); box-shadow: var(--bar-shadow);
+  display: flex; align-items: center; padding: 8px 14px; gap: 10px;
+  height: 52px; transition: transform 0.25s ease-out;
+}
+.mini-player.hidden { transform: translateY(100%); pointer-events: none; }
+.mini-player .mp-art { width: 36px; height: 36px; border-radius: 6px; background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.mini-player .mp-info { flex: 1; min-width: 0; }
+.mini-player .mp-track { font-size: 12px; font-weight: 600; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini-player .mp-artist { font-size: 10px; color: var(--text-mid); }
+.mini-player .mp-play { background: none; border: none; color: var(--cyan); font-size: 22px; cursor: pointer; flex-shrink: 0; }
+.mini-player .mp-room { font-size: 8px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.1em; }
+.mp-progress-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--surface-3); }
+.mp-progress-bar .fill { width: 35%; height: 100%; background: var(--cyan); }
+
+/* ── BOTTOM NAV ──────────────────────────────────────────── */
+.nav-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bar-bg); backdrop-filter: blur(24px) saturate(200%);
+  border-top: 1px solid var(--bar-border); box-shadow: var(--bar-shadow);
+  display: flex; align-items: stretch; min-height: 68px;
+}
+.nav-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 4px; background: none; border: none;
+  cursor: pointer; padding: 12px 4px 10px; color: var(--nav-inactive);
+  -webkit-tap-highlight-color: transparent; position: relative;
+  transition: color 0.15s; font-family: inherit;
+}
+.nav-btn.active { color: var(--nav-active); }
+.nav-btn .nav-icon { font-size: 20px; }
+.nav-btn .nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* Nav indicator Option 1: Elevated Pill */
+.nav-btn .nav-pill {
+  width: 32px; height: 4px; border-radius: 4px; background: var(--nav-active);
+  opacity: 0; transition: opacity 0.15s; margin-top: 4px;
+}
+.nav-btn.active .nav-pill { opacity: 1; }
+
+/* Nav indicator Option 2: Background Highlight */
+[data-nav-style="highlight"] .nav-btn .nav-pill { display: none; }
+[data-nav-style="highlight"] .nav-btn.active {
+  background: rgba(0,212,240,0.08); border-radius: 12px; margin: 4px 2px;
+}
+[data-mode="day"][data-nav-style="highlight"] .nav-btn.active {
+  background: rgba(0,136,168,0.08);
+}
+
+/* ── NOTIFICATION BADGE ──────────────────────────────────── */
+.nav-badge {
+  position: absolute; top: 6px; right: calc(50% - 18px);
+  min-width: 16px; height: 16px; border-radius: 8px;
+  font-size: 10px; font-weight: 700; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; border: 2px solid var(--badge-border);
+}
+.nav-badge.urgent { background: var(--red); }
+.nav-badge.advisory { background: var(--amber); }
+
+/* ── SETTINGS CARDS ──────────────────────────────────────── */
+.settings-grid { display: grid; gap: var(--gap); }
+.tablet-landscape .settings-grid { grid-template-columns: 1fr 1fr; }
+.theme-buttons { display: flex; gap: 8px; margin-top: 8px; }
+.theme-btn {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border);
+  background: var(--glass-bg); color: var(--text-mid); text-align: center;
+  cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s;
+}
+.theme-btn.active { background: var(--cyan); color: #070910; border-color: var(--cyan); }
+.status-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--glass-border); }
+.status-row:last-child { border-bottom: none; }
+.sr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sr-label { font-size: 12px; color: var(--text-hi); flex: 1; }
+.sr-value { font-size: 11px; color: var(--text-mid); }
+
+/* ── TABLET LANDSCAPE LAYOUTS ────────────────────────────── */
+.tablet-landscape .page-content { --page-pad: 24px; --gap: 16px; --card-radius: 16px; }
+.tablet-landscape .climate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+.tablet-landscape .lights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+.tablet-landscape .camera-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+
+/* Motion camera column (landscape Home only) */
+.camera-col { display: none; }
+
+/* ── ABOUT CARD ──────────────────────────────────────────── */
+.about-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--glass-border); }
+.about-row:last-child { border-bottom: none; }
+.about-label { font-size: 12px; color: var(--text-hi); }
+.about-value { font-size: 12px; color: var(--text-mid); }
+</style>
+</head>
+<body>
+
+<!-- ═══ CONTROL BAR ═══ -->
+<div class="ctrl-bar">
+  <label>Device:</label>
+  <select id="deviceSelect">
+    <option value="iphone">iPhone 15 Pro Max</option>
+    <option value="tablet-landscape">iPad / Tab S9+ Landscape</option>
+  </select>
+  <div class="sep"></div>
+  <label>Mode:</label>
+  <button id="btnNight" class="active" onclick="setMode('night')">Night</button>
+  <button id="btnDay" onclick="setMode('day')">Day</button>
+  <div class="sep"></div>
+  <label>Nav Style:</label>
+  <button id="btnPill" class="active" onclick="setNavStyle('pill')">Pill</button>
+  <button id="btnHighlight" onclick="setNavStyle('highlight')">Highlight</button>
+  <div class="sep"></div>
+  <label>Now Playing:</label>
+  <button id="btnMpOn" class="active" onclick="toggleMiniPlayer(true)">On</button>
+  <button id="btnMpOff" onclick="toggleMiniPlayer(false)">Off</button>
+  <div class="sep"></div>
+  <label>Motion Camera:</label>
+  <button id="btnCamOn" onclick="toggleMotionCam(true)">Triggered</button>
+  <button id="btnCamOff" class="active" onclick="toggleMotionCam(false)">Clear</button>
+  <div class="sep"></div>
+  <label>Badge:</label>
+  <button id="btnBadge2" onclick="setBadge(2,'urgent')">2 Urgent</button>
+  <button id="btnBadge1" onclick="setBadge(1,'advisory')">1 Advisory</button>
+  <button id="btnBadgeOff" class="active" onclick="setBadge(0)">None</button>
+</div>
+
+<!-- ═══ DEVICE FRAME ═══ -->
+<div class="device-frame iphone" id="deviceFrame" data-nav-style="pill">
+
+<div class="device-inner" id="deviceInner">
+
+<!-- ── HEADER ── -->
+<div class="header-bar">
+  <div class="hb-left">
+    <div>
+      <div class="hb-clock">7:55 <span class="hb-ampm">PM</span></div>
+      <div class="hb-date">Tuesday · April 15</div>
+    </div>
+    <div class="hb-weather">
+      <span>☀️</span>
+      <span class="hb-weather-temp">72°</span>
+    </div>
+  </div>
+  <div class="hb-right">
+    <div class="hb-pill"><span class="hb-dot home"></span><span class="hb-pname">Chris</span></div>
+    <div class="hb-pill"><span class="hb-dot away"></span><span class="hb-pname">Claire</span></div>
+    <div class="hb-alarm" id="alarmPill" style="background:rgba(16,208,144,0.12);color:var(--green);border:1px solid rgba(16,208,144,0.3);">
+      <span class="hb-dot home"></span> Disarmed
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: HOME ── -->
+<div class="page-content">
+<div class="page active" id="page-home">
+
+  <div class="section-hdr">Scenes</div>
+  <div class="scenes-row" id="scenesRow">
+    <div class="scene-card" data-scene="morning" data-color="#f5a623" onclick="toggleScene(this)">
+      <div class="sc-icon">☀️</div><div class="sc-label">Morning</div>
+    </div>
+    <div class="scene-card" data-scene="night" data-color="#9d6ef0" onclick="toggleScene(this)">
+      <div class="sc-icon">🌙</div><div class="sc-label">Night</div>
+    </div>
+    <div class="scene-card" data-scene="away" data-color="#f04060" onclick="toggleScene(this)">
+      <div class="sc-icon">🏠</div><div class="sc-label">Away</div>
+    </div>
+    <div class="scene-card" data-scene="welcome" data-color="#10d090" onclick="toggleScene(this)">
+      <div class="sc-icon">👋</div><div class="sc-label">Welcome</div>
+    </div>
+    <div class="scene-card" data-scene="movie" data-color="#4d8ef0" onclick="toggleScene(this)">
+      <div class="sc-icon">🎬</div><div class="sc-label">Movie</div>
+    </div>
+    <div class="scene-card" data-scene="dinner" data-color="#9d6ef0" onclick="toggleScene(this)">
+      <div class="sc-icon">🍽️</div><div class="sc-label">Dinner</div>
+    </div>
+  </div>
+
+  <div id="homeLandscapeGrid">
+    <div id="homeColLeft">
+      <div class="section-hdr">Locks</div>
+      <div class="status-card" onclick="toggleState(this)">
+        <div class="sc-left"><div class="sc-icon-wrap" style="background:rgba(0,212,240,0.10);">🔒</div><div class="sc-info"><div class="sc-name">Front Door</div><div class="sc-state">Last changed 01:17 PM</div></div></div>
+        <div class="sc-badge" style="background:rgba(0,212,240,0.10);color:var(--cyan);">Locked</div>
+      </div>
+      <div class="status-card" onclick="toggleState(this)" data-unlocked="true">
+        <div class="sc-left"><div class="sc-icon-wrap" style="background:rgba(245,166,35,0.10);">🔓</div><div class="sc-info"><div class="sc-name">Back Door</div><div class="sc-state">Last changed 01:30 PM</div></div></div>
+        <div class="sc-badge" style="background:rgba(245,166,35,0.10);color:var(--amber);">Unlocked</div>
+      </div>
+      <div class="status-card" onclick="toggleState(this)">
+        <div class="sc-left"><div class="sc-icon-wrap" style="background:rgba(0,212,240,0.10);">🔒</div><div class="sc-info"><div class="sc-name">Gemelli Door</div><div class="sc-state">Last changed 01:30 PM</div></div></div>
+        <div class="sc-badge" style="background:rgba(0,212,240,0.10);color:var(--cyan);">Locked</div>
+      </div>
+    </div>
+
+    <div id="homeColRight">
+      <div class="section-hdr">Garage</div>
+      <div class="grid-2">
+        <div class="status-card" onclick="toggleState(this)">
+          <div class="sc-left"><div class="sc-icon-wrap" style="background:rgba(16,208,144,0.10);">🚗</div><div class="sc-info"><div class="sc-name">Left</div><div class="sc-state">Closed</div></div></div>
+          <div class="sc-badge" style="background:rgba(16,208,144,0.10);color:var(--green);">Closed</div>
+        </div>
+        <div class="status-card" onclick="toggleState(this)">
+          <div class="sc-left"><div class="sc-icon-wrap" style="background:rgba(16,208,144,0.10);">🚗</div><div class="sc-info"><div class="sc-name">Right</div><div class="sc-state">Closed</div></div></div>
+          <div class="sc-badge" style="background:rgba(16,208,144,0.10);color:var(--green);">Closed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Motion-triggered camera column (landscape only) -->
+    <div class="camera-col" id="motionCamCol">
+      <div class="section-hdr">Motion Detected</div>
+      <div class="camera-card">
+        <div class="cam-feed">
+          <span class="motion-badge">Motion</span>
+          📹 Doorbell — Live
+          <span class="cam-label">Doorbell</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── PAGE: CLIMATE ── -->
+<div class="page" id="page-climate">
+  <div class="section-hdr">Climate Control</div>
+  <div id="climateGrid">
+    <div class="climate-card">
+      <div class="cc-header"><span class="cc-name">Living Room · Daikin</span><span class="cc-mode" style="background:rgba(77,142,240,0.12);color:var(--blue);">Cool</span></div>
+      <div class="cc-temp">67</div><div class="cc-set">Set → 70°F</div>
+      <div class="cc-controls"><div class="cc-btn">−</div><div class="cc-btn">+</div></div>
+    </div>
+    <div class="climate-card">
+      <div class="cc-header"><span class="cc-name">Gemelli Suite</span><span class="cc-mode" style="background:rgba(77,142,240,0.12);color:var(--blue);">Cool</span></div>
+      <div class="cc-temp">72</div><div class="cc-set">Set → 73°F</div>
+      <div class="cc-controls"><div class="cc-btn">−</div><div class="cc-btn">+</div></div>
+    </div>
+    <div class="climate-card">
+      <div class="cc-header"><span class="cc-name">Master Bedroom</span><span class="cc-mode" style="background:rgba(77,142,240,0.12);color:var(--blue);">Cool</span></div>
+      <div class="cc-temp">67</div><div class="cc-set">Set → 67°F</div>
+      <div class="cc-controls"><div class="cc-btn">−</div><div class="cc-btn">+</div></div>
+    </div>
+    <div class="climate-card">
+      <div class="cc-header"><span class="cc-name">Upstairs</span><span class="cc-mode" style="background:rgba(77,142,240,0.12);color:var(--blue);">Cool</span></div>
+      <div class="cc-temp">69</div><div class="cc-set">Set → 68°F</div>
+      <div class="cc-controls"><div class="cc-btn">−</div><div class="cc-btn">+</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: LIGHTS (NEW ROOM-GROUPED DESIGN) ── -->
+<div class="page" id="page-lights">
+  <div class="section-hdr">Light Groups</div>
+  <div id="lightsGrid">
+
+    <!-- Kitchen -->
+    <div class="room-card">
+      <div class="room-header" onclick="toggleRoom(this)">
+        <div><span class="room-name">Kitchen</span><span class="room-count">1/4 on</span></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="room-master on" onclick="event.stopPropagation()"></button>
+          <span class="room-chevron" id="chev-kitchen">▼</span>
+        </div>
+      </div>
+      <div class="room-lights" id="lights-kitchen">
+        <div class="light-row" onclick="toggleLight(this)">
+          <span class="lr-dot on"></span><span class="lr-name">Countertop</span>
+          <div class="lr-slider"><div class="lr-slider-fill" style="width:40%"></div></div>
+          <button class="lr-toggle on" onclick="event.stopPropagation()"></button>
+        </div>
+        <div class="light-row" onclick="toggleLight(this)">
+          <span class="lr-dot off"></span><span class="lr-name">Chandelier</span>
+          <div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div>
+          <button class="lr-toggle off" onclick="event.stopPropagation()"></button>
+        </div>
+        <div class="light-row" onclick="toggleLight(this)">
+          <span class="lr-dot off"></span><span class="lr-name">Ceiling</span>
+          <div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div>
+          <button class="lr-toggle off" onclick="event.stopPropagation()"></button>
+        </div>
+        <div class="light-row" onclick="toggleLight(this)">
+          <span class="lr-dot off"></span><span class="lr-name">Island</span>
+          <div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div>
+          <button class="lr-toggle off" onclick="event.stopPropagation()"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Living Room -->
+    <div class="room-card">
+      <div class="room-header" onclick="toggleRoom(this)">
+        <div><span class="room-name">Living Room</span><span class="room-count">0/2 on</span></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="room-master off" onclick="event.stopPropagation()"></button>
+          <span class="room-chevron" id="chev-living">▼</span>
+        </div>
+      </div>
+      <div class="room-lights" id="lights-living">
+        <div class="light-row" onclick="toggleLight(this)">
+          <span class="lr-dot off"></span><span class="lr-name">Ceiling</span>
+          <div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div>
+          <button class="lr-toggle off" onclick="event.stopPropagation()"></button>
+        </div>
+        <div class="light-row" onclick="toggleLight(this)">
+          <span class="lr-dot off"></span><span class="lr-name">Lamp</span>
+          <div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div>
+          <button class="lr-toggle off" onclick="event.stopPropagation()"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outdoor -->
+    <div class="room-card">
+      <div class="room-header" onclick="toggleRoom(this)">
+        <div><span class="room-name">Outdoor</span><span class="room-count">0/7 on</span></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="room-master off" onclick="event.stopPropagation()"></button>
+          <span class="room-chevron" id="chev-outdoor">▼</span>
+        </div>
+      </div>
+      <div class="room-lights" id="lights-outdoor">
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Garage</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Patio String</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Front Porch</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Front Walkway</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Upper Outdoor</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Left Patio</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Center Patio</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+      </div>
+    </div>
+
+    <!-- Benjamin's Room -->
+    <div class="room-card">
+      <div class="room-header" onclick="toggleRoom(this)">
+        <div><span class="room-name">Benjamin's Room</span><span class="room-count">0/2 on</span></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="room-master off" onclick="event.stopPropagation()"></button>
+          <span class="room-chevron" id="chev-ben">▼</span>
+        </div>
+      </div>
+      <div class="room-lights" id="lights-ben">
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Hatch Light</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+        <div class="light-row" onclick="toggleLight(this)"><span class="lr-dot off"></span><span class="lr-name">Ben's Light</span><div class="lr-slider"><div class="lr-slider-fill" style="width:0%"></div></div><button class="lr-toggle off" onclick="event.stopPropagation()"></button></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── PAGE: CAMERAS ── -->
+<div class="page" id="page-cameras">
+  <div class="section-hdr">Cameras</div>
+  <div id="cameraGrid">
+    <div class="camera-card"><div class="cam-feed">📹 Live Feed<span class="cam-label">Doorbell</span></div></div>
+    <div class="camera-card"><div class="cam-feed">📹 Live Feed<span class="cam-label">Izzy Camera</span></div></div>
+    <div class="camera-card"><div class="cam-feed">📹 Live Feed<span class="cam-label">Living Room</span></div></div>
+  </div>
+</div>
+
+<!-- ── PAGE: MEDIA ── -->
+<div class="page" id="page-media">
+  <div class="section-hdr">Media</div>
+  <div class="media-card">
+    <div class="mc-player">
+      <div class="mc-art">🎵</div>
+      <div class="mc-info">
+        <div class="mc-track">Unknown Track</div>
+        <div class="mc-artist">Benjamin's Room</div>
+      </div>
+      <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;background:rgba(0,212,240,0.12);color:var(--cyan);">PLAYING</span>
+    </div>
+    <div class="mc-controls">
+      <button class="mc-btn">⏮</button>
+      <button class="mc-btn play">⏸</button>
+      <button class="mc-btn">⏭</button>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="mc-progress"><div class="mc-progress-fill"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--text-lo);">
+        <span>1:23</span><span>3:45</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: SETTINGS (REDESIGNED) ── -->
+<div class="page" id="page-settings">
+  <div class="settings-grid">
+    <div>
+      <div class="section-hdr">Theme</div>
+      <div class="card">
+        <div class="card-label">Theme Mode</div>
+        <div class="card-sub">Always light theme</div>
+        <div class="theme-buttons">
+          <div class="theme-btn" onclick="selectThemeBtn(this)">Auto</div>
+          <div class="theme-btn active" onclick="selectThemeBtn(this)">Day</div>
+          <div class="theme-btn" onclick="selectThemeBtn(this)">Night</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-hdr">About</div>
+      <div class="card">
+        <div class="about-row"><span class="about-label">Dashboard</span><span class="about-value">mobilev1</span></div>
+        <div class="about-row"><span class="about-label">kis-nav.js</span><span class="about-value">v16</span></div>
+        <div class="about-row"><span class="about-label">Navigation</span><span class="about-value">6 tabs</span></div>
+      </div>
+    </div>
+    <div style="grid-column: 1 / -1;">
+      <div class="section-hdr">System Status</div>
+      <div class="card">
+        <div class="status-row"><span class="sr-dot" style="background:var(--green)"></span><span class="sr-label">Security</span><span class="sr-value">All Secure</span></div>
+        <div class="status-row"><span class="sr-dot" style="background:var(--amber)"></span><span class="sr-label">Lights</span><span class="sr-value">1 Light On</span></div>
+        <div class="status-row"><span class="sr-dot" style="background:var(--cyan)"></span><span class="sr-label">Temperature</span><span class="sr-value">72°F</span></div>
+        <div class="status-row"><span class="sr-dot" style="background:var(--green)"></span><span class="sr-label">Network</span><span class="sr-value">Online</span></div>
+        <div class="status-row"><span class="sr-dot" style="background:var(--green)"></span><span class="sr-label">Home Assistant</span><span class="sr-value">Running</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- page-content -->
+
+<!-- ── MINI PLAYER ── -->
+<div class="mini-player" id="miniPlayer">
+  <div class="mp-art">🎵</div>
+  <div class="mp-info">
+    <div class="mp-track">Unknown Track</div>
+    <div class="mp-artist">Benjamin's Room</div>
+  </div>
+  <button class="mp-play">⏸</button>
+  <div class="mp-progress-bar"><div class="fill"></div></div>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<div class="nav-bar" id="navBar">
+  <button class="nav-btn active" data-page="home" onclick="switchPage('home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span><div class="nav-pill"></div></button>
+  <button class="nav-btn" data-page="climate" onclick="switchPage('climate')"><span class="nav-icon">🌡️</span><span class="nav-label">Climate</span><div class="nav-pill"></div></button>
+  <button class="nav-btn" data-page="lights" onclick="switchPage('lights')"><span class="nav-icon">💡</span><span class="nav-label">Lights</span><div class="nav-pill"></div></button>
+  <button class="nav-btn" data-page="cameras" onclick="switchPage('cameras')"><span class="nav-icon">📹</span><span class="nav-label">Cameras</span><div class="nav-pill"></div></button>
+  <button class="nav-btn" data-page="media" onclick="switchPage('media')"><span class="nav-icon">🎵</span><span class="nav-label">Media</span><div class="nav-pill"></div></button>
+  <button class="nav-btn" data-page="settings" onclick="switchPage('settings')"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span><div class="nav-pill"></div><span class="nav-badge urgent" id="navBadge" style="display:none;">2</span></button>
+</div>
+
+</div><!-- device-inner -->
+</div><!-- device-frame -->
+
+<script>
+// ── Page switching ──
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === name));
+  document.getElementById('deviceInner').scrollTop = 0;
+}
+
+// ── Mode toggle ──
+function setMode(mode) {
+  const frame = document.getElementById('deviceFrame');
+  if (mode === 'day') {
+    frame.setAttribute('data-mode', 'day');
+    document.getElementById('btnDay').classList.add('active');
+    document.getElementById('btnNight').classList.remove('active');
+  } else {
+    frame.removeAttribute('data-mode');
+    document.getElementById('btnNight').classList.add('active');
+    document.getElementById('btnDay').classList.remove('active');
+  }
+}
+
+// ── Device switching ──
+document.getElementById('deviceSelect').addEventListener('change', function() {
+  const frame = document.getElementById('deviceFrame');
+  frame.className = 'device-frame ' + this.value;
+  // Apply tablet landscape classes
+  if (this.value === 'tablet-landscape') {
+    frame.classList.add('tablet-landscape');
+    document.getElementById('climateGrid').classList.add('climate-grid');
+    document.getElementById('lightsGrid').classList.add('lights-grid');
+    document.getElementById('cameraGrid').classList.add('camera-grid');
+    // Expand all room lights on tablet
+    document.querySelectorAll('.room-lights').forEach(rl => rl.classList.remove('collapsed'));
+    document.querySelectorAll('.room-chevron').forEach(c => c.textContent = '▲');
+    // Show landscape grid for home
+    const hlg = document.getElementById('homeLandscapeGrid');
+    hlg.style.display = 'grid';
+    hlg.style.gridTemplateColumns = '1fr 1fr' + (document.getElementById('motionCamCol').style.display !== 'none' ? ' 1fr' : '');
+    hlg.style.gap = 'var(--gap)';
+  } else {
+    frame.classList.remove('tablet-landscape');
+    document.getElementById('climateGrid').classList.remove('climate-grid');
+    document.getElementById('lightsGrid').classList.remove('lights-grid');
+    document.getElementById('cameraGrid').classList.remove('camera-grid');
+    document.getElementById('homeLandscapeGrid').style.display = '';
+    document.getElementById('homeLandscapeGrid').style.gridTemplateColumns = '';
+  }
+});
+
+// ── Nav style toggle ──
+function setNavStyle(style) {
+  const frame = document.getElementById('deviceFrame');
+  frame.setAttribute('data-nav-style', style);
+  document.getElementById('btnPill').classList.toggle('active', style === 'pill');
+  document.getElementById('btnHighlight').classList.toggle('active', style === 'highlight');
+}
+
+// ── Mini player toggle ──
+function toggleMiniPlayer(show) {
+  const mp = document.getElementById('miniPlayer');
+  mp.classList.toggle('hidden', !show);
+  document.getElementById('btnMpOn').classList.toggle('active', show);
+  document.getElementById('btnMpOff').classList.toggle('active', !show);
+}
+
+// ── Motion camera toggle ──
+function toggleMotionCam(show) {
+  const col = document.getElementById('motionCamCol');
+  col.style.display = show ? 'block' : 'none';
+  document.getElementById('btnCamOn').classList.toggle('active', show);
+  document.getElementById('btnCamOff').classList.toggle('active', !show);
+  // Update landscape grid if in tablet mode
+  if (document.getElementById('deviceFrame').classList.contains('tablet-landscape')) {
+    const hlg = document.getElementById('homeLandscapeGrid');
+    hlg.style.gridTemplateColumns = show ? '1fr 1fr 1fr' : '1fr 1fr';
+  }
+}
+
+// ── Badge control ──
+function setBadge(count, severity) {
+  const badge = document.getElementById('navBadge');
+  if (count === 0) {
+    badge.style.display = 'none';
+  } else {
+    badge.style.display = 'flex';
+    badge.textContent = count;
+    badge.className = 'nav-badge ' + (severity || 'urgent');
+  }
+  document.getElementById('btnBadge2').classList.toggle('active', count === 2);
+  document.getElementById('btnBadge1').classList.toggle('active', count === 1);
+  document.getElementById('btnBadgeOff').classList.toggle('active', count === 0);
+}
+
+// ── Scene toggle ──
+function toggleScene(el) {
+  const wasActive = el.classList.contains('active');
+  // Deactivate all
+  document.querySelectorAll('.scene-card').forEach(s => {
+    s.classList.remove('active');
+    s.style.borderColor = '';
+    s.style.background = '';
+  });
+  if (!wasActive) {
+    el.classList.add('active');
+    const color = el.dataset.color;
+    el.style.borderColor = color;
+    el.style.background = color + '14'; // ~8% opacity
+  }
+}
+
+// ── Light toggle ──
+function toggleLight(row) {
+  const dot = row.querySelector('.lr-dot');
+  const toggle = row.querySelector('.lr-toggle');
+  const fill = row.querySelector('.lr-slider-fill');
+  const isOn = dot.classList.contains('on');
+  dot.classList.toggle('on', !isOn);
+  dot.classList.toggle('off', isOn);
+  toggle.classList.toggle('on', !isOn);
+  toggle.classList.toggle('off', isOn);
+  fill.style.width = isOn ? '0%' : '70%';
+}
+
+// ── Room expand/collapse ──
+function toggleRoom(header) {
+  const card = header.closest('.room-card');
+  const lights = card.querySelector('.room-lights');
+  const chevron = card.querySelector('.room-chevron');
+  // Don't collapse on tablet
+  if (document.getElementById('deviceFrame').classList.contains('tablet-landscape')) return;
+  lights.classList.toggle('collapsed');
+  chevron.textContent = lights.classList.contains('collapsed') ? '▼' : '▲';
+}
+
+// ── Status card toggle (visual only) ──
+function toggleState(card) {
+  card.style.transform = 'scale(0.97)';
+  setTimeout(() => card.style.transform = '', 150);
+}
+
+// ── Theme button select ──
+function selectThemeBtn(btn) {
+  btn.parentElement.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Init: collapse rooms on iPhone ──
+if (!document.getElementById('deviceFrame').classList.contains('tablet-landscape')) {
+  document.querySelectorAll('.room-lights').forEach(rl => {
+    // Keep kitchen expanded, collapse others
+    if (rl.id !== 'lights-kitchen') rl.classList.add('collapsed');
+  });
+  document.querySelectorAll('.room-chevron').forEach(c => {
+    const rl = c.closest('.room-card').querySelector('.room-lights');
+    c.textContent = rl.classList.contains('collapsed') ? '▼' : '▲';
+  });
+}
+</script>
+</body>
+</html>

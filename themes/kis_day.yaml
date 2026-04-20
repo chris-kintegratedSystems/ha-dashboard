@@ -1,0 +1,70 @@
+kis-day:
+  # ── Page / Shell ─────────────────────────────────────────────
+  primary-background-color: "#eef1f5"
+  secondary-background-color: "#e4e8f0"
+  lovelace-background: "#eef1f5"
+
+  # ── Cards ────────────────────────────────────────────────────
+  card-background-color: "rgba(255,255,255,0.88)"
+  ha-card-background: "rgba(255,255,255,0.88)"
+  ha-card-border-color: "rgba(0,0,0,0.05)"
+  ha-card-border-width: "1px"
+  ha-card-border-radius: "16px"
+  ha-card-box-shadow: "0 1px 3px rgba(0,0,0,0.04)"
+
+  # ── Text ─────────────────────────────────────────────────────
+  primary-text-color: "#1a2030"
+  secondary-text-color: "#4a5a72"
+  disabled-text-color: "#7a8698"
+  text-primary-color: "#1a2030"
+  text-light-primary-color: "#1a2030"
+
+  # ── Accents / Brand ──────────────────────────────────────────
+  accent-color: "#0088a8"
+  primary-color: "#0088a8"
+  light-primary-color: "rgba(0,136,168,0.10)"
+  dark-primary-color: "#006a84"
+
+  # ── Sidebar ──────────────────────────────────────────────────
+  sidebar-background-color: "#e4e8f0"
+  sidebar-text-color: "#4a5a72"
+  sidebar-selected-text-color: "#0088a8"
+  sidebar-selected-background-color: "rgba(0,136,168,0.10)"
+  sidebar-icon-color: "#7a8698"
+  sidebar-selected-icon-color: "#0088a8"
+  sidebar-border-color: "rgba(0,0,0,0.05)"
+
+  # ── Header ───────────────────────────────────────────────────
+  app-header-background-color: "rgba(255,255,255,0.96)"
+  app-header-text-color: "#1a2030"
+  app-header-selection-bar-color: "#0088a8"
+
+  # ── Inputs / Toggles ─────────────────────────────────────────
+  paper-toggle-button-checked-button-color: "#0088a8"
+  paper-toggle-button-checked-bar-color: "rgba(0,136,168,0.4)"
+  paper-toggle-button-unchecked-button-color: "#7a8698"
+  paper-toggle-button-unchecked-bar-color: "rgba(122,134,152,0.4)"
+
+  # ── Dividers / Borders ───────────────────────────────────────
+  divider-color: "rgba(0,0,0,0.05)"
+  primary-border-color: "rgba(0,0,0,0.05)"
+
+  # ── State colors ─────────────────────────────────────────────
+  success-color: "#089464"
+  warning-color: "#c07808"
+  error-color: "#c02840"
+  info-color: "#2d6bc4"
+
+  # ── Slider / Range ───────────────────────────────────────────
+  paper-slider-active-color: "#0088a8"
+  paper-slider-knob-color: "#0088a8"
+  paper-slider-pin-color: "#0088a8"
+
+  # ── Ripple ───────────────────────────────────────────────────
+  paper-ripple-opacity: "0.08"
+
+  # ── Sticky header clearance (card-mod global) ────────────────
+  card-mod-view: |
+    :host {
+      --sticky-header-clearance: calc(max(env(safe-area-inset-top), 70px) + 95px);
+    }

@@ -1,0 +1,92 @@
+# ─── THEME MODE PACKAGE ──────────────────────────────────────────────────────
+# Controls dashboard theme: Auto (follows sunrise/sunset), Day, or Night.
+# input_select.theme_mode  →  automation applies the matching HA theme
+# ─────────────────────────────────────────────────────────────────────────────
+
+input_select:
+  theme_mode:
+    name: Theme Mode
+    icon: mdi:theme-light-dark
+    options:
+      - Auto
+      - Day
+      - Night
+
+automation:
+  # ── When the user changes the theme selector ──────────────────────────────
+  - id: theme_mode_changed
+    alias: "Theme — Apply on mode change"
+    description: "When theme_mode changes, apply the correct HA theme immediately"
+    trigger:
+      - platform: state
+        entity_id: input_select.theme_mode
+    action:
+      - choose:
+          - conditions:
+              - condition: state
+                entity_id: input_select.theme_mode
+                state: "Day"
+            sequence:
+              - service: frontend.set_theme
+                data:
+                  name: kis-day
+          - conditions:
+              - condition: state
+                entity_id: input_select.theme_mode
+                state: "Night"
+            sequence:
+              - service: frontend.set_theme
+                data:
+                  name: kis-dark
+          - conditions:
+              - condition: state
+                entity_id: input_select.theme_mode
+                state: "Auto"
+            sequence:
+              - choose:
+                  - conditions:
+                      - condition: state
+                        entity_id: sun.sun
+                        state: "above_horizon"
+                    sequence:
+                      - service: frontend.set_theme
+                        data:
+                          name: kis-day
+                default:
+                  - service: frontend.set_theme
+                    data:
+                      name: kis-dark
+
+  # ── Auto-switch at sunrise ────────────────────────────────────────────────
+  - id: theme_auto_sunrise
+    alias: "Theme — Auto switch at sunrise"
+    description: "Switch to day theme at sunrise when Auto mode is active"
+    trigger:
+      - platform: state
+        entity_id: sun.sun
+        to: "above_horizon"
+    condition:
+      - condition: state
+        entity_id: input_select.theme_mode
+        state: "Auto"
+    action:
+      - service: frontend.set_theme
+        data:
+          name: kis-day
+
+  # ── Auto-switch at sunset ─────────────────────────────────────────────────
+  - id: theme_auto_sunset
+    alias: "Theme — Auto switch at sunset"
+    description: "Switch to dark theme at sunset when Auto mode is active"
+    trigger:
+      - platform: state
+        entity_id: sun.sun
+        to: "below_horizon"
+    condition:
+      - condition: state
+        entity_id: input_select.theme_mode
+        state: "Auto"
+    action:
+      - service: frontend.set_theme
+        data:
+          name: kis-dark
