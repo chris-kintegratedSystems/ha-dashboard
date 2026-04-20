@@ -17,6 +17,28 @@
             {
               "title": "",
               "type": "grid",
+              "visibility": [
+                {
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.doorbell_motion",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.living_room_camera_motion",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.izzy_camera_motion",
+                      "state": "on"
+                    }
+                  ]
+                }
+              ],
               "cards": [
                 {
                   "type": "conditional",
