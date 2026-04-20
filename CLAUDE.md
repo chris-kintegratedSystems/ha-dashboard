@@ -54,7 +54,7 @@ warning; it never fails the overall QA run.
 Manual one-off:
 
 ```bash
-curl -s "http://${FKB_IP}:2323/?cmd=screenShot&password=${FKB_PASSWORD}" -o qa-screenshots/fkb-tabs9.png
+curl -s "http://${FKB_IP}:2323/?cmd=getScreenshot&password=${FKB_PASSWORD}" -o qa-screenshots/fkb-tabs9.png
 ```
 
 ---

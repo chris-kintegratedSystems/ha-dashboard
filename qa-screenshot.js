@@ -77,7 +77,7 @@ async function setHassTokens(page, token) {
 
 function captureFullyKiosk(ip, password, outPath) {
   return new Promise((resolve, reject) => {
-    const url = `http://${ip}:2323/?cmd=screenShot&password=${encodeURIComponent(password)}`;
+    const url = `http://${ip}:2323/?cmd=getScreenshot&password=${encodeURIComponent(password)}`;
     const req = http.get(url, { timeout: 10000 }, (res) => {
       if (res.statusCode !== 200) {
         res.resume();
