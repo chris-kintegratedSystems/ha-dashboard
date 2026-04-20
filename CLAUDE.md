@@ -45,11 +45,16 @@ verify on actual hardware:
 - iPhone via HA Companion App hard refresh
 - Day AND night theme on both devices
 
-Optional — capture the actual Fully Kiosk rendering via its remote
-admin API and attach alongside the Playwright screenshots:
+`qa-screenshot.js` automatically captures a real-device PNG from the
+wall-mounted Tab S9 at the end of the run when `FKB_IP` and
+`FKB_PASSWORD` are set in `.env` — saved to `qa-screenshots/fkb-tabs9.png`.
+If the tablet is asleep or offline the capture is skipped with a
+warning; it never fails the overall QA run.
+
+Manual one-off:
 
 ```bash
-curl -s "http://<tablet-ip>:2323/?cmd=screenShot" -o qa-screenshots/tabs9-real.png
+curl -s "http://${FKB_IP}:2323/?cmd=screenShot&password=${FKB_PASSWORD}" -o qa-screenshots/fkb-tabs9.png
 ```
 
 ---

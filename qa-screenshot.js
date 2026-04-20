@@ -19,9 +19,12 @@
  *   HA_QA_TOKEN=<long-lived access token>   # preferred
  *   HA_TOKEN=<fallback, older var name>
  *   HA_URL=http://192.168.51.179:8123
+ *   FKB_IP=192.168.51.150                   # optional: Fully Kiosk tablet
+ *   FKB_PASSWORD=<remote admin password>    # optional: FKB REST API auth
  */
 const { chromium } = require('playwright');
 const fs = require('fs');
+const http = require('http');
 const path = require('path');
 
 // ── Load .env ────────────────────────────────────────────────────────────────
@@ -39,6 +42,8 @@ if (!HA_TOKEN) {
   console.error('ERROR: Missing HA_QA_TOKEN in .env — create a long-lived access token in HA (Profile → Security → Long-lived access tokens).');
   process.exit(1);
 }
+const FKB_IP = env.FKB_IP || process.env.FKB_IP;
+const FKB_PASSWORD = env.FKB_PASSWORD || process.env.FKB_PASSWORD;
 
 const DASHBOARD = '/dashboard-mobilev1';
 const VIEWS = ['home', 'climate', 'lights', 'cameras', 'media', 'settings'];
@@ -68,6 +73,24 @@ async function setHassTokens(page, token) {
     };
     localStorage.setItem('hassTokens', JSON.stringify(hassTokens));
   }, token);
+}
+
+function captureFullyKiosk(ip, password, outPath) {
+  return new Promise((resolve, reject) => {
+    const url = `http://${ip}:2323/?cmd=screenShot&password=${encodeURIComponent(password)}`;
+    const req = http.get(url, { timeout: 10000 }, (res) => {
+      if (res.statusCode !== 200) {
+        res.resume();
+        return reject(new Error(`Fully Kiosk returned HTTP ${res.statusCode}`));
+      }
+      const file = fs.createWriteStream(outPath);
+      res.pipe(file);
+      file.on('finish', () => file.close(() => resolve(outPath)));
+      file.on('error', reject);
+    });
+    req.on('timeout', () => { req.destroy(new Error('Fully Kiosk request timed out')); });
+    req.on('error', reject);
+  });
 }
 
 async function waitForKisNav(page, timeoutMs) {
@@ -144,6 +167,21 @@ async function waitForKisNav(page, timeoutMs) {
   }
 
   await browser.close();
+
+  // Real-device capture: pull a live PNG from Fully Kiosk on the wall-mounted
+  // Tab S9. Only runs if FKB_IP + FKB_PASSWORD are in .env; never fails the
+  // overall QA run if the tablet is unreachable (it may be asleep, offline,
+  // or the user may not have creds configured).
+  if (FKB_IP && FKB_PASSWORD) {
+    const fkbPath = path.join(OUT_DIR, 'fkb-tabs9.png');
+    console.log(`\n[fkb] capturing real-device screenshot from ${FKB_IP}...`);
+    try {
+      await captureFullyKiosk(FKB_IP, FKB_PASSWORD, fkbPath);
+      console.log(`  ✓ ${path.basename(fkbPath)}`);
+    } catch (e) {
+      console.warn(`  ⚠ Fully Kiosk capture skipped: ${e.message}`);
+    }
+  }
 
   if (failures.length) {
     console.error(`\n❌ QA FAILED — ${failures.length} kis-nav.js injection failure(s):`);
