@@ -2996,8 +2996,8 @@
                 },
                 {
                   "type": "picture-entity",
-                  "entity": "camera.nanit_nursery",
-                  "camera_image": "camera.nanit_nursery",
+                  "entity": "camera.nanit_benjamin",
+                  "camera_image": "camera.nanit_benjamin",
                   "camera_view": "live",
                   "show_state": false,
                   "show_name": false,
@@ -3014,8 +3014,8 @@
                         "dismissable": true,
                         "content": {
                           "type": "picture-entity",
-                          "entity": "camera.nanit_nursery",
-                          "camera_image": "camera.nanit_nursery",
+                          "entity": "camera.nanit_benjamin",
+                          "camera_image": "camera.nanit_benjamin",
                           "camera_view": "live",
                           "show_state": false,
                           "show_name": false,
@@ -3025,12 +3025,12 @@
                       }
                     }
                   },
-                  "name": "Nanit Nursery"
+                  "name": "Nanit Benjamin"
                 },
                 {
                   "type": "picture-entity",
-                  "entity": "camera.nanit_second_room",
-                  "camera_image": "camera.nanit_second_room",
+                  "entity": "camera.nanit_travel",
+                  "camera_image": "camera.nanit_travel",
                   "camera_view": "live",
                   "show_state": false,
                   "show_name": false,
@@ -3047,8 +3047,8 @@
                         "dismissable": true,
                         "content": {
                           "type": "picture-entity",
-                          "entity": "camera.nanit_second_room",
-                          "camera_image": "camera.nanit_second_room",
+                          "entity": "camera.nanit_travel",
+                          "camera_image": "camera.nanit_travel",
                           "camera_view": "live",
                           "show_state": false,
                           "show_name": false,
@@ -3058,7 +3058,7 @@
                       }
                     }
                   },
-                  "name": "Nanit Second Room"
+                  "name": "Nanit Travel"
                 }
               ]
             }
