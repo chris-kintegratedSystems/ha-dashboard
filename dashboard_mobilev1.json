@@ -1072,7 +1072,7 @@
                                     "camera_image": "camera.doorbell",
                                     "camera_view": "live",
                                     "card_mod": {
-                                      "style": "hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                                      "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                                     },
                                     "elements": [
                                       {
@@ -1136,6 +1136,9 @@
                                     "type": "picture-elements",
                                     "camera_image": "camera.living_room_camera",
                                     "camera_view": "live",
+                                    "card_mod": {
+                                      "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                                    },
                                     "elements": [
                                       {
                                         "type": "custom:button-card",
@@ -1193,6 +1196,9 @@
                                     "type": "picture-elements",
                                     "camera_image": "camera.izzy_camera",
                                     "camera_view": "live",
+                                    "card_mod": {
+                                      "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                                    },
                                     "elements": [
                                       {
                                         "type": "custom:button-card",
@@ -3021,18 +3027,11 @@
           "path": "cameras",
           "icon": "mdi:cctv",
           "type": "sections",
-          "max_columns": 4,
+          "max_columns": 2,
           "sections": [
             {
               "type": "grid",
               "cards": [
-                {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>CAMERAS</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
-                },
                 {
                   "type": "picture-entity",
                   "entity": "camera.doorbell",
@@ -3042,7 +3041,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                    "style": "ha-card { aspect-ratio: 16 / 9; height: auto !important; width: 100% !important; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3058,7 +3057,7 @@
                           "camera_image": "camera.doorbell",
                           "camera_view": "live",
                           "card_mod": {
-                            "style": "hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                            "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                           },
                           "elements": [
                             {
@@ -3099,7 +3098,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                    "style": "ha-card { aspect-ratio: 16 / 9; height: auto !important; width: 100% !important; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3114,6 +3113,9 @@
                           "type": "picture-elements",
                           "camera_image": "camera.izzy_camera",
                           "camera_view": "live",
+                          "card_mod": {
+                            "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                          },
                           "elements": [
                             {
                               "type": "custom:button-card",
@@ -3148,7 +3150,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                    "style": "ha-card { aspect-ratio: 16 / 9; height: auto !important; width: 100% !important; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3163,6 +3165,9 @@
                           "type": "picture-elements",
                           "camera_image": "camera.living_room_camera",
                           "camera_view": "live",
+                          "card_mod": {
+                            "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                          },
                           "elements": [
                             {
                               "type": "custom:button-card",
@@ -3187,7 +3192,12 @@
                     }
                   },
                   "name": "Living Room"
-                },
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
                 {
                   "type": "picture-entity",
                   "entity": "camera.nanit_benjamin",
@@ -3197,7 +3207,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                    "style": "ha-card { aspect-ratio: 16 / 9; height: auto !important; width: 100% !important; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3212,6 +3222,9 @@
                           "type": "picture-elements",
                           "camera_image": "camera.nanit_benjamin",
                           "camera_view": "live",
+                          "card_mod": {
+                            "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                          },
                           "elements": [
                             {
                               "type": "custom:button-card",
@@ -3246,7 +3259,7 @@
                   "show_name": false,
                   "fit_mode": "fill",
                   "card_mod": {
-                    "style": "ha-card { height: 30vh; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                    "style": "ha-card { aspect-ratio: 16 / 9; height: auto !important; width: 100% !important; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                   },
                   "tap_action": {
                     "action": "fire-dom-event",
@@ -3261,6 +3274,9 @@
                           "type": "picture-elements",
                           "camera_image": "camera.nanit_travel",
                           "camera_view": "live",
+                          "card_mod": {
+                            "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                          },
                           "elements": [
                             {
                               "type": "custom:button-card",
