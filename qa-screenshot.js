@@ -49,11 +49,18 @@ const DASHBOARD = '/dashboard-mobilev1';
 const VIEWS = ['home', 'climate', 'lights', 'cameras', 'media', 'settings'];
 const OUT_DIR = path.join(__dirname, 'qa-screenshots');
 
-// Three device profiles — match real hardware used by Chris's household.
+// Eight device profiles — every piece of real hardware in Chris's household,
+// in both orientations. Viewports are CSS pixels; scale is DPR.
+const IOS_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15';
 const DEVICES = [
-  { name: 'tabs9-landscape',    width: 2800, height: 1752, scale: 2, ua: null },
-  { name: 'iphone-portrait',    width: 430,  height: 932,  scale: 3, ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15' },
-  { name: 'iphone-landscape',   width: 932,  height: 430,  scale: 3, ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15' },
+  { name: 'ipad11-portrait',          width: 834,  height: 1194, scale: 2, ua: null },
+  { name: 'ipad11-landscape',         width: 1194, height: 834,  scale: 2, ua: null },
+  { name: 'tabs9plus-portrait',       width: 876,  height: 1400, scale: 2, ua: null },
+  { name: 'tabs9plus-landscape',      width: 1400, height: 876,  scale: 2, ua: null },
+  { name: 'iphone17promax-portrait',  width: 440,  height: 956,  scale: 3, ua: IOS_UA },
+  { name: 'iphone17promax-landscape', width: 956,  height: 440,  scale: 3, ua: IOS_UA },
+  { name: 'iphone16pro-portrait',     width: 402,  height: 874,  scale: 3, ua: IOS_UA },
+  { name: 'iphone16pro-landscape',    width: 874,  height: 402,  scale: 3, ua: IOS_UA },
 ];
 
 // kis-nav.js injects these IDs into document.body — checking for them is how
