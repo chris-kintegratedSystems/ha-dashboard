@@ -1,7 +1,7 @@
 # HA Dashboard Redesign — Tasks
 
 **Project:** Home Assistant Dashboard Redesign
-**Status:** Kickoff — Product spec in progress
+**Status:** Phase 2 complete — Phase 3 in progress
 **Owner:** Chris (KIntegrated Systems)
 **Lead Agent:** Product → Dev → QA
 
@@ -21,12 +21,72 @@
 - [x] Scene grid — 3-col with mixed colors per scene type
 - [x] Dimmer light buttons — orange gradient fill proportional to brightness %, tap=toggle, hold=slider
 - [x] Nav bar — cyan pill active indicator on all 5 tabs
-- [ ] QA sign-off from Chris on all devices (Tab S9+, iPhone, iPad)
+- [x] kis-nav.js v16 — background-highlight nav, notification badge, mini-player, perf refactor (commit 63b31cd)
+- [x] **Batch A** — remove Now Playing section from Home (replaced by mini-player)
+- [x] **Batch B** — move System Status from Home → Settings; bump About label v15→v16
+- [x] **Batch C** — Lights page room-grouped layout (4 sections, `max_columns: 2`, chips dropped)
+- [x] QA sign-off — iPhone + Tab S9 landscape + Tab S9 portrait screenshots captured (commit e1357a2)
 
-## Phase 3: Ship
+## Phase 3: Post-Phase-2 Follow-ups
 
-- [ ] Chris confirms on all devices
+- [x] **2.6** Conditional motion camera on Home — 3 conditional `picture-entity` cards (doorbell, living_room, izzy). No HA config changes needed; uses existing `binary_sensor.*_motion` entities. Section at Home index 0 collapses when no motion active.
+- [x] **2.3** Scene toggle active-state tracking — 6 wrapper scripts in `scripts.yaml`; scene buttons now call `script.scene_*` and track the most-recently-triggered script via button-card JS templates (`[[[ ... ]]]`) for a colored border/glow when active (1-hour window).
+- [ ] **2.4** Climate tap-to-toggle HVAC — *deferred per Chris (April 19, 2026), leave as-is*
+- [ ] Lights page polish: tighten ~10-15px gap between room header and grid (stack-in-card install required)
+- [ ] Chris confirms on all devices (iPhone + Tab S9+ + iPad)
 - [ ] Tag release commit
+
+---
+
+## Phase 2 Deployment Notes (2026-04-19)
+
+**Commit:** `e1357a2` — feat: Phase 2 dashboard changes — Home/Settings/Lights refactor
+**Files changed:** `dashboard_mobilev1.json` + 17 QA screenshots
+
+**Batch A — Home cleanup:**
+- Removed the static Now Playing section (markdown + media-control card) from Home view
+- Now handled by persistent `kis-nav.js` mini-player above the nav bar
+
+**Batch B — Settings restructure + version bump:**
+- Cut System Status section (3-chip markdown card) from Home view sections
+- Pasted into Settings view between Theme and About sections
+- Changed `const navVer = 'v15'` → `'v16'` in the About card template
+- Home: 5 sections → 3; Settings: 2 sections → 3
+
+**Batch C — Lights page redesign:**
+- Split the single Lights section (1 markdown + 4 header/grid pairs) into 4 per-room sections
+- Each room section = `{title:"", type:"grid", cards:[header, grid]}` — Kitchen, Living Room, Outdoor, Bedrooms
+- `max_columns: 4` → `2` for clean landscape reflow on Tab S9
+- Stripped "All On / All Off" chip pills from all 4 room header label templates (~960b each)
+- Preserved room icons per Chris's override of design spec
+
+**Edit technique:** Byte-exact text splicing via brace matching (not `JSON.stringify` reformat) to keep the file diff surgical. Scratch scripts (`_splice*.js`) deleted post-deploy.
+
+**Known cosmetic:** ~10-15px gap between each room header card and its light grid on the Lights page. Card-mod seam tradeoff vs installing `stack-in-card` (HACS — deferred, requires external-code approval). Polish later.
+
+---
+
+## Phase 3 Deployment Notes (2026-04-19)
+
+**2.6 Conditional Motion Camera on Home**
+- Added new section at Home index 0 with 3 conditional `picture-entity` cards
+- Mapping: `binary_sensor.doorbell_motion`→`camera.doorbell`, `living_room_camera_motion`→`camera.living_room_camera`, `izzy_camera_motion`→`camera.izzy_camera`
+- Each card: 24vh height, `camera_view: "auto"`, tap navigates to `/dashboard-mobilev1/cameras`
+- Section collapses cleanly when no motion is active (Home visually identical to pre-Phase-3 in idle state)
+- Verified via forced `state: "off"` QA (doorbell card rendered correctly)
+
+**2.3 Scene Active-State Tracking**
+- Created `C:\Projects\ha-config\scripts.yaml` with 6 wrapper scripts: `scene_good_morning`, `scene_good_night`, `scene_away_mode`, `scene_welcome_home`, `scene_movie_time`, `scene_dinner_time` (each calls the underlying `scene.turn_on` for its mapped scene)
+- 6 scene buttons in dashboard updated:
+  - `tap_action` now calls `script.scene_*` (enables `last_triggered` tracking)
+  - `styles.card` uses button-card JS templates (`[[[ ... ]]]`) to compute "active" = this script has the most-recent `last_triggered` AND triggered within the last hour
+  - Active button shows 2px colored border matching its scene accent (orange/violet/red/green/blue) + subtle glow
+- No `configuration.yaml` changes, no `input_select` helper needed
+- Deploy: `scripts.yaml` SCP'd to Pi + validated via YAML parse + HA restart
+
+**Pivots during implementation:**
+- Initial approach used card-mod + Jinja `{% set ... %}` inside `card_mod.style` — didn't render visibly. Switched to button-card's native `styles.card` + `[[[ JS ]]]` template syntax (same pattern as existing dimmer light cards). Works reliably.
+- Shared-scene ambiguity (Away Mode + Movie Time both fire `scene.chill_mode`) is resolved by tracking at the script level, not the scene level — each button has its own script.
 
 ---
 
