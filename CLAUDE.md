@@ -173,6 +173,77 @@ create new session-handoff markdown files for this purpose.
 
 ---
 
+## "Save Everything" Command
+
+When Chris says "save everything", "checkpoint", or "safe to exit?",
+run the full 6-phase checkpoint:
+
+1. STATUS CHECK — report uncommitted work, open PRs, scratch files
+2. UPDATE MEMORY — capture session lessons to .claude/memory/ files
+   BEFORE committing (so they're included in the push)
+3. COMMIT + PUSH — stage everything (code + memory), push to origin
+4. PR MERGE — guide Chris through merging on GitHub, pull fresh master
+5. SESSION HANDOFF — upload to Drive for cross-session continuity
+6. FINAL REPORT — green/red checklist + next steps
+
+### Phase 1: STATUS CHECK
+Report for both ha-dashboard and ha-config repos:
+- Current branch, uncommitted changes, unpushed commits, open PRs
+- Scratch files present
+- Deployed state mismatches
+Ask before proceeding if anything needs action. WAIT for answer.
+
+### Phase 2: UPDATE MEMORY FILES (BEFORE committing)
+Scan session for new lessons. Append to .claude/memory/:
+- dead_ends.md — failed approaches + what worked instead
+- component_compat.md — new cards/components tested (works/broken)
+- css_dom_patterns.md — new CSS/DOM selectors, injection points
+- deploy_gotchas.md — deploy issues encountered + prevention
+If no new lessons, skip. Don't add empty entries.
+DO NOT commit yet — these get committed with code in Phase 3.
+
+### Phase 3: COMMIT + PUSH
+- Delete scratch files
+- git add -A (stages code + memory files together)
+- Commit with descriptive message
+- Push to origin
+- Open PRs if branches don't have them yet
+
+### Phase 4: PR MERGE
+- Print merge order with GitHub links (ha-config first, ha-dashboard second)
+- WAIT for Chris to confirm merges done on GitHub
+- After confirmed: git checkout master && git pull origin master on BOTH repos
+- Verify merged commits appear in git log
+
+### Phase 5: SESSION HANDOFF
+Upload SESSION_HANDOFF to Drive ha-dashboard folder
+(parent ID: 1eNj0A4aKHcihpgiR4xTgRl6CvuBl9H1c) with:
+date, what was done, deployed state, open PRs, known issues, next session work
+
+### Phase 6: FINAL REPORT
+Print green/red checklist:
+- Memory files updated
+- All changes committed and pushed
+- All PRs merged (or list remaining)
+- Both repos on master, up to date
+- Session handoff saved
+- Deployed state matches git
+- No scratch files
+- Ready for next session
+End with: "Safe to exit" or "Not safe — [reason]"
+
+### Rules:
+- NEVER auto-commit without asking
+- NEVER merge PRs (guide Chris to merge on GitHub, then verify)
+- Save memory files BEFORE committing — they go in the same push
+- Always push BEFORE saying "safe to exit"
+- Always pull master AFTER PRs are merged
+- Flag deployed/git mismatches clearly
+- "Safe to exit" means next session starts with just:
+  git checkout master && git pull origin master && new branch
+
+---
+
 ## Deploy pattern
 
 1. Edit dashboard JSON locally, validate with `node -e "require('./dashboard_mobilev1.json')"`.
