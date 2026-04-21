@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 34;
+  window.KIS_NAV_VERSION = 35;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1262,8 +1262,27 @@
       }
 
       // 3) Pointer/touch handlers on the card itself — catches every swipe
-      //    the user makes, even if other signals don't fire.
-      const onPointerUp = () => setTimeout(() => pushSlideIndex(readSwipeIndex(swipeCard)), 120);
+      //    the user makes, even if other signals don't fire. Also powers the
+      //    60s swipe-away cooldown: if the user swipes off the active camera
+      //    tile (rendered-index 0 during priority motion), we record the
+      //    cooldown timestamp so autoSnapPriorityCamera won't yank them back.
+      const onPointerUp = () => {
+        const preIdx = readSwipeIndex(swipeCard);
+        setTimeout(() => {
+          const postIdx = readSwipeIndex(swipeCard);
+          pushSlideIndex(postIdx);
+          if (preIdx === 0 && postIdx !== 0 && postIdx > 0) {
+            const h = getHass();
+            if (h) {
+              const ps = getState(h, 'sensor.priority_camera');
+              const cam = ps && ps.state;
+              if (cam === 'doorbell' || cam === 'living_room' || cam === 'izzy') {
+                _cameraCooldownUntil[cam] = Date.now() + SWIPE_AWAY_COOLDOWN_MS;
+              }
+            }
+          }
+        }, 120);
+      };
       swipeCard.addEventListener('pointerup', onPointerUp, true);
       swipeCard.addEventListener('touchend', onPointerUp, true);
       _swipePointerCleanup = () => {
@@ -1310,119 +1329,63 @@
     }
   }
 
-  // ─── Motion camera takeover (preload + winner visibility) ──────────────────
-  // Home page priority-zone carousel is swapped for one of three Nest/Vivint
-  // feeds when its sticky motion sensor is ON. The dashboard renders the
-  // three conditional picture-entities inside a vertical-stack — meaning all
-  // cams with active motion are in the DOM simultaneously (streams live),
-  // but they visually stack and only one should be visible. This controller
-  // overlays them (CSS injected into the stack's shadow root, making
-  // children absolute-positioned) and drives per-element opacity / z-index
-  // from sensor.priority_camera (HA's "most recent wins" picker).
+  // ─── Priority-camera auto-snap (camera-as-carousel-tile) ───────────────────
+  // Cameras live as conditional tiles inside the simple-swipe-card priority
+  // zone (dashboard_mobilev1.json home view). When a camera's sticky motion
+  // sensor is ON its tile appears in the carousel; when it clears the tile
+  // disappears. The tier-priority state machine (see configuration.yaml +
+  // automations.yaml) guarantees the highest-priority active camera is the
+  // first rendered tile, so auto-snap target is always rendered-index 0.
   //
-  // When all three stickies clear, the conditionals unmount and the
-  // vertical-stack is hidden; the carousel visibility condition
-  // (`priority_camera == 'none'`) takes it back.
-  const MOTION_CAM_ENTITIES = [
-    'camera.doorbell',
-    'camera.living_room_camera',
-    'camera.izzy_camera',
-  ];
+  // PRIORITY_CAMERA_MAP is the public contract shared with sensor.priority_camera
+  // — do NOT change the key alphabet (doorbell / living_room / izzy / none).
+  //
+  // Swipe-away cooldown: if the user actively swipes off the active camera
+  // tile (pointer-up transitions carousel from index 0 to a later tile
+  // while a camera is priority), we record a 60s cooldown for that camera
+  // entity. During that window autoSnapPriorityCamera won't force-snap
+  // back to the same camera — the user wanted a break.
   const PRIORITY_CAMERA_MAP = {
     doorbell: 'camera.doorbell',
     living_room: 'camera.living_room_camera',
     izzy: 'camera.izzy_camera',
   };
-  const MOTION_CAM_OVERLAY_CSS_ID = 'kis-motion-cam-overlay';
-  const MOTION_CAM_OVERLAY_CSS = `
-    #root {
-      position: relative !important;
-      height: 240px !important;
-    }
-    @media (min-width: 768px) {
-      #root { height: 44vh !important; }
-    }
-    #root > * {
-      position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      transition: opacity 140ms ease !important;
-    }
-  `;
+  const SWIPE_AWAY_COOLDOWN_MS = 60000;
+  const _cameraCooldownUntil = Object.create(null);
+  let _lastSnappedPriorityCamera = null;
 
-  // Walk shadow DOMs for all vertical-stack cards and return those that
-  // contain at least one picture-entity whose entity matches one of the
-  // three motion cameras. Returns the stack elements (host-level).
-  function findMotionCamStacks() {
-    const stacks = [];
-    const seenStack = new Set();
-
-    function pictureEntityMatches(card) {
-      const cfg = card && (card._config || card.config);
-      return cfg && MOTION_CAM_ENTITIES.indexOf(cfg.entity) !== -1;
-    }
-
-    function walkForStacks(root) {
-      if (!root) return;
-      const all = root.querySelectorAll
-        ? root.querySelectorAll('hui-vertical-stack-card')
-        : [];
-      for (const stack of all) {
-        if (seenStack.has(stack)) continue;
-        seenStack.add(stack);
-        const sr = stack.shadowRoot;
-        if (!sr) continue;
-        let hasMotionCam = false;
-        const pes = sr.querySelectorAll('hui-picture-entity-card');
-        for (const pe of pes) {
-          if (pictureEntityMatches(pe)) { hasMotionCam = true; break; }
-        }
-        if (hasMotionCam) stacks.push(stack);
-      }
-      // Recurse into nested shadow roots.
-      const all2 = root.querySelectorAll ? root.querySelectorAll('*') : [];
-      for (const el of all2) {
-        if (el.shadowRoot) walkForStacks(el.shadowRoot);
-      }
-    }
-    walkForStacks(document.body);
-    return stacks;
-  }
-
-  function updateMotionCamOverlay() {
+  function autoSnapPriorityCamera() {
     if (!onMobileDashboard()) return;
     const hass = getHass();
     if (!hass) return;
-    const priorityEnt = getState(hass, 'sensor.priority_camera');
-    if (!priorityEnt) return;
-    const winnerEntity = PRIORITY_CAMERA_MAP[priorityEnt.state] || null;
+    const ps = getState(hass, 'sensor.priority_camera');
+    if (!ps) return;
+    const cam = ps.state;
 
-    const stacks = findMotionCamStacks();
-    for (const stack of stacks) {
-      const sr = stack.shadowRoot;
-      if (!sr) continue;
-      // Inject the overlay CSS once per stack shadow root.
-      injectShadowCSS(sr, MOTION_CAM_OVERLAY_CSS_ID, MOTION_CAM_OVERLAY_CSS);
-
-      // Set opacity/z-index per rendered picture-entity based on winner.
-      const pes = sr.querySelectorAll('hui-picture-entity-card');
-      for (const pe of pes) {
-        const cfg = pe._config || pe.config;
-        if (!cfg) continue;
-        const isWinner = cfg.entity === winnerEntity;
-        // Walk up to the direct #root child (conditional wrapper or
-        // picture-entity-card itself, depending on HA version).
-        let target = pe;
-        while (target && target.parentElement && target.parentElement !== sr && target.parentElement.id !== 'root') {
-          target = target.parentElement;
-        }
-        target.style.opacity = isWinner ? '1' : '0';
-        target.style.zIndex = isWinner ? '10' : '1';
-        target.style.pointerEvents = isWinner ? 'auto' : 'none';
-      }
+    if (cam !== 'doorbell' && cam !== 'living_room' && cam !== 'izzy') {
+      // No active camera — reset memory so the next motion event snaps.
+      _lastSnappedPriorityCamera = null;
+      return;
     }
+
+    // Already snapped (or acknowledged) this priority-state — don't re-snap
+    // on every tick. Lets the user navigate manually during a takeover.
+    if (cam === _lastSnappedPriorityCamera) return;
+
+    // Cooldown: mark as acknowledged so we don't snap the moment the
+    // cooldown window expires. Only a transition through `none` back to a
+    // camera will trigger another snap.
+    if (Date.now() < (_cameraCooldownUntil[cam] || 0)) {
+      _lastSnappedPriorityCamera = cam;
+      return;
+    }
+
+    const swipeCard = findSwipeCardEl(document.body);
+    if (!swipeCard || typeof swipeCard.goToSlide !== 'function') return;
+    try {
+      swipeCard.goToSlide(0);
+      _lastSnappedPriorityCamera = cam;
+    } catch (e) {}
   }
 
   // ─── Cameras page: stagger Nest stream init ────────────────────────────────
@@ -2023,7 +1986,7 @@
         patchHALayout(0);
         maybeShowSwipeHint();
         observeSwipeSlideIndex();
-        updateMotionCamOverlay();
+        autoSnapPriorityCamera();
         applyCamerasStagger();
         updateCameraPlaceholders();
         startCameraPlaceholderBurst();
@@ -2198,7 +2161,7 @@
       if (onMobileDashboard()) {
         renderHeaderContent();
         maybeReattachSwipeObserver();
-        updateMotionCamOverlay();
+        autoSnapPriorityCamera();
         applyCamerasStagger();
         updateCameraPlaceholders();
       }

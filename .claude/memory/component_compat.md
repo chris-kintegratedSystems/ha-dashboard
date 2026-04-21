@@ -24,6 +24,7 @@ Append new entries at the bottom. Date-stamp every entry.
 | nutteloost/simple-swipe-card v2.8.2 | Carousel | WORKS | ResizeObserver, no FKB crash. | 2026-04-21 |
 | fold-entity-row | Expand/collapse | WORKS | Phase 5A lights page. | 2026-04-21 |
 | simple-swipe-card | Carousel w/ slide-index tracking | WORKS | No `slide-changed` event. `.active-slide` class is VERTICAL-only in v2.8.2 — useless for horizontal swipes. Read `cardEl.currentIndex`, observe `.slider` style/transform mutations + `transitionend`, 750 ms poll fallback. Debounce 80ms. | 2026-04-21 |
+| simple-swipe-card v2.8.2 | Dynamic tile visibility (conditionals) | WORKS | Children of `type: conditional` collapse cleanly when their condition evaluates false. `_adjustCurrentIndexForVisibility` recalculates slide count on HA state change. `goToSlide(i)` takes the VISIBLE rendered index, not the config-order index — so `goToSlide(0)` always lands on whichever conditional is the first currently-rendered tile. Pattern used for motion-camera takeover where 3 camera conditionals + 2 static tiles share one carousel and the priority camera is guaranteed by the upstream state machine to always be the first rendered tile. | 2026-04-21 |
 | Browser Mod popup | Fullscreen overlays | WORKS | size: fullscreen, dismissable. | 2026-04-20 |
 
 ## Layout Types

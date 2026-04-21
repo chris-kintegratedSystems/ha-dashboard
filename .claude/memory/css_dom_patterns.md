@@ -322,3 +322,46 @@ camera load transitions.
 (placeholder CSS race vs. first HA render). v34 fixed Layer 2 (UA
 default video paint + wrong reveal gate). Keep both patterns
 together.
+
+## Priority-camera auto-snap + per-camera swipe cooldown (2026-04-21, kis-nav v35)
+Carousel takeover pattern: 3 camera conditionals + 2 static tiles
+inside simple-swipe-card. Upstream tier-priority state machine
+(`sensor.priority_camera`, hold-until-clear logic in
+`ha-config/automations.yaml`) guarantees the active priority camera
+is ALWAYS the first currently-rendered tile. kis-nav.js auto-snaps
+the carousel to rendered-index 0 whenever `sensor.priority_camera`
+transitions into a new camera name:
+
+```js
+function autoSnapPriorityCamera() {
+  const cam = getState(hass, 'sensor.priority_camera')?.state;
+  if (!['doorbell','living_room','izzy'].includes(cam)) {
+    _lastSnappedPriorityCamera = null;  // reset on 'none' so next snap fires
+    return;
+  }
+  if (cam === _lastSnappedPriorityCamera) return;           // already snapped
+  if (Date.now() < (_cameraCooldownUntil[cam] || 0)) {
+    _lastSnappedPriorityCamera = cam;                       // ACK during cooldown so expiry doesn't re-snap
+    return;
+  }
+  swipeCard.goToSlide(0);                                   // 0 = rendered index, not config index
+  _lastSnappedPriorityCamera = cam;
+}
+```
+
+Called from both the post-navigation 100ms setTimeout and the
+1-second setInterval in onMobileDashboard tick.
+
+**Swipe-away cooldown (user dismiss):** pointerup handler on the
+swipe card reads `currentIndex` BEFORE and 120ms AFTER release; if
+pre=0 and post>0 during an active priority camera, records
+`_cameraCooldownUntil[cam] = Date.now() + 60000` so that camera
+cannot auto-snap back for 60s. Per-camera, so a higher-tier camera
+still snaps even if the user dismissed a lower-tier one.
+
+**Cooldown-ACK subtlety:** during cooldown, still set
+`_lastSnappedPriorityCamera = cam`. Without the ACK, the moment
+cooldown expires the sensor state still equals cam and the next tick
+would auto-snap — defeating the dismissal. Only a transition through
+`priority_camera == 'none'` back into a camera name resets
+`_lastSnappedPriorityCamera` and earns another snap.
