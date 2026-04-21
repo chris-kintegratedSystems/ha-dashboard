@@ -47,7 +47,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 27;
+  window.KIS_NAV_VERSION = 28;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -515,6 +515,12 @@
            sections fill the available viewport width. */
         --ha-view-sections-column-max-width: none !important;
         --column-max-width: none !important;
+        /* Column + row gap between sections must equal the 12px edge padding
+           below on .container, so left-edge = column-gap = right-edge and
+           top-edge = row-gap. HA's default is 32px which makes the center
+           gutter visibly wider than the side gutters. */
+        --ha-view-sections-column-gap: 12px !important;
+        --ha-view-sections-row-gap: 12px !important;
       }
       /* .wrapper is hui-sections-view's outer shell; HA gives it 32px side
          padding which is where the visible page-edge gutter comes from. Drop
@@ -1091,9 +1097,6 @@
   //   - transitionend on .slider when the animation settles
   //   - cardEl.currentIndex property after settle
   //
-  // v27: add multi-source index read, pointer/touch handlers, opportunistic
-  // re-attach from the 1-s tick, and an on-screen debug badge toggleable
-  // via localStorage.kis_swipe_debug.
   const PRIORITY_SLIDE_ENTITY = 'input_number.priority_slide_index';
   let _swipeObserverEl = null;
   let _swipeObserverInstance = null;
@@ -1102,24 +1105,19 @@
   let _swipePointerCleanup = null;
   let _swipeObserverAttempts = 0;
   let _lastPushedSlideIndex = -1;
-  let _lastDetectedSlideIndex = -1;
-  let _lastDetectSource = 'init';
 
   // Read the active slide index using whichever signal is available,
   // in order of authority. Returns -1 if none yield a valid number.
   function readSwipeIndex(cardEl) {
     if (!cardEl) return -1;
 
-    // 1) currentIndex property — authoritative when present.
     if (typeof cardEl.currentIndex === 'number' && cardEl.currentIndex >= 0) {
-      _lastDetectSource = 'prop';
       return cardEl.currentIndex;
     }
 
     const sr = cardEl.shadowRoot;
     if (!sr) return -1;
 
-    // 2) .active-slide class (in case v2.8.2 ever applies it in horizontal).
     const active = sr.querySelector('.active-slide');
     if (active) {
       const parent = active.parentElement;
@@ -1128,14 +1126,11 @@
           (n) => n.classList && n.classList.contains('slide')
         );
         const idx = siblings.indexOf(active);
-        if (idx >= 0) {
-          _lastDetectSource = 'class';
-          return idx;
-        }
+        if (idx >= 0) return idx;
       }
     }
 
-    // 3) Math on the .slider transform: translateX / slide width = index.
+    // Fallback: derive index from .slider transform matrix / slide width.
     const slider = sr.querySelector('.slider');
     const firstSlide = sr.querySelector('.slide');
     if (slider && firstSlide) {
@@ -1144,7 +1139,6 @@
         const t = getComputedStyle(slider).transform;
         let tx = 0;
         if (t && t !== 'none') {
-          // matrix(a,b,c,d,tx,ty) → tx is at index 4 after "matrix("
           const m = t.match(/matrix.*\((.+)\)/);
           if (m) {
             const parts = m[1].split(',').map(parseFloat);
@@ -1152,20 +1146,14 @@
           }
         }
         const idx = Math.round(Math.abs(tx) / w);
-        if (!Number.isNaN(idx) && idx >= 0) {
-          _lastDetectSource = 'transform';
-          return idx;
-        }
+        if (!Number.isNaN(idx) && idx >= 0) return idx;
       }
     }
 
-    _lastDetectSource = 'none';
     return -1;
   }
 
   function pushSlideIndex(idx) {
-    _lastDetectedSlideIndex = idx;
-    renderSwipeDebugBadge();
     if (idx < 0 || idx === _lastPushedSlideIndex) return;
     const hass = getHass();
     if (!hass) return;
@@ -1178,45 +1166,6 @@
       entity_id: PRIORITY_SLIDE_ENTITY,
       value: idx,
     });
-  }
-
-  // On-tablet debug badge. Enable with localStorage.setItem('kis_swipe_debug','1').
-  // Renders a tiny fixed pill bottom-left of the viewport showing the last
-  // detected index, source (prop/class/transform/none), and last pushed value
-  // — so you can tell at a glance whether the observer is firing without
-  // needing USB DevTools.
-  function renderSwipeDebugBadge() {
-    const on = (() => {
-      try { return localStorage.getItem('kis_swipe_debug') === '1'; } catch (e) { return false; }
-    })();
-    let badge = document.getElementById('kis-swipe-debug');
-    if (!on) {
-      if (badge) badge.remove();
-      return;
-    }
-    if (!badge) {
-      badge = document.createElement('div');
-      badge.id = 'kis-swipe-debug';
-      Object.assign(badge.style, {
-        position: 'fixed',
-        left: '8px',
-        bottom: '88px',
-        zIndex: '10000002',
-        background: 'rgba(0,0,0,0.75)',
-        color: '#0f0',
-        padding: '4px 8px',
-        font: '11px ui-monospace,monospace',
-        borderRadius: '6px',
-        pointerEvents: 'none',
-        maxWidth: '60vw',
-      });
-      document.body.appendChild(badge);
-    }
-    badge.textContent =
-      'swipe idx=' + _lastDetectedSlideIndex +
-      ' src=' + _lastDetectSource +
-      ' pushed=' + _lastPushedSlideIndex +
-      (_swipeObserverEl ? ' [attached]' : ' [no-card]');
   }
 
   function observeSwipeSlideIndex() {
@@ -1246,12 +1195,9 @@
       const swipeCard = findSwipeCardEl(document.body);
       if (!swipeCard) {
         if (_swipeObserverAttempts++ < 30) setTimeout(tryAttach, 400);
-        renderSwipeDebugBadge();
         return;
       }
       if (_swipeObserverEl === swipeCard && _swipeObserverInstance) {
-        // already attached to this exact element
-        renderSwipeDebugBadge();
         return;
       }
       teardown();
@@ -1310,8 +1256,6 @@
         const idx = readSwipeIndex(swipeCard);
         pushSlideIndex(idx);
       }, 750);
-
-      renderSwipeDebugBadge();
     };
 
     _swipeObserverAttempts = 0;
@@ -1337,14 +1281,246 @@
         _swipePointerCleanup = null;
         _swipePollTimer = null;
       }
-      renderSwipeDebugBadge();
       return;
     }
     if (swipeCard !== _swipeObserverEl || !_swipeObserverInstance) {
       _swipeObserverAttempts = 0;
       observeSwipeSlideIndex();
     }
-    renderSwipeDebugBadge();
+  }
+
+  // ─── Motion camera takeover (preload + winner visibility) ──────────────────
+  // Home page priority-zone carousel is swapped for one of three Nest/Vivint
+  // feeds when its sticky motion sensor is ON. The dashboard renders the
+  // three conditional picture-entities inside a vertical-stack — meaning all
+  // cams with active motion are in the DOM simultaneously (streams live),
+  // but they visually stack and only one should be visible. This controller
+  // overlays them (CSS injected into the stack's shadow root, making
+  // children absolute-positioned) and drives per-element opacity / z-index
+  // from sensor.priority_camera (HA's "most recent wins" picker).
+  //
+  // When all three stickies clear, the conditionals unmount and the
+  // vertical-stack is hidden; the carousel visibility condition
+  // (`priority_camera == 'none'`) takes it back.
+  const MOTION_CAM_ENTITIES = [
+    'camera.doorbell',
+    'camera.living_room_camera',
+    'camera.izzy_camera',
+  ];
+  const PRIORITY_CAMERA_MAP = {
+    doorbell: 'camera.doorbell',
+    living_room: 'camera.living_room_camera',
+    izzy: 'camera.izzy_camera',
+  };
+  const MOTION_CAM_OVERLAY_CSS_ID = 'kis-motion-cam-overlay';
+  const MOTION_CAM_OVERLAY_CSS = `
+    #root {
+      position: relative !important;
+      height: 240px !important;
+    }
+    @media (min-width: 768px) {
+      #root { height: 44vh !important; }
+    }
+    #root > * {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      transition: opacity 140ms ease !important;
+    }
+  `;
+
+  // Walk shadow DOMs for all vertical-stack cards and return those that
+  // contain at least one picture-entity whose entity matches one of the
+  // three motion cameras. Returns the stack elements (host-level).
+  function findMotionCamStacks() {
+    const stacks = [];
+    const seenStack = new Set();
+
+    function pictureEntityMatches(card) {
+      const cfg = card && (card._config || card.config);
+      return cfg && MOTION_CAM_ENTITIES.indexOf(cfg.entity) !== -1;
+    }
+
+    function walkForStacks(root) {
+      if (!root) return;
+      const all = root.querySelectorAll
+        ? root.querySelectorAll('hui-vertical-stack-card')
+        : [];
+      for (const stack of all) {
+        if (seenStack.has(stack)) continue;
+        seenStack.add(stack);
+        const sr = stack.shadowRoot;
+        if (!sr) continue;
+        let hasMotionCam = false;
+        const pes = sr.querySelectorAll('hui-picture-entity-card');
+        for (const pe of pes) {
+          if (pictureEntityMatches(pe)) { hasMotionCam = true; break; }
+        }
+        if (hasMotionCam) stacks.push(stack);
+      }
+      // Recurse into nested shadow roots.
+      const all2 = root.querySelectorAll ? root.querySelectorAll('*') : [];
+      for (const el of all2) {
+        if (el.shadowRoot) walkForStacks(el.shadowRoot);
+      }
+    }
+    walkForStacks(document.body);
+    return stacks;
+  }
+
+  function updateMotionCamOverlay() {
+    if (!onMobileDashboard()) return;
+    const hass = getHass();
+    if (!hass) return;
+    const priorityEnt = getState(hass, 'sensor.priority_camera');
+    if (!priorityEnt) return;
+    const winnerEntity = PRIORITY_CAMERA_MAP[priorityEnt.state] || null;
+
+    const stacks = findMotionCamStacks();
+    for (const stack of stacks) {
+      const sr = stack.shadowRoot;
+      if (!sr) continue;
+      // Inject the overlay CSS once per stack shadow root.
+      injectShadowCSS(sr, MOTION_CAM_OVERLAY_CSS_ID, MOTION_CAM_OVERLAY_CSS);
+
+      // Set opacity/z-index per rendered picture-entity based on winner.
+      const pes = sr.querySelectorAll('hui-picture-entity-card');
+      for (const pe of pes) {
+        const cfg = pe._config || pe.config;
+        if (!cfg) continue;
+        const isWinner = cfg.entity === winnerEntity;
+        // Walk up to the direct #root child (conditional wrapper or
+        // picture-entity-card itself, depending on HA version).
+        let target = pe;
+        while (target && target.parentElement && target.parentElement !== sr && target.parentElement.id !== 'root') {
+          target = target.parentElement;
+        }
+        target.style.opacity = isWinner ? '1' : '0';
+        target.style.zIndex = isWinner ? '10' : '1';
+        target.style.pointerEvents = isWinner ? 'auto' : 'none';
+      }
+    }
+  }
+
+  // ─── Cameras page: stagger Nest stream init ────────────────────────────────
+  // Nest SDM rate limits: 5 QPM per device per user. Starting the two Nest
+  // streams simultaneously on a Tab S9 refresh brushes the cap when a
+  // keepalive from a prior session is still in-flight.
+  //
+  // Plan (per ha-lovelace-expert brief 2026-04-21):
+  //   nanit_benjamin / nanit_travel: immediate (local RTMP, zero limit)
+  //   doorbell (Vivint):             immediate (separate auth path)
+  //   living_room_camera (Nest):     immediate
+  //   izzy_camera (Nest):            delay 3 s
+  //
+  // Implementation: detach izzy's picture-entity from DOM on Cameras-page
+  // entry (a placeholder of the same size holds the grid cell open), then
+  // re-attach it 3 s later. Detachment disconnects the custom element, so
+  // its connectedCallback / stream init don't run until re-attach — a true
+  // stream-start delay, not just a visual one.
+  const CAMERAS_STAGGER_ENTITY = 'camera.izzy_camera';
+  const CAMERAS_STAGGER_MS = 3000;
+  let _camerasStaggerTimer = null;
+  let _camerasStaggerActiveSlug = null;
+  let _camerasStaggerParent = null;
+  let _camerasStaggerPlaceholder = null;
+  let _camerasStaggerNode = null;
+
+  function findCameraPictureEntity(entityId) {
+    function walk(root) {
+      if (!root) return null;
+      const pes = root.querySelectorAll
+        ? root.querySelectorAll('hui-picture-entity-card')
+        : [];
+      for (const pe of pes) {
+        const cfg = pe._config || pe.config;
+        if (cfg && cfg.entity === entityId) return pe;
+      }
+      const all = root.querySelectorAll ? root.querySelectorAll('*') : [];
+      for (const el of all) {
+        if (el.shadowRoot) {
+          const hit = walk(el.shadowRoot);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    }
+    return walk(document.body);
+  }
+
+  function restoreStaggeredCamera() {
+    if (_camerasStaggerTimer) {
+      clearTimeout(_camerasStaggerTimer);
+      _camerasStaggerTimer = null;
+    }
+    if (
+      _camerasStaggerParent &&
+      _camerasStaggerPlaceholder &&
+      _camerasStaggerNode &&
+      _camerasStaggerPlaceholder.parentElement === _camerasStaggerParent
+    ) {
+      _camerasStaggerParent.replaceChild(
+        _camerasStaggerNode,
+        _camerasStaggerPlaceholder
+      );
+    }
+    _camerasStaggerParent = null;
+    _camerasStaggerPlaceholder = null;
+    _camerasStaggerNode = null;
+  }
+
+  function applyCamerasStagger() {
+    if (!onMobileDashboard() || getActiveSlug() !== 'cameras') {
+      // Left the page — restore the node immediately if it's still detached,
+      // so returning to Cameras finds a sane DOM.
+      if (_camerasStaggerActiveSlug === 'cameras') restoreStaggeredCamera();
+      _camerasStaggerActiveSlug = null;
+      return;
+    }
+    if (_camerasStaggerActiveSlug === 'cameras') return; // already armed
+    _camerasStaggerActiveSlug = 'cameras';
+
+    const tryApply = (attempts) => {
+      const pe = findCameraPictureEntity(CAMERAS_STAGGER_ENTITY);
+      if (!pe) {
+        if (attempts < 20) setTimeout(() => tryApply(attempts + 1), 200);
+        return;
+      }
+      const parent = pe.parentElement;
+      if (!parent) return;
+      const rect = pe.getBoundingClientRect();
+      const placeholder = document.createElement('div');
+      placeholder.setAttribute('data-kis-cam-stagger', CAMERAS_STAGGER_ENTITY);
+      placeholder.style.width = rect.width > 0 ? rect.width + 'px' : '100%';
+      placeholder.style.height = rect.height > 0 ? rect.height + 'px' : 'auto';
+      placeholder.style.visibility = 'hidden';
+
+      _camerasStaggerParent = parent;
+      _camerasStaggerPlaceholder = placeholder;
+      _camerasStaggerNode = pe;
+      parent.replaceChild(placeholder, pe);
+
+      _camerasStaggerTimer = setTimeout(() => {
+        if (
+          _camerasStaggerParent &&
+          _camerasStaggerPlaceholder &&
+          _camerasStaggerNode &&
+          _camerasStaggerPlaceholder.parentElement === _camerasStaggerParent
+        ) {
+          _camerasStaggerParent.replaceChild(
+            _camerasStaggerNode,
+            _camerasStaggerPlaceholder
+          );
+        }
+        _camerasStaggerTimer = null;
+        _camerasStaggerParent = null;
+        _camerasStaggerPlaceholder = null;
+        _camerasStaggerNode = null;
+      }, CAMERAS_STAGGER_MS);
+    };
+    tryApply(0);
   }
 
   // ─── Layout patches ────────────────────────────────────────────────────────
@@ -1425,6 +1601,8 @@
         patchHALayout(0);
         maybeShowSwipeHint();
         observeSwipeSlideIndex();
+        updateMotionCamOverlay();
+        applyCamerasStagger();
       }, 100);
     } else {
       nav.setAttribute('hidden', '');
@@ -1443,16 +1621,12 @@
       return;
     }
 
-    // Swipe-tracker debug: enable the on-screen badge automatically on v27
-    // so we can diagnose swipe detection on the Tab S9 without DevTools.
-    // Clear by running `localStorage.removeItem('kis_swipe_debug')` once
-    // fixed. The "seen" flag means "we've auto-enabled at least once" —
-    // don't re-enable after the user manually clears it.
+    // Clean up leftover v27 swipe debug surface (pill + localStorage flags).
     try {
-      if (localStorage.getItem('kis_swipe_debug_auto_v27') !== '1') {
-        localStorage.setItem('kis_swipe_debug', '1');
-        localStorage.setItem('kis_swipe_debug_auto_v27', '1');
-      }
+      const stale = document.getElementById('kis-swipe-debug');
+      if (stale) stale.remove();
+      localStorage.removeItem('kis_swipe_debug');
+      localStorage.removeItem('kis_swipe_debug_auto_v27');
     } catch (e) {}
 
     // Resolve safe-area-inset-top via CSS custom property (WKWebView fix)
@@ -1588,13 +1762,15 @@
     });
 
     // Update header content every second (live clock + entity states).
-    // Also opportunistically re-attach the swipe-card observer in case the
-    // card was remounted (theme reload, content re-render) since the last
-    // syncState call.
+    // Also opportunistically re-attach the swipe-card observer, and refresh
+    // the motion-camera overlay (winner z-index / losers hidden), in case
+    // the relevant elements remounted since the last syncState call.
     setInterval(() => {
       if (onMobileDashboard()) {
         renderHeaderContent();
         maybeReattachSwipeObserver();
+        updateMotionCamOverlay();
+        applyCamerasStagger();
       }
     }, 1000);
 
