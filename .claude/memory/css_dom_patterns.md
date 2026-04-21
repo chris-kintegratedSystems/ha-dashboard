@@ -170,7 +170,7 @@ media decoder on the Tab S9 (Chromium 146.x): the elements never paint
 pixels even after the reveal class lifts the gate, and the cell stays
 empty indefinitely. v33 pattern below is the safe version.
 
-## Camera placeholder via overlay-only ha-card::before (2026-04-21, v33)
+## Camera placeholder via overlay-only ha-card::before (2026-04-21, v33 — SUPERSEDED by v34 below)
 Same goal as the v30 entry above, but this time the native feed rendering is
 left **completely untouched** — no `opacity: 0` on hui-image/video/ha-hls-player/
 ha-camera-stream, no host opacity tricks. Only the `ha-card::before` pseudo-
@@ -266,3 +266,59 @@ SVG body is inline in the script — no external file dependency:
 dark-gray 16:9 rectangle, "CAMERA MOCK" heading, entity name
 subtitle. `preserveAspectRatio="xMidYMid slice"` lets the SVG fill
 whatever aspect ratio the card slot demands.
+
+## Camera placeholder — video background + playing-gated reveal (2026-04-21, v34)
+Builds on v33 (overlay-only `ha-card::before` — no `opacity` gating on
+media elements, safe for Android WebView). v33 fixed the race between
+our CSS and HA's first paint, but left a secondary flash visible during
+the 300ms overlay fade-out: Android WebView 146 paints empty `<video>`
+elements black by UA default, and we were firing the reveal (adding
+`.kis-feed-ready`) on `loadeddata` — which fires on one buffered frame,
+not on visible frames. Cross-dissolving the placeholder into an empty
+`<video>` produced "black → white → video" in day mode
+(near-white overlay) and was invisible in night mode (near-black
+overlay blends with UA black).
+
+Two additions on top of v33:
+
+1. **Paint the video element's OWN background** to match the
+   placeholder, via the same shadow-root stylesheet:
+   ```css
+   video,
+   hui-image video,
+   ha-camera-stream video,
+   ha-hls-player video,
+   ha-web-rtc-player video {
+     background-color: var(--kis-cam-placeholder-bg, #151c2a) !important;
+   }
+   ```
+   `background-color` on `<video>` is standard CSS — it paints the
+   element's own backing color whenever the video has no decoded frame
+   (empty buffer, initial mount, network stall, brief decoder hiccup).
+   Critically **not** `opacity: 0` — so the decoder keeps painting
+   pixels normally and the v31/v32 WebView regression stays fixed.
+
+2. **Reveal gate tightened from `loadeddata` to `playing`.** `loadeddata`
+   = decoder buffered one frame = often a black I-frame on Nest SDM
+   low-light / warmup. `playing` = stream is actually producing
+   subsequent frames = safe moment to cross-dissolve the overlay. For
+   the initial/polled readyState check: raised from `>= 2`
+   (HAVE_CURRENT_DATA) to `>= 3 && !paused` (HAVE_FUTURE_DATA +
+   actually playing). `<img>` feeds (Nanit MJPEG / Vivint snapshot) are
+   unchanged — `load` event + `complete && naturalHeight > 0` still
+   right there.
+
+Safety timer (3 s) and poll-count cap (5 s) unchanged — the hard
+backstop for feeds where `playing` never fires.
+
+**Why Playwright didn't reproduce the original bug:** Playwright's
+Chromium uses a transparent UA default for empty `<video>`. Real
+Android WebView 146 uses black. The bug is only visible on actual
+hardware, so Playwright sweeps must be complemented by
+`qa-camera-burst.js` bursts of the Tab S9 for anything involving
+camera load transitions.
+
+**Broader lesson:** two paint-layer bugs can stack. v33 fixed Layer 1
+(placeholder CSS race vs. first HA render). v34 fixed Layer 2 (UA
+default video paint + wrong reveal gate). Keep both patterns
+together.

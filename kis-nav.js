@@ -1,9 +1,20 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v23
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v34
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
+ *
+ * v34 changes (camera loading flash fix):
+ *  - Camera placeholder: paint <video> element's OWN background to match
+ *    the placeholder (via shadow-root CSS). Neutralizes Android WebView
+ *    146's UA-default black on empty <video>, which was the "black" phase
+ *    of the black→white→video flash during the 300ms overlay fade-out.
+ *    Not opacity — just background-color. WebView-safe.
+ *  - Feed-ready gate: reveal only on `playing` (dropped `loadeddata` +
+ *    `canplay`). `loadeddata` fires on one buffered frame which on Nest
+ *    SDM is often a black I-frame; `playing` fires only once frames are
+ *    actually decoding. readyState check raised from >= 2 to >= 3 && !paused.
  *
  * v23 changes (phase 5b fixes):
  *  - Expose window.KIS_NAV_VERSION so the Settings → About card can read
@@ -47,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 33;
+  window.KIS_NAV_VERSION = 34;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1642,6 +1653,20 @@
     ha-card {
       background: var(--kis-cam-placeholder-bg, #151c2a) !important;
     }
+    /* v34: paint the <video> element's OWN background to match the
+       placeholder. Android WebView 146 paints empty <video> black by UA
+       default — visible during the 300ms overlay fade-out as a flash
+       between placeholder and live frames. Setting background-color is
+       safe (not opacity — doesn't starve the decoder the way v31/v32
+       did). Covers WebRTC (ha-web-rtc-player), HLS (ha-hls-player), and
+       any nested hui-image/ha-camera-stream render tree. */
+    video,
+    hui-image video,
+    ha-camera-stream video,
+    ha-hls-player video,
+    ha-web-rtc-player video {
+      background-color: var(--kis-cam-placeholder-bg, #151c2a) !important;
+    }
     ha-card::before {
       content: var(--kis-cam-label-text, "CAMERA");
       position: absolute;
@@ -1792,6 +1817,22 @@
     watchFeedReady(pe);
   }
 
+  // v34: reveal gate tightened to `playing` only (dropped `loadeddata` +
+  // `canplay`). loadeddata fires as soon as the decoder has ONE frame
+  // buffered — on Nest SDM WebRTC that first buffered frame is typically a
+  // black I-frame, so revealing on loadeddata cross-dissolves the
+  // placeholder into a black video element. `playing` fires only once the
+  // stream is actually producing subsequent frames, so the 300ms overlay
+  // fade now crosses into live pixels. For <img> feeds (Nanit MJPEG, Vivint
+  // snapshot) the `load` event is unchanged — still the right signal.
+  // readyState check moved from >= 2 (HAVE_CURRENT_DATA) to >= 3
+  // (HAVE_FUTURE_DATA) and conjunct with !paused to approximate "is
+  // currently playing" for initial / polled checks. Safety timer (3s) and
+  // interval cap (5s) preserved as the hard backstop.
+  function videoIsPlaying(v) {
+    return !!v && v.readyState >= 3 && !v.paused;
+  }
+
   function watchFeedReady(pe) {
     if (!pe || !pe.shadowRoot) return;
     if (pe.classList.contains('kis-feed-ready')) return;
@@ -1801,17 +1842,18 @@
     const feedNow = findFeedElement(sr);
     if (feedNow) {
       const nowReady = feedNow.tagName === 'VIDEO'
-        ? feedNow.readyState >= 2
+        ? videoIsPlaying(feedNow)
         : (feedNow.tagName === 'IMG' ? (feedNow.complete && feedNow.naturalHeight > 0) : false);
       if (nowReady) { markFeedReady(pe); return; }
     }
 
     // Fire-and-forget ceiling: no matter what, reveal the feed within 3 s.
-    // Android WebView doesn't reliably fire loadeddata/playing for MSE
-    // video nor 'load' for MJPEG image streams that re-use a connection,
-    // so waiting beyond this risks a permanently-hidden feed. 3 s is enough
-    // to cover up the first-frame paint in practice; if the stream hasn't
-    // started yet the user sees the native loading spinner which is fine.
+    // Android WebView doesn't reliably fire `playing` for some stream
+    // types (rare, but exists) nor `load` for MJPEG image streams that
+    // re-use a connection, so waiting beyond this risks a permanently-
+    // hidden feed. 3 s is enough to cover the first-frame paint in
+    // practice; if the stream hasn't started yet the user sees the native
+    // loading spinner which is fine.
     pe._kisCamSafetyTimer = setTimeout(() => markFeedReady(pe), 3000);
 
     let tries = 0;
@@ -1821,12 +1863,10 @@
       let ready = false;
       if (feed) {
         if (feed.tagName === 'VIDEO') {
-          ready = feed.readyState >= 2;
+          ready = videoIsPlaying(feed);
           if (!ready && !feed._kisReadyHandler) {
             feed._kisReadyHandler = () => markFeedReady(pe);
-            feed.addEventListener('loadeddata', feed._kisReadyHandler);
             feed.addEventListener('playing', feed._kisReadyHandler);
-            feed.addEventListener('canplay', feed._kisReadyHandler);
           }
         } else if (feed.tagName === 'IMG') {
           ready = feed.complete && feed.naturalHeight > 0;

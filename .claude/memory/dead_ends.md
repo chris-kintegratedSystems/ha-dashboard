@@ -172,6 +172,36 @@ gating native rendering off. Also: when a regression appears only on
 real hardware and not in Playwright, suspect WebView-specific behavior
 before blaming your JS.
 
+## 2026-04-21: loadeddata fires too early for the reveal gate (v33 → v34)
+**Tried:** v33 `watchFeedReady` revealed the camera feed on any of
+`loadeddata` / `playing` / `canplay` firing, plus an initial
+`readyState >= 2` check. The overlay faded out via a 300ms CSS transition
+the moment ANY of those signals fired.
+**Failed:** On Android WebView 146 (Tab S9 FKB), the Nest SDM WebRTC
+pipeline fires `loadeddata` as soon as ONE frame is buffered — which on
+low-light outdoor cams or during encoder warmup is usually a black
+I-frame. The 300ms overlay fade-out then cross-dissolved the (day-mode
+near-white) placeholder into an empty / black-I-frame `<video>` element.
+User saw "black → white → video" on every camera mount. Playwright
+Chromium doesn't reproduce it (UA-default `<video>` background is
+transparent there, not black) so the sweep looked clean.
+**Fix (v34):** Reveal only on `playing` for `<video>` (drop `loadeddata`
++ `canplay`); keep `load` on `<img>`. Initial / polled readyState check
+raised from `>= 2` (HAVE_CURRENT_DATA) to `>= 3 && !paused`
+(HAVE_FUTURE_DATA, actually playing). PLUS paint the `<video>`
+element's OWN `background-color` to match the placeholder via the same
+shadow-root stylesheet — neutralizes Android WebView's UA-default black
+on empty `<video>` for any residual window where the overlay is fading
+and the video has no frame. Safe because `background-color` is not
+`opacity` — doesn't starve the decoder (the v31/v32 killer). 3s safety
+timer + 5s interval cap preserved as the backstop.
+**Broader lesson:** when gating a reveal animation on a media element,
+`loadeddata` = "one buffered frame" is not "visible frames". Use
+`playing` (or `timeupdate` + `!paused` + `readyState >= 3`). And on
+embedded WebViews, the UA-default `<video>` background CAN leak
+through any transparent overlay layer — set the video's own
+`background-color` as a belt to the overlay's suspenders.
+
 ## 2026-04-21: Rapid test iteration exhausts Nest SDM rate limit — looks like code regression
 **Tried:** Iterating on kis-nav placeholder CSS with tight loops of
 `scp kis-nav.js → docker restart homeassistant → FKB hard refresh →
