@@ -1,40 +1,72 @@
 # HA Dashboard Redesign — Tasks
 
 **Project:** Home Assistant Dashboard Redesign
-**Status:** Phase 2 complete — Phase 3 in progress
+**Status:** Phase 4 + camera overlays complete — PR #6 awaiting merge
 **Owner:** Chris (KIntegrated Systems)
 **Lead Agent:** Product → Dev → QA
 
 ---
 
-## Phase 1: Product Spec & Mockups
+## Current status (2026-04-20)
 
-- [x] Project folder created
-- [x] Product Agent produces PRD with visual mockups
-- [x] Chris approves spec / mockups
+### Shipped
+- [x] **Phase 1** — Product spec + mockups approved
+- [x] **Phase 2** — Full mobile dashboard build (Home, Climate, Lights,
+      Cameras, Media, Settings) with kiosk mode, kis-nav.js v16,
+      per-room Lights layout
+- [x] **Phase 3** — Conditional motion camera on Home, scene toggle
+      active-state tracking (6 wrapper scripts)
+- [x] **Phase 4** — Home view sections redesign with reserved motion-
+      camera zone keyed off sticky `binary_sensor.*_motion_sticky`
+      entities (ha-config PR #2 + dashboard PR #4, both merged). QA
+      pipeline hardened: 8 device profiles, authenticated Playwright,
+      kis-nav injection gate, Fully Kiosk live capture. `kis-nav.js`
+      cache-bust at `?v=17`.
+- [x] **Nanit integration** — `indiefan/nanit` RTMP restream on Pi;
+      `camera.nanit_benjamin` + `camera.nanit_travel` live in HA; two
+      picture-entity cards on the Cameras page (ha-config PR #3 +
+      dashboard PR #5, both merged)
+- [x] **Camera overlays + fullscreen popups** — 5 cards on Cameras
+      page, 3 conditional on Home. Tap opens `browser_mod.popup`
+      fullscreen; overlay buttons (close X, lock/unlock on doorbell,
+      disabled talk/listen placeholders) layered via picture-elements.
+      Cameras page rewritten to `type: panel` + native `grid` card
+      (columns: 2, square: false) with `aspect_ratio: "16:9"` on each
+      picture-entity — produces identical card dimensions in every
+      viewport. **Dashboard PR #6 OPEN on `feature/camera-overlays`.**
 
-## Phase 2: Design & Build
+### Deferred — next sessions
+- [ ] **Camera two-way audio (talk + listen)** — requires go2rtc
+      backchannel config + `custom:webrtc-camera` HACS card. Vivint
+      DBC300 backchannel support unverified. Current UI has disabled
+      placeholder buttons.
+- [ ] **Nanit motion / sound / cry events** — fork publishes via MQTT
+      auto-discovery but Pi has no MQTT broker yet. Add mosquitto
+      container → flip `NANIT_MQTT_ENABLED=true` → extend Home motion
+      zone conditions to include `binary_sensor.nanit_*_motion`.
+- [ ] **Camera name label suppression on feeds** — HA entity-name
+      overlay currently sits on top of camera streams; needs CSS or
+      card swap to hide without breaking the stream.
+- [ ] **Lights page polish** — ~10–15px gap between room header and
+      grid (stack-in-card install required).
+- [ ] **2.4 Climate tap-to-toggle HVAC** — deferred per Chris
+      (2026-04-19), leave as-is.
 
-- [x] dashboard_mobilev1.json designed and deployed to Pi
-- [x] Kiosk mode — admin users now hidden (header/sidebar/tab)
-- [x] System Status card — 3-chip row (security, lights count, temp)
-- [x] Scene grid — 3-col with mixed colors per scene type
-- [x] Dimmer light buttons — orange gradient fill proportional to brightness %, tap=toggle, hold=slider
-- [x] Nav bar — cyan pill active indicator on all 5 tabs
-- [x] kis-nav.js v16 — background-highlight nav, notification badge, mini-player, perf refactor (commit 63b31cd)
-- [x] **Batch A** — remove Now Playing section from Home (replaced by mini-player)
-- [x] **Batch B** — move System Status from Home → Settings; bump About label v15→v16
-- [x] **Batch C** — Lights page room-grouped layout (4 sections, `max_columns: 2`, chips dropped)
-- [x] QA sign-off — iPhone + Tab S9 landscape + Tab S9 portrait screenshots captured (commit e1357a2)
+### Next up
+- [ ] **Release notes system** — feed Chris a human-readable list of
+      what changed between deploys (commit messages are the source;
+      needs a formatted view tied to tagged releases).
+- [ ] **Tag post-Phase-4 release** once PR #6 merges.
+- [ ] **Pi operational cleanup** — move `NANIT_PASSWORD` out of the
+      plain-text `nanit/docker-compose.yaml` into an `.env`/`secrets:`
+      mount (flagged in `ha-config/CLAUDE.md` → Nanit Integration).
 
-## Phase 3: Post-Phase-2 Follow-ups
+### Open PRs
 
-- [x] **2.6** Conditional motion camera on Home — 3 conditional `picture-entity` cards (doorbell, living_room, izzy). No HA config changes needed; uses existing `binary_sensor.*_motion` entities. Section at Home index 0 collapses when no motion active.
-- [x] **2.3** Scene toggle active-state tracking — 6 wrapper scripts in `scripts.yaml`; scene buttons now call `script.scene_*` and track the most-recently-triggered script via button-card JS templates (`[[[ ... ]]]`) for a colored border/glow when active (1-hour window).
-- [ ] **2.4** Climate tap-to-toggle HVAC — *deferred per Chris (April 19, 2026), leave as-is*
-- [ ] Lights page polish: tighten ~10-15px gap between room header and grid (stack-in-card install required)
-- [ ] Chris confirms on all devices (iPhone + Tab S9+ + iPad)
-- [ ] Tag release commit
+| Repo | PR | Branch | Status |
+|------|----|--------|--------|
+| `ha-dashboard` | #6 | `feature/camera-overlays` | OPEN — camera overlays + panel+grid Cameras layout |
+| `ha-config` | #4 | `fix/go2rtc-docs-accurate` | OPEN — doc-only correction to go2rtc state in CLAUDE.md |
 
 ---
 

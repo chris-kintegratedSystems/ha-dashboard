@@ -11,9 +11,14 @@
  * that the dashboard is rendering exactly like the real device.
  *
  * Usage:
- *   node qa-screenshot.js [view]
- *   node qa-screenshot.js              # all views, all devices
- *   node qa-screenshot.js home         # just the home view
+ *   node qa-screenshot.js [view] [devices]
+ *   node qa-screenshot.js                                                # all views, all devices (full 48-shot sweep)
+ *   node qa-screenshot.js home                                           # just the home view, all devices
+ *   node qa-screenshot.js cameras tabs9plus-landscape,iphone17promax-portrait
+ *                                                                        # targeted iteration sweep — one view, two devices
+ *
+ * During iterative UI work, prefer the targeted form. Run the full sweep
+ * once at the end before committing + updating the PR.
  *
  * .env (gitignored):
  *   HA_QA_TOKEN=<long-lived access token>   # preferred
@@ -115,12 +120,26 @@ async function waitForKisNav(page, timeoutMs) {
   const requestedView = process.argv[2];
   const views = requestedView ? [requestedView] : VIEWS;
 
+  const requestedDevices = process.argv[3];
+  const devices = requestedDevices
+    ? (() => {
+        const names = requestedDevices.split(',').map(s => s.trim()).filter(Boolean);
+        const unknown = names.filter(n => !DEVICES.some(d => d.name === n));
+        if (unknown.length) {
+          console.error(`ERROR: unknown device name(s): ${unknown.join(', ')}`);
+          console.error(`Valid: ${DEVICES.map(d => d.name).join(', ')}`);
+          process.exit(1);
+        }
+        return DEVICES.filter(d => names.includes(d.name));
+      })()
+    : DEVICES;
+
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
   const browser = await chromium.launch();
   const failures = [];
 
-  for (const device of DEVICES) {
+  for (const device of devices) {
     const context = await browser.newContext({
       viewport: { width: device.width, height: device.height },
       deviceScaleFactor: device.scale,
@@ -196,5 +215,5 @@ async function waitForKisNav(page, timeoutMs) {
     console.error('\nDo NOT open a PR until this is resolved. Verify on real device first.');
     process.exit(1);
   }
-  console.log(`\n✅ Done — ${views.length * DEVICES.length} screenshots in ${OUT_DIR}, kis-nav.js verified on every view.`);
+  console.log(`\n✅ Done — ${views.length * devices.length} screenshots in ${OUT_DIR}, kis-nav.js verified on every view.`);
 })();
