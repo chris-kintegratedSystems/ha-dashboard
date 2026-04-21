@@ -368,6 +368,105 @@ End with: "Safe to exit" or "Not safe — [reason]"
 
 ---
 
+## Efficiency Rules
+
+Derived from the Phase 5B retrospective on 2026-04-21. The camera
+placeholder fix burned through 6 iterations (v29–v34) and ~90 minutes
+because research happened too late, deploys were too frequent, and Nest
+rate limits were mistaken for code regressions. These rules keep that
+from repeating.
+
+### Research before code — mandatory after first failure
+
+If a bug fix or feature approach fails on the first attempt, STOP
+writing code. Invoke `ha-lovelace-expert` (or web research) for a root
+cause brief BEFORE proposing the next approach. The v29–v34 camera
+placeholder arc burned 5 iterations because the root cause
+(`loadeddata` fires on a black I-frame, not on visible frames) was not
+understood until the research agent ran. Research first would have
+made v34 the second attempt, not the sixth.
+
+**Rule:** after one failed approach, the next action is ALWAYS
+research, never another code attempt.
+
+### Real-device-first for WebView bugs
+
+Playwright uses desktop Chromium which has different rendering
+behavior than Android WebView (Tab S9 FKB) and iOS WKWebView (iPhone
+HA Companion). Bugs that only reproduce on real hardware CANNOT be
+verified with Playwright.
+
+**Rule:** if a bug involves camera streams, video elements, or shadow
+DOM CSS rendering on the Tab S9, use `qa-camera-burst.js` (FKB
+screenshots) as the PRIMARY verification tool. Playwright is for
+layout regression only, not for confirming stream-related fixes work.
+
+### Deploy budget — max 3 kis-nav.js versions per session
+
+Every deploy cycle costs ~5 minutes (edit, SCP, cache-bust bump in
+ha-config, HA restart, FKB refresh, verify). Rapid iteration burns
+both time and Nest SDM quota.
+
+**Rule:** never deploy more than 3 kis-nav.js versions in a single
+session. If the third attempt does not fix the bug, STOP and run a
+research brief. Do not deploy a 4th speculative fix.
+
+### Nest camera quota budget
+
+Google Nest SDM enforces 5 QPM per device on `ExecuteDeviceCommand`.
+Rapid deploy-test cycles on camera-containing views burn this quota,
+producing 429 RESOURCE_EXHAUSTED errors that look identical to code
+regressions.
+
+**Rules:**
+
+- Budget 3 real-stream camera page loads per session max
+- After that, use `--mock-cameras` or `qa-camera-burst.js` exclusively
+- If you hit 429, do NOT rewrite code. Navigate the tablet away from
+  cameras for 90 seconds, then retest the SAME code
+- Read the in-UI error banner text before blaming recent CSS/JS changes
+
+### Post-compaction mandatory re-read
+
+Conversation compaction loses failure history and design decisions.
+After any compaction event, the FIRST action before proposing any
+approach is to re-read all four `.claude/memory/` files:
+
+- `dead_ends.md`
+- `component_compat.md`
+- `css_dom_patterns.md`
+- `deploy_gotchas.md`
+
+Do not rely on compacted context for what has already been tried. If a
+proposed approach matches a failed pattern in `dead_ends.md`, use the
+noted workaround instead of re-testing.
+
+### Save Everything — minimize back-and-forth
+
+During Phase 1 (STATUS CHECK), auto-resolve obvious cleanup items
+instead of asking about each one:
+
+- Delete all scratch files automatically: probe scripts, "(1)"
+  duplicate files, prompt drafts, `.lock` files
+- KEEP files matching `SESSION_HANDOFF*.md` or `CHAT_CHECKPOINT*.md`
+- Only ask about files that are genuinely ambiguous (e.g., a design
+  doc that might be a keeper)
+- Default to deleting, not asking
+
+### No debug UI in production deploys
+
+Never ship visible debug overlays (badges, pills, `console.log`
+noise) to the Pi in a production deploy. If debug output is needed
+for diagnosis, add it in a separate commit that is reverted before
+the PR. The v27 swipe debug badge required an entire version bump
+(v28) just to remove it.
+
+**Rule:** debug instrumentation goes in a local-only scratch file or
+behind a flag that is OFF by default and never auto-enabled on real
+devices.
+
+---
+
 ## Deploy pattern
 
 1. Edit dashboard JSON locally, validate with `node -e "require('./dashboard_mobilev1.json')"`.
