@@ -42,7 +42,7 @@ Append new entries at the bottom. Date-stamp every entry.
 | ratgdo (garage) | WORKS | cover.ratgdov25i_1746c3/b4_door |
 | Vivint (alarm) | WORKS | alarm_control_panel.kuprycz_home |
 | Nanit (cameras) | PARTIAL | RTMP works. Motion needs MQTT. |
-| Nest SDM (WebRTC) | WORKS, RATE-LIMITED | 5 QPM ExecuteDeviceCommand quota per user. Rapid test iteration burns it and returns 429 RESOURCE_EXHAUSTED that looks like a code regression. Wait ≥60s between camera-page reloads; navigate away for 90s to fully refill. |
+| Nest SDM (WebRTC) | WORKS, RATE-LIMITED | 5 QPM ExecuteDeviceCommand quota per user. Rapid test iteration burns it and returns 429 RESOURCE_EXHAUSTED that looks like a code regression. Wait ≥60s between camera-page reloads; navigate away for 90s to fully refill. For Playwright iteration use `qa-screenshot.js --mock-cameras` (no API calls); for loading-sequence verification use `qa-camera-burst.js` (FKB screenshots only). |
 | iCloud3 (AirTags) | NOT STARTED | Needs Apple ID auth. |
 | Tesla | NOT STARTED | Needs OAuth + virtual key. |
 | Mercedes mbapi2020 | UNCERTAIN | G580 support unconfirmed. |

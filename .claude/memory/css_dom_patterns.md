@@ -228,3 +228,41 @@ as layout shift. Apply via:
   streaming cameras where the element tree is different.
 - `hui-image div` + `background-size: 100% 100%` for the fallback
   div-with-background-image path picture-entity sometimes takes.
+
+## Playwright camera mock — two-layer intercept (2026-04-21)
+`qa-screenshot.js --mock-cameras` replaces Nest camera feeds
+(`camera.living_room_camera`, `camera.izzy_camera`) with a generated
+SVG placeholder so iterative Playwright sweeps over camera-containing
+views burn zero Nest SDM quota. The implementation uses BOTH layers
+simultaneously because neither alone covers every picture-entity
+render path:
+
+Layer 1 — `context.route()` intercepts `**/api/camera_proxy/<entity>*`
+and `**/api/camera_proxy_stream/<entity>*`, returning the SVG as a
+200 with `image/svg+xml`. Covers the snapshot thumbnail path that
+picture-entity pulls on first paint. Does NOT cover HLS (`/api/hls/
+<token>/*`) or WebRTC (signaled via websocket, peers directly) —
+those URL tokens are keyed to the stream, not the entity, so
+pattern matching cannot target specific cameras.
+
+Layer 2 — `context.addInitScript()` registers a MutationObserver +
+500 ms interval that walks shadow DOMs looking for
+`hui-picture-entity-card` elements whose `config.entity` is in the
+mock set. When found, it injects a `<style>` inside the card's
+shadow root that (a) gates `hui-image`, `ha-hls-player`,
+`ha-camera-stream` children at `opacity: 0`, and (b) paints a
+`.kis-mock-overlay` div inside `ha-card` with the SVG as a
+`background-image`. This catches HLS/WebRTC renders that Layer 1
+misses.
+
+Note: Layer 2 uses the same "opacity: 0 on media elements" gating
+pattern that broke v31/v32 on Android WebView (see dead_ends.md).
+That is safe here because Playwright's Chromium handles the opacity
+correctly AND this is mock-only — the mock never ships to real
+devices. DO NOT copy this opacity-gating pattern into kis-nav.js
+shadow CSS on the Tab S9.
+
+SVG body is inline in the script — no external file dependency:
+dark-gray 16:9 rectangle, "CAMERA MOCK" heading, entity name
+subtitle. `preserveAspectRatio="xMidYMid slice"` lets the SVG fill
+whatever aspect ratio the card slot demands.

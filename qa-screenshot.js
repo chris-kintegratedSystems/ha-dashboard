@@ -11,14 +11,32 @@
  * that the dashboard is rendering exactly like the real device.
  *
  * Usage:
- *   node qa-screenshot.js [view] [devices]
+ *   node qa-screenshot.js [view] [devices] [flags]
  *   node qa-screenshot.js                                                # all views, all devices (full 48-shot sweep)
  *   node qa-screenshot.js home                                           # just the home view, all devices
  *   node qa-screenshot.js cameras tabs9plus-landscape,iphone17promax-portrait
  *                                                                        # targeted iteration sweep — one view, two devices
  *
+ * Flags:
+ *   --mock-cameras        Replace the two Nest camera streams
+ *                         (camera.living_room_camera, camera.izzy_camera)
+ *                         with a generated SVG "CAMERA MOCK" placeholder.
+ *                         Zero Nest SDM API calls. Use this for all
+ *                         iterative camera-containing-view layout work so
+ *                         you don't burn the 5 QPM ExecuteDeviceCommand
+ *                         quota. Vivint doorbell + Nanit cameras are NOT
+ *                         mocked (no rate limits).
+ *
+ *   --camera-delay N      Milliseconds to wait between device profiles
+ *                         when the current view is a camera-containing
+ *                         view (cameras or home). Default 15000. Only
+ *                         applies when --mock-cameras is NOT set. Lets a
+ *                         full sweep across 8 devices stay under the Nest
+ *                         5 QPM quota at the cost of ~2 minutes extra.
+ *
  * During iterative UI work, prefer the targeted form. Run the full sweep
- * once at the end before committing + updating the PR.
+ * once at the end before committing + updating the PR. See CLAUDE.md
+ * "Camera QA — rate-limit-safe testing" for the full decision guide.
  *
  * .env (gitignored):
  *   HA_QA_TOKEN=<long-lived access token>   # preferred
@@ -72,6 +90,129 @@ const DEVICES = [
 // we know the authenticated session loaded the frontend.extra_module_url JS.
 const REQUIRED_SELECTORS = ['#kis-header-bar', '#kis-nav-bar'];
 
+// Nest SDM cameras are the only ones that get rate-limited (5 QPM per device
+// on ExecuteDeviceCommand). Vivint doorbell + Nanit never need mocking.
+const MOCK_CAMERA_ENTITIES = ['camera.living_room_camera', 'camera.izzy_camera'];
+
+// Views whose layout typically renders Nest camera streams. --camera-delay
+// applies between device profiles on these views only.
+const CAMERA_VIEWS = new Set(['cameras', 'home']);
+
+function buildMockSvg(label) {
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">` +
+    `<rect width="100%" height="100%" fill="#2a2f3a"/>` +
+    `<text x="50%" y="46%" text-anchor="middle" fill="#c0c8d8" font-family="system-ui,Arial,sans-serif" font-size="120" font-weight="700">CAMERA MOCK</text>` +
+    `<text x="50%" y="60%" text-anchor="middle" fill="#6a7484" font-family="system-ui,Arial,sans-serif" font-size="56">${label}</text>` +
+    `</svg>`;
+  return svg;
+}
+
+// Installs the camera mock into the page. Uses two layers so the mock holds
+// whether HA serves via camera_proxy (HTTP snapshot) or via HLS/WebRTC stream:
+//   Layer 1 — page.route() intercepts /api/camera_proxy/<entity>* requests
+//             and returns the SVG mock. Option A from the task brief.
+//   Layer 2 — addInitScript injects a MutationObserver that walks shadow
+//             DOMs, finds hui-picture-entity-card elements whose config.entity
+//             matches a mock entity, and paints an SVG overlay on ha-card
+//             that covers the live feed. This covers HLS/WebRTC paths whose
+//             URL tokens are not deterministic enough for page.route to match.
+async function installCameraMocks(context) {
+  // Layer 1 — HTTP intercept for snapshot paths.
+  for (const entity of MOCK_CAMERA_ENTITIES) {
+    const pattern = `**/api/camera_proxy/${entity}*`;
+    await context.route(pattern, async (route) => {
+      const svg = buildMockSvg(entity);
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/svg+xml',
+        body: svg,
+      });
+    });
+    // camera_proxy_stream is the MJPEG stream path; feed back the same SVG
+    // as a single frame so the stream element has something to show.
+    const streamPattern = `**/api/camera_proxy_stream/${entity}*`;
+    await context.route(streamPattern, async (route) => {
+      const svg = buildMockSvg(entity);
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/svg+xml',
+        body: svg,
+      });
+    });
+  }
+
+  // Layer 2 — shadow-DOM overlay. Runs inside the page on every navigation.
+  await context.addInitScript(({ mockEntities }) => {
+    const MOCK = new Set(mockEntities);
+    const svgCache = new Map();
+    function dataUri(entity) {
+      if (svgCache.has(entity)) return svgCache.get(entity);
+      const svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">' +
+        '<rect width="100%" height="100%" fill="#2a2f3a"/>' +
+        '<text x="50%" y="46%" text-anchor="middle" fill="#c0c8d8" font-family="system-ui,Arial,sans-serif" font-size="120" font-weight="700">CAMERA MOCK</text>' +
+        '<text x="50%" y="60%" text-anchor="middle" fill="#6a7484" font-family="system-ui,Arial,sans-serif" font-size="56">' + entity + '</text>' +
+        '</svg>';
+      const uri = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+      svgCache.set(entity, uri);
+      return uri;
+    }
+
+    function applyMock(card) {
+      if (!card || card.__kisMocked) return;
+      const entity = card.config && card.config.entity;
+      if (!entity || !MOCK.has(entity)) return;
+      const sr = card.shadowRoot;
+      if (!sr) return;
+      const haCard = sr.querySelector('ha-card');
+      if (!haCard) return;
+      card.__kisMocked = true;
+      const style = document.createElement('style');
+      style.textContent = `
+        ha-card { background: #2a2f3a !important; position: relative; }
+        hui-image, hui-image img, hui-image video, hui-image div,
+        ha-hls-player, ha-hls-player video,
+        ha-camera-stream, ha-camera-stream video {
+          opacity: 0 !important;
+        }
+        .kis-mock-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 50;
+          background-color: #2a2f3a;
+          background-image: url("${dataUri(entity)}");
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          border-radius: inherit;
+          pointer-events: none;
+        }
+      `;
+      sr.appendChild(style);
+      const overlay = document.createElement('div');
+      overlay.className = 'kis-mock-overlay';
+      haCard.appendChild(overlay);
+    }
+
+    function walk(node) {
+      if (!node) return;
+      if (node.tagName === 'HUI-PICTURE-ENTITY-CARD') applyMock(node);
+      const sr = node.shadowRoot;
+      if (sr) {
+        for (const child of sr.children) walk(child);
+      }
+      const kids = node.children || [];
+      for (const child of kids) walk(child);
+    }
+
+    // Run both on an interval (cheap, catches async renders) and via
+    // MutationObserver on document for immediate coverage.
+    const mo = new MutationObserver(() => walk(document.body));
+    mo.observe(document, { subtree: true, childList: true });
+    setInterval(() => walk(document.body), 500);
+  }, { mockEntities: MOCK_CAMERA_ENTITIES });
+}
+
 async function setHassTokens(page, token) {
   await page.evaluate((t) => {
     const hassTokens = {
@@ -117,10 +258,36 @@ async function waitForKisNav(page, timeoutMs) {
 }
 
 (async () => {
-  const requestedView = process.argv[2];
+  // Split argv into flags (--foo [value]) and positional args. Positional
+  // args are [view, devices] — preserved so existing invocations like
+  // `node qa-screenshot.js cameras tabs9plus-landscape,iphone17promax-portrait`
+  // still work exactly as before when no flags are present.
+  const positional = [];
+  let mockCameras = false;
+  let cameraDelayMs = 15000;
+  for (let i = 2; i < process.argv.length; i++) {
+    const a = process.argv[i];
+    if (a === '--mock-cameras') {
+      mockCameras = true;
+    } else if (a === '--camera-delay') {
+      const v = parseInt(process.argv[++i], 10);
+      if (!Number.isFinite(v) || v < 0) {
+        console.error('ERROR: --camera-delay must be a non-negative integer (ms)');
+        process.exit(1);
+      }
+      cameraDelayMs = v;
+    } else if (a.startsWith('--')) {
+      console.error(`ERROR: unknown flag: ${a}`);
+      process.exit(1);
+    } else {
+      positional.push(a);
+    }
+  }
+
+  const requestedView = positional[0];
   const views = requestedView ? [requestedView] : VIEWS;
 
-  const requestedDevices = process.argv[3];
+  const requestedDevices = positional[1];
   const devices = requestedDevices
     ? (() => {
         const names = requestedDevices.split(',').map(s => s.trim()).filter(Boolean);
@@ -136,10 +303,26 @@ async function waitForKisNav(page, timeoutMs) {
 
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
+  if (mockCameras) {
+    console.log(`[mock] Nest cameras mocked: ${MOCK_CAMERA_ENTITIES.join(', ')} — zero SDM API calls.`);
+  }
+
+  // A sweep "touches cameras" if any view in the run is a camera-containing
+  // view. Only then does --camera-delay apply between device profiles.
+  const sweepTouchesCameras = views.some(v => CAMERA_VIEWS.has(v));
+  const applyCameraDelay = sweepTouchesCameras && !mockCameras && cameraDelayMs > 0;
+
   const browser = await chromium.launch();
   const failures = [];
 
-  for (const device of devices) {
+  for (let deviceIdx = 0; deviceIdx < devices.length; deviceIdx++) {
+    const device = devices[deviceIdx];
+
+    if (applyCameraDelay && deviceIdx > 0) {
+      console.log(`[rate-limit] Camera rate-limit delay: waiting ${cameraDelayMs}ms before next device...`);
+      await new Promise(r => setTimeout(r, cameraDelayMs));
+    }
+
     const context = await browser.newContext({
       viewport: { width: device.width, height: device.height },
       deviceScaleFactor: device.scale,
@@ -149,6 +332,8 @@ async function waitForKisNav(page, timeoutMs) {
       // is what authenticates the long-running session.
       extraHTTPHeaders: { Authorization: `Bearer ${HA_TOKEN}` },
     });
+
+    if (mockCameras) await installCameraMocks(context);
 
     const page = await context.newPage();
 

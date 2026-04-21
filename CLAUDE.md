@@ -78,6 +78,75 @@ node qa-screenshot.js cameras tabs9plus-landscape,iphone17promax-portrait
 
 Run the full 48-shot sweep once at the end, right before commit + PR.
 
+### Camera QA — rate-limit-safe testing
+
+Three tools, three purposes. Google Nest SDM enforces **5 QPM per
+camera** on `ExecuteDeviceCommand`; rapid camera-view QA iteration
+burns the quota and returns 429 RESOURCE_EXHAUSTED that looks like a
+code regression (empty cells). Pick the right tool:
+
+**STANDARD QA** (`qa-screenshot.js`, no flags):
+- When: final pre-PR sweep, non-camera views, or when you NEED real
+  Nest streams
+- Cost: triggers Nest stream requests (5 QPM per device limit)
+- Rule: never run `cameras` or `home` more than once per minute during
+  iteration
+- Use targeted mode to limit device count:
+  ```bash
+  node qa-screenshot.js cameras tabs9plus-landscape,iphone17promax-portrait
+  ```
+
+**MOCK MODE** (`qa-screenshot.js --mock-cameras`):
+- When: iterating on camera zone layout, card sizing, borders,
+  placeholder styling, section headers, grid alignment, day/night
+  theming on camera-containing views
+- Cost: ZERO Nest API calls. `camera.living_room_camera` and
+  `camera.izzy_camera` show a static SVG "CAMERA MOCK" placeholder.
+  Vivint doorbell and Nanit cameras still load live (no rate limits).
+- Works with existing view + device filters:
+  ```bash
+  node qa-screenshot.js cameras --mock-cameras
+  node qa-screenshot.js cameras tabs9plus-landscape --mock-cameras
+  node qa-screenshot.js --mock-cameras
+  ```
+- Use this for all iterative layout work on cameras and home views.
+  Run real (no flag) once at the end for final verification.
+
+**FKB BURST** (`qa-camera-burst.js`):
+- When: verifying camera loading transitions (crossfade, placeholder
+  flash, stream init timing), testing motion-trigger visual
+  sequences, checking what the real tablet actually shows
+- Cost: ZERO API calls — captures what the Tab S9 is already
+  displaying via Fully Kiosk Remote Admin REST
+- Use `--trigger doorbell|living_room|izzy` to fire motion via HA REST
+  before the burst, so the capture covers the full
+  motion→takeover→stream sequence on the real device
+- Use for the crossfade/placeholder flash bug specifically
+- Example:
+  ```bash
+  node qa-camera-burst.js --trigger doorbell --count 12 --interval 500
+  ```
+
+**`--camera-delay N`** on `qa-screenshot.js`: when running real
+(non-mocked) camera screenshots, spaces out device profiles on
+camera-containing views by N ms (default 15000). Only applies when
+`--mock-cameras` is NOT set and the sweep includes `cameras` or `home`.
+Lets a full 8-device sweep stay under the Nest 5 QPM quota at the cost
+of ~2 minutes extra.
+
+**Recommended workflow during camera-related development:**
+1. Iterate with `--mock-cameras` for layout (run as many times as you
+   want — zero API cost)
+2. When layout is right, deploy to Pi
+3. Use `qa-camera-burst.js` to verify loading transitions on real
+   device
+4. One final `qa-screenshot.js` run (no flag) for the PR screenshots
+
+**Rule:** During camera/home view iteration, ALWAYS use
+`--mock-cameras` unless explicitly testing live stream rendering. If
+you hit a 429 from Nest, STOP Playwright camera runs for 5 minutes,
+then resume with `--mock-cameras` only.
+
 ### Dashboard target path — `.storage/`, never `www/`
 The mobilev1 and tabletv1 dashboards are storage-mode dashboards. HA
 reads them from:
