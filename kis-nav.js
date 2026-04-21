@@ -47,7 +47,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 23;
+  window.KIS_NAV_VERSION = 24;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -883,9 +883,13 @@
     if (isDayMode) {
       bar.setAttribute('data-kis-day', '');
       if (navBar) navBar.setAttribute('data-kis-day', '');
+      document.documentElement.style.setProperty('--kis-section-label', '#7a8698');
+      document.documentElement.style.setProperty('--kis-section-rule', 'rgba(0,0,0,0.06)');
     } else {
       bar.removeAttribute('data-kis-day');
       if (navBar) navBar.removeAttribute('data-kis-day');
+      document.documentElement.style.setProperty('--kis-section-label', '#4a5570');
+      document.documentElement.style.setProperty('--kis-section-rule', 'rgba(255,255,255,0.06)');
     }
 
     // Clock + date

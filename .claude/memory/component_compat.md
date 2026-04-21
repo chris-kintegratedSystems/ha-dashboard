@@ -10,8 +10,11 @@ Append new entries at the bottom. Date-stamp every entry.
 |-----------|----------|--------|-------|------|
 | custom:button-card | State-driven styling | WORKS | ONLY card confirmed working. Use native JS templates. | 2026-04 |
 | custom:button-card | Brightness slider | WORKS | show_state + slider layout. | 2026-04-21 |
-| card-mod + Jinja | State-driven styling | BROKEN | Jinja doesn't render inside button-card. | 2026-04 |
+| custom:button-card | Thin section label | WORKS | button_card_templates `section_label` — styles.name with 9px uppercase + border-bottom hairline, no card_mod needed. | 2026-04-21 |
+| card-mod (ANY usage) | Custom styling | NOT INSTALLED | `/hacsfiles/card-mod` missing from lovelace_resources. All card_mod blocks are silently ignored by Lovelace schema. Verify w/ `cat /config/.storage/lovelace_resources` before trusting any card_mod CSS. | 2026-04-21 |
+| card-mod + Jinja | State-driven styling | BROKEN | Jinja doesn't render inside button-card (separate issue from above). | 2026-04 |
 | card-mod | aspect-ratio on picture-entity | BROKEN | Use native aspect_ratio prop. | 2026-04-20 |
+| type: markdown + inline HTML | Section header | WORKS IF card-mod not needed | Default HA markdown card ships with heavy `.card-content` padding + white background. Only viable for thin labels if card-mod strips them — which it doesn't here. Use custom:button-card section_label template instead. | 2026-04-21 |
 | Bubble Card | Dynamic styling | BROKEN | Shadow DOM blocks. | 2026-04 |
 | Mushroom cards | Dynamic styling | BROKEN | Shadow DOM blocks. | 2026-04 |
 | tile + card-mod | Dynamic visuals | BROKEN | Shadow DOM blocks. | 2026-04 |

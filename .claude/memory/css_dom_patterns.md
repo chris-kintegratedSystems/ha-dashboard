@@ -48,6 +48,32 @@ collapses around it, breaking any container-sizing expectation.
 matching the sibling card it alternates with. Match it on `min-height`
 AND `max-height` so the feed cannot overflow either way.
 
+## Day/night CSS variables via kis-nav :root-level bridge (2026-04-21)
+HA's themes don't flip for day/night in this setup (single `kis-dark` theme
+loaded at all times; sun-based day/night is kis-nav's job). That means theme-
+aware CSS vars like `--divider-color` and `--disabled-text-color` cannot be
+used to switch values between day and night inside dashboard content.
+
+Bridge pattern: kis-nav.js sets custom properties directly on
+`document.documentElement` inside the existing `isDayMode` branch:
+```js
+document.documentElement.style.setProperty('--kis-section-label', isDayMode ? '#7a8698' : '#4a5570');
+document.documentElement.style.setProperty('--kis-section-rule',  isDayMode ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)');
+```
+CSS custom properties inherit through shadow DOM from the root, so any card
+inside any shadow tree can `var(--kis-section-label, #4a5570)` and pick up
+the correct value. Card must declare a fallback for the very first paint
+before kis-nav has run.
+
+Works in button-card's native `styles.name` / `styles.card` arrays (which
+flatten to inline styles on light-DOM elements inside button-card's shadow
+root — CSS vars still inherit).
+
+Do NOT rely on `body[data-kis-day]` selectors — kis-nav only sets that
+attribute on its own injected elements (header bar, nav bar, mini player),
+not on document.body/html. Adding it to body would work but requires an
+extra injection path; property bag on documentElement is simpler.
+
 ## object-fit on camera feeds — Chris prefers fill (2026-04-21)
 For the motion-takeover zone on mobilev1, Chris wants `object-fit: fill`
 (stretch to fit exact zone dimensions), NOT cover (which crops) and NOT

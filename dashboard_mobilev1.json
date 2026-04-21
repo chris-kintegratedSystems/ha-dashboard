@@ -159,6 +159,98 @@
               }
             ]
           }
+        },
+        "section_label": {
+          "show_icon": false,
+          "show_name": true,
+          "show_state": false,
+          "show_label": false,
+          "tap_action": {
+            "action": "none"
+          },
+          "hold_action": {
+            "action": "none"
+          },
+          "styles": {
+            "card": [
+              {
+                "background": "none"
+              },
+              {
+                "border": "none"
+              },
+              {
+                "box-shadow": "none"
+              },
+              {
+                "border-radius": "0"
+              },
+              {
+                "padding": "0"
+              },
+              {
+                "margin": "0"
+              },
+              {
+                "min-height": "0"
+              },
+              {
+                "height": "auto"
+              }
+            ],
+            "grid": [
+              {
+                "grid-template-areas": "\"n\""
+              },
+              {
+                "grid-template-columns": "1fr"
+              },
+              {
+                "grid-template-rows": "auto"
+              },
+              {
+                "padding": "0"
+              }
+            ],
+            "name": [
+              {
+                "font-size": "9px"
+              },
+              {
+                "font-weight": "600"
+              },
+              {
+                "letter-spacing": "0.15em"
+              },
+              {
+                "text-transform": "uppercase"
+              },
+              {
+                "color": "var(--kis-section-label, #4a5570)"
+              },
+              {
+                "padding": "4px 2px"
+              },
+              {
+                "margin": "0"
+              },
+              {
+                "border-bottom": "1px solid var(--kis-section-rule, rgba(255,255,255,0.06))"
+              },
+              {
+                "text-align": "left"
+              },
+              {
+                "justify-self": "stretch"
+              },
+              {
+                "width": "100%"
+              },
+              {
+                "display": "block"
+              }
+            ]
+          }
         }
       },
       "views": [
@@ -175,11 +267,9 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SCENES</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  },
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "SCENES",
                   "grid_options": {
                     "columns": "full",
                     "rows": "auto"
@@ -549,11 +639,9 @@
               "column_span": 1,
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SECURITY</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "SECURITY"
                 },
                 {
                   "type": "custom:button-card",
@@ -862,11 +950,9 @@
                   }
                 },
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>GARAGE</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; margin-top: auto !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "GARAGE"
                 },
                 {
                   "type": "horizontal-stack",
@@ -1372,34 +1458,78 @@
                               "label": "[[[ if (states['sensor.tesla_battery_level']) { var b=states['sensor.tesla_battery_level'].state; var r=states['sensor.tesla_range'] ? ' · ' + Math.round(parseFloat(states['sensor.tesla_range'].state)) + ' mi' : ''; return b + '%' + r; } return 'Setup Required'; ]]]",
                               "styles": {
                                 "card": [
-                                  { "padding": "18px 12px" },
-                                  { "border-radius": "14px" },
-                                  { "height": "220px" },
-                                  { "background": "var(--ha-card-background, rgba(16,21,31,0.72))" },
-                                  { "border": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '2px solid #10d090' : '1px solid rgba(255,255,255,0.06)'; ]]]" },
-                                  { "box-shadow": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '0 0 14px rgba(16,208,144,0.45)' : 'none'; ]]]" },
-                                  { "display": "flex" },
-                                  { "flex-direction": "column" },
-                                  { "justify-content": "center" },
-                                  { "align-items": "center" }
+                                  {
+                                    "padding": "18px 12px"
+                                  },
+                                  {
+                                    "border-radius": "14px"
+                                  },
+                                  {
+                                    "height": "220px"
+                                  },
+                                  {
+                                    "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                                  },
+                                  {
+                                    "border": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '2px solid #10d090' : '1px solid rgba(255,255,255,0.06)'; ]]]"
+                                  },
+                                  {
+                                    "box-shadow": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '0 0 14px rgba(16,208,144,0.45)' : 'none'; ]]]"
+                                  },
+                                  {
+                                    "display": "flex"
+                                  },
+                                  {
+                                    "flex-direction": "column"
+                                  },
+                                  {
+                                    "justify-content": "center"
+                                  },
+                                  {
+                                    "align-items": "center"
+                                  }
                                 ],
                                 "icon": [
-                                  { "color": "#e81c24" },
-                                  { "margin-bottom": "8px" }
+                                  {
+                                    "color": "#e81c24"
+                                  },
+                                  {
+                                    "margin-bottom": "8px"
+                                  }
                                 ],
                                 "name": [
-                                  { "font-size": "13px" },
-                                  { "font-weight": "600" },
-                                  { "color": "#eef2f8" },
-                                  { "margin-top": "10px" },
-                                  { "letter-spacing": "0.02em" }
+                                  {
+                                    "font-size": "13px"
+                                  },
+                                  {
+                                    "font-weight": "600"
+                                  },
+                                  {
+                                    "color": "#eef2f8"
+                                  },
+                                  {
+                                    "margin-top": "10px"
+                                  },
+                                  {
+                                    "letter-spacing": "0.02em"
+                                  }
                                 ],
                                 "label": [
-                                  { "font-size": "11px" },
-                                  { "letter-spacing": "0.06em" },
-                                  { "text-transform": "uppercase" },
-                                  { "color": "[[[ return states['sensor.tesla_battery_level'] ? '#10d090' : 'rgba(138,154,184,0.55)'; ]]]" },
-                                  { "margin-top": "6px" }
+                                  {
+                                    "font-size": "11px"
+                                  },
+                                  {
+                                    "letter-spacing": "0.06em"
+                                  },
+                                  {
+                                    "text-transform": "uppercase"
+                                  },
+                                  {
+                                    "color": "[[[ return states['sensor.tesla_battery_level'] ? '#10d090' : 'rgba(138,154,184,0.55)'; ]]]"
+                                  },
+                                  {
+                                    "margin-top": "6px"
+                                  }
                                 ]
                               }
                             },
@@ -1414,33 +1544,75 @@
                               "label": "Home",
                               "styles": {
                                 "card": [
-                                  { "padding": "18px 12px" },
-                                  { "border-radius": "14px" },
-                                  { "height": "220px" },
-                                  { "background": "var(--ha-card-background, rgba(16,21,31,0.72))" },
-                                  { "border": "1px solid rgba(255,255,255,0.06)" },
-                                  { "display": "flex" },
-                                  { "flex-direction": "column" },
-                                  { "justify-content": "center" },
-                                  { "align-items": "center" }
+                                  {
+                                    "padding": "18px 12px"
+                                  },
+                                  {
+                                    "border-radius": "14px"
+                                  },
+                                  {
+                                    "height": "220px"
+                                  },
+                                  {
+                                    "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                                  },
+                                  {
+                                    "border": "1px solid rgba(255,255,255,0.06)"
+                                  },
+                                  {
+                                    "display": "flex"
+                                  },
+                                  {
+                                    "flex-direction": "column"
+                                  },
+                                  {
+                                    "justify-content": "center"
+                                  },
+                                  {
+                                    "align-items": "center"
+                                  }
                                 ],
                                 "icon": [
-                                  { "color": "#c0c5d0" },
-                                  { "margin-bottom": "8px" }
+                                  {
+                                    "color": "#c0c5d0"
+                                  },
+                                  {
+                                    "margin-bottom": "8px"
+                                  }
                                 ],
                                 "name": [
-                                  { "font-size": "13px" },
-                                  { "font-weight": "600" },
-                                  { "color": "#eef2f8" },
-                                  { "margin-top": "10px" },
-                                  { "letter-spacing": "0.02em" }
+                                  {
+                                    "font-size": "13px"
+                                  },
+                                  {
+                                    "font-weight": "600"
+                                  },
+                                  {
+                                    "color": "#eef2f8"
+                                  },
+                                  {
+                                    "margin-top": "10px"
+                                  },
+                                  {
+                                    "letter-spacing": "0.02em"
+                                  }
                                 ],
                                 "label": [
-                                  { "font-size": "11px" },
-                                  { "letter-spacing": "0.06em" },
-                                  { "text-transform": "uppercase" },
-                                  { "color": "#10d090" },
-                                  { "margin-top": "6px" }
+                                  {
+                                    "font-size": "11px"
+                                  },
+                                  {
+                                    "letter-spacing": "0.06em"
+                                  },
+                                  {
+                                    "text-transform": "uppercase"
+                                  },
+                                  {
+                                    "color": "#10d090"
+                                  },
+                                  {
+                                    "margin-top": "6px"
+                                  }
                                 ]
                               }
                             }
@@ -1462,35 +1634,81 @@
                               "label": "[[[ var s=(entity.state||'').replace(/-/g,' ').replace(/\\b\\w/g,function(c){return c.toUpperCase();}); var h=entity.attributes.humidity; var w=entity.attributes.wind_speed; var parts=[s]; if (h!=null) parts.push(h+'% hum'); if (w!=null) parts.push(Math.round(w)+' mph'); return parts.join(' · '); ]]]",
                               "styles": {
                                 "card": [
-                                  { "padding": "16px 14px 10px" },
-                                  { "border-radius": "14px 14px 0 0" },
-                                  { "height": "148px" },
-                                  { "background": "var(--ha-card-background, rgba(16,21,31,0.72))" },
-                                  { "border": "1px solid rgba(255,255,255,0.06)" },
-                                  { "border-bottom": "none" },
-                                  { "display": "flex" },
-                                  { "flex-direction": "column" },
-                                  { "justify-content": "center" },
-                                  { "align-items": "center" }
+                                  {
+                                    "padding": "16px 14px 10px"
+                                  },
+                                  {
+                                    "border-radius": "14px 14px 0 0"
+                                  },
+                                  {
+                                    "height": "148px"
+                                  },
+                                  {
+                                    "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                                  },
+                                  {
+                                    "border": "1px solid rgba(255,255,255,0.06)"
+                                  },
+                                  {
+                                    "border-bottom": "none"
+                                  },
+                                  {
+                                    "display": "flex"
+                                  },
+                                  {
+                                    "flex-direction": "column"
+                                  },
+                                  {
+                                    "justify-content": "center"
+                                  },
+                                  {
+                                    "align-items": "center"
+                                  }
                                 ],
                                 "icon": [
-                                  { "color": "[[[ var c=entity.state; var m={'sunny':'#f5a623','clear-night':'#9d6ef0','cloudy':'#8a9ab8','partlycloudy':'#4d8ef0','rainy':'#4d8ef0','pouring':'#4d8ef0','snowy':'#eef2f8','fog':'#8a9ab8','windy':'#8a9ab8','lightning':'#f5a623','lightning-rainy':'#f5a623'}; return m[c] || '#8a9ab8'; ]]]" },
-                                  { "margin-bottom": "4px" }
+                                  {
+                                    "color": "[[[ var c=entity.state; var m={'sunny':'#f5a623','clear-night':'#9d6ef0','cloudy':'#8a9ab8','partlycloudy':'#4d8ef0','rainy':'#4d8ef0','pouring':'#4d8ef0','snowy':'#eef2f8','fog':'#8a9ab8','windy':'#8a9ab8','lightning':'#f5a623','lightning-rainy':'#f5a623'}; return m[c] || '#8a9ab8'; ]]]"
+                                  },
+                                  {
+                                    "margin-bottom": "4px"
+                                  }
                                 ],
                                 "name": [
-                                  { "font-size": "40px" },
-                                  { "font-weight": "300" },
-                                  { "color": "#eef2f8" },
-                                  { "letter-spacing": "-0.02em" },
-                                  { "line-height": "1" }
+                                  {
+                                    "font-size": "40px"
+                                  },
+                                  {
+                                    "font-weight": "300"
+                                  },
+                                  {
+                                    "color": "#eef2f8"
+                                  },
+                                  {
+                                    "letter-spacing": "-0.02em"
+                                  },
+                                  {
+                                    "line-height": "1"
+                                  }
                                 ],
                                 "label": [
-                                  { "font-size": "10px" },
-                                  { "letter-spacing": "0.08em" },
-                                  { "text-transform": "uppercase" },
-                                  { "color": "rgba(138,154,184,0.8)" },
-                                  { "margin-top": "8px" },
-                                  { "text-align": "center" }
+                                  {
+                                    "font-size": "10px"
+                                  },
+                                  {
+                                    "letter-spacing": "0.08em"
+                                  },
+                                  {
+                                    "text-transform": "uppercase"
+                                  },
+                                  {
+                                    "color": "rgba(138,154,184,0.8)"
+                                  },
+                                  {
+                                    "margin-top": "8px"
+                                  },
+                                  {
+                                    "text-align": "center"
+                                  }
                                 ]
                               }
                             },
@@ -1582,11 +1800,9 @@
             {
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>CLIMATE CONTROL</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "CLIMATE CONTROL"
                 },
                 {
                   "type": "custom:button-card",
@@ -4416,11 +4632,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>MEDIA</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "MEDIA"
                 },
                 {
                   "type": "conditional",
@@ -4662,11 +4876,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>THEME</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "THEME"
                 },
                 {
                   "type": "custom:button-card",
@@ -4944,11 +5156,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SYSTEM STATUS</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "SYSTEM STATUS"
                 },
                 {
                   "type": "custom:mushroom-chips-card",
@@ -4994,11 +5204,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>ABOUT</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "ABOUT"
                 },
                 {
                   "type": "custom:button-card",

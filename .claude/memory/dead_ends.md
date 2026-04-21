@@ -72,3 +72,25 @@ for manual override.
 **Tried:** bramkragten/swipe-card for the priority display zone carousel.
 **Failed:** Reproducible setConfig crash on Fully Kiosk Browser refresh.
 **Fix:** Use nutteloost/simple-swipe-card v2.8.2 instead.
+
+## 2026-04-21: markdown card + card_mod for thin section headers
+**Tried:** Render section labels (SCENES, SECURITY, GARAGE, etc) as `type: markdown`
+cards with inline HTML + `card_mod` CSS stripping the `ha-card` background/padding.
+**Failed:** card-mod is NOT installed on this HA instance — `/hacsfiles/card-mod`
+is absent from `lovelace_resources`. Every `card_mod` block in the dashboard is
+silently ignored. Headers rendered as full-fat white cards wasting ~40-50px each.
+**Root-cause check:** `sudo cat /config/.storage/lovelace_resources` on the Pi
+— card-mod was never added as a resource, even though the dashboard has 30+
+`card_mod` usages. A lot of "half-working" styling across this codebase is
+actually just being ignored.
+**Fix:** Use `custom:button-card` (which IS installed) with a reusable template
+`section_label` in `button_card_templates`. button-card's native `styles.card`
+/ `styles.name` arrays apply without any external CSS framework — no card-mod
+dependency. Template: show_name true, show_icon false, card { background:none,
+border:none, box-shadow:none, padding:0, min-height:0 }, name { font-size 9px,
+weight 600, letter-spacing 0.15em, uppercase, padding 4px 2px, border-bottom
+hairline }. Day/night colors via CSS custom properties flipped by kis-nav.js
+(see css_dom_patterns.md → CSS-variable bridge).
+**Broader lesson:** before assuming card_mod styling will work, verify card-mod
+is actually installed — the `card_mod` key is accepted silently by Lovelace's
+schema whether card-mod is loaded or not.
