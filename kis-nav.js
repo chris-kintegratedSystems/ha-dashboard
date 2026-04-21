@@ -1,9 +1,14 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v16
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v18
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
+ *
+ * v18 changes:
+ *  - Day/night: input_select.theme_mode (Auto/Day/Night) + sun.sun auto switch
+ *  - Reason: hass.themes.theme is static (frontend_default_dark_theme = null),
+ *    so kis-nav now drives its own day/night attribute from sun + override.
  *
  * v16 changes:
  *  - Nav bar: background highlight indicator replaces pill (iOS 17+ style)
@@ -765,12 +770,18 @@
 
     const hass = getHass();
 
-    // Theme detection — toggle day mode attribute on header + nav + mini-player
-    const activeTheme = (hass && hass.themes && hass.themes.theme)
-      || (hass && hass.selectedTheme && hass.selectedTheme.theme)
-      || '';
-    const isDayMode = activeTheme === 'kis-day'
-      || (activeTheme === '' && hass && hass.themes && hass.themes.darkMode === false);
+    // Theme detection — input_select.theme_mode override + sun.sun auto fallback.
+    // Mode options: Auto (follows sunrise/sunset), Day (force light), Night (force dark).
+    // Why: HA's frontend_default_dark_theme is null, so hass.themes.theme is static.
+    // We drive kis-nav's day/night look directly from sun.sun + user override.
+    const sunEnt = getState(hass, 'sun.sun');
+    const sunBelow = sunEnt && sunEnt.state === 'below_horizon';
+    const themeModeEnt = getState(hass, 'input_select.theme_mode');
+    const themeMode = themeModeEnt ? themeModeEnt.state : 'Auto';
+    let isDayMode;
+    if (themeMode === 'Day') isDayMode = true;
+    else if (themeMode === 'Night') isDayMode = false;
+    else isDayMode = !sunBelow;
     const navBar = document.getElementById('kis-nav-bar');
     if (isDayMode) {
       bar.setAttribute('data-kis-day', '');
