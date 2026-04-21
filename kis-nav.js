@@ -47,7 +47,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 26;
+  window.KIS_NAV_VERSION = 27;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1081,41 +1081,96 @@
 
   // ─── Priority-zone carousel slide-index tracker ────────────────────────────
   // simple-swipe-card v2.8.2 exposes `currentIndex` as a direct property on
-  // the element — authoritative and cheap to read. It does NOT dispatch a
-  // `slide-changed` event and does NOT add an `active-slide` class in
-  // horizontal mode (that class is vertical-only in v2.8.2). Signals we DO
-  // get on every swipe: the inner `.slider` element's inline `style`
-  // attribute updates as transform translate animates, and `transitionend`
-  // fires when the animation settles.
+  // the element. It doesn't dispatch `slide-changed` and its `.active-slide`
+  // class is vertical-only. Multiple reader strategies below — we use
+  // whichever is most authoritative at call time.
   //
-  // Strategy:
-  //   1. Observe `.slider` style-attribute mutations (fires during animation).
-  //   2. Listen for `transitionend` on `.slider` (fires when it settles).
-  //   3. Fallback: poll `cardEl.currentIndex` every 750ms when attached
-  //      (cheap — single property read, defensive for transitions we miss).
-  //   4. On change, call input_number.set_value → section_label template
-  //      re-renders with VEHICLES / WEATHER matching the visible tile.
+  // Signals on every swipe (real-device verified):
+  //   - pointerup / touchend on the card (we add our own handlers)
+  //   - .slider element transform mutation (animation frames)
+  //   - transitionend on .slider when the animation settles
+  //   - cardEl.currentIndex property after settle
+  //
+  // v27: add multi-source index read, pointer/touch handlers, opportunistic
+  // re-attach from the 1-s tick, and an on-screen debug badge toggleable
+  // via localStorage.kis_swipe_debug.
   const PRIORITY_SLIDE_ENTITY = 'input_number.priority_slide_index';
-  let _swipeObserverEl = null;       // the swipe-card element currently observed
-  let _swipeObserverInstance = null; // MutationObserver for cleanup on remount
-  let _swipeTransitionCleanup = null; // detach fn for transitionend
-  let _swipePollTimer = null;        // interval id for fallback poll
+  let _swipeObserverEl = null;
+  let _swipeObserverInstance = null;
+  let _swipeTransitionCleanup = null;
+  let _swipePollTimer = null;
+  let _swipePointerCleanup = null;
   let _swipeObserverAttempts = 0;
   let _lastPushedSlideIndex = -1;
+  let _lastDetectedSlideIndex = -1;
+  let _lastDetectSource = 'init';
 
+  // Read the active slide index using whichever signal is available,
+  // in order of authority. Returns -1 if none yield a valid number.
   function readSwipeIndex(cardEl) {
-    // Source of truth: the card's own currentIndex property. Set by the
-    // card in every code path that changes the visible slide.
-    if (typeof cardEl.currentIndex === 'number') return cardEl.currentIndex;
+    if (!cardEl) return -1;
+
+    // 1) currentIndex property — authoritative when present.
+    if (typeof cardEl.currentIndex === 'number' && cardEl.currentIndex >= 0) {
+      _lastDetectSource = 'prop';
+      return cardEl.currentIndex;
+    }
+
+    const sr = cardEl.shadowRoot;
+    if (!sr) return -1;
+
+    // 2) .active-slide class (in case v2.8.2 ever applies it in horizontal).
+    const active = sr.querySelector('.active-slide');
+    if (active) {
+      const parent = active.parentElement;
+      if (parent) {
+        const siblings = Array.from(parent.children).filter(
+          (n) => n.classList && n.classList.contains('slide')
+        );
+        const idx = siblings.indexOf(active);
+        if (idx >= 0) {
+          _lastDetectSource = 'class';
+          return idx;
+        }
+      }
+    }
+
+    // 3) Math on the .slider transform: translateX / slide width = index.
+    const slider = sr.querySelector('.slider');
+    const firstSlide = sr.querySelector('.slide');
+    if (slider && firstSlide) {
+      const w = firstSlide.getBoundingClientRect().width || 0;
+      if (w > 0) {
+        const t = getComputedStyle(slider).transform;
+        let tx = 0;
+        if (t && t !== 'none') {
+          // matrix(a,b,c,d,tx,ty) → tx is at index 4 after "matrix("
+          const m = t.match(/matrix.*\((.+)\)/);
+          if (m) {
+            const parts = m[1].split(',').map(parseFloat);
+            tx = parts.length === 6 ? parts[4] : (parts[12] || 0);
+          }
+        }
+        const idx = Math.round(Math.abs(tx) / w);
+        if (!Number.isNaN(idx) && idx >= 0) {
+          _lastDetectSource = 'transform';
+          return idx;
+        }
+      }
+    }
+
+    _lastDetectSource = 'none';
     return -1;
   }
 
   function pushSlideIndex(idx) {
+    _lastDetectedSlideIndex = idx;
+    renderSwipeDebugBadge();
     if (idx < 0 || idx === _lastPushedSlideIndex) return;
     const hass = getHass();
     if (!hass) return;
     const ent = getState(hass, PRIORITY_SLIDE_ENTITY);
-    if (!ent) return; // helper not yet created — silently skip
+    if (!ent) return;
     const current = Math.round(parseFloat(ent.state));
     _lastPushedSlideIndex = idx;
     if (current === idx) return;
@@ -1123,6 +1178,45 @@
       entity_id: PRIORITY_SLIDE_ENTITY,
       value: idx,
     });
+  }
+
+  // On-tablet debug badge. Enable with localStorage.setItem('kis_swipe_debug','1').
+  // Renders a tiny fixed pill bottom-left of the viewport showing the last
+  // detected index, source (prop/class/transform/none), and last pushed value
+  // — so you can tell at a glance whether the observer is firing without
+  // needing USB DevTools.
+  function renderSwipeDebugBadge() {
+    const on = (() => {
+      try { return localStorage.getItem('kis_swipe_debug') === '1'; } catch (e) { return false; }
+    })();
+    let badge = document.getElementById('kis-swipe-debug');
+    if (!on) {
+      if (badge) badge.remove();
+      return;
+    }
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.id = 'kis-swipe-debug';
+      Object.assign(badge.style, {
+        position: 'fixed',
+        left: '8px',
+        bottom: '88px',
+        zIndex: '10000002',
+        background: 'rgba(0,0,0,0.75)',
+        color: '#0f0',
+        padding: '4px 8px',
+        font: '11px ui-monospace,monospace',
+        borderRadius: '6px',
+        pointerEvents: 'none',
+        maxWidth: '60vw',
+      });
+      document.body.appendChild(badge);
+    }
+    badge.textContent =
+      'swipe idx=' + _lastDetectedSlideIndex +
+      ' src=' + _lastDetectSource +
+      ' pushed=' + _lastPushedSlideIndex +
+      (_swipeObserverEl ? ' [attached]' : ' [no-card]');
   }
 
   function observeSwipeSlideIndex() {
@@ -1137,6 +1231,10 @@
         try { _swipeTransitionCleanup(); } catch (e) {}
       }
       _swipeTransitionCleanup = null;
+      if (_swipePointerCleanup) {
+        try { _swipePointerCleanup(); } catch (e) {}
+      }
+      _swipePointerCleanup = null;
       if (_swipePollTimer) {
         clearInterval(_swipePollTimer);
         _swipePollTimer = null;
@@ -1148,64 +1246,105 @@
       const swipeCard = findSwipeCardEl(document.body);
       if (!swipeCard) {
         if (_swipeObserverAttempts++ < 30) setTimeout(tryAttach, 400);
+        renderSwipeDebugBadge();
         return;
       }
-      // Already attached to THIS element — nothing to do.
-      if (_swipeObserverEl === swipeCard && _swipeObserverInstance) return;
+      if (_swipeObserverEl === swipeCard && _swipeObserverInstance) {
+        // already attached to this exact element
+        renderSwipeDebugBadge();
+        return;
+      }
       teardown();
       _swipeObserverEl = swipeCard;
       _lastPushedSlideIndex = -1;
 
       // Initial push so HA reflects the mounted carousel's starting slide.
-      const initial = readSwipeIndex(swipeCard);
-      if (initial >= 0) pushSlideIndex(initial);
+      pushSlideIndex(readSwipeIndex(swipeCard));
 
       let debounceTimer = null;
-      const schedule = () => {
+      const schedule = (reason) => {
         if (debounceTimer) clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
           const idx = readSwipeIndex(swipeCard);
-          if (idx >= 0) pushSlideIndex(idx);
+          pushSlideIndex(idx);
         }, 80);
       };
 
-      // 1) Observe the .slider element's style attribute (transform updates
-      //    on every swipe). Also watch general subtree mutations in case
-      //    v2.8.2 ever flips to the active-slide pattern in horizontal mode.
-      const mo = new MutationObserver(() => schedule());
+      // 1) Mutation observer on the shadow root subtree — fires on transform
+      //    updates (.slider style attr) and class/attribute flips.
+      const mo = new MutationObserver(() => schedule('mutation'));
       const sr = swipeCard.shadowRoot;
       if (sr) {
         mo.observe(sr, {
           subtree: true,
           attributes: true,
-          attributeFilter: ['style', 'class', 'data-visible-index'],
+          attributeFilter: ['style', 'class', 'data-visible-index', 'data-index'],
         });
       }
       _swipeObserverInstance = mo;
 
-      // 2) transitionend on the slider — fires when the slide animation
-      //    finishes. Authoritative moment to re-read currentIndex.
+      // 2) transitionend on the slider — authoritative settle signal.
       const slider = sr ? sr.querySelector('.slider') : null;
       if (slider) {
         const onTransitionEnd = () => {
           const idx = readSwipeIndex(swipeCard);
-          if (idx >= 0) pushSlideIndex(idx);
+          pushSlideIndex(idx);
         };
         slider.addEventListener('transitionend', onTransitionEnd, true);
         _swipeTransitionCleanup = () => slider.removeEventListener('transitionend', onTransitionEnd, true);
       }
 
-      // 3) Fallback poll at 750ms — covers no-animation paths (e.g. direct
-      //    goToSlide from a pagination-dot click that transition-ends too
-      //    fast to catch, or any path the observer misses).
+      // 3) Pointer/touch handlers on the card itself — catches every swipe
+      //    the user makes, even if other signals don't fire.
+      const onPointerUp = () => setTimeout(() => pushSlideIndex(readSwipeIndex(swipeCard)), 120);
+      swipeCard.addEventListener('pointerup', onPointerUp, true);
+      swipeCard.addEventListener('touchend', onPointerUp, true);
+      _swipePointerCleanup = () => {
+        swipeCard.removeEventListener('pointerup', onPointerUp, true);
+        swipeCard.removeEventListener('touchend', onPointerUp, true);
+      };
+
+      // 4) Fallback poll at 750ms — belt-and-suspenders for any path the
+      //    observer misses (theme remount, transient reflow).
       _swipePollTimer = setInterval(() => {
         const idx = readSwipeIndex(swipeCard);
-        if (idx >= 0) pushSlideIndex(idx);
+        pushSlideIndex(idx);
       }, 750);
+
+      renderSwipeDebugBadge();
     };
 
     _swipeObserverAttempts = 0;
     setTimeout(tryAttach, 600);
+  }
+
+  // Opportunistic re-attach: if the page re-renders the swipe-card after
+  // initial attach (e.g. after a theme reload or HA re-render), the cached
+  // _swipeObserverEl becomes stale. Called from the 1-s tick in addRoots().
+  function maybeReattachSwipeObserver() {
+    if (!onMobileDashboard()) return;
+    const swipeCard = findSwipeCardEl(document.body);
+    if (!swipeCard) {
+      if (_swipeObserverEl) {
+        // Card was present but now isn't — tear down.
+        if (_swipeObserverInstance) try { _swipeObserverInstance.disconnect(); } catch (e) {}
+        if (_swipeTransitionCleanup) try { _swipeTransitionCleanup(); } catch (e) {}
+        if (_swipePointerCleanup) try { _swipePointerCleanup(); } catch (e) {}
+        if (_swipePollTimer) clearInterval(_swipePollTimer);
+        _swipeObserverEl = null;
+        _swipeObserverInstance = null;
+        _swipeTransitionCleanup = null;
+        _swipePointerCleanup = null;
+        _swipePollTimer = null;
+      }
+      renderSwipeDebugBadge();
+      return;
+    }
+    if (swipeCard !== _swipeObserverEl || !_swipeObserverInstance) {
+      _swipeObserverAttempts = 0;
+      observeSwipeSlideIndex();
+    }
+    renderSwipeDebugBadge();
   }
 
   // ─── Layout patches ────────────────────────────────────────────────────────
@@ -1303,6 +1442,18 @@
       syncState();
       return;
     }
+
+    // Swipe-tracker debug: enable the on-screen badge automatically on v27
+    // so we can diagnose swipe detection on the Tab S9 without DevTools.
+    // Clear by running `localStorage.removeItem('kis_swipe_debug')` once
+    // fixed. The "seen" flag means "we've auto-enabled at least once" —
+    // don't re-enable after the user manually clears it.
+    try {
+      if (localStorage.getItem('kis_swipe_debug_auto_v27') !== '1') {
+        localStorage.setItem('kis_swipe_debug', '1');
+        localStorage.setItem('kis_swipe_debug_auto_v27', '1');
+      }
+    } catch (e) {}
 
     // Resolve safe-area-inset-top via CSS custom property (WKWebView fix)
     initSafeAreaTop();
@@ -1436,9 +1587,15 @@
       }, 150);
     });
 
-    // Update header content every second (live clock + entity states)
+    // Update header content every second (live clock + entity states).
+    // Also opportunistically re-attach the swipe-card observer in case the
+    // card was remounted (theme reload, content re-render) since the last
+    // syncState call.
     setInterval(() => {
-      if (onMobileDashboard()) renderHeaderContent();
+      if (onMobileDashboard()) {
+        renderHeaderContent();
+        maybeReattachSwipeObserver();
+      }
     }, 1000);
 
     // Instant theme sync: watch for CSS variable changes on documentElement.
