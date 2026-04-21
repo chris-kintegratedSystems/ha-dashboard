@@ -550,7 +550,7 @@
               "cards": [
                 {
                   "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>LOCKS</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
+                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SECURITY</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
                   "card_mod": {
                     "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
                   }
@@ -860,19 +860,12 @@
                   "card_mod": {
                     "style": "ha-card { border-left: 2px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n#icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }"
                   }
-                }
-              ]
-            },
-            {
-              "title": "",
-              "type": "grid",
-              "column_span": 1,
-              "cards": [
+                },
                 {
                   "type": "markdown",
                   "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>GARAGE</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
                   "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
+                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; margin-top: auto !important; }"
                   }
                 },
                 {
@@ -1087,7 +1080,14 @@
                       ]
                     }
                   ]
-                },
+                }
+              ]
+            },
+            {
+              "title": "",
+              "type": "grid",
+              "column_span": 1,
+              "cards": [
                 {
                   "type": "grid",
                   "columns": 1,
@@ -1098,28 +1098,6 @@
                   "cards": [
                     {
                       "type": "horizontal-stack",
-                      "visibility": [
-                        {
-                          "condition": "or",
-                          "conditions": [
-                            {
-                              "condition": "state",
-                              "entity": "binary_sensor.doorbell_motion_sticky",
-                              "state": "on"
-                            },
-                            {
-                              "condition": "state",
-                              "entity": "binary_sensor.living_room_camera_motion_sticky",
-                              "state": "on"
-                            },
-                            {
-                              "condition": "state",
-                              "entity": "binary_sensor.izzy_camera_motion_sticky",
-                              "state": "on"
-                            }
-                          ]
-                        }
-                      ],
                       "cards": [
                         {
                           "type": "conditional",
@@ -1793,331 +1771,570 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_on",
-                    "service_data": {
-                      "entity_id": [
-                        "light.countertop_lights",
-                        "light.kitchen_chandelier",
-                        "light.kitchen_ceilings_lights",
-                        "light.kitchen_island_light"
-                      ]
-                    }
-                  },
-                  "double_tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.countertop_lights",
-                        "light.kitchen_chandelier",
-                        "light.kitchen_ceilings_lights",
-                        "light.kitchen_island_light"
-                      ]
-                    }
-                  },
-                  "hold_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.countertop_lights",
-                        "light.kitchen_chandelier",
-                        "light.kitchen_ceilings_lights",
-                        "light.kitchen_island_light"
-                      ]
-                    }
-                  },
-                  "label": "[[[ const entityIds = [\"light.countertop_lights\",\"light.kitchen_chandelier\",\"light.kitchen_ceilings_lights\",\"light.kitchen_island_light\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;padding:10px 14px 8px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">Kitchen</span>' + '<span style=\"font-size:30px;font-weight:300;color:var(--primary-text-color,#eef2f8);letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:12px;color:var(--disabled-text-color,#4a5570);font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "var(--card-background-color, #10151f)"
-                      },
-                      {
-                        "border-radius": "14px"
-                      },
-                      {
-                        "padding": "0px"
-                      },
-                      {
-                        "border": "1px solid rgba(0,212,240,0.18)"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "6px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      }
-                    ]
-                  },
-                  "card_mod": {
-                    "style": "ha-card { border-left: 2px solid #f5a623; border-radius: 14px; }"
-                  }
-                },
-                {
-                  "type": "grid",
-                  "columns": 3,
-                  "square": false,
+                  "type": "vertical-stack",
                   "cards": [
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.countertop_lights",
-                      "name": "Countertop",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": false,
+                          "show_label": true,
+                          "tap_action": {
+                            "action": "none"
                           },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          "label": "[[[ const ids = [\"light.countertop_lights\",\"light.kitchen_chandelier\",\"light.kitchen_ceilings_lights\",\"light.kitchen_island_light\"]; const on = ids.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = ids.length; return '<div style=\"display:flex;align-items:center;gap:10px;padding:12px 14px;\"><span style=\"font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#eef2f8;\">KITCHEN</span><span style=\"font-size:12px;color:#6a8090;font-weight:500;\">' + on + '/' + total + ' on</span></div>'; ]]]",
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "none"
+                              },
+                              {
+                                "box-shadow": "none"
+                              },
+                              {
+                                "padding": "0px"
+                              },
+                              {
+                                "flex-grow": "1"
+                              },
+                              {
+                                "min-width": "0"
+                              }
+                            ],
+                            "label": [
+                              {
+                                "width": "100%"
+                              },
+                              {
+                                "white-space": "nowrap"
+                              },
+                              {
+                                "overflow": "hidden"
+                              },
+                              {
+                                "text-overflow": "ellipsis"
+                              }
+                            ]
                           }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "light.kitchen_all",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:power",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "hold_action": {
+                            "action": "more-info"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                              },
+                              {
+                                "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                              }
+                            ]
                           }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "input_boolean.lights_kitchen_expanded",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:chevron-down",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "input_boolean.toggle",
+                            "target": {
+                              "entity_id": "input_boolean.lights_kitchen_expanded"
+                            }
                           },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "1px solid rgba(0,200,232,0.08)"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "#6a8090"
+                              },
+                              {
+                                "transition": "transform 180ms ease"
+                              },
+                              {
+                                "transform": "[[[ return states['input_boolean.lights_kitchen_expanded'].state==='on' ? 'rotate(180deg)' : 'rotate(0deg)'; ]]]"
+                              }
+                            ]
                           }
-                        ]
-                      }
+                        }
+                      ]
                     },
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.kitchen_chandelier",
-                      "name": "Chandelier",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "input_boolean.lights_kitchen_expanded",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "vertical-stack",
+                        "cards": [
                           {
-                            "padding": "12px 8px 10px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.countertop_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Countertop</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "width": "110px"
+                                    },
+                                    {
+                                      "flex-shrink": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:my-slider-v2",
+                                "entity": "light.countertop_lights",
+                                "mode": "brightness",
+                                "allowTapping": true,
+                                "allowSliding": true,
+                                "step": 10,
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "height": "48px"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "container": [
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "background": "rgba(0,200,232,0.05)"
+                                    }
+                                  ],
+                                  "track": [
+                                    {
+                                      "background": "rgba(74,85,112,0.25)"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "progress": [
+                                    {
+                                      "background": "linear-gradient(90deg,rgba(245,150,35,0.65),rgba(245,150,35,0.95))"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "thumb": [
+                                    {
+                                      "display": "none"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.countertop_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "border-radius": "10px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.kitchen_chandelier",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Chandelier</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.kitchen_chandelier",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "overflow": "hidden"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.kitchen_ceilings_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Ceiling</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.kitchen_ceilings_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "light.kitchen_ceilings_lights",
-                      "name": "Ceiling",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
-                          },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "light.kitchen_island_light",
-                      "name": "Island",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
-                          },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.kitchen_island_light",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Island</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.kitchen_island_light",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           }
                         ]
                       }
@@ -2131,201 +2348,439 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_on",
-                    "service_data": {
-                      "entity_id": [
-                        "light.living_room_ceiling",
-                        "light.living_room_lamp_2"
-                      ]
-                    }
-                  },
-                  "double_tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.living_room_ceiling",
-                        "light.living_room_lamp_2"
-                      ]
-                    }
-                  },
-                  "hold_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.living_room_ceiling",
-                        "light.living_room_lamp_2"
-                      ]
-                    }
-                  },
-                  "label": "[[[ const entityIds = [\"light.living_room_ceiling\",\"light.living_room_lamp_2\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;padding:10px 14px 8px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">Living Room</span>' + '<span style=\"font-size:30px;font-weight:300;color:var(--primary-text-color,#eef2f8);letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:12px;color:var(--disabled-text-color,#4a5570);font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "var(--card-background-color, #10151f)"
-                      },
-                      {
-                        "border-radius": "14px"
-                      },
-                      {
-                        "padding": "0px"
-                      },
-                      {
-                        "border": "1px solid rgba(0,212,240,0.18)"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "6px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      }
-                    ]
-                  },
-                  "card_mod": {
-                    "style": "ha-card { border-left: 2px solid #4d8ef0; border-radius: 14px; }\n"
-                  }
-                },
-                {
-                  "type": "grid",
-                  "columns": 3,
-                  "square": false,
+                  "type": "vertical-stack",
                   "cards": [
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.living_room_ceiling",
-                      "name": "Ceiling",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": false,
+                          "show_label": true,
+                          "tap_action": {
+                            "action": "none"
                           },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          "label": "[[[ const ids = [\"light.living_room_ceiling\",\"light.living_room_lamp_2\"]; const on = ids.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = ids.length; return '<div style=\"display:flex;align-items:center;gap:10px;padding:12px 14px;\"><span style=\"font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#eef2f8;\">LIVING ROOM</span><span style=\"font-size:12px;color:#6a8090;font-weight:500;\">' + on + '/' + total + ' on</span></div>'; ]]]",
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "none"
+                              },
+                              {
+                                "box-shadow": "none"
+                              },
+                              {
+                                "padding": "0px"
+                              },
+                              {
+                                "flex-grow": "1"
+                              },
+                              {
+                                "min-width": "0"
+                              }
+                            ],
+                            "label": [
+                              {
+                                "width": "100%"
+                              },
+                              {
+                                "white-space": "nowrap"
+                              },
+                              {
+                                "overflow": "hidden"
+                              },
+                              {
+                                "text-overflow": "ellipsis"
+                              }
+                            ]
                           }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "light.living_room_all",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:power",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "hold_action": {
+                            "action": "more-info"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                              },
+                              {
+                                "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                              }
+                            ]
                           }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "input_boolean.lights_living_room_expanded",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:chevron-down",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "input_boolean.toggle",
+                            "target": {
+                              "entity_id": "input_boolean.lights_living_room_expanded"
+                            }
                           },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "1px solid rgba(0,200,232,0.08)"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "#6a8090"
+                              },
+                              {
+                                "transition": "transform 180ms ease"
+                              },
+                              {
+                                "transform": "[[[ return states['input_boolean.lights_living_room_expanded'].state==='on' ? 'rotate(180deg)' : 'rotate(0deg)'; ]]]"
+                              }
+                            ]
                           }
-                        ]
-                      }
+                        }
+                      ]
                     },
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.living_room_lamp_2",
-                      "name": "Lamp",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "input_boolean.lights_living_room_expanded",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "vertical-stack",
+                        "cards": [
                           {
-                            "padding": "12px 8px 10px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.living_room_ceiling",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Ceiling</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "width": "110px"
+                                    },
+                                    {
+                                      "flex-shrink": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:my-slider-v2",
+                                "entity": "light.living_room_ceiling",
+                                "mode": "brightness",
+                                "allowTapping": true,
+                                "allowSliding": true,
+                                "step": 10,
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "height": "48px"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "container": [
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "background": "rgba(0,200,232,0.05)"
+                                    }
+                                  ],
+                                  "track": [
+                                    {
+                                      "background": "rgba(74,85,112,0.25)"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "progress": [
+                                    {
+                                      "background": "linear-gradient(90deg,rgba(245,150,35,0.65),rgba(245,150,35,0.95))"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "thumb": [
+                                    {
+                                      "display": "none"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.living_room_ceiling",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.living_room_lamp_2",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Lamp</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "width": "110px"
+                                    },
+                                    {
+                                      "flex-shrink": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:my-slider-v2",
+                                "entity": "light.living_room_lamp_2",
+                                "mode": "brightness",
+                                "allowTapping": true,
+                                "allowSliding": true,
+                                "step": 10,
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "height": "48px"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "container": [
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "background": "rgba(0,200,232,0.05)"
+                                    }
+                                  ],
+                                  "track": [
+                                    {
+                                      "background": "rgba(74,85,112,0.25)"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "progress": [
+                                    {
+                                      "background": "linear-gradient(90deg,rgba(245,150,35,0.65),rgba(245,150,35,0.95))"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "thumb": [
+                                    {
+                                      "display": "none"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.living_room_lamp_2",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           }
                         ]
                       }
@@ -2339,526 +2794,612 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_on",
-                    "service_data": {
-                      "entity_id": [
-                        "light.garage_light",
-                        "light.outdoor_switch_2",
-                        "light.front_porch_lights",
-                        "light.front_walkway_lights",
-                        "light.upper_outdoor_lights",
-                        "light.left_outdoor_patio_lights",
-                        "light.center_outdoor_patio"
-                      ]
-                    }
-                  },
-                  "double_tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.garage_light",
-                        "light.outdoor_switch_2",
-                        "light.front_porch_lights",
-                        "light.front_walkway_lights",
-                        "light.upper_outdoor_lights",
-                        "light.left_outdoor_patio_lights",
-                        "light.center_outdoor_patio"
-                      ]
-                    }
-                  },
-                  "hold_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.garage_light",
-                        "light.outdoor_switch_2",
-                        "light.front_porch_lights",
-                        "light.front_walkway_lights",
-                        "light.upper_outdoor_lights",
-                        "light.left_outdoor_patio_lights",
-                        "light.center_outdoor_patio"
-                      ]
-                    }
-                  },
-                  "label": "[[[ const entityIds = [\"light.garage_light\",\"light.outdoor_switch_2\",\"light.front_porch_lights\",\"light.front_walkway_lights\",\"light.upper_outdoor_lights\",\"light.left_outdoor_patio_lights\",\"light.center_outdoor_patio\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;padding:10px 14px 8px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">Outdoor</span>' + '<span style=\"font-size:30px;font-weight:300;color:var(--primary-text-color,#eef2f8);letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:12px;color:var(--disabled-text-color,#4a5570);font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "var(--card-background-color, #10151f)"
-                      },
-                      {
-                        "border-radius": "14px"
-                      },
-                      {
-                        "padding": "0px"
-                      },
-                      {
-                        "border": "1px solid rgba(0,212,240,0.18)"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "6px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      }
-                    ]
-                  },
-                  "card_mod": {
-                    "style": "ha-card { border-left: 2px solid #10d090; border-radius: 14px; }\n"
-                  }
-                },
-                {
-                  "type": "grid",
-                  "columns": 3,
-                  "square": false,
+                  "type": "vertical-stack",
                   "cards": [
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.garage_light",
-                      "name": "Garage",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": false,
+                          "show_label": true,
+                          "tap_action": {
+                            "action": "none"
                           },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          "label": "[[[ const ids = [\"light.front_porch_lights\",\"light.front_walkway_lights\",\"light.upper_outdoor_lights\",\"light.left_outdoor_patio_lights\",\"light.center_outdoor_patio\"]; const on = ids.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = ids.length; return '<div style=\"display:flex;align-items:center;gap:10px;padding:12px 14px;\"><span style=\"font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#eef2f8;\">OUTDOOR</span><span style=\"font-size:12px;color:#6a8090;font-weight:500;\">' + on + '/' + total + ' on</span></div>'; ]]]",
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "none"
+                              },
+                              {
+                                "box-shadow": "none"
+                              },
+                              {
+                                "padding": "0px"
+                              },
+                              {
+                                "flex-grow": "1"
+                              },
+                              {
+                                "min-width": "0"
+                              }
+                            ],
+                            "label": [
+                              {
+                                "width": "100%"
+                              },
+                              {
+                                "white-space": "nowrap"
+                              },
+                              {
+                                "overflow": "hidden"
+                              },
+                              {
+                                "text-overflow": "ellipsis"
+                              }
+                            ]
                           }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "light.outdoor_all",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:power",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "hold_action": {
+                            "action": "more-info"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                              },
+                              {
+                                "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                              }
+                            ]
                           }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "input_boolean.lights_outdoor_expanded",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:chevron-down",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "input_boolean.toggle",
+                            "target": {
+                              "entity_id": "input_boolean.lights_outdoor_expanded"
+                            }
                           },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "1px solid rgba(0,200,232,0.08)"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "#6a8090"
+                              },
+                              {
+                                "transition": "transform 180ms ease"
+                              },
+                              {
+                                "transform": "[[[ return states['input_boolean.lights_outdoor_expanded'].state==='on' ? 'rotate(180deg)' : 'rotate(0deg)'; ]]]"
+                              }
+                            ]
                           }
-                        ]
-                      }
+                        }
+                      ]
                     },
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.outdoor_switch_2",
-                      "name": "Patio String",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "input_boolean.lights_outdoor_expanded",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "vertical-stack",
+                        "cards": [
                           {
-                            "padding": "12px 8px 10px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.front_porch_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Front Porch</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.front_porch_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "border-radius": "10px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.front_walkway_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Walkway</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.front_walkway_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "overflow": "hidden"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.upper_outdoor_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Upper Patio</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.upper_outdoor_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "min-height": "72px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.left_outdoor_patio_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Left Patio</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.left_outdoor_patio_lights",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "light.front_porch_lights",
-                      "name": "Front Porch",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
-                          },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "light.front_walkway_lights",
-                      "name": "Walkway",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
-                          },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "light.upper_outdoor_lights",
-                      "name": "Upper Out",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
-                          },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "light.left_outdoor_patio_lights",
-                      "name": "Left Patio",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
-                          },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "light.center_outdoor_patio",
-                      "name": "Center Patio",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
-                          },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.center_outdoor_patio",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Center Patio</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "flex-grow": "1"
+                                    },
+                                    {
+                                      "min-width": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.center_outdoor_patio",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           }
                         ]
                       }
@@ -2872,201 +3413,439 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_state": false,
-                  "show_icon": false,
-                  "show_label": true,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_on",
-                    "service_data": {
-                      "entity_id": [
-                        "light.benjamins_hatch_light",
-                        "light.bens_light"
-                      ]
-                    }
-                  },
-                  "double_tap_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.benjamins_hatch_light",
-                        "light.bens_light"
-                      ]
-                    }
-                  },
-                  "hold_action": {
-                    "action": "call-service",
-                    "service": "light.turn_off",
-                    "service_data": {
-                      "entity_id": [
-                        "light.benjamins_hatch_light",
-                        "light.bens_light"
-                      ]
-                    }
-                  },
-                  "label": "[[[ const entityIds = [\"light.benjamins_hatch_light\",\"light.bens_light\"]; const onCount = entityIds.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = entityIds.length; return '<div style=\"display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;padding:10px 14px 8px 18px;\">' + '<div style=\"display:flex;flex-direction:column;gap:2px;\">' + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">Bedrooms</span>' + '<span style=\"font-size:30px;font-weight:300;color:var(--primary-text-color,#eef2f8);letter-spacing:-0.02em;line-height:1.1;\">' + onCount + '<span style=\"font-size:12px;color:var(--disabled-text-color,#4a5570);font-weight:400;\">&thinsp;/' + total + '&thinsp;on</span></span>' + '</div>'; ]]]",
-                  "styles": {
-                    "card": [
-                      {
-                        "background": "var(--card-background-color, #10151f)"
-                      },
-                      {
-                        "border-radius": "14px"
-                      },
-                      {
-                        "padding": "0px"
-                      },
-                      {
-                        "border": "1px solid rgba(0,212,240,0.18)"
-                      },
-                      {
-                        "box-shadow": "none"
-                      },
-                      {
-                        "margin-bottom": "6px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "white-space": "normal"
-                      }
-                    ]
-                  },
-                  "card_mod": {
-                    "style": "ha-card { border-left: 2px solid #9d6ef0; border-radius: 14px; }\n"
-                  }
-                },
-                {
-                  "type": "grid",
-                  "columns": 3,
-                  "square": false,
+                  "type": "vertical-stack",
                   "cards": [
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.benjamins_hatch_light",
-                      "name": "Ben Hatch",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "12px 8px 10px"
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": false,
+                          "show_label": true,
+                          "tap_action": {
+                            "action": "none"
                           },
-                          {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
+                          "label": "[[[ const ids = [\"light.benjamins_hatch_light\",\"light.bens_light\"]; const on = ids.filter(function(id){return states[id]&&states[id].state==='on';}).length; const total = ids.length; return '<div style=\"display:flex;align-items:center;gap:10px;padding:12px 14px;\"><span style=\"font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#eef2f8;\">BENJAMIN</span><span style=\"font-size:12px;color:#6a8090;font-weight:500;\">' + on + '/' + total + ' on</span></div>'; ]]]",
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "none"
+                              },
+                              {
+                                "box-shadow": "none"
+                              },
+                              {
+                                "padding": "0px"
+                              },
+                              {
+                                "flex-grow": "1"
+                              },
+                              {
+                                "min-width": "0"
+                              }
+                            ],
+                            "label": [
+                              {
+                                "width": "100%"
+                              },
+                              {
+                                "white-space": "nowrap"
+                              },
+                              {
+                                "overflow": "hidden"
+                              },
+                              {
+                                "text-overflow": "ellipsis"
+                              }
+                            ]
                           }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "light.benjamin_room_all",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:power",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "hold_action": {
+                            "action": "more-info"
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                              },
+                              {
+                                "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                              }
+                            ]
                           }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "entity": "input_boolean.lights_benjamin_expanded",
+                          "show_name": false,
+                          "show_state": false,
+                          "show_icon": true,
+                          "size": "22px",
+                          "icon": "mdi:chevron-down",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "input_boolean.toggle",
+                            "target": {
+                              "entity_id": "input_boolean.lights_benjamin_expanded"
+                            }
                           },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                          "styles": {
+                            "card": [
+                              {
+                                "background": "transparent"
+                              },
+                              {
+                                "border": "1px solid rgba(0,200,232,0.08)"
+                              },
+                              {
+                                "border-radius": "10px"
+                              },
+                              {
+                                "padding": "8px"
+                              },
+                              {
+                                "width": "44px"
+                              },
+                              {
+                                "height": "44px"
+                              },
+                              {
+                                "box-shadow": "none"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "#6a8090"
+                              },
+                              {
+                                "transition": "transform 180ms ease"
+                              },
+                              {
+                                "transform": "[[[ return states['input_boolean.lights_benjamin_expanded'].state==='on' ? 'rotate(180deg)' : 'rotate(0deg)'; ]]]"
+                              }
+                            ]
                           }
-                        ]
-                      }
+                        }
+                      ]
                     },
                     {
-                      "type": "custom:button-card",
-                      "entity": "light.bens_light",
-                      "name": "Ben's Light",
-                      "show_state": false,
-                      "show_icon": true,
-                      "size": "20px",
-                      "layout": "vertical",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "styles": {
-                        "card": [
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "input_boolean.lights_benjamin_expanded",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "vertical-stack",
+                        "cards": [
                           {
-                            "padding": "12px 8px 10px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.benjamins_hatch_light",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Hatch</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "width": "110px"
+                                    },
+                                    {
+                                      "flex-shrink": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:my-slider-v2",
+                                "entity": "light.benjamins_hatch_light",
+                                "mode": "brightness",
+                                "allowTapping": true,
+                                "allowSliding": true,
+                                "step": 10,
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "height": "48px"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "container": [
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "background": "rgba(0,200,232,0.05)"
+                                    }
+                                  ],
+                                  "track": [
+                                    {
+                                      "background": "rgba(74,85,112,0.25)"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "progress": [
+                                    {
+                                      "background": "linear-gradient(90deg,rgba(245,150,35,0.65),rgba(245,150,35,0.95))"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "thumb": [
+                                    {
+                                      "display": "none"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.benjamins_hatch_light",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           },
                           {
-                            "border-radius": "10px"
-                          },
-                          {
-                            "overflow": "hidden"
-                          },
-                          {
-                            "min-height": "72px"
-                          },
-                          {
-                            "background": "[[[ var sf=entity.attributes.supported_features||0;var dim=(sf&1)===1;if(entity.state==='on'){if(dim&&entity.attributes.brightness){var pct=Math.round(entity.attributes.brightness/255*100);return 'linear-gradient(to right,rgba(245,150,35,0.28) '+pct+'%,var(--card-background-color, rgba(13,30,56,1)) '+pct+'%)';}return 'rgba(245,150,35,0.08)';}return 'var(--card-background-color, rgba(13,30,56,1))'; ]]]"
-                          },
-                          {
-                            "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.28)':'rgba(0,200,232,0.08)'; ]]]"
-                          }
-                        ],
-                        "icon": [
-                          {
-                            "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "[[[ return entity.state==='on'?'#eef2f8':'#6a8090'; ]]]"
-                          },
-                          {
-                            "margin-top": "5px"
+                            "type": "horizontal-stack",
+                            "cards": [
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.bens_light",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": false,
+                                "show_label": true,
+                                "tap_action": {
+                                  "action": "more-info"
+                                },
+                                "label": "[[[ const on = entity.state==='on'; const dotColor = on ? '#f5a623' : '#4a5570'; const nameColor = on ? '#eef2f8' : '#6a8090'; return '<div style=\"display:flex;align-items:center;gap:10px;padding:0 4px;\">' + '<span style=\"width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;box-shadow:' + (on?'0 0 8px rgba(245,150,35,0.5)':'none') + ';\"></span>' + '<span style=\"font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:' + nameColor + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Lamp</span>' + '</div>'; ]]]",
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "transparent"
+                                    },
+                                    {
+                                      "border": "none"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    },
+                                    {
+                                      "padding": "0px"
+                                    },
+                                    {
+                                      "width": "110px"
+                                    },
+                                    {
+                                      "flex-shrink": "0"
+                                    }
+                                  ],
+                                  "label": [
+                                    {
+                                      "width": "100%"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:my-slider-v2",
+                                "entity": "light.bens_light",
+                                "mode": "brightness",
+                                "allowTapping": true,
+                                "allowSliding": true,
+                                "step": 10,
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "height": "48px"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "container": [
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "background": "rgba(0,200,232,0.05)"
+                                    }
+                                  ],
+                                  "track": [
+                                    {
+                                      "background": "rgba(74,85,112,0.25)"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "progress": [
+                                    {
+                                      "background": "linear-gradient(90deg,rgba(245,150,35,0.65),rgba(245,150,35,0.95))"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    }
+                                  ],
+                                  "thumb": [
+                                    {
+                                      "display": "none"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "entity": "light.bens_light",
+                                "show_name": false,
+                                "show_state": false,
+                                "show_icon": true,
+                                "size": "20px",
+                                "icon": "mdi:lightbulb",
+                                "tap_action": {
+                                  "action": "toggle"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                },
+                                "styles": {
+                                  "card": [
+                                    {
+                                      "background": "[[[ return entity.state==='on'?'rgba(245,150,35,0.14)':'transparent'; ]]]"
+                                    },
+                                    {
+                                      "border": "1px solid [[[ return entity.state==='on'?'rgba(245,150,35,0.32)':'rgba(0,200,232,0.08)'; ]]]"
+                                    },
+                                    {
+                                      "border-radius": "10px"
+                                    },
+                                    {
+                                      "padding": "6px"
+                                    },
+                                    {
+                                      "width": "40px"
+                                    },
+                                    {
+                                      "height": "40px"
+                                    },
+                                    {
+                                      "box-shadow": "none"
+                                    }
+                                  ],
+                                  "icon": [
+                                    {
+                                      "color": "[[[ return entity.state==='on'?'#f5a623':'#4a5570'; ]]]"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           }
                         ]
                       }
