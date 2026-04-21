@@ -1,9 +1,19 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v20
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v23
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
+ *
+ * v23 changes (phase 5b fixes):
+ *  - Expose window.KIS_NAV_VERSION so the Settings → About card can read
+ *    the running version dynamically (no more stale hardcoded "v16").
+ *  - Edge-to-edge: also zero out .wrapper padding (32px → 0) inside
+ *    hui-sections-view so all 5 sections-type views (Home, Climate, Lights,
+ *    Media, Settings) sit flush with the viewport. Previous fix only hit
+ *    the inner .container which left the outer .wrapper gutter behind.
+ *  - hui-panel-view / hui-sections-view: zero padding-left/right so panel
+ *    views (Cameras) stay full-width too.
  *
  * v20 changes (phase 5b):
  *  - Swipe-hint overlay: first-visit centered pill "‹ › Swipe to explore" over
@@ -33,6 +43,11 @@
  */
 (function () {
   'use strict';
+
+  // Expose version so the Settings → About card can read it dynamically
+  // via a custom:button-card [[[ ]]] template. Bump this whenever the
+  // ?v=N cache-bust in configuration.yaml goes up.
+  window.KIS_NAV_VERSION = 23;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -463,9 +478,13 @@
       hui-masonry-view, hui-panel-view {
         padding-top: 0 !important;
         margin-top: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
       hui-sections-view {
         padding-top: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         /* margin-top applied dynamically by applyDynamicHeaderClearance */
       }
     `;
@@ -497,6 +516,17 @@
         --ha-view-sections-column-max-width: none !important;
         --column-max-width: none !important;
       }
+      /* .wrapper is hui-sections-view's outer shell; HA gives it 32px side
+         padding which is where the visible page-edge gutter comes from. Drop
+         it to 0 so .container below can apply a single 12px gutter. */
+      .wrapper {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        max-width: 100% !important;
+      }
       .container, .sections-container, [class*="container"] {
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
@@ -510,7 +540,7 @@
         margin-right: 0 !important;
       }
       /* Zero out HA's default 80px spacer for view headers (we use #kis-header-bar instead) */
-      .wrapper.top-margin, .top-margin, .wrapper {
+      .wrapper.top-margin, .top-margin {
         margin-top: 0 !important;
       }
     `;
