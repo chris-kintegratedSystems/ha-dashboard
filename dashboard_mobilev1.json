@@ -159,6 +159,98 @@
               }
             ]
           }
+        },
+        "section_label": {
+          "show_icon": false,
+          "show_name": true,
+          "show_state": false,
+          "show_label": false,
+          "tap_action": {
+            "action": "none"
+          },
+          "hold_action": {
+            "action": "none"
+          },
+          "styles": {
+            "card": [
+              {
+                "background": "none"
+              },
+              {
+                "border": "none"
+              },
+              {
+                "box-shadow": "none"
+              },
+              {
+                "border-radius": "0"
+              },
+              {
+                "padding": "0"
+              },
+              {
+                "margin": "0"
+              },
+              {
+                "min-height": "0"
+              },
+              {
+                "height": "auto"
+              }
+            ],
+            "grid": [
+              {
+                "grid-template-areas": "\"n\""
+              },
+              {
+                "grid-template-columns": "1fr"
+              },
+              {
+                "grid-template-rows": "auto"
+              },
+              {
+                "padding": "0"
+              }
+            ],
+            "name": [
+              {
+                "font-size": "9px"
+              },
+              {
+                "font-weight": "600"
+              },
+              {
+                "letter-spacing": "0.15em"
+              },
+              {
+                "text-transform": "uppercase"
+              },
+              {
+                "color": "var(--kis-section-label, #4a5570)"
+              },
+              {
+                "padding": "4px 2px"
+              },
+              {
+                "margin": "0"
+              },
+              {
+                "border-bottom": "1px solid var(--kis-section-rule, rgba(255,255,255,0.06))"
+              },
+              {
+                "text-align": "left"
+              },
+              {
+                "justify-self": "stretch"
+              },
+              {
+                "width": "100%"
+              },
+              {
+                "display": "block"
+              }
+            ]
+          }
         }
       },
       "views": [
@@ -175,11 +267,9 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SCENES</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  },
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "SCENES",
                   "grid_options": {
                     "columns": "full",
                     "rows": "auto"
@@ -549,11 +639,9 @@
               "column_span": 1,
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SECURITY</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "SECURITY"
                 },
                 {
                   "type": "custom:button-card",
@@ -862,11 +950,9 @@
                   }
                 },
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>GARAGE</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; margin-top: auto !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "GARAGE"
                 },
                 {
                   "type": "horizontal-stack",
@@ -1089,266 +1175,533 @@
               "column_span": 1,
               "cards": [
                 {
-                  "type": "grid",
-                  "columns": 1,
-                  "square": false,
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "[[[\n  const d = states['binary_sensor.doorbell_motion_sticky'];\n  const l = states['binary_sensor.living_room_camera_motion_sticky'];\n  const i = states['binary_sensor.izzy_camera_motion_sticky'];\n  const active = [];\n  if (d && d.state === 'on') active.push({name:'DOORBELL', t:new Date(d.last_changed)});\n  if (l && l.state === 'on') active.push({name:'LIVING ROOM', t:new Date(l.last_changed)});\n  if (i && i.state === 'on') active.push({name:'IZZY CAMERA', t:new Date(i.last_changed)});\n  if (active.length > 0) {\n    active.sort((a,b) => b.t - a.t);\n    return 'MOTION DETECTED: ' + active[0].name;\n  }\n  const slide = states['input_number.priority_slide_index'];\n  const s = slide ? Math.round(parseFloat(slide.state)) : 0;\n  return ['VEHICLES', 'WEATHER'][s] || 'VEHICLES';\n]]]",
+                  "styles": {
+                    "name": [
+                      {
+                        "color": "[[[\n  const d = states['binary_sensor.doorbell_motion_sticky'];\n  const l = states['binary_sensor.living_room_camera_motion_sticky'];\n  const i = states['binary_sensor.izzy_camera_motion_sticky'];\n  const any = (d && d.state === 'on') || (l && l.state === 'on') || (i && i.state === 'on');\n  return any ? '#f04060' : 'var(--kis-section-label, #4a5570)';\n]]]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.doorbell_motion_sticky",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.doorbell",
+                    "camera_image": "camera.doorbell",
+                    "camera_view": "live",
+                    "show_state": false,
+                    "show_name": false,
+                    "fit_mode": "fill",
+                    "card_mod": {
+                      "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #f04060 !important; box-shadow: 0 0 12px rgba(240,64,96,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
+                    },
+                    "tap_action": {
+                      "action": "fire-dom-event",
+                      "browser_mod": {
+                        "service": "browser_mod.popup",
+                        "data": {
+                          "title": false,
+                          "size": "fullscreen",
+                          "dismissable": true,
+                          "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                          "content": {
+                            "type": "picture-elements",
+                            "camera_image": "camera.doorbell",
+                            "camera_view": "live",
+                            "card_mod": {
+                              "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                            },
+                            "elements": [
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_close",
+                                "style": {
+                                  "top": "16px",
+                                  "right": "16px"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_lock_front_door",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 74px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:microphone",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 22px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:volume-high",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% + 30px)"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.living_room_camera_motion_sticky",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.living_room_camera",
+                    "camera_image": "camera.living_room_camera",
+                    "camera_view": "live",
+                    "show_state": false,
+                    "show_name": false,
+                    "fit_mode": "fill",
+                    "card_mod": {
+                      "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
+                    },
+                    "tap_action": {
+                      "action": "fire-dom-event",
+                      "browser_mod": {
+                        "service": "browser_mod.popup",
+                        "data": {
+                          "title": false,
+                          "size": "fullscreen",
+                          "dismissable": true,
+                          "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                          "content": {
+                            "type": "picture-elements",
+                            "camera_image": "camera.living_room_camera",
+                            "camera_view": "live",
+                            "card_mod": {
+                              "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                            },
+                            "elements": [
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_close",
+                                "style": {
+                                  "top": "16px",
+                                  "right": "16px"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:microphone",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 48px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:volume-high",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% + 4px)"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.izzy_camera_motion_sticky",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.izzy_camera",
+                    "camera_image": "camera.izzy_camera",
+                    "camera_view": "live",
+                    "show_state": false,
+                    "show_name": false,
+                    "fit_mode": "fill",
+                    "card_mod": {
+                      "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
+                    },
+                    "tap_action": {
+                      "action": "fire-dom-event",
+                      "browser_mod": {
+                        "service": "browser_mod.popup",
+                        "data": {
+                          "title": false,
+                          "size": "fullscreen",
+                          "dismissable": true,
+                          "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                          "content": {
+                            "type": "picture-elements",
+                            "camera_image": "camera.izzy_camera",
+                            "camera_view": "live",
+                            "card_mod": {
+                              "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                            },
+                            "elements": [
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_close",
+                                "style": {
+                                  "top": "16px",
+                                  "right": "16px"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:microphone",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 48px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:volume-high",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% + 4px)"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:simple-swipe-card",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "sensor.priority_camera",
+                      "state": "none"
+                    }
+                  ],
+                  "loop_mode": "none",
+                  "show_pagination": true,
+                  "card_spacing": 0,
+                  "enable_resize_observer": true,
+                  "reset_after": 0,
+                  "view_mode": "single",
                   "card_mod": {
-                    "style": "ha-card { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; min-height: 240px; } @media (min-width: 768px) { ha-card { min-height: 44vh; } }"
+                    "style": "ha-card { background: transparent !important; border: none !important; box-shadow: none !important; height: 240px !important; min-height: 240px !important; padding: 0 !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; } } :host { --simple-swipe-card-pagination-dot-active-color: #00d4f0; --simple-swipe-card-pagination-dot-inactive-color: rgba(138,154,184,0.25); --simple-swipe-card-pagination-dot-size: 6px; --simple-swipe-card-pagination-gap: 6px; --simple-swipe-card-pagination-bottom: 6px; }"
                   },
                   "cards": [
                     {
                       "type": "horizontal-stack",
                       "cards": [
                         {
-                          "type": "conditional",
-                          "conditions": [
-                            {
-                              "entity": "binary_sensor.doorbell_motion_sticky",
-                              "state": "on"
-                            }
-                          ],
-                          "card": {
-                            "type": "picture-entity",
-                            "entity": "camera.doorbell",
-                            "camera_image": "camera.doorbell",
-                            "camera_view": "live",
-                            "show_state": false,
-                            "show_name": false,
-                            "fit_mode": "fill",
-                            "card_mod": {
-                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #f04060; box-shadow: 0 0 12px rgba(240,64,96,0.4); border-radius: 12px; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
-                            },
-                            "tap_action": {
-                              "action": "fire-dom-event",
-                              "browser_mod": {
-                                "service": "browser_mod.popup",
-                                "data": {
-                                  "title": false,
-                                  "size": "fullscreen",
-                                  "dismissable": true,
-                                  "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
-                                  "content": {
-                                    "type": "picture-elements",
-                                    "camera_image": "camera.doorbell",
-                                    "camera_view": "live",
-                                    "card_mod": {
-                                      "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
-                                    },
-                                    "elements": [
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_close",
-                                        "style": {
-                                          "top": "16px",
-                                          "right": "16px"
-                                        }
-                                      },
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_lock_front_door",
-                                        "style": {
-                                          "bottom": "18px",
-                                          "left": "calc(50% - 74px)"
-                                        }
-                                      },
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_ctrl_disabled",
-                                        "icon": "mdi:microphone",
-                                        "style": {
-                                          "bottom": "18px",
-                                          "left": "calc(50% - 22px)"
-                                        }
-                                      },
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_ctrl_disabled",
-                                        "icon": "mdi:volume-high",
-                                        "style": {
-                                          "bottom": "18px",
-                                          "left": "calc(50% + 30px)"
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
+                          "type": "custom:button-card",
+                          "name": "Tesla Model Y",
+                          "icon": "mdi:car-electric",
+                          "show_icon": true,
+                          "show_name": true,
+                          "show_label": true,
+                          "size": "36px",
+                          "label": "[[[ if (states['sensor.tesla_battery_level']) { var b=states['sensor.tesla_battery_level'].state; var r=states['sensor.tesla_range'] ? ' · ' + Math.round(parseFloat(states['sensor.tesla_range'].state)) + ' mi' : ''; return b + '%' + r; } return 'Setup Required'; ]]]",
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "18px 12px"
+                              },
+                              {
+                                "border-radius": "14px"
+                              },
+                              {
+                                "height": "220px"
+                              },
+                              {
+                                "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                              },
+                              {
+                                "border": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '2px solid #10d090' : '1px solid rgba(255,255,255,0.06)'; ]]]"
+                              },
+                              {
+                                "box-shadow": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '0 0 14px rgba(16,208,144,0.45)' : 'none'; ]]]"
+                              },
+                              {
+                                "display": "flex"
+                              },
+                              {
+                                "flex-direction": "column"
+                              },
+                              {
+                                "justify-content": "center"
+                              },
+                              {
+                                "align-items": "center"
                               }
-                            }
+                            ],
+                            "icon": [
+                              {
+                                "color": "#e81c24"
+                              },
+                              {
+                                "margin-bottom": "8px"
+                              }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "13px"
+                              },
+                              {
+                                "font-weight": "600"
+                              },
+                              {
+                                "color": "#eef2f8"
+                              },
+                              {
+                                "margin-top": "10px"
+                              },
+                              {
+                                "letter-spacing": "0.02em"
+                              }
+                            ],
+                            "label": [
+                              {
+                                "font-size": "11px"
+                              },
+                              {
+                                "letter-spacing": "0.06em"
+                              },
+                              {
+                                "text-transform": "uppercase"
+                              },
+                              {
+                                "color": "[[[ return states['sensor.tesla_battery_level'] ? '#10d090' : 'rgba(138,154,184,0.55)'; ]]]"
+                              },
+                              {
+                                "margin-top": "6px"
+                              }
+                            ]
                           }
                         },
                         {
-                          "type": "conditional",
-                          "conditions": [
-                            {
-                              "entity": "binary_sensor.living_room_camera_motion_sticky",
-                              "state": "on"
-                            }
-                          ],
-                          "card": {
-                            "type": "picture-entity",
-                            "entity": "camera.living_room_camera",
-                            "camera_image": "camera.living_room_camera",
-                            "camera_view": "live",
-                            "show_state": false,
-                            "show_name": false,
-                            "fit_mode": "fill",
-                            "card_mod": {
-                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #00c8e8; box-shadow: 0 0 12px rgba(0,200,232,0.4); border-radius: 12px; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
-                            },
-                            "tap_action": {
-                              "action": "fire-dom-event",
-                              "browser_mod": {
-                                "service": "browser_mod.popup",
-                                "data": {
-                                  "title": false,
-                                  "size": "fullscreen",
-                                  "dismissable": true,
-                                  "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
-                                  "content": {
-                                    "type": "picture-elements",
-                                    "camera_image": "camera.living_room_camera",
-                                    "camera_view": "live",
-                                    "card_mod": {
-                                      "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
-                                    },
-                                    "elements": [
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_close",
-                                        "style": {
-                                          "top": "16px",
-                                          "right": "16px"
-                                        }
-                                      },
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_ctrl_disabled",
-                                        "icon": "mdi:microphone",
-                                        "style": {
-                                          "bottom": "18px",
-                                          "left": "calc(50% - 48px)"
-                                        }
-                                      },
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_ctrl_disabled",
-                                        "icon": "mdi:volume-high",
-                                        "style": {
-                                          "bottom": "18px",
-                                          "left": "calc(50% + 4px)"
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
+                          "type": "custom:button-card",
+                          "name": "Mercedes G580",
+                          "icon": "mdi:car-estate",
+                          "show_icon": true,
+                          "show_name": true,
+                          "show_label": true,
+                          "size": "36px",
+                          "label": "Home",
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "18px 12px"
+                              },
+                              {
+                                "border-radius": "14px"
+                              },
+                              {
+                                "height": "220px"
+                              },
+                              {
+                                "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                              },
+                              {
+                                "border": "1px solid rgba(255,255,255,0.06)"
+                              },
+                              {
+                                "display": "flex"
+                              },
+                              {
+                                "flex-direction": "column"
+                              },
+                              {
+                                "justify-content": "center"
+                              },
+                              {
+                                "align-items": "center"
                               }
-                            }
-                          }
-                        },
-                        {
-                          "type": "conditional",
-                          "conditions": [
-                            {
-                              "entity": "binary_sensor.izzy_camera_motion_sticky",
-                              "state": "on"
-                            }
-                          ],
-                          "card": {
-                            "type": "picture-entity",
-                            "entity": "camera.izzy_camera",
-                            "camera_image": "camera.izzy_camera",
-                            "camera_view": "live",
-                            "show_state": false,
-                            "show_name": false,
-                            "fit_mode": "fill",
-                            "card_mod": {
-                              "style": "ha-card { height: 100%; min-height: 100%; border: 2px solid #00c8e8; box-shadow: 0 0 12px rgba(0,200,232,0.4); border-radius: 12px; overflow: hidden; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
-                            },
-                            "tap_action": {
-                              "action": "fire-dom-event",
-                              "browser_mod": {
-                                "service": "browser_mod.popup",
-                                "data": {
-                                  "title": false,
-                                  "size": "fullscreen",
-                                  "dismissable": true,
-                                  "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
-                                  "content": {
-                                    "type": "picture-elements",
-                                    "camera_image": "camera.izzy_camera",
-                                    "camera_view": "live",
-                                    "card_mod": {
-                                      "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
-                                    },
-                                    "elements": [
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_close",
-                                        "style": {
-                                          "top": "16px",
-                                          "right": "16px"
-                                        }
-                                      },
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_ctrl_disabled",
-                                        "icon": "mdi:microphone",
-                                        "style": {
-                                          "bottom": "18px",
-                                          "left": "calc(50% - 48px)"
-                                        }
-                                      },
-                                      {
-                                        "type": "custom:button-card",
-                                        "template": "cam_ctrl_disabled",
-                                        "icon": "mdi:volume-high",
-                                        "style": {
-                                          "bottom": "18px",
-                                          "left": "calc(50% + 4px)"
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
+                            ],
+                            "icon": [
+                              {
+                                "color": "#c0c5d0"
+                              },
+                              {
+                                "margin-bottom": "8px"
                               }
-                            }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "13px"
+                              },
+                              {
+                                "font-weight": "600"
+                              },
+                              {
+                                "color": "#eef2f8"
+                              },
+                              {
+                                "margin-top": "10px"
+                              },
+                              {
+                                "letter-spacing": "0.02em"
+                              }
+                            ],
+                            "label": [
+                              {
+                                "font-size": "11px"
+                              },
+                              {
+                                "letter-spacing": "0.06em"
+                              },
+                              {
+                                "text-transform": "uppercase"
+                              },
+                              {
+                                "color": "#10d090"
+                              },
+                              {
+                                "margin-top": "6px"
+                              }
+                            ]
                           }
                         }
                       ]
                     },
                     {
-                      "type": "markdown",
-                      "visibility": [
+                      "type": "vertical-stack",
+                      "cards": [
                         {
-                          "condition": "not",
-                          "conditions": [
-                            {
-                              "condition": "or",
-                              "conditions": [
-                                {
-                                  "condition": "state",
-                                  "entity": "binary_sensor.doorbell_motion_sticky",
-                                  "state": "on"
-                                },
-                                {
-                                  "condition": "state",
-                                  "entity": "binary_sensor.living_room_camera_motion_sticky",
-                                  "state": "on"
-                                },
-                                {
-                                  "condition": "state",
-                                  "entity": "binary_sensor.izzy_camera_motion_sticky",
-                                  "state": "on"
-                                }
-                              ]
-                            }
-                          ]
+                          "type": "custom:button-card",
+                          "entity": "weather.forecast_home",
+                          "show_icon": true,
+                          "show_name": true,
+                          "show_label": true,
+                          "show_state": false,
+                          "size": "44px",
+                          "icon": "[[[ var c=entity.state; var m={'sunny':'mdi:weather-sunny','clear-night':'mdi:weather-night','cloudy':'mdi:weather-cloudy','partlycloudy':'mdi:weather-partly-cloudy','rainy':'mdi:weather-pouring','pouring':'mdi:weather-pouring','snowy':'mdi:weather-snowy','fog':'mdi:weather-fog','windy':'mdi:weather-windy','lightning':'mdi:weather-lightning','lightning-rainy':'mdi:weather-lightning-rainy','hail':'mdi:weather-hail'}; return m[c] || 'mdi:weather-cloudy'; ]]]",
+                          "name": "[[[ var t=entity.attributes.temperature; return (t==null) ? '--' : (Math.round(t) + '°F'); ]]]",
+                          "label": "[[[ var s=(entity.state||'').replace(/-/g,' ').replace(/\\b\\w/g,function(c){return c.toUpperCase();}); var h=entity.attributes.humidity; var w=entity.attributes.wind_speed; var parts=[s]; if (h!=null) parts.push(h+'% hum'); if (w!=null) parts.push(Math.round(w)+' mph'); return parts.join(' · '); ]]]",
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "16px 14px 10px"
+                              },
+                              {
+                                "border-radius": "14px 14px 0 0"
+                              },
+                              {
+                                "height": "148px"
+                              },
+                              {
+                                "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                              },
+                              {
+                                "border": "1px solid rgba(255,255,255,0.06)"
+                              },
+                              {
+                                "border-bottom": "none"
+                              },
+                              {
+                                "display": "flex"
+                              },
+                              {
+                                "flex-direction": "column"
+                              },
+                              {
+                                "justify-content": "center"
+                              },
+                              {
+                                "align-items": "center"
+                              }
+                            ],
+                            "icon": [
+                              {
+                                "color": "[[[ var c=entity.state; var m={'sunny':'#f5a623','clear-night':'#9d6ef0','cloudy':'#8a9ab8','partlycloudy':'#4d8ef0','rainy':'#4d8ef0','pouring':'#4d8ef0','snowy':'#eef2f8','fog':'#8a9ab8','windy':'#8a9ab8','lightning':'#f5a623','lightning-rainy':'#f5a623'}; return m[c] || '#8a9ab8'; ]]]"
+                              },
+                              {
+                                "margin-bottom": "4px"
+                              }
+                            ],
+                            "name": [
+                              {
+                                "font-size": "40px"
+                              },
+                              {
+                                "font-weight": "300"
+                              },
+                              {
+                                "color": "#eef2f8"
+                              },
+                              {
+                                "letter-spacing": "-0.02em"
+                              },
+                              {
+                                "line-height": "1"
+                              }
+                            ],
+                            "label": [
+                              {
+                                "font-size": "10px"
+                              },
+                              {
+                                "letter-spacing": "0.08em"
+                              },
+                              {
+                                "text-transform": "uppercase"
+                              },
+                              {
+                                "color": "rgba(138,154,184,0.8)"
+                              },
+                              {
+                                "margin-top": "8px"
+                              },
+                              {
+                                "text-align": "center"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "weather-forecast",
+                          "entity": "weather.forecast_home",
+                          "forecast_type": "daily",
+                          "show_current": false,
+                          "show_forecast": true,
+                          "card_mod": {
+                            "style": "ha-card { background: rgba(10,14,22,0.55) !important; border: 1px solid rgba(255,255,255,0.06) !important; border-top: none !important; border-radius: 0 0 14px 14px !important; padding: 6px 8px !important; height: 72px !important; min-height: 72px !important; box-shadow: none !important; } .forecast { padding: 0 !important; margin: 0 !important; } .temp { color: #eef2f8 !important; font-weight: 600 !important; } .templow { color: rgba(138,154,184,0.7) !important; } .name, .dayname { color: rgba(138,154,184,1) !important; font-size: 9px !important; letter-spacing: 0.12em !important; text-transform: uppercase !important; }"
+                          }
                         }
-                      ],
-                      "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%;min-height:232px;color:rgba(138,154,184,0.35);font-size:10px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;\">NO MOTION</div>",
-                      "card_mod": {
-                        "style": "ha-card { background: transparent !important; border: 1px dashed rgba(138,154,184,0.22) !important; border-radius: 12px; box-shadow: none !important; min-height: 240px; } @media (min-width: 768px) { ha-card { min-height: 44vh; } }"
-                      }
+                      ]
                     }
                   ]
                 }
@@ -1424,11 +1777,9 @@
             {
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>CLIMATE CONTROL</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "CLIMATE CONTROL"
                 },
                 {
                   "type": "custom:button-card",
@@ -4258,11 +4609,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>MEDIA</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "MEDIA"
                 },
                 {
                   "type": "conditional",
@@ -4504,11 +4853,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>THEME</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "THEME"
                 },
                 {
                   "type": "custom:button-card",
@@ -4786,11 +5133,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>SYSTEM STATUS</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "SYSTEM STATUS"
                 },
                 {
                   "type": "custom:mushroom-chips-card",
@@ -4836,11 +5181,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "<div style=\"font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);padding:0 2px 8px;display:flex;align-items:center;gap:8px;width:100%;\"><span>ABOUT</span><span style=\"flex:1;height:1px;background:linear-gradient(to right,var(--divider-color,rgba(255,255,255,0.06)),transparent);\"></span></div>",
-                  "card_mod": {
-                    "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
-                  }
+                  "type": "custom:button-card",
+                  "template": "section_label",
+                  "name": "ABOUT"
                 },
                 {
                   "type": "custom:button-card",
@@ -4851,7 +5194,7 @@
                   "tap_action": {
                     "action": "none"
                   },
-                  "label": "[[[ const version = 'mobilev1'; const navVer = 'v16'; return '<div style=\"padding:4px 0;\">' + '<div style=\"display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--divider-color,rgba(255,255,255,0.06));\"><span style=\"font-size:13px;color:var(--primary-text-color,#eef2f8);\">Dashboard</span><span style=\"font-size:12px;color:var(--secondary-text-color,#4a5570);\">' + version + '</span></div>' + '<div style=\"display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--divider-color,rgba(255,255,255,0.06));\"><span style=\"font-size:13px;color:var(--primary-text-color,#eef2f8);\">kis-nav.js</span><span style=\"font-size:12px;color:var(--secondary-text-color,#4a5570);\">' + navVer + '</span></div>' + '<div style=\"display:flex;justify-content:space-between;padding:8px 0;\"><span style=\"font-size:13px;color:var(--primary-text-color,#eef2f8);\">Navigation</span><span style=\"font-size:12px;color:var(--secondary-text-color,#4a5570);\">6 tabs</span></div>' + '</div>'; ]]]",
+                  "label": "[[[ const version = 'mobilev1'; const navVer = 'v' + (window.KIS_NAV_VERSION || '?'); return '<div style=\"padding:4px 0;\">' + '<div style=\"display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--divider-color,rgba(255,255,255,0.06));\"><span style=\"font-size:13px;color:var(--primary-text-color,#eef2f8);\">Dashboard</span><span style=\"font-size:12px;color:var(--secondary-text-color,#4a5570);\">' + version + '</span></div>' + '<div style=\"display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--divider-color,rgba(255,255,255,0.06));\"><span style=\"font-size:13px;color:var(--primary-text-color,#eef2f8);\">kis-nav.js</span><span style=\"font-size:12px;color:var(--secondary-text-color,#4a5570);\">' + navVer + '</span></div>' + '<div style=\"display:flex;justify-content:space-between;padding:8px 0;\"><span style=\"font-size:13px;color:var(--primary-text-color,#eef2f8);\">Navigation</span><span style=\"font-size:12px;color:var(--secondary-text-color,#4a5570);\">6 tabs</span></div>' + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {

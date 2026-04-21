@@ -22,6 +22,26 @@ deploy rules.
 
 ## Critical Patterns
 
+### HACS community card installs — self-serve when safe
+Claude Code MAY install HACS custom cards directly via SSH (curl + chmod)
+without stopping to ask, IF all of these are true:
+1. The card was recommended by ha-lovelace-expert research brief
+2. The install is a simple JS file download (no Docker, no auth, no config flow)
+3. The install path is /config/www/community/<card-name>/
+4. The card is registered in dashboard resources (lovelace or configuration.yaml)
+
+Pattern:
+  ssh cooper5389@192.168.51.179 'sudo mkdir -p /home/cooper5389/homeassistant/config/www/community/<card>/ && \
+    sudo curl -sL -o /home/cooper5389/homeassistant/config/www/community/<card>/<card>.js <github-release-url> && \
+    sudo chmod 644 /home/cooper5389/homeassistant/config/www/community/<card>/<card>.js'
+Then add the resource to configuration.yaml or lovelace resources and restart.
+
+Do NOT self-serve:
+- HACS integrations (require HA config flow in UI)
+- Anything requiring OAuth, 2FA, or interactive auth
+- Docker containers
+- Core HA integrations (use HA UI)
+
 ### QA screenshots MUST use authenticated Playwright
 `qa-screenshot.js` requires a long-lived HA access token in `.env` as
 `HA_QA_TOKEN` (or legacy `HA_TOKEN`). Anonymous Chromium sessions cannot
@@ -110,6 +130,172 @@ Manual one-off:
 ```bash
 curl -s "http://${FKB_IP}:2323/?cmd=getScreenshot&password=${FKB_PASSWORD}" -o qa-screenshots/fkb-tabs9.png
 ```
+
+---
+
+## Session Knowledge Capture
+
+`.claude/memory/` holds four append-only project-memory files that
+accumulate the hard-won lessons from every dashboard session. These
+are committed to the repo — they travel with the code.
+
+| File | What belongs here |
+|------|-------------------|
+| `dead_ends.md` | Approaches that looked promising but failed, with the workaround that worked. Tried / Failed / Fix triples, date-stamped. |
+| `component_compat.md` | Card types, layout types, and HACS integrations — WORKS / BROKEN / PARTIAL with notes. Updated whenever a new card is evaluated. |
+| `css_dom_patterns.md` | Shadow DOM traversal paths, kis-nav CSS patch IDs, grid/flex recipes, safe-area quirks. Write tight; these get re-read a lot. |
+| `deploy_gotchas.md` | Deploy-path, permission, cache-bust, and restart pitfalls. Anything that would cause a silent "change didn't land" failure. |
+
+### Mandatory session discipline
+
+**At session START** — before editing any dashboard JSON, kis-nav.js,
+or touching the Pi — read all four memory files. They are short. Doing
+this up front prevents re-learning the same dead end. If a proposed
+approach matches a failed pattern in `dead_ends.md`, pick the noted
+workaround instead of re-testing.
+
+**At session END** — BEFORE the final commit of the session — append
+new lessons to whichever files apply. What counts as a lesson:
+- An approach that failed and cost iteration time → `dead_ends.md`
+- A new component evaluated (works or broken) → `component_compat.md`
+- A non-obvious shadow-DOM / CSS / layout trick that worked →
+  `css_dom_patterns.md`
+- A deploy-path, permission, cache, or restart issue → `deploy_gotchas.md`
+
+Format every entry with a date heading (`## YYYY-MM-DD: <short title>`)
+and include enough context that a future session can act on it without
+re-discovering the root cause. Entries belong in the same commit as
+the work that produced the lesson — so the lesson and its evidence ship
+together.
+
+These files replace ad-hoc "what did I learn today" notes. Do not
+create new session-handoff markdown files for this purpose.
+
+---
+
+## "Save Everything" Command
+
+When Chris says "save everything", "checkpoint", or "safe to exit?",
+run the full 6-phase checkpoint:
+
+1. STATUS CHECK — report uncommitted work, open PRs, scratch files
+2. UPDATE MEMORY — capture session lessons to .claude/memory/ files
+   BEFORE committing (so they're included in the push)
+3. COMMIT + PUSH — stage everything (code + memory), push to origin
+4. PR MERGE — guide Chris through merging on GitHub, pull fresh master
+5. SESSION HANDOFF — upload to Drive for cross-session continuity
+6. FINAL REPORT — green/red checklist + next steps
+
+### Phase 1: STATUS CHECK
+Report for both ha-dashboard and ha-config repos:
+- Current branch, uncommitted changes, unpushed commits, open PRs
+- Scratch files present
+- Deployed state mismatches
+Ask before proceeding if anything needs action. WAIT for answer.
+
+### Phase 2: UPDATE MEMORY FILES (BEFORE committing)
+Scan session for new lessons. Append to .claude/memory/:
+- dead_ends.md — failed approaches + what worked instead
+- component_compat.md — new cards/components tested (works/broken)
+- css_dom_patterns.md — new CSS/DOM selectors, injection points
+- deploy_gotchas.md — deploy issues encountered + prevention
+If no new lessons, skip. Don't add empty entries.
+DO NOT commit yet — these get committed with code in Phase 3.
+
+### Phase 3: COMMIT + PUSH
+- Delete scratch files
+- git add -A (stages code + memory files together)
+- Commit with descriptive message
+- Push to origin
+- Open PRs if branches don't have them yet
+
+### Phase 4: PR MERGE
+- Print the ordered list of open PRs with full clickable GitHub URLs
+  (ha-config FIRST, ha-dashboard SECOND; oldest PR number first within
+  each repo). Every PR reference MUST be a complete
+  `https://github.com/chris-kintegratedSystems/<repo>/pull/<number>` URL
+  on its own line — never a bare `#9` or repo-only reference. Chris taps
+  the URL from the terminal; constructing URLs by hand is not acceptable.
+- Get PR data via `gh pr list --repo chris-kintegratedSystems/<repo> --state open --json number,title,url`.
+  If `gh` is unavailable, construct URLs from the PR numbers known during
+  the session using `https://github.com/chris-kintegratedSystems/<repo>/pull/<number>`.
+- Format each PR on its own line:
+  `<repo> #<number>: <title>`
+  then the full URL on the very next line by itself (no inline URLs).
+- Then ask: **"Want me to merge these, or will you do it on GitHub?"**
+- If Chris says "merge them" / "merge all" / similar: execute
+  `gh pr merge <number> --repo chris-kintegratedSystems/<repo> --merge`
+  for each PR in the printed order. Do NOT use `--squash` or `--rebase`
+  unless Chris specifies. If any merge fails (conflicts, failing checks,
+  branch protection), stop immediately and report which PR failed and
+  why — do not proceed to the remaining PRs.
+- If Chris says he will do it on GitHub: WAIT for confirmation.
+- After all merges are complete (either path): run
+  `git checkout master && git pull origin master` on BOTH repos. Verify
+  the merged commits appear in `git log`.
+
+### Phase 5: SESSION HANDOFF
+Upload SESSION_HANDOFF to Drive ha-dashboard folder
+(parent ID: 1eNj0A4aKHcihpgiR4xTgRl6CvuBl9H1c) with:
+date, what was done, deployed state, open PRs, known issues, next session work
+
+### Phase 6: FINAL REPORT
+Print a GREEN / RED checklist. GREEN is the usual pass list. RED must
+contain three subsections, each with full clickable URLs on their own lines
+— never inline with other text, always tappable from the terminal.
+
+**GREEN** (pass list, as before):
+- Memory files updated
+- All changes committed and pushed
+- All PRs merged (or list remaining)
+- Both repos on master, up to date
+- Session handoff saved
+- Deployed state matches git
+- No scratch files
+- Ready for next session
+
+**RED** — three subsections, every URL on its own line:
+
+*(1) PRs to merge* — for every open PR across both repos, print one line
+with `<repo> #<number>: <title>` then the full URL on the next line by
+itself. Get PR data via `gh pr list --repo chris-kintegratedSystems/<repo>
+--state open --json number,title,url` on BOTH repos. If `gh` is
+unavailable, construct URLs from known PR numbers using
+`https://github.com/chris-kintegratedSystems/<repo>/pull/<number>`.
+List ha-config PRs FIRST, ha-dashboard PRs SECOND.
+
+*(2) Latest commits* — for each repo on its current branch, run
+`git rev-parse HEAD` and `git log --oneline -1`. Print the branch name,
+short hash, and commit message on one line, then the full commit URL on
+the next line by itself:
+`https://github.com/chris-kintegratedSystems/<repo>/commit/<full-sha>`.
+
+*(3) Drive uploads* — for any file uploaded to Drive during Phase 5,
+print the filename on one line, then the full Drive view URL on the next
+line by itself:
+`https://drive.google.com/file/d/<file-id>/view`.
+Use the file `id` returned by `create_file` — do not guess.
+
+End with: "Safe to exit" or "Not safe — [reason]"
+
+### Rules:
+- NEVER auto-commit without asking
+- PR merges: when Chris says "merge them", "merge all", or similar,
+  execute the merges using `gh pr merge <number> --repo
+  chris-kintegratedSystems/<repo> --merge` in the correct order —
+  ha-config FIRST, ha-dashboard SECOND, oldest PR number first within
+  each repo. After all merges complete, run `git checkout master &&
+  git pull origin master` on BOTH repos and verify merged commits
+  appear in `git log`. If any merge fails (conflicts, failing checks,
+  branch protection), stop immediately and report which PR failed.
+  If Chris does NOT say to merge, print the clickable URLs and wait
+  for him to merge manually on GitHub — same as before.
+- Save memory files BEFORE committing — they go in the same push
+- Always push BEFORE saying "safe to exit"
+- Always pull master AFTER PRs are merged
+- Flag deployed/git mismatches clearly
+- "Safe to exit" means next session starts with just:
+  git checkout master && git pull origin master && new branch
 
 ---
 

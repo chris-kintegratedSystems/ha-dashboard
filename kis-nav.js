@@ -1,9 +1,28 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v18
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v23
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
+ *
+ * v23 changes (phase 5b fixes):
+ *  - Expose window.KIS_NAV_VERSION so the Settings → About card can read
+ *    the running version dynamically (no more stale hardcoded "v16").
+ *  - Edge-to-edge: also zero out .wrapper padding (32px → 0) inside
+ *    hui-sections-view so all 5 sections-type views (Home, Climate, Lights,
+ *    Media, Settings) sit flush with the viewport. Previous fix only hit
+ *    the inner .container which left the outer .wrapper gutter behind.
+ *  - hui-panel-view / hui-sections-view: zero padding-left/right so panel
+ *    views (Cameras) stay full-width too.
+ *
+ * v20 changes (phase 5b):
+ *  - Swipe-hint overlay: first-visit centered pill "‹ › Swipe to explore" over
+ *    any <simple-swipe-card>. Fades after 3.5s or first touch/pointer;
+ *    localStorage flag kis-swipe-hint-shown gates subsequent showings.
+ *
+ * v19 changes (phase 5b):
+ *  - Edge-to-edge: override HA sections container max-width + side padding so
+ *    cards fill viewport with a uniform 12px side gap (matches card-to-card).
  *
  * v18 changes:
  *  - Day/night: input_select.theme_mode (Auto/Day/Night) + sun.sun auto switch
@@ -24,6 +43,11 @@
  */
 (function () {
   'use strict';
+
+  // Expose version so the Settings → About card can read it dynamically
+  // via a custom:button-card [[[ ]]] template. Bump this whenever the
+  // ?v=N cache-bust in configuration.yaml goes up.
+  window.KIS_NAV_VERSION = 33;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -389,6 +413,52 @@
     #kis-header-bar[data-kis-day] .kh-pname { color: #1a2030; }
   `;
 
+  // ─── Swipe-hint overlay CSS ───────────────────────────────────────────────
+  const SWIPE_HINT_CSS = `
+    #kis-swipe-hint {
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(0,212,240,0.12);
+      border: 1px solid rgba(0,212,240,0.22);
+      color: rgba(0,212,240,0.95);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 2147483640;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.96);
+      transition: opacity 260ms ease, transform 260ms ease;
+      white-space: nowrap;
+    }
+    #kis-swipe-hint[data-visible] {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    #kis-swipe-hint .kish-arrow {
+      display: inline-block;
+      animation: kish-arrow-pulse 1.6s ease-in-out infinite;
+    }
+    #kis-swipe-hint .kish-arrow.kish-right { animation-delay: 0.3s; }
+    @keyframes kish-arrow-pulse {
+      0%, 100% { transform: translateX(0); opacity: 0.75; }
+      50%      { transform: translateX(4px); opacity: 1; }
+    }
+    #kis-swipe-hint .kish-arrow.kish-left {
+      animation-name: kish-arrow-pulse-left;
+    }
+    @keyframes kish-arrow-pulse-left {
+      0%, 100% { transform: translateX(0); opacity: 0.75; }
+      50%      { transform: translateX(-4px); opacity: 1; }
+    }
+  `;
+
   // ─── Shadow CSS patches ────────────────────────────────────────────────────
   function getHuiRootCSS() {
     return `
@@ -408,9 +478,13 @@
       hui-masonry-view, hui-panel-view {
         padding-top: 0 !important;
         margin-top: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
       hui-sections-view {
         padding-top: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         /* margin-top applied dynamically by applyDynamicHeaderClearance */
       }
     `;
@@ -437,13 +511,42 @@
         /* margin-top controlled from outside via element.style */
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
+        /* Edge-to-edge: neutralize HA's column max-width / min-width clamps so
+           sections fill the available viewport width. */
+        --ha-view-sections-column-max-width: none !important;
+        --column-max-width: none !important;
+        /* Column + row gap between sections must equal the 12px edge padding
+           below on .container, so left-edge = column-gap = right-edge and
+           top-edge = row-gap. HA's default is 32px which makes the center
+           gutter visibly wider than the side gutters. */
+        --ha-view-sections-column-gap: 12px !important;
+        --ha-view-sections-row-gap: 12px !important;
+      }
+      /* .wrapper is hui-sections-view's outer shell; HA gives it 32px side
+         padding which is where the visible page-edge gutter comes from. Drop
+         it to 0 so .container below can apply a single 12px gutter. */
+      .wrapper {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        max-width: 100% !important;
       }
       .container, .sections-container, [class*="container"] {
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
+        /* Edge-to-edge: HA's sections layout applies its own max-width + side
+           padding (~60-80px on tablet). Match the 12px inter-card gap so the
+           dashboard-to-edge gap equals card-to-card gap. */
+        max-width: 100% !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
       /* Zero out HA's default 80px spacer for view headers (we use #kis-header-bar instead) */
-      .wrapper.top-margin, .top-margin, .wrapper {
+      .wrapper.top-margin, .top-margin {
         margin-top: 0 !important;
       }
     `;
@@ -786,9 +889,23 @@
     if (isDayMode) {
       bar.setAttribute('data-kis-day', '');
       if (navBar) navBar.setAttribute('data-kis-day', '');
+      document.body.setAttribute('data-kis-day', '');
+      document.documentElement.style.setProperty('--kis-section-label', '#7a8698');
+      document.documentElement.style.setProperty('--kis-section-rule', 'rgba(0,0,0,0.06)');
+      // Camera placeholder day palette (consumed by CAM_PLACEHOLDER_CSS via
+      // CSS var inheritance through shadow DOM — see installCameraPlaceholder).
+      document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#f0f2f5');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#7a8698');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(0,0,0,0.06)');
     } else {
       bar.removeAttribute('data-kis-day');
       if (navBar) navBar.removeAttribute('data-kis-day');
+      document.body.removeAttribute('data-kis-day');
+      document.documentElement.style.setProperty('--kis-section-label', '#4a5570');
+      document.documentElement.style.setProperty('--kis-section-rule', 'rgba(255,255,255,0.06)');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#151c2a');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#4a5570');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(255,255,255,0.06)');
     }
 
     // Clock + date
@@ -891,6 +1008,903 @@
     updateMiniPlayer(hass, isDayMode);
   }
 
+  // ─── Swipe-hint overlay ───────────────────────────────────────────────────
+  // On first visit to a page containing a simple-swipe-card, briefly overlay a
+  // centered pill reading "‹ › Swipe to explore" over the card. One-shot —
+  // localStorage flag gates future showings. Fades after 3.5s or on first touch.
+  const SWIPE_HINT_STORAGE_KEY = 'kis-swipe-hint-shown';
+  let _swipeHintAttempts = 0;
+  let _swipeHintScheduled = false;
+
+  function findSwipeCardEl(root) {
+    // Deep shadow-DOM search for the first <simple-swipe-card> element.
+    if (!root) return null;
+    if (root.tagName && root.tagName.toLowerCase() === 'simple-swipe-card') return root;
+    const direct = root.querySelector && root.querySelector('simple-swipe-card');
+    if (direct) return direct;
+    const walker = root.querySelectorAll ? root.querySelectorAll('*') : [];
+    for (const el of walker) {
+      if (el.shadowRoot) {
+        const found = findSwipeCardEl(el.shadowRoot);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  function dismissSwipeHint(reason) {
+    const hint = document.getElementById('kis-swipe-hint');
+    if (!hint) return;
+    hint.removeAttribute('data-visible');
+    setTimeout(() => { if (hint.parentNode) hint.parentNode.removeChild(hint); }, 320);
+    try { localStorage.setItem(SWIPE_HINT_STORAGE_KEY, '1'); } catch (e) { /* private mode */ }
+    window.removeEventListener('touchstart', onHintInteract, true);
+    window.removeEventListener('pointerdown', onHintInteract, true);
+  }
+
+  function onHintInteract() { dismissSwipeHint('touch'); }
+
+  function maybeShowSwipeHint() {
+    if (_swipeHintScheduled) return;
+    if (!onMobileDashboard()) return;
+    try {
+      if (localStorage.getItem(SWIPE_HINT_STORAGE_KEY) === '1') return;
+    } catch (e) { /* private mode — always show */ }
+
+    _swipeHintAttempts = 0;
+    _swipeHintScheduled = true;
+
+    const tryShow = () => {
+      _swipeHintScheduled = false;
+      const swipeCard = findSwipeCardEl(document.body);
+      if (!swipeCard) {
+        if (_swipeHintAttempts++ < 20) {
+          _swipeHintScheduled = true;
+          setTimeout(tryShow, 300);
+        }
+        return;
+      }
+      const rect = swipeCard.getBoundingClientRect();
+      if (!rect.width || !rect.height) {
+        if (_swipeHintAttempts++ < 20) {
+          _swipeHintScheduled = true;
+          setTimeout(tryShow, 300);
+        }
+        return;
+      }
+
+      // Already shown / not fully dismissed?
+      if (document.getElementById('kis-swipe-hint')) return;
+
+      const hint = document.createElement('div');
+      hint.id = 'kis-swipe-hint';
+      hint.innerHTML = '<span class="kish-arrow kish-left">‹</span><span>Swipe to explore</span><span class="kish-arrow kish-right">›</span>';
+      hint.style.left = (rect.left + rect.width / 2) + 'px';
+      hint.style.top  = (rect.top  + rect.height / 2) + 'px';
+      document.body.appendChild(hint);
+      // Next frame: mark visible so transition fires.
+      requestAnimationFrame(() => hint.setAttribute('data-visible', ''));
+
+      window.addEventListener('touchstart', onHintInteract, { capture: true, passive: true });
+      window.addEventListener('pointerdown', onHintInteract, { capture: true });
+
+      setTimeout(() => dismissSwipeHint('timeout'), 3500);
+    };
+
+    // Give the dashboard a moment to mount the swipe-card after patchHALayout.
+    setTimeout(tryShow, 600);
+  }
+
+  // ─── Priority-zone carousel slide-index tracker ────────────────────────────
+  // simple-swipe-card v2.8.2 exposes `currentIndex` as a direct property on
+  // the element. It doesn't dispatch `slide-changed` and its `.active-slide`
+  // class is vertical-only. Multiple reader strategies below — we use
+  // whichever is most authoritative at call time.
+  //
+  // Signals on every swipe (real-device verified):
+  //   - pointerup / touchend on the card (we add our own handlers)
+  //   - .slider element transform mutation (animation frames)
+  //   - transitionend on .slider when the animation settles
+  //   - cardEl.currentIndex property after settle
+  //
+  const PRIORITY_SLIDE_ENTITY = 'input_number.priority_slide_index';
+  let _swipeObserverEl = null;
+  let _swipeObserverInstance = null;
+  let _swipeTransitionCleanup = null;
+  let _swipePollTimer = null;
+  let _swipePointerCleanup = null;
+  let _swipeObserverAttempts = 0;
+  let _lastPushedSlideIndex = -1;
+
+  // Read the active slide index using whichever signal is available,
+  // in order of authority. Returns -1 if none yield a valid number.
+  function readSwipeIndex(cardEl) {
+    if (!cardEl) return -1;
+
+    if (typeof cardEl.currentIndex === 'number' && cardEl.currentIndex >= 0) {
+      return cardEl.currentIndex;
+    }
+
+    const sr = cardEl.shadowRoot;
+    if (!sr) return -1;
+
+    const active = sr.querySelector('.active-slide');
+    if (active) {
+      const parent = active.parentElement;
+      if (parent) {
+        const siblings = Array.from(parent.children).filter(
+          (n) => n.classList && n.classList.contains('slide')
+        );
+        const idx = siblings.indexOf(active);
+        if (idx >= 0) return idx;
+      }
+    }
+
+    // Fallback: derive index from .slider transform matrix / slide width.
+    const slider = sr.querySelector('.slider');
+    const firstSlide = sr.querySelector('.slide');
+    if (slider && firstSlide) {
+      const w = firstSlide.getBoundingClientRect().width || 0;
+      if (w > 0) {
+        const t = getComputedStyle(slider).transform;
+        let tx = 0;
+        if (t && t !== 'none') {
+          const m = t.match(/matrix.*\((.+)\)/);
+          if (m) {
+            const parts = m[1].split(',').map(parseFloat);
+            tx = parts.length === 6 ? parts[4] : (parts[12] || 0);
+          }
+        }
+        const idx = Math.round(Math.abs(tx) / w);
+        if (!Number.isNaN(idx) && idx >= 0) return idx;
+      }
+    }
+
+    return -1;
+  }
+
+  function pushSlideIndex(idx) {
+    if (idx < 0 || idx === _lastPushedSlideIndex) return;
+    const hass = getHass();
+    if (!hass) return;
+    const ent = getState(hass, PRIORITY_SLIDE_ENTITY);
+    if (!ent) return;
+    const current = Math.round(parseFloat(ent.state));
+    _lastPushedSlideIndex = idx;
+    if (current === idx) return;
+    hass.callService('input_number', 'set_value', {
+      entity_id: PRIORITY_SLIDE_ENTITY,
+      value: idx,
+    });
+  }
+
+  function observeSwipeSlideIndex() {
+    if (!onMobileDashboard()) return;
+
+    const teardown = () => {
+      if (_swipeObserverInstance) {
+        try { _swipeObserverInstance.disconnect(); } catch (e) {}
+      }
+      _swipeObserverInstance = null;
+      if (_swipeTransitionCleanup) {
+        try { _swipeTransitionCleanup(); } catch (e) {}
+      }
+      _swipeTransitionCleanup = null;
+      if (_swipePointerCleanup) {
+        try { _swipePointerCleanup(); } catch (e) {}
+      }
+      _swipePointerCleanup = null;
+      if (_swipePollTimer) {
+        clearInterval(_swipePollTimer);
+        _swipePollTimer = null;
+      }
+      _swipeObserverEl = null;
+    };
+
+    const tryAttach = () => {
+      const swipeCard = findSwipeCardEl(document.body);
+      if (!swipeCard) {
+        if (_swipeObserverAttempts++ < 30) setTimeout(tryAttach, 400);
+        return;
+      }
+      if (_swipeObserverEl === swipeCard && _swipeObserverInstance) {
+        return;
+      }
+      teardown();
+      _swipeObserverEl = swipeCard;
+      _lastPushedSlideIndex = -1;
+
+      // Initial push so HA reflects the mounted carousel's starting slide.
+      pushSlideIndex(readSwipeIndex(swipeCard));
+
+      let debounceTimer = null;
+      const schedule = (reason) => {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          const idx = readSwipeIndex(swipeCard);
+          pushSlideIndex(idx);
+        }, 80);
+      };
+
+      // 1) Mutation observer on the shadow root subtree — fires on transform
+      //    updates (.slider style attr) and class/attribute flips.
+      const mo = new MutationObserver(() => schedule('mutation'));
+      const sr = swipeCard.shadowRoot;
+      if (sr) {
+        mo.observe(sr, {
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['style', 'class', 'data-visible-index', 'data-index'],
+        });
+      }
+      _swipeObserverInstance = mo;
+
+      // 2) transitionend on the slider — authoritative settle signal.
+      const slider = sr ? sr.querySelector('.slider') : null;
+      if (slider) {
+        const onTransitionEnd = () => {
+          const idx = readSwipeIndex(swipeCard);
+          pushSlideIndex(idx);
+        };
+        slider.addEventListener('transitionend', onTransitionEnd, true);
+        _swipeTransitionCleanup = () => slider.removeEventListener('transitionend', onTransitionEnd, true);
+      }
+
+      // 3) Pointer/touch handlers on the card itself — catches every swipe
+      //    the user makes, even if other signals don't fire.
+      const onPointerUp = () => setTimeout(() => pushSlideIndex(readSwipeIndex(swipeCard)), 120);
+      swipeCard.addEventListener('pointerup', onPointerUp, true);
+      swipeCard.addEventListener('touchend', onPointerUp, true);
+      _swipePointerCleanup = () => {
+        swipeCard.removeEventListener('pointerup', onPointerUp, true);
+        swipeCard.removeEventListener('touchend', onPointerUp, true);
+      };
+
+      // 4) Fallback poll at 750ms — belt-and-suspenders for any path the
+      //    observer misses (theme remount, transient reflow).
+      _swipePollTimer = setInterval(() => {
+        const idx = readSwipeIndex(swipeCard);
+        pushSlideIndex(idx);
+      }, 750);
+    };
+
+    _swipeObserverAttempts = 0;
+    setTimeout(tryAttach, 600);
+  }
+
+  // Opportunistic re-attach: if the page re-renders the swipe-card after
+  // initial attach (e.g. after a theme reload or HA re-render), the cached
+  // _swipeObserverEl becomes stale. Called from the 1-s tick in addRoots().
+  function maybeReattachSwipeObserver() {
+    if (!onMobileDashboard()) return;
+    const swipeCard = findSwipeCardEl(document.body);
+    if (!swipeCard) {
+      if (_swipeObserverEl) {
+        // Card was present but now isn't — tear down.
+        if (_swipeObserverInstance) try { _swipeObserverInstance.disconnect(); } catch (e) {}
+        if (_swipeTransitionCleanup) try { _swipeTransitionCleanup(); } catch (e) {}
+        if (_swipePointerCleanup) try { _swipePointerCleanup(); } catch (e) {}
+        if (_swipePollTimer) clearInterval(_swipePollTimer);
+        _swipeObserverEl = null;
+        _swipeObserverInstance = null;
+        _swipeTransitionCleanup = null;
+        _swipePointerCleanup = null;
+        _swipePollTimer = null;
+      }
+      return;
+    }
+    if (swipeCard !== _swipeObserverEl || !_swipeObserverInstance) {
+      _swipeObserverAttempts = 0;
+      observeSwipeSlideIndex();
+    }
+  }
+
+  // ─── Motion camera takeover (preload + winner visibility) ──────────────────
+  // Home page priority-zone carousel is swapped for one of three Nest/Vivint
+  // feeds when its sticky motion sensor is ON. The dashboard renders the
+  // three conditional picture-entities inside a vertical-stack — meaning all
+  // cams with active motion are in the DOM simultaneously (streams live),
+  // but they visually stack and only one should be visible. This controller
+  // overlays them (CSS injected into the stack's shadow root, making
+  // children absolute-positioned) and drives per-element opacity / z-index
+  // from sensor.priority_camera (HA's "most recent wins" picker).
+  //
+  // When all three stickies clear, the conditionals unmount and the
+  // vertical-stack is hidden; the carousel visibility condition
+  // (`priority_camera == 'none'`) takes it back.
+  const MOTION_CAM_ENTITIES = [
+    'camera.doorbell',
+    'camera.living_room_camera',
+    'camera.izzy_camera',
+  ];
+  const PRIORITY_CAMERA_MAP = {
+    doorbell: 'camera.doorbell',
+    living_room: 'camera.living_room_camera',
+    izzy: 'camera.izzy_camera',
+  };
+  const MOTION_CAM_OVERLAY_CSS_ID = 'kis-motion-cam-overlay';
+  const MOTION_CAM_OVERLAY_CSS = `
+    #root {
+      position: relative !important;
+      height: 240px !important;
+    }
+    @media (min-width: 768px) {
+      #root { height: 44vh !important; }
+    }
+    #root > * {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      transition: opacity 140ms ease !important;
+    }
+  `;
+
+  // Walk shadow DOMs for all vertical-stack cards and return those that
+  // contain at least one picture-entity whose entity matches one of the
+  // three motion cameras. Returns the stack elements (host-level).
+  function findMotionCamStacks() {
+    const stacks = [];
+    const seenStack = new Set();
+
+    function pictureEntityMatches(card) {
+      const cfg = card && (card._config || card.config);
+      return cfg && MOTION_CAM_ENTITIES.indexOf(cfg.entity) !== -1;
+    }
+
+    function walkForStacks(root) {
+      if (!root) return;
+      const all = root.querySelectorAll
+        ? root.querySelectorAll('hui-vertical-stack-card')
+        : [];
+      for (const stack of all) {
+        if (seenStack.has(stack)) continue;
+        seenStack.add(stack);
+        const sr = stack.shadowRoot;
+        if (!sr) continue;
+        let hasMotionCam = false;
+        const pes = sr.querySelectorAll('hui-picture-entity-card');
+        for (const pe of pes) {
+          if (pictureEntityMatches(pe)) { hasMotionCam = true; break; }
+        }
+        if (hasMotionCam) stacks.push(stack);
+      }
+      // Recurse into nested shadow roots.
+      const all2 = root.querySelectorAll ? root.querySelectorAll('*') : [];
+      for (const el of all2) {
+        if (el.shadowRoot) walkForStacks(el.shadowRoot);
+      }
+    }
+    walkForStacks(document.body);
+    return stacks;
+  }
+
+  function updateMotionCamOverlay() {
+    if (!onMobileDashboard()) return;
+    const hass = getHass();
+    if (!hass) return;
+    const priorityEnt = getState(hass, 'sensor.priority_camera');
+    if (!priorityEnt) return;
+    const winnerEntity = PRIORITY_CAMERA_MAP[priorityEnt.state] || null;
+
+    const stacks = findMotionCamStacks();
+    for (const stack of stacks) {
+      const sr = stack.shadowRoot;
+      if (!sr) continue;
+      // Inject the overlay CSS once per stack shadow root.
+      injectShadowCSS(sr, MOTION_CAM_OVERLAY_CSS_ID, MOTION_CAM_OVERLAY_CSS);
+
+      // Set opacity/z-index per rendered picture-entity based on winner.
+      const pes = sr.querySelectorAll('hui-picture-entity-card');
+      for (const pe of pes) {
+        const cfg = pe._config || pe.config;
+        if (!cfg) continue;
+        const isWinner = cfg.entity === winnerEntity;
+        // Walk up to the direct #root child (conditional wrapper or
+        // picture-entity-card itself, depending on HA version).
+        let target = pe;
+        while (target && target.parentElement && target.parentElement !== sr && target.parentElement.id !== 'root') {
+          target = target.parentElement;
+        }
+        target.style.opacity = isWinner ? '1' : '0';
+        target.style.zIndex = isWinner ? '10' : '1';
+        target.style.pointerEvents = isWinner ? 'auto' : 'none';
+      }
+    }
+  }
+
+  // ─── Cameras page: stagger Nest stream init ────────────────────────────────
+  // Nest SDM rate limits: 5 QPM per device per user. Starting both Nest
+  // streams simultaneously on a Tab S9 refresh brushes the cap when a
+  // keepalive from a prior session is still in-flight — this produced
+  // WebRTC RESOURCE_EXHAUSTED / HTTP 429 errors on Cameras page load.
+  //
+  // Per-camera delay map (2026-04-21):
+  //   camera.doorbell        — immediate (Vivint, separate auth path)
+  //   camera.nanit_benjamin  — immediate (local RTMP, zero limit)
+  //   camera.nanit_travel    — immediate (local RTMP, zero limit)
+  //   camera.living_room_camera (Nest) — delay 1000 ms
+  //   camera.izzy_camera        (Nest) — delay 2000 ms
+  //
+  // Implementation: detach each staggered camera's picture-entity from DOM
+  // on Cameras-page entry (a placeholder of the same size holds the grid
+  // cell open), then re-attach it after its delay. Detachment disconnects
+  // the custom element, so its connectedCallback / stream init don't run
+  // until re-attach — a true stream-start delay, not just visual.
+  const CAMERAS_STAGGER = {
+    'camera.living_room_camera': 1000,
+    'camera.izzy_camera': 2000,
+  };
+  let _camerasStaggerActiveSlug = null;
+  // Map<entityId, { parent, placeholder, node, timer }>
+  const _camerasStaggerState = new Map();
+
+  function findCameraPictureEntity(entityId) {
+    function walk(root) {
+      if (!root) return null;
+      const pes = root.querySelectorAll
+        ? root.querySelectorAll('hui-picture-entity-card')
+        : [];
+      for (const pe of pes) {
+        const cfg = pe._config || pe.config;
+        if (cfg && cfg.entity === entityId) return pe;
+      }
+      const all = root.querySelectorAll ? root.querySelectorAll('*') : [];
+      for (const el of all) {
+        if (el.shadowRoot) {
+          const hit = walk(el.shadowRoot);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    }
+    return walk(document.body);
+  }
+
+  function restoreStaggeredCamera(entityId) {
+    if (!entityId) {
+      // Called without an arg — restore all.
+      for (const id of Array.from(_camerasStaggerState.keys())) {
+        restoreStaggeredCamera(id);
+      }
+      return;
+    }
+    const st = _camerasStaggerState.get(entityId);
+    if (!st) return;
+    if (st.timer) clearTimeout(st.timer);
+    if (
+      st.parent &&
+      st.placeholder &&
+      st.node &&
+      st.placeholder.parentElement === st.parent
+    ) {
+      st.parent.replaceChild(st.node, st.placeholder);
+    }
+    _camerasStaggerState.delete(entityId);
+  }
+
+  // Stagger placeholder sits in the light tree but the grid card that
+  // hosts it lives inside a shadow root, so document.head styles don't
+  // reach it. We inject the same stylesheet into the placeholder's own
+  // root (wherever it ends up) and also into document.head — keyframes
+  // resolve by global name, so @keyframes defined in either works.
+  const CAM_STAGGER_CSS = `
+    [data-kis-cam-stagger] {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 12px;
+      background: rgba(16,21,31,0.92);
+      color: rgba(255,255,255,0.82);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 12px;
+      box-sizing: border-box;
+    }
+    [data-kis-cam-stagger][data-kis-day] {
+      background: rgba(244,247,252,0.94);
+      color: rgba(26,32,48,0.72);
+    }
+    [data-kis-cam-stagger] .kis-cam-spinner {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.18);
+      border-top-color: rgba(255,255,255,0.75);
+      animation: kis-cam-spin 900ms linear infinite;
+    }
+    [data-kis-cam-stagger][data-kis-day] .kis-cam-spinner {
+      border-color: rgba(26,32,48,0.14);
+      border-top-color: rgba(26,32,48,0.55);
+    }
+    @keyframes kis-cam-spin { to { transform: rotate(360deg); } }
+  `;
+
+  function injectStaggerStylesInto(rootNode) {
+    const scope = rootNode === document ? document.head : rootNode;
+    if (!scope) return;
+    if (scope.querySelector && scope.querySelector('style[data-kis-stagger]')) return;
+    const s = document.createElement('style');
+    s.setAttribute('data-kis-stagger', '');
+    s.textContent = CAM_STAGGER_CSS;
+    scope.appendChild(s);
+  }
+
+  function ensureLightCamPlaceholderStyles() {
+    injectStaggerStylesInto(document);
+  }
+
+  function applyCamerasStagger() {
+    if (!onMobileDashboard() || getActiveSlug() !== 'cameras') {
+      // Left the page — restore all detached nodes immediately so returning
+      // to Cameras finds a sane DOM.
+      if (_camerasStaggerActiveSlug === 'cameras') restoreStaggeredCamera();
+      _camerasStaggerActiveSlug = null;
+      return;
+    }
+    if (_camerasStaggerActiveSlug === 'cameras') return; // already armed
+    _camerasStaggerActiveSlug = 'cameras';
+
+    ensureLightCamPlaceholderStyles();
+
+    for (const [entityId, delayMs] of Object.entries(CAMERAS_STAGGER)) {
+      applyStaggerFor(entityId, delayMs, 0);
+    }
+  }
+
+  function applyStaggerFor(entityId, delayMs, attempts) {
+    const pe = findCameraPictureEntity(entityId);
+    if (!pe) {
+      if (attempts < 20) setTimeout(() => applyStaggerFor(entityId, delayMs, attempts + 1), 200);
+      return;
+    }
+    if (_camerasStaggerState.has(entityId)) return; // already detached
+    const parent = pe.parentElement;
+    if (!parent) return;
+    const rect = pe.getBoundingClientRect();
+    const placeholder = document.createElement('div');
+    placeholder.setAttribute('data-kis-cam-stagger', entityId);
+    if (document.body.hasAttribute('data-kis-day')) {
+      placeholder.setAttribute('data-kis-day', '');
+    }
+    placeholder.style.width = rect.width > 0 ? rect.width + 'px' : '100%';
+    placeholder.style.height = rect.height > 0 ? rect.height + 'px' : 'auto';
+    const spinner = document.createElement('div');
+    spinner.className = 'kis-cam-spinner';
+    placeholder.appendChild(spinner);
+    const label = document.createElement('span');
+    label.textContent = cameraFriendlyName(entityId);
+    placeholder.appendChild(label);
+    injectStaggerStylesInto(parent.getRootNode());
+
+    const state = { parent, placeholder, node: pe, timer: null };
+    _camerasStaggerState.set(entityId, state);
+    parent.replaceChild(placeholder, pe);
+
+    state.timer = setTimeout(() => {
+      const st = _camerasStaggerState.get(entityId);
+      if (st && st.placeholder && st.node && st.placeholder.parentElement === st.parent) {
+        st.parent.replaceChild(st.node, st.placeholder);
+      }
+      _camerasStaggerState.delete(entityId);
+    }, delayMs);
+  }
+
+  // ─── Camera placeholder (no-flash stream init) ────────────────────────────
+  // v31 approach — hoist the fix to the earliest possible point: patch
+  // hui-picture-entity-card.prototype.connectedCallback so EVERY instance
+  // receives our placeholder CSS the moment it connects, BEFORE its own
+  // first paint. v29's DOM-injected overlay and v30's post-hoc shadow CSS
+  // both lost the race against picture-entity's first render on FKB. The
+  // prototype patch wins the race by being part of the same connection
+  // sequence as the element's render.
+  //
+  // Two-layer defense:
+  //  1. Host opacity: 0 at connectedCallback start, transitioned to 1 once
+  //     the shadow-root CSS is in place and the host is flagged as one of
+  //     our cameras (data-kis-cam). Keeps the bare-ha-card flash off-screen
+  //     during the first frames.
+  //  2. Shadow-root CSS gated on :host([data-kis-cam]) paints the placeholder
+  //     via ha-card::before and holds hui-image/video/img at opacity: 0
+  //     until :host([data-kis-cam].kis-feed-ready) flips on.
+  //
+  // markFeedReady adds the `kis-feed-ready` class on the host when the
+  // underlying video/img fires loadeddata/playing/load. This is a CLASS,
+  // not an attribute — requested by Chris 2026-04-21 and matches the user-
+  // spec selector hui-picture-entity-card.kis-feed-ready { opacity: 1 }.
+  //
+  // Day/night colors come from documentElement CSS variables set in
+  // renderHeaderContent (--kis-cam-placeholder-bg/-text/-border). CSS
+  // custom properties inherit through shadow-DOM boundaries.
+  const PLACEHOLDER_CAM_ENTITIES = [
+    'camera.doorbell',
+    'camera.living_room_camera',
+    'camera.izzy_camera',
+    'camera.nanit_benjamin',
+    'camera.nanit_travel',
+  ];
+  const CAM_PLACEHOLDER_CSS_ID = 'kis-cam-placeholder';
+  // Applied unconditionally to every hui-picture-entity-card shadow root via
+  // the prototype patch below. Every picture-entity card on this dashboard
+  // is one of our 5 cameras (verified 2026-04-21), so unconditional is safe;
+  // the flip gate is the `kis-feed-ready` class that JS adds once the feed
+  // element fires loadeddata/playing/load.
+  const CAM_PLACEHOLDER_CSS = `
+    /* Overlay-only approach: we DON'T touch hui-image / video / img
+       rendering — picture-entity keeps its native layout and the stream
+       paints pixels normally. We just paint a ha-card::before overlay ON
+       TOP of the feed until markFeedReady adds .kis-feed-ready to the host.
+       Safer than hiding internals — doesn't starve the WebView of rendering
+       signals (which was the v31/v32 Tab S9 regression). */
+    ha-card {
+      background: var(--kis-cam-placeholder-bg, #151c2a) !important;
+    }
+    ha-card::before {
+      content: var(--kis-cam-label-text, "CAMERA");
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--kis-cam-placeholder-bg, #151c2a);
+      color: var(--kis-cam-placeholder-text, #4a5570);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      pointer-events: none;
+      border-radius: inherit;
+      transition: opacity 300ms ease;
+      animation: kis-cam-pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes kis-cam-pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.55; }
+    }
+    :host(.kis-feed-ready) ha-card::before {
+      opacity: 0;
+      animation: none;
+    }
+  `;
+
+  function findAllCameraPictureEntities() {
+    const out = [];
+    const seen = new Set();
+    function walk(root) {
+      if (!root || seen.has(root)) return;
+      seen.add(root);
+      const pes = root.querySelectorAll
+        ? root.querySelectorAll('hui-picture-entity-card')
+        : [];
+      for (const pe of pes) {
+        const cfg = pe._config || pe.config;
+        if (cfg && PLACEHOLDER_CAM_ENTITIES.indexOf(cfg.entity) !== -1) {
+          out.push(pe);
+        }
+      }
+      const all = root.querySelectorAll ? root.querySelectorAll('*') : [];
+      for (const el of all) {
+        if (el.shadowRoot) walk(el.shadowRoot);
+      }
+    }
+    walk(document.body);
+    return out;
+  }
+
+  function findFeedElement(peShadowRoot) {
+    function walk(root) {
+      if (!root) return null;
+      const hit = root.querySelector('video, img');
+      if (hit) return hit;
+      const all = root.querySelectorAll('*');
+      for (const el of all) {
+        if (el.shadowRoot) {
+          const hit2 = walk(el.shadowRoot);
+          if (hit2) return hit2;
+        }
+      }
+      return null;
+    }
+    return walk(peShadowRoot);
+  }
+
+  function cameraFriendlyName(entityId) {
+    const hass = getHass();
+    if (hass && hass.states && hass.states[entityId]) {
+      const s = hass.states[entityId];
+      if (s.attributes && s.attributes.friendly_name) return s.attributes.friendly_name;
+    }
+    return (entityId || '')
+      .replace(/^camera\./, '')
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  function markFeedReady(pe) {
+    if (!pe || pe.classList.contains('kis-feed-ready')) return;
+    pe.classList.add('kis-feed-ready');
+    if (pe._kisCamPoll) { clearInterval(pe._kisCamPoll); pe._kisCamPoll = null; }
+    if (pe._kisCamSafetyTimer) { clearTimeout(pe._kisCamSafetyTimer); pe._kisCamSafetyTimer = null; }
+  }
+
+  function installPlaceholderCSS(pe) {
+    if (!pe || !pe.shadowRoot) return false;
+    return injectShadowCSS(pe.shadowRoot, CAM_PLACEHOLDER_CSS_ID, CAM_PLACEHOLDER_CSS);
+  }
+
+  // Walk shadow tree rooted at `root`, invoking `fn(pe)` for every
+  // hui-picture-entity-card host encountered. Used to retroactively reach
+  // instances that were already connected before we patched the prototype.
+  function walkPictureEntities(root, fn) {
+    if (!root) return;
+    const seen = new Set();
+    function walk(r) {
+      if (!r || seen.has(r)) return;
+      seen.add(r);
+      const pes = r.querySelectorAll ? r.querySelectorAll('hui-picture-entity-card') : [];
+      for (const pe of pes) fn(pe);
+      const all = r.querySelectorAll ? r.querySelectorAll('*') : [];
+      for (const el of all) if (el.shadowRoot) walk(el.shadowRoot);
+    }
+    walk(root);
+  }
+
+  function armPictureEntityHost(pe) {
+    if (!pe || pe._kisCamArmed) return;
+    pe._kisCamArmed = true;
+    // Install the shadow-root CSS as soon as a shadow root exists. For
+    // lit-element based cards (all HA cards), shadowRoot is created in the
+    // constructor, so this succeeds on the first tick. The CSS paints the
+    // ha-card placeholder background + ::before label AND holds hui-image/
+    // video/img at opacity:0 — host stays visible so the placeholder shows.
+    installPlaceholderCSS(pe);
+    armEntityOnceConfigReady(pe, 0);
+  }
+
+  function armEntityOnceConfigReady(pe, attempts) {
+    const cfg = pe._config || pe.config;
+    if (!cfg || !cfg.entity) {
+      if (attempts < 50) {
+        setTimeout(() => armEntityOnceConfigReady(pe, attempts + 1), 60);
+      }
+      return;
+    }
+    installPlaceholderCSS(pe);
+    const isOurs = PLACEHOLDER_CAM_ENTITIES.indexOf(cfg.entity) !== -1;
+    if (!isOurs) {
+      // Not one of our allowlist — skip placeholder wiring. CSS applied to its
+      // shadow root is still harmless (just hides internals until
+      // kis-feed-ready). Mark feed-ready immediately so the feed shows.
+      markFeedReady(pe);
+      return;
+    }
+    if (!pe._kisCamLabelSet) {
+      const label = cameraFriendlyName(cfg.entity);
+      const safe = String(label).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      pe.style.setProperty('--kis-cam-label-text', '"' + safe + '"');
+      pe._kisCamLabelSet = true;
+    }
+    watchFeedReady(pe);
+  }
+
+  function watchFeedReady(pe) {
+    if (!pe || !pe.shadowRoot) return;
+    if (pe.classList.contains('kis-feed-ready')) return;
+    if (pe._kisCamPoll) return;
+
+    const sr = pe.shadowRoot;
+    const feedNow = findFeedElement(sr);
+    if (feedNow) {
+      const nowReady = feedNow.tagName === 'VIDEO'
+        ? feedNow.readyState >= 2
+        : (feedNow.tagName === 'IMG' ? (feedNow.complete && feedNow.naturalHeight > 0) : false);
+      if (nowReady) { markFeedReady(pe); return; }
+    }
+
+    // Fire-and-forget ceiling: no matter what, reveal the feed within 3 s.
+    // Android WebView doesn't reliably fire loadeddata/playing for MSE
+    // video nor 'load' for MJPEG image streams that re-use a connection,
+    // so waiting beyond this risks a permanently-hidden feed. 3 s is enough
+    // to cover up the first-frame paint in practice; if the stream hasn't
+    // started yet the user sees the native loading spinner which is fine.
+    pe._kisCamSafetyTimer = setTimeout(() => markFeedReady(pe), 3000);
+
+    let tries = 0;
+    pe._kisCamPoll = setInterval(() => {
+      tries++;
+      const feed = findFeedElement(sr);
+      let ready = false;
+      if (feed) {
+        if (feed.tagName === 'VIDEO') {
+          ready = feed.readyState >= 2;
+          if (!ready && !feed._kisReadyHandler) {
+            feed._kisReadyHandler = () => markFeedReady(pe);
+            feed.addEventListener('loadeddata', feed._kisReadyHandler);
+            feed.addEventListener('playing', feed._kisReadyHandler);
+            feed.addEventListener('canplay', feed._kisReadyHandler);
+          }
+        } else if (feed.tagName === 'IMG') {
+          ready = feed.complete && feed.naturalHeight > 0;
+          if (!ready && !feed._kisReadyHandler) {
+            feed._kisReadyHandler = () => markFeedReady(pe);
+            feed.addEventListener('load', feed._kisReadyHandler);
+          }
+        }
+      }
+      if (ready) {
+        markFeedReady(pe);
+      } else if (tries > 10) {
+        // 5 s hard cap via interval count (belt-and-suspenders with timer).
+        markFeedReady(pe);
+      }
+    }, 500);
+  }
+
+  function updateCameraPlaceholders() {
+    if (!onMobileDashboard()) return;
+    const slug = getActiveSlug();
+    if (slug !== 'cameras' && slug !== 'home') return;
+    walkPictureEntities(document.body, (pe) => armPictureEntityHost(pe));
+  }
+
+  // Monkey-patch hui-picture-entity-card.connectedCallback to inject the
+  // placeholder CSS at the earliest possible point — before HA's own render
+  // pipeline paints the first black <video>. Shadow-root CSS paints the
+  // ha-card placeholder bg + ::before label AND holds hui-image/video at
+  // opacity:0. Host opacity stays at 1 so the placeholder shows.
+  let _pictureEntityProtoPatched = false;
+  function patchPictureEntityPrototype() {
+    if (_pictureEntityProtoPatched) return;
+    const Ctor = customElements.get('hui-picture-entity-card');
+    if (!Ctor || !Ctor.prototype) return;
+    _pictureEntityProtoPatched = true;
+    const origConnected = Ctor.prototype.connectedCallback;
+    Ctor.prototype.connectedCallback = function() {
+      // Shadow root is created in the constructor for lit-element cards —
+      // so it already exists here and we can inject CSS before any render.
+      installPlaceholderCSS(this);
+      this._kisCamArmed = true;
+      const r = origConnected ? origConnected.apply(this, arguments) : undefined;
+      // Config lands via setConfig (separate call from HA). Poll for it.
+      armEntityOnceConfigReady(this, 0);
+      return r;
+    };
+    // Catch any instances that connected BEFORE we patched the prototype
+    // (script-load timing).
+    walkPictureEntities(document.body, (pe) => armPictureEntityHost(pe));
+  }
+
+  let _camPlaceholderBurstTimer = null;
+  function startCameraPlaceholderBurst() {
+    if (_camPlaceholderBurstTimer) clearInterval(_camPlaceholderBurstTimer);
+    let ticks = 0;
+    _camPlaceholderBurstTimer = setInterval(() => {
+      ticks++;
+      updateCameraPlaceholders();
+      if (ticks >= 100) { // 100 * 60ms = 6 s
+        clearInterval(_camPlaceholderBurstTimer);
+        _camPlaceholderBurstTimer = null;
+      }
+    }, 60);
+  }
+
+  let _camPlaceholderDefinedHooked = false;
+  function hookPictureEntityDefinition() {
+    if (_camPlaceholderDefinedHooked) return;
+    _camPlaceholderDefinedHooked = true;
+    try {
+      customElements.whenDefined('hui-picture-entity-card').then(() => {
+        patchPictureEntityPrototype();
+        startCameraPlaceholderBurst();
+      });
+    } catch (e) { /* older browsers — burst still covers us */ }
+  }
+
   // ─── Layout patches ────────────────────────────────────────────────────────
   function patchHALayout(attempt) {
     attempt = attempt || 0;
@@ -967,6 +1981,12 @@
           delete el._kisPadded;
         });
         patchHALayout(0);
+        maybeShowSwipeHint();
+        observeSwipeSlideIndex();
+        updateMotionCamOverlay();
+        applyCamerasStagger();
+        updateCameraPlaceholders();
+        startCameraPlaceholderBurst();
       }, 100);
     } else {
       nav.setAttribute('hidden', '');
@@ -985,13 +2005,26 @@
       return;
     }
 
+    // Clean up leftover v27 swipe debug surface (pill + localStorage flags).
+    try {
+      const stale = document.getElementById('kis-swipe-debug');
+      if (stale) stale.remove();
+      localStorage.removeItem('kis_swipe_debug');
+      localStorage.removeItem('kis_swipe_debug_auto_v27');
+    } catch (e) {}
+
     // Resolve safe-area-inset-top via CSS custom property (WKWebView fix)
     initSafeAreaTop();
+
+    // Kick the camera-placeholder pipeline the moment hui-picture-entity-card
+    // is defined — earliest opportunity to inject shadow-root CSS before any
+    // instance paints a black <video> element.
+    hookPictureEntityDefinition();
 
     // Inject shared styles + global app-header hide
     const styleEl = document.createElement('style');
     styleEl.id = 'kis-styles';
-    styleEl.textContent = NAV_CSS + HEADER_CSS + `
+    styleEl.textContent = NAV_CSS + HEADER_CSS + SWIPE_HINT_CSS + `
       app-header { display: none !important; }
     `;
     document.head.appendChild(styleEl);
@@ -1117,9 +2150,18 @@
       }, 150);
     });
 
-    // Update header content every second (live clock + entity states)
+    // Update header content every second (live clock + entity states).
+    // Also opportunistically re-attach the swipe-card observer, and refresh
+    // the motion-camera overlay (winner z-index / losers hidden), in case
+    // the relevant elements remounted since the last syncState call.
     setInterval(() => {
-      if (onMobileDashboard()) renderHeaderContent();
+      if (onMobileDashboard()) {
+        renderHeaderContent();
+        maybeReattachSwipeObserver();
+        updateMotionCamOverlay();
+        applyCamerasStagger();
+        updateCameraPlaceholders();
+      }
     }, 1000);
 
     // Instant theme sync: watch for CSS variable changes on documentElement.
@@ -1158,6 +2200,15 @@
       customElements.whenDefined('ha-icon').then(() => setTimeout(inject, 200));
     }
   }
+
+  // Kick the picture-entity prototype patch as early as kis-nav.js can run,
+  // BEFORE boot() waits for ha-icon. customElements.whenDefined resolves as
+  // soon as HA's bundle registers hui-picture-entity-card — at that moment
+  // we patch connectedCallback to hide the host + inject placeholder CSS
+  // on every future connection, and walk the tree to cover any instances
+  // that connected before this script loaded. This is the earliest point
+  // at which we can intercept picture-entity renders.
+  hookPictureEntityDefinition();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
