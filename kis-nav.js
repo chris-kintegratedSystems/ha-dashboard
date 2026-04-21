@@ -1,9 +1,18 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v18
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v20
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
  * Only visible when on the /dashboard-mobilev1/ dashboard.
+ *
+ * v20 changes (phase 5b):
+ *  - Swipe-hint overlay: first-visit centered pill "‹ › Swipe to explore" over
+ *    any <simple-swipe-card>. Fades after 3.5s or first touch/pointer;
+ *    localStorage flag kis-swipe-hint-shown gates subsequent showings.
+ *
+ * v19 changes (phase 5b):
+ *  - Edge-to-edge: override HA sections container max-width + side padding so
+ *    cards fill viewport with a uniform 12px side gap (matches card-to-card).
  *
  * v18 changes:
  *  - Day/night: input_select.theme_mode (Auto/Day/Night) + sun.sun auto switch
@@ -389,6 +398,52 @@
     #kis-header-bar[data-kis-day] .kh-pname { color: #1a2030; }
   `;
 
+  // ─── Swipe-hint overlay CSS ───────────────────────────────────────────────
+  const SWIPE_HINT_CSS = `
+    #kis-swipe-hint {
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(0,212,240,0.12);
+      border: 1px solid rgba(0,212,240,0.22);
+      color: rgba(0,212,240,0.95);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 2147483640;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.96);
+      transition: opacity 260ms ease, transform 260ms ease;
+      white-space: nowrap;
+    }
+    #kis-swipe-hint[data-visible] {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    #kis-swipe-hint .kish-arrow {
+      display: inline-block;
+      animation: kish-arrow-pulse 1.6s ease-in-out infinite;
+    }
+    #kis-swipe-hint .kish-arrow.kish-right { animation-delay: 0.3s; }
+    @keyframes kish-arrow-pulse {
+      0%, 100% { transform: translateX(0); opacity: 0.75; }
+      50%      { transform: translateX(4px); opacity: 1; }
+    }
+    #kis-swipe-hint .kish-arrow.kish-left {
+      animation-name: kish-arrow-pulse-left;
+    }
+    @keyframes kish-arrow-pulse-left {
+      0%, 100% { transform: translateX(0); opacity: 0.75; }
+      50%      { transform: translateX(-4px); opacity: 1; }
+    }
+  `;
+
   // ─── Shadow CSS patches ────────────────────────────────────────────────────
   function getHuiRootCSS() {
     return `
@@ -437,10 +492,22 @@
         /* margin-top controlled from outside via element.style */
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
+        /* Edge-to-edge: neutralize HA's column max-width / min-width clamps so
+           sections fill the available viewport width. */
+        --ha-view-sections-column-max-width: none !important;
+        --column-max-width: none !important;
       }
       .container, .sections-container, [class*="container"] {
         margin-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
+        /* Edge-to-edge: HA's sections layout applies its own max-width + side
+           padding (~60-80px on tablet). Match the 12px inter-card gap so the
+           dashboard-to-edge gap equals card-to-card gap. */
+        max-width: 100% !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
       /* Zero out HA's default 80px spacer for view headers (we use #kis-header-bar instead) */
       .wrapper.top-margin, .top-margin, .wrapper {
@@ -891,6 +958,93 @@
     updateMiniPlayer(hass, isDayMode);
   }
 
+  // ─── Swipe-hint overlay ───────────────────────────────────────────────────
+  // On first visit to a page containing a simple-swipe-card, briefly overlay a
+  // centered pill reading "‹ › Swipe to explore" over the card. One-shot —
+  // localStorage flag gates future showings. Fades after 3.5s or on first touch.
+  const SWIPE_HINT_STORAGE_KEY = 'kis-swipe-hint-shown';
+  let _swipeHintAttempts = 0;
+  let _swipeHintScheduled = false;
+
+  function findSwipeCardEl(root) {
+    // Deep shadow-DOM search for the first <simple-swipe-card> element.
+    if (!root) return null;
+    if (root.tagName && root.tagName.toLowerCase() === 'simple-swipe-card') return root;
+    const direct = root.querySelector && root.querySelector('simple-swipe-card');
+    if (direct) return direct;
+    const walker = root.querySelectorAll ? root.querySelectorAll('*') : [];
+    for (const el of walker) {
+      if (el.shadowRoot) {
+        const found = findSwipeCardEl(el.shadowRoot);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  function dismissSwipeHint(reason) {
+    const hint = document.getElementById('kis-swipe-hint');
+    if (!hint) return;
+    hint.removeAttribute('data-visible');
+    setTimeout(() => { if (hint.parentNode) hint.parentNode.removeChild(hint); }, 320);
+    try { localStorage.setItem(SWIPE_HINT_STORAGE_KEY, '1'); } catch (e) { /* private mode */ }
+    window.removeEventListener('touchstart', onHintInteract, true);
+    window.removeEventListener('pointerdown', onHintInteract, true);
+  }
+
+  function onHintInteract() { dismissSwipeHint('touch'); }
+
+  function maybeShowSwipeHint() {
+    if (_swipeHintScheduled) return;
+    if (!onMobileDashboard()) return;
+    try {
+      if (localStorage.getItem(SWIPE_HINT_STORAGE_KEY) === '1') return;
+    } catch (e) { /* private mode — always show */ }
+
+    _swipeHintAttempts = 0;
+    _swipeHintScheduled = true;
+
+    const tryShow = () => {
+      _swipeHintScheduled = false;
+      const swipeCard = findSwipeCardEl(document.body);
+      if (!swipeCard) {
+        if (_swipeHintAttempts++ < 20) {
+          _swipeHintScheduled = true;
+          setTimeout(tryShow, 300);
+        }
+        return;
+      }
+      const rect = swipeCard.getBoundingClientRect();
+      if (!rect.width || !rect.height) {
+        if (_swipeHintAttempts++ < 20) {
+          _swipeHintScheduled = true;
+          setTimeout(tryShow, 300);
+        }
+        return;
+      }
+
+      // Already shown / not fully dismissed?
+      if (document.getElementById('kis-swipe-hint')) return;
+
+      const hint = document.createElement('div');
+      hint.id = 'kis-swipe-hint';
+      hint.innerHTML = '<span class="kish-arrow kish-left">‹</span><span>Swipe to explore</span><span class="kish-arrow kish-right">›</span>';
+      hint.style.left = (rect.left + rect.width / 2) + 'px';
+      hint.style.top  = (rect.top  + rect.height / 2) + 'px';
+      document.body.appendChild(hint);
+      // Next frame: mark visible so transition fires.
+      requestAnimationFrame(() => hint.setAttribute('data-visible', ''));
+
+      window.addEventListener('touchstart', onHintInteract, { capture: true, passive: true });
+      window.addEventListener('pointerdown', onHintInteract, { capture: true });
+
+      setTimeout(() => dismissSwipeHint('timeout'), 3500);
+    };
+
+    // Give the dashboard a moment to mount the swipe-card after patchHALayout.
+    setTimeout(tryShow, 600);
+  }
+
   // ─── Layout patches ────────────────────────────────────────────────────────
   function patchHALayout(attempt) {
     attempt = attempt || 0;
@@ -967,6 +1121,7 @@
           delete el._kisPadded;
         });
         patchHALayout(0);
+        maybeShowSwipeHint();
       }, 100);
     } else {
       nav.setAttribute('hidden', '');
@@ -991,7 +1146,7 @@
     // Inject shared styles + global app-header hide
     const styleEl = document.createElement('style');
     styleEl.id = 'kis-styles';
-    styleEl.textContent = NAV_CSS + HEADER_CSS + `
+    styleEl.textContent = NAV_CSS + HEADER_CSS + SWIPE_HINT_CSS + `
       app-header { display: none !important; }
     `;
     document.head.appendChild(styleEl);

@@ -22,6 +22,26 @@ deploy rules.
 
 ## Critical Patterns
 
+### HACS community card installs — self-serve when safe
+Claude Code MAY install HACS custom cards directly via SSH (curl + chmod)
+without stopping to ask, IF all of these are true:
+1. The card was recommended by ha-lovelace-expert research brief
+2. The install is a simple JS file download (no Docker, no auth, no config flow)
+3. The install path is /config/www/community/<card-name>/
+4. The card is registered in dashboard resources (lovelace or configuration.yaml)
+
+Pattern:
+  ssh cooper5389@192.168.51.179 'sudo mkdir -p /home/cooper5389/homeassistant/config/www/community/<card>/ && \
+    sudo curl -sL -o /home/cooper5389/homeassistant/config/www/community/<card>/<card>.js <github-release-url> && \
+    sudo chmod 644 /home/cooper5389/homeassistant/config/www/community/<card>/<card>.js'
+Then add the resource to configuration.yaml or lovelace resources and restart.
+
+Do NOT self-serve:
+- HACS integrations (require HA config flow in UI)
+- Anything requiring OAuth, 2FA, or interactive auth
+- Docker containers
+- Core HA integrations (use HA UI)
+
 ### QA screenshots MUST use authenticated Playwright
 `qa-screenshot.js` requires a long-lived HA access token in `.env` as
 `HA_QA_TOKEN` (or legacy `HA_TOKEN`). Anonymous Chromium sessions cannot

@@ -2,3 +2,4 @@
 node_modules/
 qa-screenshots/
 .claude/settings.local.json
+.phase5b-staging.json
