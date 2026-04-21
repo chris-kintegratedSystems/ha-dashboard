@@ -133,6 +133,46 @@ curl -s "http://${FKB_IP}:2323/?cmd=getScreenshot&password=${FKB_PASSWORD}" -o q
 
 ---
 
+## Session Knowledge Capture
+
+`.claude/memory/` holds four append-only project-memory files that
+accumulate the hard-won lessons from every dashboard session. These
+are committed to the repo — they travel with the code.
+
+| File | What belongs here |
+|------|-------------------|
+| `dead_ends.md` | Approaches that looked promising but failed, with the workaround that worked. Tried / Failed / Fix triples, date-stamped. |
+| `component_compat.md` | Card types, layout types, and HACS integrations — WORKS / BROKEN / PARTIAL with notes. Updated whenever a new card is evaluated. |
+| `css_dom_patterns.md` | Shadow DOM traversal paths, kis-nav CSS patch IDs, grid/flex recipes, safe-area quirks. Write tight; these get re-read a lot. |
+| `deploy_gotchas.md` | Deploy-path, permission, cache-bust, and restart pitfalls. Anything that would cause a silent "change didn't land" failure. |
+
+### Mandatory session discipline
+
+**At session START** — before editing any dashboard JSON, kis-nav.js,
+or touching the Pi — read all four memory files. They are short. Doing
+this up front prevents re-learning the same dead end. If a proposed
+approach matches a failed pattern in `dead_ends.md`, pick the noted
+workaround instead of re-testing.
+
+**At session END** — BEFORE the final commit of the session — append
+new lessons to whichever files apply. What counts as a lesson:
+- An approach that failed and cost iteration time → `dead_ends.md`
+- A new component evaluated (works or broken) → `component_compat.md`
+- A non-obvious shadow-DOM / CSS / layout trick that worked →
+  `css_dom_patterns.md`
+- A deploy-path, permission, cache, or restart issue → `deploy_gotchas.md`
+
+Format every entry with a date heading (`## YYYY-MM-DD: <short title>`)
+and include enough context that a future session can act on it without
+re-discovering the root cause. Entries belong in the same commit as
+the work that produced the lesson — so the lesson and its evidence ship
+together.
+
+These files replace ad-hoc "what did I learn today" notes. Do not
+create new session-handoff markdown files for this purpose.
+
+---
+
 ## Deploy pattern
 
 1. Edit dashboard JSON locally, validate with `node -e "require('./dashboard_mobilev1.json')"`.
