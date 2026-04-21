@@ -37,3 +37,19 @@ Masonry/panel: need separate overrides.
 ## Safe area inset top (2026-04)
 - WKWebView delayed env() - probe after 500ms
 - Never override with 0
+
+## picture-entity height inside grid/stack (2026-04-21)
+`ha-card { height: 100% }` on a picture-entity sitting inside a
+horizontal-stack / grid child slot does NOT inherit parent height.
+The picture-entity renders at the image's natural size and the stack
+collapses around it, breaking any container-sizing expectation.
+**Fix:** give the picture-entity's ha-card an EXPLICIT height
+(e.g. `height: 240px !important; @media (min-width:768px){ height: 44vh !important }`)
+matching the sibling card it alternates with. Match it on `min-height`
+AND `max-height` so the feed cannot overflow either way.
+
+## object-fit on camera feeds (2026-04-21)
+`fit_mode: cover` on picture-entity + `hui-image img { object-fit: cover !important }`
+in card_mod. `fill` stretches and distorts; `cover` preserves aspect
+and crops the overflow side — use cover for motion-takeover cameras
+where visual integrity matters more than seeing every pixel.
