@@ -74,6 +74,21 @@ attribute on its own injected elements (header bar, nav bar, mini player),
 not on document.body/html. Adding it to body would work but requires an
 extra injection path; property bag on documentElement is simpler.
 
+## button-card state-reactive section_label (2026-04-21)
+The `section_label` template accepts overrides at the instance level — both
+`name` and `styles.name.<prop>` can be `[[[ ... ]]]` JS templates that read
+`states[...]` and recompute on state change. Example: dynamic MOTION DETECTED
+/ NO MOTION header above priority-display zone, text + color both reactive.
+
+Key points:
+- `name: "[[[ ... return 'STRING'; ]]]"` re-renders whenever any read
+  state entity updates — no polling, no event wiring needed.
+- Inside `styles.name`, any property value can also be `[[[ ... ]]]`.
+  Color flip from `var(--kis-section-label, #4a5570)` to `#f04060` works.
+- Pattern is cheap: the template only recomputes when listed entities
+  change. Use it instead of HA `conditional:` cards whenever the swap
+  is just text/style (not a whole card replacement).
+
 ## object-fit on camera feeds — Chris prefers fill (2026-04-21)
 For the motion-takeover zone on mobilev1, Chris wants `object-fit: fill`
 (stretch to fit exact zone dimensions), NOT cover (which crops) and NOT
