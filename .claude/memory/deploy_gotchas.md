@@ -41,3 +41,27 @@ If you need styling that today relies on card_mod, either (a) install
 card-mod as a HACS custom resource, or (b) rewrite using custom:button-card
 native styles (our preferred path, since button-card IS installed and a lot
 of the dashboard already uses it).
+
+## 2026-04-21: ha-config cache-bust can drift from ha-dashboard kis-nav version
+The kis-nav.js version number (`window.KIS_NAV_VERSION` inside the file)
+and the cache-bust query param in `configuration.yaml`
+(`frontend.extra_module_url: /local/mobile_v1/kis-nav.js?v=N`) live in two
+different repos. A deploy that updates kis-nav.js without bumping `?v=N` in
+configuration.yaml ships fine on the filesystem but Fully Kiosk Browser keeps
+serving the cached old file — the new code does not run. Checklist for every
+kis-nav deploy:
+1. Increment `window.KIS_NAV_VERSION` in ha-dashboard `kis-nav.js`.
+2. Increment `?v=N` in ha-config `configuration.yaml` to match.
+3. Both repos get a commit+push in the same session.
+4. `sudo docker restart homeassistant` after configuration.yaml changes.
+5. Hard-refresh FKB on Tab S9 and verify the version badge or `window.KIS_NAV_VERSION`
+   in a probe matches the new number before declaring the deploy done.
+
+## 2026-04-21: Nest SDM 429 during rapid deploy iteration
+Tight deploy-then-test cycles on the Cameras page (sub-60s between refreshes)
+burn Google's 5 QPM ExecuteDeviceCommand quota and return
+`RESOURCE_EXHAUSTED (429)` on WebRTC stream start. The cells go empty and it
+looks exactly like a code regression. Before blaming recent CSS/JS changes:
+read the in-UI error banner text. If it says 429 / RESOURCE_EXHAUSTED, the
+code is likely fine — wait 90 s with the tablet on a non-camera page for
+quota refill, then retest. See dead_ends.md entry of the same date.

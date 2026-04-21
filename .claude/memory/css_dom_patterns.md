@@ -139,6 +139,83 @@ Key points:
   change. Use it instead of HA `conditional:` cards whenever the swap
   is just text/style (not a whole card replacement).
 
+## Camera placeholder via pseudo-element — CSS-first, no race (2026-04-21, v30 — SUPERSEDED, see v33 below)
+Inject a stylesheet into each `hui-picture-entity-card` shadow root that:
+1. Paints a placeholder layer via `ha-card::before` — `content: var(--kis-cam-label-text)`,
+   centered text, subtle opacity pulse. Exists the moment the `<style>` node lands.
+2. Gates the live feed at `opacity: 0` (hui-image, hui-image img/video/div,
+   ha-hls-player video, ha-camera-stream video) — no transition, no visible
+   fade-out of a raw black `<video>` element.
+3. On `:host([data-kis-feed-ready])`, flips feed opacity to 1 WITH a 300 ms
+   transition, and `ha-card::before { opacity: 0 }` fades the placeholder out.
+
+Day/night colors come from documentElement CSS vars (--kis-cam-placeholder-bg /
+-text / -border), set in `renderHeaderContent`'s isDayMode branch. CSS custom
+properties inherit through every shadow-DOM boundary, so no attribute
+propagation onto the picture-entity host is needed.
+
+Label text is passed via `--kis-cam-label-text` (set on the host's inline style,
+value wrapped in quotes so it resolves as a valid CSS string for `content`).
+Install calls `customElements.whenDefined('hui-picture-entity-card')` for the
+earliest opportunity, plus a 60 ms / 6 s burst as a fallback on view nav.
+
+Why this beats a DOM-injected overlay: the `<style>` insertion happens atomically
+with its rules taking effect — there's no window where picture-entity paints
+before the pseudo-element exists. See `dead_ends.md` → "Camera placeholder via
+DOM-injected overlay" for the v29 race that motivated this.
+
+**DO NOT USE step 2 — it's the v31/v32 break.** Gating hui-image / video /
+ha-hls-player / ha-camera-stream at `opacity: 0` starves Android WebView's
+media decoder on the Tab S9 (Chromium 146.x): the elements never paint
+pixels even after the reveal class lifts the gate, and the cell stays
+empty indefinitely. v33 pattern below is the safe version.
+
+## Camera placeholder via overlay-only ha-card::before (2026-04-21, v33)
+Same goal as the v30 entry above, but this time the native feed rendering is
+left **completely untouched** — no `opacity: 0` on hui-image/video/ha-hls-player/
+ha-camera-stream, no host opacity tricks. Only the `ha-card::before` pseudo-
+element is painted as a solid-color overlay on top of the live feed, and fades
+out when the reveal class lands.
+
+Shadow-root stylesheet (inside each `hui-picture-entity-card`):
+```css
+ha-card {
+  background: var(--kis-cam-placeholder-bg, #151c2a) !important;
+}
+ha-card::before {
+  content: var(--kis-cam-label-text, "CAMERA");
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--kis-cam-placeholder-bg, #151c2a);
+  color: var(--kis-cam-placeholder-text, #4a5570);
+  pointer-events: none; border-radius: inherit;
+  transition: opacity 300ms ease;
+  animation: kis-cam-pulse 2.4s ease-in-out infinite;
+}
+:host(.kis-feed-ready) ha-card::before {
+  opacity: 0;
+  animation: none;
+}
+```
+
+Reveal trigger: JS adds class `kis-feed-ready` to the `hui-picture-entity-card`
+host element when any of `loadeddata` / `playing` / `canplay` fires on the feed
+element (hui-image img/video, ha-hls-player video, ha-camera-stream video).
+Hard cap at 5 s via an interval counter, plus a 3 s `setTimeout` safety to
+mark ready unconditionally — prevents cameras with quirky event dispatch from
+staying placeholder'd forever.
+
+Why `:host(.kis-feed-ready)` not `:host([data-kis-feed-ready])`: attribute
+selectors on HA component hosts can collide with the component's own config
+attributes; a plain class is safer and HA doesn't manage classes on the host.
+
+Day/night colors still travel via documentElement CSS custom properties
+(--kis-cam-placeholder-bg, --kis-cam-placeholder-text) — unchanged from v30.
+
+**Broader lesson:** overlay on TOP of native media rendering is always safer
+than gating native rendering off. Any CSS that touches video element opacity
+on Android WebView is a regression waiting to happen.
+
 ## object-fit on camera feeds — Chris prefers fill (2026-04-21)
 For the motion-takeover zone on mobilev1, Chris wants `object-fit: fill`
 (stretch to fit exact zone dimensions), NOT cover (which crops) and NOT

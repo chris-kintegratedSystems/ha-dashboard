@@ -95,6 +95,24 @@ hairline }. Day/night colors via CSS custom properties flipped by kis-nav.js
 is actually installed — the `card_mod` key is accepted silently by Lovelace's
 schema whether card-mod is loaded or not.
 
+## 2026-04-21: Camera placeholder via DOM-injected overlay inside picture-entity
+**Tried:** kis-nav.js v29 created a `<div class="kis-cam-placeholder">` inside
+each picture-entity's `ha-card` (via `shadowRoot.querySelector('ha-card').appendChild`)
+at opacity 1, then faded to opacity 0 on `loadeddata` / `playing` / `load`.
+**Failed:** Visible black→white→video flash on Tab S9 FKB refresh. The DOM
+injection loses the race against picture-entity's first paint — the user sees
+the raw `<video>` element (black, then first frame) BEFORE the overlay lands
+on top. Polling the picture-entity tree at 180ms (burst) is not fast enough.
+**Fix:** Replace the overlay DIV with a CSS pseudo-element (`ha-card::before`)
+defined entirely in the shadow-root `<style>` block, and gate the live feed
+(hui-image / video / img / ha-hls-player / ha-camera-stream) at `opacity: 0`.
+The pseudo-element exists the moment our stylesheet lands — no DOM node to
+insert, no race. JS only flips a `data-kis-feed-ready` attribute on the host;
+a CSS rule fades feed in and placeholder out. Day/night palette travels via
+documentElement CSS variables (--kis-cam-placeholder-bg / -text / -border) —
+custom properties inherit through shadow DOM. Runs on `customElements.
+whenDefined('hui-picture-entity-card').then(…)` plus a 60 ms burst fallback.
+
 ## 2026-04-21: simple-swipe-card .active-slide class for horizontal swipes
 **Tried:** kis-nav.js v25 MutationObserver watching `class` attribute changes
 across the simple-swipe-card subtree, expecting to detect which child slide
@@ -118,3 +136,58 @@ that re-reads `currentIndex`. Full pattern documented in
 **Broader lesson:** When a custom element ships a property for its public
 state (here `currentIndex`), read it directly rather than inferring from
 class names. Classes are a rendering detail; properties are the API.
+
+## 2026-04-21: Host opacity:0 + shadow-root CSS hiding hui-image/video (v31/v32)
+**Tried:** kis-nav v31/v32 shadow-root CSS that held the host at `opacity:0`
+via a prototype patch on `hui-picture-entity-card.connectedCallback`, PLUS
+CSS inside each picture-entity's shadow root forcing
+`hui-image, hui-image > *, hui-image img, hui-image video, ha-hls-player,
+ha-camera-stream, ha-camera-stream video { opacity: 0 !important }`
+until a `.kis-feed-ready` class was added. Intent: zero flash from a raw
+black `<video>` element painting before the stream arrives.
+**Failed:** Empty light-gray cells on the real Tab S9 (Android WebView
+146.0.7680.x) even 4+ minutes after the `.kis-feed-ready` class had
+been added by markFeedReady. Playwright on the dev laptop rendered fine
+so the break only showed up on the actual hardware. Root cause
+unconfirmed but consistent with WebView starving the decoder when the
+entire video element tree is held at `opacity: 0` during stream
+initialization — it never paints pixels even after the class lifts the
+opacity gate. Also obscured a real Nest `RESOURCE_EXHAUSTED (429)`
+error that was happening in parallel (our rapid test iteration burned
+the 5 QPM ExecuteDeviceCommand quota), making the regression look
+purely CSS-driven when it was both.
+**Fix:** v33 switched to overlay-only — shadow-root CSS paints ONLY a
+`ha-card::before` pseudo-element over the top of the native feed (solid
+bg + pulse label); hui-image / video / ha-hls-player / ha-camera-stream
+rendering is left completely untouched. Feed paints pixels normally;
+when `.kis-feed-ready` adds, `::before { opacity: 0 }` fades the overlay
+off revealing the live stream beneath. Host stays at opacity:1 the whole
+time. Also removed `position: relative !important` + width/height:100%
+overrides on ha-card / hui-image that were redundant with HA's native
+layout and may have contributed to the break.
+**Broader lesson:** Intrusive CSS that forces opacity:0 on MEDIA
+elements (video, hls-player, camera-stream) is dangerous on embedded
+WebViews. Overlay on TOP of native rendering is always safer than
+gating native rendering off. Also: when a regression appears only on
+real hardware and not in Playwright, suspect WebView-specific behavior
+before blaming your JS.
+
+## 2026-04-21: Rapid test iteration exhausts Nest SDM rate limit — looks like code regression
+**Tried:** Iterating on kis-nav placeholder CSS with tight loops of
+`scp kis-nav.js → docker restart homeassistant → FKB hard refresh →
+navigate to cameras → screenshot` in under a minute each cycle.
+**Failed:** After ~3 cycles, the cameras page showed
+`Failed to start WebRTC stream: Nest API error: Too Many Requests
+response from API (429): RESOURCE_EXHAUSTED (429): Rate limited for
+the ExecuteDeviceCommand API for the user.` This looks identical to a
+code regression (empty cells) but is actually Google's 5 QPM quota
+refusing to start new WebRTC sessions.
+**Fix:** When iterating on camera-related code, wait ≥60s between
+test cycles. If 429 appears, navigate Tab S9 AWAY from cameras (home
+page) for 90s to let active streams tear down and quota refill.
+Verifying the error banner text before chasing CSS/JS is critical —
+don't rewrite working code because the cameras "look broken".
+**Broader lesson:** Before blaming your own recent changes, read the
+actual in-UI error banner. HA surfaces upstream errors inline (Nest
+429, Vivint auth, etc) right on the card, and those look very similar
+to "my CSS broke it" at a glance.

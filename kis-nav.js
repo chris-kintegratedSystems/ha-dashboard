@@ -47,7 +47,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 29;
+  window.KIS_NAV_VERSION = 33;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -892,12 +892,20 @@
       document.body.setAttribute('data-kis-day', '');
       document.documentElement.style.setProperty('--kis-section-label', '#7a8698');
       document.documentElement.style.setProperty('--kis-section-rule', 'rgba(0,0,0,0.06)');
+      // Camera placeholder day palette (consumed by CAM_PLACEHOLDER_CSS via
+      // CSS var inheritance through shadow DOM — see installCameraPlaceholder).
+      document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#f0f2f5');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#7a8698');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(0,0,0,0.06)');
     } else {
       bar.removeAttribute('data-kis-day');
       if (navBar) navBar.removeAttribute('data-kis-day');
       document.body.removeAttribute('data-kis-day');
       document.documentElement.style.setProperty('--kis-section-label', '#4a5570');
       document.documentElement.style.setProperty('--kis-section-rule', 'rgba(255,255,255,0.06)');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#151c2a');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#4a5570');
+      document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(255,255,255,0.06)');
     }
 
     // Clock + date
@@ -1407,28 +1415,30 @@
   }
 
   // ─── Cameras page: stagger Nest stream init ────────────────────────────────
-  // Nest SDM rate limits: 5 QPM per device per user. Starting the two Nest
+  // Nest SDM rate limits: 5 QPM per device per user. Starting both Nest
   // streams simultaneously on a Tab S9 refresh brushes the cap when a
-  // keepalive from a prior session is still in-flight.
+  // keepalive from a prior session is still in-flight — this produced
+  // WebRTC RESOURCE_EXHAUSTED / HTTP 429 errors on Cameras page load.
   //
-  // Plan (per ha-lovelace-expert brief 2026-04-21):
-  //   nanit_benjamin / nanit_travel: immediate (local RTMP, zero limit)
-  //   doorbell (Vivint):             immediate (separate auth path)
-  //   living_room_camera (Nest):     immediate
-  //   izzy_camera (Nest):            delay 3 s
+  // Per-camera delay map (2026-04-21):
+  //   camera.doorbell        — immediate (Vivint, separate auth path)
+  //   camera.nanit_benjamin  — immediate (local RTMP, zero limit)
+  //   camera.nanit_travel    — immediate (local RTMP, zero limit)
+  //   camera.living_room_camera (Nest) — delay 1000 ms
+  //   camera.izzy_camera        (Nest) — delay 2000 ms
   //
-  // Implementation: detach izzy's picture-entity from DOM on Cameras-page
-  // entry (a placeholder of the same size holds the grid cell open), then
-  // re-attach it 3 s later. Detachment disconnects the custom element, so
-  // its connectedCallback / stream init don't run until re-attach — a true
-  // stream-start delay, not just a visual one.
-  const CAMERAS_STAGGER_ENTITY = 'camera.izzy_camera';
-  const CAMERAS_STAGGER_MS = 3000;
-  let _camerasStaggerTimer = null;
+  // Implementation: detach each staggered camera's picture-entity from DOM
+  // on Cameras-page entry (a placeholder of the same size holds the grid
+  // cell open), then re-attach it after its delay. Detachment disconnects
+  // the custom element, so its connectedCallback / stream init don't run
+  // until re-attach — a true stream-start delay, not just visual.
+  const CAMERAS_STAGGER = {
+    'camera.living_room_camera': 1000,
+    'camera.izzy_camera': 2000,
+  };
   let _camerasStaggerActiveSlug = null;
-  let _camerasStaggerParent = null;
-  let _camerasStaggerPlaceholder = null;
-  let _camerasStaggerNode = null;
+  // Map<entityId, { parent, placeholder, node, timer }>
+  const _camerasStaggerState = new Map();
 
   function findCameraPictureEntity(entityId) {
     function walk(root) {
@@ -1452,25 +1462,26 @@
     return walk(document.body);
   }
 
-  function restoreStaggeredCamera() {
-    if (_camerasStaggerTimer) {
-      clearTimeout(_camerasStaggerTimer);
-      _camerasStaggerTimer = null;
+  function restoreStaggeredCamera(entityId) {
+    if (!entityId) {
+      // Called without an arg — restore all.
+      for (const id of Array.from(_camerasStaggerState.keys())) {
+        restoreStaggeredCamera(id);
+      }
+      return;
     }
+    const st = _camerasStaggerState.get(entityId);
+    if (!st) return;
+    if (st.timer) clearTimeout(st.timer);
     if (
-      _camerasStaggerParent &&
-      _camerasStaggerPlaceholder &&
-      _camerasStaggerNode &&
-      _camerasStaggerPlaceholder.parentElement === _camerasStaggerParent
+      st.parent &&
+      st.placeholder &&
+      st.node &&
+      st.placeholder.parentElement === st.parent
     ) {
-      _camerasStaggerParent.replaceChild(
-        _camerasStaggerNode,
-        _camerasStaggerPlaceholder
-      );
+      st.parent.replaceChild(st.node, st.placeholder);
     }
-    _camerasStaggerParent = null;
-    _camerasStaggerPlaceholder = null;
-    _camerasStaggerNode = null;
+    _camerasStaggerState.delete(entityId);
   }
 
   // Stagger placeholder sits in the light tree but the grid card that
@@ -1528,8 +1539,8 @@
 
   function applyCamerasStagger() {
     if (!onMobileDashboard() || getActiveSlug() !== 'cameras') {
-      // Left the page — restore the node immediately if it's still detached,
-      // so returning to Cameras finds a sane DOM.
+      // Left the page — restore all detached nodes immediately so returning
+      // to Cameras finds a sane DOM.
       if (_camerasStaggerActiveSlug === 'cameras') restoreStaggeredCamera();
       _camerasStaggerActiveSlug = null;
       return;
@@ -1539,70 +1550,75 @@
 
     ensureLightCamPlaceholderStyles();
 
-    const tryApply = (attempts) => {
-      const pe = findCameraPictureEntity(CAMERAS_STAGGER_ENTITY);
-      if (!pe) {
-        if (attempts < 20) setTimeout(() => tryApply(attempts + 1), 200);
-        return;
-      }
-      const parent = pe.parentElement;
-      if (!parent) return;
-      const rect = pe.getBoundingClientRect();
-      const placeholder = document.createElement('div');
-      placeholder.setAttribute('data-kis-cam-stagger', CAMERAS_STAGGER_ENTITY);
-      if (document.body.hasAttribute('data-kis-day')) {
-        placeholder.setAttribute('data-kis-day', '');
-      }
-      placeholder.style.width = rect.width > 0 ? rect.width + 'px' : '100%';
-      placeholder.style.height = rect.height > 0 ? rect.height + 'px' : 'auto';
-      const spinner = document.createElement('div');
-      spinner.className = 'kis-cam-spinner';
-      placeholder.appendChild(spinner);
-      const label = document.createElement('span');
-      label.textContent = cameraFriendlyName(CAMERAS_STAGGER_ENTITY);
-      placeholder.appendChild(label);
-      // Inject the stagger CSS into whatever root the placeholder ends
-      // up in (typically a grid-card shadow root) so the rules actually
-      // reach the element.
-      injectStaggerStylesInto(parent.getRootNode());
-
-      _camerasStaggerParent = parent;
-      _camerasStaggerPlaceholder = placeholder;
-      _camerasStaggerNode = pe;
-      parent.replaceChild(placeholder, pe);
-
-      _camerasStaggerTimer = setTimeout(() => {
-        if (
-          _camerasStaggerParent &&
-          _camerasStaggerPlaceholder &&
-          _camerasStaggerNode &&
-          _camerasStaggerPlaceholder.parentElement === _camerasStaggerParent
-        ) {
-          _camerasStaggerParent.replaceChild(
-            _camerasStaggerNode,
-            _camerasStaggerPlaceholder
-          );
-        }
-        _camerasStaggerTimer = null;
-        _camerasStaggerParent = null;
-        _camerasStaggerPlaceholder = null;
-        _camerasStaggerNode = null;
-      }, CAMERAS_STAGGER_MS);
-    };
-    tryApply(0);
+    for (const [entityId, delayMs] of Object.entries(CAMERAS_STAGGER)) {
+      applyStaggerFor(entityId, delayMs, 0);
+    }
   }
 
-  // ─── Camera placeholder overlay (no-flash stream init) ────────────────────
-  // Every picture-entity camera card gets an absolutely-positioned overlay
-  // showing the camera friendly name + pulsing spinner. When the underlying
-  // <video> emits 'loadeddata' / 'playing' (or <img> 'load'), the overlay
-  // crossfades to opacity 0 over 300 ms revealing the live feed — no black
-  // or white flash while HA wires up HLS / ha-camera-stream.
+  function applyStaggerFor(entityId, delayMs, attempts) {
+    const pe = findCameraPictureEntity(entityId);
+    if (!pe) {
+      if (attempts < 20) setTimeout(() => applyStaggerFor(entityId, delayMs, attempts + 1), 200);
+      return;
+    }
+    if (_camerasStaggerState.has(entityId)) return; // already detached
+    const parent = pe.parentElement;
+    if (!parent) return;
+    const rect = pe.getBoundingClientRect();
+    const placeholder = document.createElement('div');
+    placeholder.setAttribute('data-kis-cam-stagger', entityId);
+    if (document.body.hasAttribute('data-kis-day')) {
+      placeholder.setAttribute('data-kis-day', '');
+    }
+    placeholder.style.width = rect.width > 0 ? rect.width + 'px' : '100%';
+    placeholder.style.height = rect.height > 0 ? rect.height + 'px' : 'auto';
+    const spinner = document.createElement('div');
+    spinner.className = 'kis-cam-spinner';
+    placeholder.appendChild(spinner);
+    const label = document.createElement('span');
+    label.textContent = cameraFriendlyName(entityId);
+    placeholder.appendChild(label);
+    injectStaggerStylesInto(parent.getRootNode());
+
+    const state = { parent, placeholder, node: pe, timer: null };
+    _camerasStaggerState.set(entityId, state);
+    parent.replaceChild(placeholder, pe);
+
+    state.timer = setTimeout(() => {
+      const st = _camerasStaggerState.get(entityId);
+      if (st && st.placeholder && st.node && st.placeholder.parentElement === st.parent) {
+        st.parent.replaceChild(st.node, st.placeholder);
+      }
+      _camerasStaggerState.delete(entityId);
+    }, delayMs);
+  }
+
+  // ─── Camera placeholder (no-flash stream init) ────────────────────────────
+  // v31 approach — hoist the fix to the earliest possible point: patch
+  // hui-picture-entity-card.prototype.connectedCallback so EVERY instance
+  // receives our placeholder CSS the moment it connects, BEFORE its own
+  // first paint. v29's DOM-injected overlay and v30's post-hoc shadow CSS
+  // both lost the race against picture-entity's first render on FKB. The
+  // prototype patch wins the race by being part of the same connection
+  // sequence as the element's render.
   //
-  // Applied to both the Cameras page (all 5 feeds) and the Home priority-
-  // zone motion takeover (doorbell / living_room / izzy). The overlay
-  // colors follow kis-nav's day/night state via the data-kis-day attribute
-  // propagated onto each picture-entity host on every tick.
+  // Two-layer defense:
+  //  1. Host opacity: 0 at connectedCallback start, transitioned to 1 once
+  //     the shadow-root CSS is in place and the host is flagged as one of
+  //     our cameras (data-kis-cam). Keeps the bare-ha-card flash off-screen
+  //     during the first frames.
+  //  2. Shadow-root CSS gated on :host([data-kis-cam]) paints the placeholder
+  //     via ha-card::before and holds hui-image/video/img at opacity: 0
+  //     until :host([data-kis-cam].kis-feed-ready) flips on.
+  //
+  // markFeedReady adds the `kis-feed-ready` class on the host when the
+  // underlying video/img fires loadeddata/playing/load. This is a CLASS,
+  // not an attribute — requested by Chris 2026-04-21 and matches the user-
+  // spec selector hui-picture-entity-card.kis-feed-ready { opacity: 1 }.
+  //
+  // Day/night colors come from documentElement CSS variables set in
+  // renderHeaderContent (--kis-cam-placeholder-bg/-text/-border). CSS
+  // custom properties inherit through shadow-DOM boundaries.
   const PLACEHOLDER_CAM_ENTITIES = [
     'camera.doorbell',
     'camera.living_room_camera',
@@ -1611,47 +1627,48 @@
     'camera.nanit_travel',
   ];
   const CAM_PLACEHOLDER_CSS_ID = 'kis-cam-placeholder';
+  // Applied unconditionally to every hui-picture-entity-card shadow root via
+  // the prototype patch below. Every picture-entity card on this dashboard
+  // is one of our 5 cameras (verified 2026-04-21), so unconditional is safe;
+  // the flip gate is the `kis-feed-ready` class that JS adds once the feed
+  // element fires loadeddata/playing/load.
   const CAM_PLACEHOLDER_CSS = `
-    ha-card { position: relative !important; overflow: hidden !important; }
-    .kis-cam-placeholder {
+    /* Overlay-only approach: we DON'T touch hui-image / video / img
+       rendering — picture-entity keeps its native layout and the stream
+       paints pixels normally. We just paint a ha-card::before overlay ON
+       TOP of the feed until markFeedReady adds .kis-feed-ready to the host.
+       Safer than hiding internals — doesn't starve the WebView of rendering
+       signals (which was the v31/v32 Tab S9 regression). */
+    ha-card {
+      background: var(--kis-cam-placeholder-bg, #151c2a) !important;
+    }
+    ha-card::before {
+      content: var(--kis-cam-label-text, "CAMERA");
       position: absolute;
       inset: 0;
       z-index: 5;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      background: rgba(16,21,31,0.92);
-      color: rgba(255,255,255,0.82);
+      background: var(--kis-cam-placeholder-bg, #151c2a);
+      color: var(--kis-cam-placeholder-text, #4a5570);
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      opacity: 1;
-      transition: opacity 300ms ease;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       pointer-events: none;
       border-radius: inherit;
+      transition: opacity 300ms ease;
+      animation: kis-cam-pulse 2.4s ease-in-out infinite;
     }
-    .kis-cam-placeholder::before {
-      content: "";
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.18);
-      border-top-color: rgba(255,255,255,0.75);
-      animation: kis-cam-spin 900ms linear infinite;
+    @keyframes kis-cam-pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.55; }
     }
-    @keyframes kis-cam-spin { to { transform: rotate(360deg); } }
-    .kis-cam-placeholder.kis-ready {
+    :host(.kis-feed-ready) ha-card::before {
       opacity: 0;
-    }
-    :host([data-kis-day]) .kis-cam-placeholder {
-      background: rgba(244,247,252,0.94);
-      color: rgba(26,32,48,0.72);
-    }
-    :host([data-kis-day]) .kis-cam-placeholder::before {
-      border-color: rgba(26,32,48,0.14);
-      border-top-color: rgba(26,32,48,0.55);
+      animation: none;
     }
   `;
 
@@ -1708,46 +1725,94 @@
       .replace(/\b\w/g, (c) => c.toUpperCase());
   }
 
-  function installCameraPlaceholder(pe) {
-    if (!pe || !pe.shadowRoot) return;
-    const sr = pe.shadowRoot;
-    injectShadowCSS(sr, CAM_PLACEHOLDER_CSS_ID, CAM_PLACEHOLDER_CSS);
+  function markFeedReady(pe) {
+    if (!pe || pe.classList.contains('kis-feed-ready')) return;
+    pe.classList.add('kis-feed-ready');
+    if (pe._kisCamPoll) { clearInterval(pe._kisCamPoll); pe._kisCamPoll = null; }
+    if (pe._kisCamSafetyTimer) { clearTimeout(pe._kisCamSafetyTimer); pe._kisCamSafetyTimer = null; }
+  }
 
-    // Propagate day/night onto the host so :host([data-kis-day]) fires.
-    const isDay = document.getElementById('kis-header-bar')?.hasAttribute('data-kis-day');
-    if (isDay) pe.setAttribute('data-kis-day', '');
-    else pe.removeAttribute('data-kis-day');
+  function installPlaceholderCSS(pe) {
+    if (!pe || !pe.shadowRoot) return false;
+    return injectShadowCSS(pe.shadowRoot, CAM_PLACEHOLDER_CSS_ID, CAM_PLACEHOLDER_CSS);
+  }
 
-    const haCard = sr.querySelector('ha-card');
-    if (!haCard) return;
+  // Walk shadow tree rooted at `root`, invoking `fn(pe)` for every
+  // hui-picture-entity-card host encountered. Used to retroactively reach
+  // instances that were already connected before we patched the prototype.
+  function walkPictureEntities(root, fn) {
+    if (!root) return;
+    const seen = new Set();
+    function walk(r) {
+      if (!r || seen.has(r)) return;
+      seen.add(r);
+      const pes = r.querySelectorAll ? r.querySelectorAll('hui-picture-entity-card') : [];
+      for (const pe of pes) fn(pe);
+      const all = r.querySelectorAll ? r.querySelectorAll('*') : [];
+      for (const el of all) if (el.shadowRoot) walk(el.shadowRoot);
+    }
+    walk(root);
+  }
 
-    let overlay = haCard.querySelector(':scope > .kis-cam-placeholder');
+  function armPictureEntityHost(pe) {
+    if (!pe || pe._kisCamArmed) return;
+    pe._kisCamArmed = true;
+    // Install the shadow-root CSS as soon as a shadow root exists. For
+    // lit-element based cards (all HA cards), shadowRoot is created in the
+    // constructor, so this succeeds on the first tick. The CSS paints the
+    // ha-card placeholder background + ::before label AND holds hui-image/
+    // video/img at opacity:0 — host stays visible so the placeholder shows.
+    installPlaceholderCSS(pe);
+    armEntityOnceConfigReady(pe, 0);
+  }
 
-    // If the feed has already painted at least one frame, skip the
-    // placeholder entirely — adding one now would cause a brief flash
-    // of the placeholder OVER an already-visible feed, a regression.
-    if (!overlay) {
-      const feedNow = findFeedElement(sr);
-      let alreadyReady = false;
-      if (feedNow) {
-        if (feedNow.tagName === 'VIDEO') alreadyReady = feedNow.readyState >= 2;
-        else if (feedNow.tagName === 'IMG') alreadyReady = feedNow.complete && feedNow.naturalHeight > 0;
+  function armEntityOnceConfigReady(pe, attempts) {
+    const cfg = pe._config || pe.config;
+    if (!cfg || !cfg.entity) {
+      if (attempts < 50) {
+        setTimeout(() => armEntityOnceConfigReady(pe, attempts + 1), 60);
       }
-      if (alreadyReady) return;
+      return;
+    }
+    installPlaceholderCSS(pe);
+    const isOurs = PLACEHOLDER_CAM_ENTITIES.indexOf(cfg.entity) !== -1;
+    if (!isOurs) {
+      // Not one of our allowlist — skip placeholder wiring. CSS applied to its
+      // shadow root is still harmless (just hides internals until
+      // kis-feed-ready). Mark feed-ready immediately so the feed shows.
+      markFeedReady(pe);
+      return;
+    }
+    if (!pe._kisCamLabelSet) {
+      const label = cameraFriendlyName(cfg.entity);
+      const safe = String(label).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      pe.style.setProperty('--kis-cam-label-text', '"' + safe + '"');
+      pe._kisCamLabelSet = true;
+    }
+    watchFeedReady(pe);
+  }
 
-      overlay = document.createElement('div');
-      overlay.className = 'kis-cam-placeholder';
-      const cfg = pe._config || pe.config;
-      const label = document.createElement('span');
-      label.textContent = cameraFriendlyName(cfg && cfg.entity);
-      overlay.appendChild(label);
-      haCard.appendChild(overlay);
+  function watchFeedReady(pe) {
+    if (!pe || !pe.shadowRoot) return;
+    if (pe.classList.contains('kis-feed-ready')) return;
+    if (pe._kisCamPoll) return;
+
+    const sr = pe.shadowRoot;
+    const feedNow = findFeedElement(sr);
+    if (feedNow) {
+      const nowReady = feedNow.tagName === 'VIDEO'
+        ? feedNow.readyState >= 2
+        : (feedNow.tagName === 'IMG' ? (feedNow.complete && feedNow.naturalHeight > 0) : false);
+      if (nowReady) { markFeedReady(pe); return; }
     }
 
-    // Already revealed — nothing more to do.
-    if (overlay.classList.contains('kis-ready')) return;
-    // Already polling for this pe — don't start a second loop.
-    if (pe._kisCamPoll) return;
+    // Fire-and-forget ceiling: no matter what, reveal the feed within 3 s.
+    // Android WebView doesn't reliably fire loadeddata/playing for MSE
+    // video nor 'load' for MJPEG image streams that re-use a connection,
+    // so waiting beyond this risks a permanently-hidden feed. 3 s is enough
+    // to cover up the first-frame paint in practice; if the stream hasn't
+    // started yet the user sees the native loading spinner which is fine.
+    pe._kisCamSafetyTimer = setTimeout(() => markFeedReady(pe), 3000);
 
     let tries = 0;
     pe._kisCamPoll = setInterval(() => {
@@ -1758,31 +1823,24 @@
         if (feed.tagName === 'VIDEO') {
           ready = feed.readyState >= 2;
           if (!ready && !feed._kisReadyHandler) {
-            feed._kisReadyHandler = () => {
-              overlay.classList.add('kis-ready');
-              if (pe._kisCamPoll) { clearInterval(pe._kisCamPoll); pe._kisCamPoll = null; }
-            };
+            feed._kisReadyHandler = () => markFeedReady(pe);
             feed.addEventListener('loadeddata', feed._kisReadyHandler);
             feed.addEventListener('playing', feed._kisReadyHandler);
+            feed.addEventListener('canplay', feed._kisReadyHandler);
           }
         } else if (feed.tagName === 'IMG') {
           ready = feed.complete && feed.naturalHeight > 0;
           if (!ready && !feed._kisReadyHandler) {
-            feed._kisReadyHandler = () => {
-              overlay.classList.add('kis-ready');
-              if (pe._kisCamPoll) { clearInterval(pe._kisCamPoll); pe._kisCamPoll = null; }
-            };
+            feed._kisReadyHandler = () => markFeedReady(pe);
             feed.addEventListener('load', feed._kisReadyHandler);
           }
         }
       }
       if (ready) {
-        overlay.classList.add('kis-ready');
-        clearInterval(pe._kisCamPoll); pe._kisCamPoll = null;
-      } else if (tries > 60) {
-        // 30 s safety — reveal feed even if we never caught a ready event.
-        overlay.classList.add('kis-ready');
-        clearInterval(pe._kisCamPoll); pe._kisCamPoll = null;
+        markFeedReady(pe);
+      } else if (tries > 10) {
+        // 5 s hard cap via interval count (belt-and-suspenders with timer).
+        markFeedReady(pe);
       }
     }, 500);
   }
@@ -1791,14 +1849,36 @@
     if (!onMobileDashboard()) return;
     const slug = getActiveSlug();
     if (slug !== 'cameras' && slug !== 'home') return;
-    const pes = findAllCameraPictureEntities();
-    for (const pe of pes) installCameraPlaceholder(pe);
+    walkPictureEntities(document.body, (pe) => armPictureEntityHost(pe));
   }
 
-  // Rapid poll for the first ~4 s after syncState fires — picture-entity
-  // elements mount lazily inside sections-view, so the 1-s tick misses
-  // them. This burst installs placeholders the instant they appear so
-  // the user never sees the black/white init flash.
+  // Monkey-patch hui-picture-entity-card.connectedCallback to inject the
+  // placeholder CSS at the earliest possible point — before HA's own render
+  // pipeline paints the first black <video>. Shadow-root CSS paints the
+  // ha-card placeholder bg + ::before label AND holds hui-image/video at
+  // opacity:0. Host opacity stays at 1 so the placeholder shows.
+  let _pictureEntityProtoPatched = false;
+  function patchPictureEntityPrototype() {
+    if (_pictureEntityProtoPatched) return;
+    const Ctor = customElements.get('hui-picture-entity-card');
+    if (!Ctor || !Ctor.prototype) return;
+    _pictureEntityProtoPatched = true;
+    const origConnected = Ctor.prototype.connectedCallback;
+    Ctor.prototype.connectedCallback = function() {
+      // Shadow root is created in the constructor for lit-element cards —
+      // so it already exists here and we can inject CSS before any render.
+      installPlaceholderCSS(this);
+      this._kisCamArmed = true;
+      const r = origConnected ? origConnected.apply(this, arguments) : undefined;
+      // Config lands via setConfig (separate call from HA). Poll for it.
+      armEntityOnceConfigReady(this, 0);
+      return r;
+    };
+    // Catch any instances that connected BEFORE we patched the prototype
+    // (script-load timing).
+    walkPictureEntities(document.body, (pe) => armPictureEntityHost(pe));
+  }
+
   let _camPlaceholderBurstTimer = null;
   function startCameraPlaceholderBurst() {
     if (_camPlaceholderBurstTimer) clearInterval(_camPlaceholderBurstTimer);
@@ -1806,11 +1886,23 @@
     _camPlaceholderBurstTimer = setInterval(() => {
       ticks++;
       updateCameraPlaceholders();
-      if (ticks >= 24) { // 24 * 180ms ≈ 4.3 s
+      if (ticks >= 100) { // 100 * 60ms = 6 s
         clearInterval(_camPlaceholderBurstTimer);
         _camPlaceholderBurstTimer = null;
       }
-    }, 180);
+    }, 60);
+  }
+
+  let _camPlaceholderDefinedHooked = false;
+  function hookPictureEntityDefinition() {
+    if (_camPlaceholderDefinedHooked) return;
+    _camPlaceholderDefinedHooked = true;
+    try {
+      customElements.whenDefined('hui-picture-entity-card').then(() => {
+        patchPictureEntityPrototype();
+        startCameraPlaceholderBurst();
+      });
+    } catch (e) { /* older browsers — burst still covers us */ }
   }
 
   // ─── Layout patches ────────────────────────────────────────────────────────
@@ -1923,6 +2015,11 @@
 
     // Resolve safe-area-inset-top via CSS custom property (WKWebView fix)
     initSafeAreaTop();
+
+    // Kick the camera-placeholder pipeline the moment hui-picture-entity-card
+    // is defined — earliest opportunity to inject shadow-root CSS before any
+    // instance paints a black <video> element.
+    hookPictureEntityDefinition();
 
     // Inject shared styles + global app-header hide
     const styleEl = document.createElement('style');
@@ -2103,6 +2200,15 @@
       customElements.whenDefined('ha-icon').then(() => setTimeout(inject, 200));
     }
   }
+
+  // Kick the picture-entity prototype patch as early as kis-nav.js can run,
+  // BEFORE boot() waits for ha-icon. customElements.whenDefined resolves as
+  // soon as HA's bundle registers hui-picture-entity-card — at that moment
+  // we patch connectedCallback to hide the host + inject placeholder CSS
+  // on every future connection, and walk the tree to cover any instances
+  // that connected before this script loaded. This is the earliest point
+  // at which we can intercept picture-entity renders.
+  hookPictureEntityDefinition();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);

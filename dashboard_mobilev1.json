@@ -1187,227 +1187,222 @@
                   }
                 },
                 {
-                  "type": "vertical-stack",
-                  "cards": [
+                  "type": "conditional",
+                  "conditions": [
                     {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "condition": "state",
-                          "entity": "binary_sensor.doorbell_motion_sticky",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "picture-entity",
-                        "entity": "camera.doorbell",
-                        "camera_image": "camera.doorbell",
-                        "camera_view": "live",
-                        "show_state": false,
-                        "show_name": false,
-                        "fit_mode": "fill",
-                        "card_mod": {
-                          "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #f04060 !important; box-shadow: 0 0 12px rgba(240,64,96,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
-                        },
-                        "tap_action": {
-                          "action": "fire-dom-event",
-                          "browser_mod": {
-                            "service": "browser_mod.popup",
-                            "data": {
-                              "title": false,
-                              "size": "fullscreen",
-                              "dismissable": true,
-                              "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
-                              "content": {
-                                "type": "picture-elements",
-                                "camera_image": "camera.doorbell",
-                                "camera_view": "live",
-                                "card_mod": {
-                                  "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
-                                },
-                                "elements": [
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_close",
-                                    "style": {
-                                      "top": "16px",
-                                      "right": "16px"
-                                    }
-                                  },
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_lock_front_door",
-                                    "style": {
-                                      "bottom": "18px",
-                                      "left": "calc(50% - 74px)"
-                                    }
-                                  },
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_ctrl_disabled",
-                                    "icon": "mdi:microphone",
-                                    "style": {
-                                      "bottom": "18px",
-                                      "left": "calc(50% - 22px)"
-                                    }
-                                  },
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_ctrl_disabled",
-                                    "icon": "mdi:volume-high",
-                                    "style": {
-                                      "bottom": "18px",
-                                      "left": "calc(50% + 30px)"
-                                    }
-                                  }
-                                ]
-                              }
-                            }
-                          }
-                        }
-                      }
+                      "condition": "state",
+                      "entity": "binary_sensor.doorbell_motion_sticky",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.doorbell",
+                    "camera_image": "camera.doorbell",
+                    "camera_view": "live",
+                    "show_state": false,
+                    "show_name": false,
+                    "fit_mode": "fill",
+                    "card_mod": {
+                      "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #f04060 !important; box-shadow: 0 0 12px rgba(240,64,96,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
                     },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "condition": "state",
-                          "entity": "binary_sensor.living_room_camera_motion_sticky",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "picture-entity",
-                        "entity": "camera.living_room_camera",
-                        "camera_image": "camera.living_room_camera",
-                        "camera_view": "live",
-                        "show_state": false,
-                        "show_name": false,
-                        "fit_mode": "fill",
-                        "card_mod": {
-                          "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
-                        },
-                        "tap_action": {
-                          "action": "fire-dom-event",
-                          "browser_mod": {
-                            "service": "browser_mod.popup",
-                            "data": {
-                              "title": false,
-                              "size": "fullscreen",
-                              "dismissable": true,
-                              "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
-                              "content": {
-                                "type": "picture-elements",
-                                "camera_image": "camera.living_room_camera",
-                                "camera_view": "live",
-                                "card_mod": {
-                                  "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
-                                },
-                                "elements": [
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_close",
-                                    "style": {
-                                      "top": "16px",
-                                      "right": "16px"
-                                    }
-                                  },
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_ctrl_disabled",
-                                    "icon": "mdi:microphone",
-                                    "style": {
-                                      "bottom": "18px",
-                                      "left": "calc(50% - 48px)"
-                                    }
-                                  },
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_ctrl_disabled",
-                                    "icon": "mdi:volume-high",
-                                    "style": {
-                                      "bottom": "18px",
-                                      "left": "calc(50% + 4px)"
-                                    }
-                                  }
-                                ]
+                    "tap_action": {
+                      "action": "fire-dom-event",
+                      "browser_mod": {
+                        "service": "browser_mod.popup",
+                        "data": {
+                          "title": false,
+                          "size": "fullscreen",
+                          "dismissable": true,
+                          "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                          "content": {
+                            "type": "picture-elements",
+                            "camera_image": "camera.doorbell",
+                            "camera_view": "live",
+                            "card_mod": {
+                              "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                            },
+                            "elements": [
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_close",
+                                "style": {
+                                  "top": "16px",
+                                  "right": "16px"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_lock_front_door",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 74px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:microphone",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 22px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:volume-high",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% + 30px)"
+                                }
                               }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "condition": "state",
-                          "entity": "binary_sensor.izzy_camera_motion_sticky",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "picture-entity",
-                        "entity": "camera.izzy_camera",
-                        "camera_image": "camera.izzy_camera",
-                        "camera_view": "live",
-                        "show_state": false,
-                        "show_name": false,
-                        "fit_mode": "fill",
-                        "card_mod": {
-                          "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
-                        },
-                        "tap_action": {
-                          "action": "fire-dom-event",
-                          "browser_mod": {
-                            "service": "browser_mod.popup",
-                            "data": {
-                              "title": false,
-                              "size": "fullscreen",
-                              "dismissable": true,
-                              "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
-                              "content": {
-                                "type": "picture-elements",
-                                "camera_image": "camera.izzy_camera",
-                                "camera_view": "live",
-                                "card_mod": {
-                                  "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
-                                },
-                                "elements": [
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_close",
-                                    "style": {
-                                      "top": "16px",
-                                      "right": "16px"
-                                    }
-                                  },
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_ctrl_disabled",
-                                    "icon": "mdi:microphone",
-                                    "style": {
-                                      "bottom": "18px",
-                                      "left": "calc(50% - 48px)"
-                                    }
-                                  },
-                                  {
-                                    "type": "custom:button-card",
-                                    "template": "cam_ctrl_disabled",
-                                    "icon": "mdi:volume-high",
-                                    "style": {
-                                      "bottom": "18px",
-                                      "left": "calc(50% + 4px)"
-                                    }
-                                  }
-                                ]
-                              }
-                            }
+                            ]
                           }
                         }
                       }
                     }
-                  ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.living_room_camera_motion_sticky",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.living_room_camera",
+                    "camera_image": "camera.living_room_camera",
+                    "camera_view": "live",
+                    "show_state": false,
+                    "show_name": false,
+                    "fit_mode": "fill",
+                    "card_mod": {
+                      "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
+                    },
+                    "tap_action": {
+                      "action": "fire-dom-event",
+                      "browser_mod": {
+                        "service": "browser_mod.popup",
+                        "data": {
+                          "title": false,
+                          "size": "fullscreen",
+                          "dismissable": true,
+                          "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                          "content": {
+                            "type": "picture-elements",
+                            "camera_image": "camera.living_room_camera",
+                            "camera_view": "live",
+                            "card_mod": {
+                              "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                            },
+                            "elements": [
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_close",
+                                "style": {
+                                  "top": "16px",
+                                  "right": "16px"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:microphone",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 48px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:volume-high",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% + 4px)"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.izzy_camera_motion_sticky",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "picture-entity",
+                    "entity": "camera.izzy_camera",
+                    "camera_image": "camera.izzy_camera",
+                    "camera_view": "live",
+                    "show_state": false,
+                    "show_name": false,
+                    "fit_mode": "fill",
+                    "card_mod": {
+                      "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
+                    },
+                    "tap_action": {
+                      "action": "fire-dom-event",
+                      "browser_mod": {
+                        "service": "browser_mod.popup",
+                        "data": {
+                          "title": false,
+                          "size": "fullscreen",
+                          "dismissable": true,
+                          "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                          "content": {
+                            "type": "picture-elements",
+                            "camera_image": "camera.izzy_camera",
+                            "camera_view": "live",
+                            "card_mod": {
+                              "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                            },
+                            "elements": [
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_close",
+                                "style": {
+                                  "top": "16px",
+                                  "right": "16px"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:microphone",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% - 48px)"
+                                }
+                              },
+                              {
+                                "type": "custom:button-card",
+                                "template": "cam_ctrl_disabled",
+                                "icon": "mdi:volume-high",
+                                "style": {
+                                  "bottom": "18px",
+                                  "left": "calc(50% + 4px)"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
                 },
                 {
                   "type": "custom:simple-swipe-card",
