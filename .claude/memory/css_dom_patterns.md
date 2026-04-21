@@ -74,19 +74,37 @@ attribute on its own injected elements (header bar, nav bar, mini player),
 not on document.body/html. Adding it to body would work but requires an
 extra injection path; property bag on documentElement is simpler.
 
-## simple-swipe-card — active-slide class marks the visible tile (2026-04-21)
+## simple-swipe-card — read currentIndex, watch .slider transform (2026-04-21, revised)
 `nutteloost/simple-swipe-card` v2.8.2 does NOT dispatch a `slide-changed`
-custom event. Instead, it toggles an `active-slide` class on whichever
-slide wrapper element is currently centered in the carousel (searched
-both shadow DOM and light DOM of the card). To track the active slide
-index from kis-nav.js, attach a MutationObserver watching `class`
-attribute changes across the subtree, then compute the index by finding
-the child with `.active-slide` and counting same-tag siblings.
+custom event. Earlier note in this file claimed `.active-slide` class
+marks the visible tile — that was WRONG for horizontal mode. Per the
+card's CSS, `.active-slide` is only applied when the carousel is in
+vertical mode (`.vertical .slide.active-slide`); horizontal swipes
+never toggle that class and a MutationObserver watching for it never
+fires. Verified via Playwright DOM inspection in `swipe-inspect.js`.
 
-Debounce the observer (~150ms) to avoid a flurry of callbacks during
-the swipe animation. Detach and re-attach on view remount (the swipe-
-card element is a new instance after navigating away from Home and
-back).
+Working approach (kis-nav.js v26):
+1. Read the authoritative index directly from the custom element as
+   `cardEl.currentIndex` — the card exposes this property and keeps it
+   in sync with the rendered transform. Preferred source of truth.
+2. Attach a MutationObserver to the card's shadow root with
+   `attributeFilter: ['style', 'class', 'data-visible-index']` and
+   `subtree: true`. The `.slider` element's inline `style` (transform
+   matrix) mutates on every swipe and snap-back, so this fires reliably.
+3. Attach a `transitionend` listener on the shadow root's `.slider`
+   element — fires when the swipe animation settles. Cheap confirmation
+   callback.
+4. As a fallback, run a 750 ms `setInterval` that re-reads
+   `currentIndex` and pushes to HA if it changed. Covers any mutation
+   the observer misses (e.g. programmatic `goToSlide()`).
+
+Debounce the observer to 80 ms. On every callback, re-read
+`cardEl.currentIndex` and only call `input_number.set_value` when the
+value changed from the last pushed value (cache last-sent in a module-
+scoped var). Detach observer + transitionend + interval on view remount
+— the swipe-card element is a new instance after navigating away from
+Home and back. Store refs in `_swipeObserverEl`,
+`_swipeObserverInstance`, `_swipeTransitionCleanup`, `_swipePollTimer`.
 
 ## priority zone sibling conditional pattern (2026-04-21)
 For the mobilev1 priority-display zone (home-view right column), the

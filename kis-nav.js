@@ -47,7 +47,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 25;
+  window.KIS_NAV_VERSION = 26;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1080,36 +1080,33 @@
   }
 
   // ─── Priority-zone carousel slide-index tracker ────────────────────────────
-  // Watches the simple-swipe-card for active-slide class changes and pushes
-  // the active index to input_number.priority_slide_index so the dashboard's
-  // section_label template can show "VEHICLES" / "WEATHER" matching the
-  // currently visible tile.
+  // simple-swipe-card v2.8.2 exposes `currentIndex` as a direct property on
+  // the element — authoritative and cheap to read. It does NOT dispatch a
+  // `slide-changed` event and does NOT add an `active-slide` class in
+  // horizontal mode (that class is vertical-only in v2.8.2). Signals we DO
+  // get on every swipe: the inner `.slider` element's inline `style`
+  // attribute updates as transform translate animates, and `transitionend`
+  // fires when the animation settles.
+  //
+  // Strategy:
+  //   1. Observe `.slider` style-attribute mutations (fires during animation).
+  //   2. Listen for `transitionend` on `.slider` (fires when it settles).
+  //   3. Fallback: poll `cardEl.currentIndex` every 750ms when attached
+  //      (cheap — single property read, defensive for transitions we miss).
+  //   4. On change, call input_number.set_value → section_label template
+  //      re-renders with VEHICLES / WEATHER matching the visible tile.
   const PRIORITY_SLIDE_ENTITY = 'input_number.priority_slide_index';
   let _swipeObserverEl = null;       // the swipe-card element currently observed
-  let _swipeObserverInstance = null; // the MutationObserver for cleanup on remount
+  let _swipeObserverInstance = null; // MutationObserver for cleanup on remount
+  let _swipeTransitionCleanup = null; // detach fn for transitionend
+  let _swipePollTimer = null;        // interval id for fallback poll
   let _swipeObserverAttempts = 0;
   let _lastPushedSlideIndex = -1;
 
-  function computeActiveSlideIndex(swipeCardEl) {
-    // active-slide class is toggled on the slide's wrapper element.
-    // Search shadow DOM first, then light DOM fallback.
-    const roots = [];
-    if (swipeCardEl.shadowRoot) roots.push(swipeCardEl.shadowRoot);
-    roots.push(swipeCardEl);
-    for (const root of roots) {
-      const active = root.querySelector('.active-slide');
-      if (!active) continue;
-      const parent = active.parentElement;
-      if (!parent) continue;
-      const siblings = Array.from(parent.children).filter(el => {
-        // Count only real slide siblings — exclude nav arrows / pagination
-        // dots that the card mounts alongside the slides. Slides are
-        // typically the largest group; a .active-slide sibling pattern.
-        return el.tagName === active.tagName;
-      });
-      const idx = siblings.indexOf(active);
-      if (idx >= 0) return idx;
-    }
+  function readSwipeIndex(cardEl) {
+    // Source of truth: the card's own currentIndex property. Set by the
+    // card in every code path that changes the visible slide.
+    if (typeof cardEl.currentIndex === 'number') return cardEl.currentIndex;
     return -1;
   }
 
@@ -1120,8 +1117,8 @@
     const ent = getState(hass, PRIORITY_SLIDE_ENTITY);
     if (!ent) return; // helper not yet created — silently skip
     const current = Math.round(parseFloat(ent.state));
-    if (current === idx) { _lastPushedSlideIndex = idx; return; }
     _lastPushedSlideIndex = idx;
+    if (current === idx) return;
     hass.callService('input_number', 'set_value', {
       entity_id: PRIORITY_SLIDE_ENTITY,
       value: idx,
@@ -1131,62 +1128,80 @@
   function observeSwipeSlideIndex() {
     if (!onMobileDashboard()) return;
 
+    const teardown = () => {
+      if (_swipeObserverInstance) {
+        try { _swipeObserverInstance.disconnect(); } catch (e) {}
+      }
+      _swipeObserverInstance = null;
+      if (_swipeTransitionCleanup) {
+        try { _swipeTransitionCleanup(); } catch (e) {}
+      }
+      _swipeTransitionCleanup = null;
+      if (_swipePollTimer) {
+        clearInterval(_swipePollTimer);
+        _swipePollTimer = null;
+      }
+      _swipeObserverEl = null;
+    };
+
     const tryAttach = () => {
       const swipeCard = findSwipeCardEl(document.body);
-      if (!swipeCard || (!swipeCard.shadowRoot && !swipeCard.querySelector)) {
+      if (!swipeCard) {
         if (_swipeObserverAttempts++ < 30) setTimeout(tryAttach, 400);
         return;
       }
       // Already attached to THIS element — nothing to do.
       if (_swipeObserverEl === swipeCard && _swipeObserverInstance) return;
-      // Different element (remount) — tear down previous observer.
-      if (_swipeObserverInstance) {
-        try { _swipeObserverInstance.disconnect(); } catch (e) {}
-      }
-      _swipeObserverInstance = null;
+      teardown();
       _swipeObserverEl = swipeCard;
       _lastPushedSlideIndex = -1;
 
-      // Initial push to sync HA's view with what's actually rendered.
-      const initial = computeActiveSlideIndex(swipeCard);
+      // Initial push so HA reflects the mounted carousel's starting slide.
+      const initial = readSwipeIndex(swipeCard);
       if (initial >= 0) pushSlideIndex(initial);
 
       let debounceTimer = null;
       const schedule = () => {
         if (debounceTimer) clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
-          const idx = computeActiveSlideIndex(swipeCard);
+          const idx = readSwipeIndex(swipeCard);
           if (idx >= 0) pushSlideIndex(idx);
-        }, 150);
+        }, 80);
       };
 
-      const mo = new MutationObserver((records) => {
-        // Only care about class attr mutations that may have added active-slide.
-        for (const r of records) {
-          if (r.type === 'attributes' && r.attributeName === 'class') {
-            schedule();
-            return;
-          }
-          if (r.type === 'childList') {
-            schedule();
-            return;
-          }
-        }
-      });
-
-      const targets = [];
-      if (swipeCard.shadowRoot) targets.push(swipeCard.shadowRoot);
-      targets.push(swipeCard);
-      for (const t of targets) {
-        mo.observe(t, {
+      // 1) Observe the .slider element's style attribute (transform updates
+      //    on every swipe). Also watch general subtree mutations in case
+      //    v2.8.2 ever flips to the active-slide pattern in horizontal mode.
+      const mo = new MutationObserver(() => schedule());
+      const sr = swipeCard.shadowRoot;
+      if (sr) {
+        mo.observe(sr, {
           subtree: true,
-          childList: true,
           attributes: true,
-          attributeFilter: ['class'],
+          attributeFilter: ['style', 'class', 'data-visible-index'],
         });
       }
-
       _swipeObserverInstance = mo;
+
+      // 2) transitionend on the slider — fires when the slide animation
+      //    finishes. Authoritative moment to re-read currentIndex.
+      const slider = sr ? sr.querySelector('.slider') : null;
+      if (slider) {
+        const onTransitionEnd = () => {
+          const idx = readSwipeIndex(swipeCard);
+          if (idx >= 0) pushSlideIndex(idx);
+        };
+        slider.addEventListener('transitionend', onTransitionEnd, true);
+        _swipeTransitionCleanup = () => slider.removeEventListener('transitionend', onTransitionEnd, true);
+      }
+
+      // 3) Fallback poll at 750ms — covers no-animation paths (e.g. direct
+      //    goToSlide from a pagination-dot click that transition-ends too
+      //    fast to catch, or any path the observer misses).
+      _swipePollTimer = setInterval(() => {
+        const idx = readSwipeIndex(swipeCard);
+        if (idx >= 0) pushSlideIndex(idx);
+      }, 750);
     };
 
     _swipeObserverAttempts = 0;

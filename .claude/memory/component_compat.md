@@ -23,7 +23,7 @@ Append new entries at the bottom. Date-stamp every entry.
 | bramkragten/swipe-card | Carousel | BROKEN | FKB crash with conditional children. | 2026-04-21 |
 | nutteloost/simple-swipe-card v2.8.2 | Carousel | WORKS | ResizeObserver, no FKB crash. | 2026-04-21 |
 | fold-entity-row | Expand/collapse | WORKS | Phase 5A lights page. | 2026-04-21 |
-| simple-swipe-card | Carousel w/ slide-index tracking | WORKS | No `slide-changed` event. Observe `.active-slide` class via MutationObserver on subtree. Debounce 150ms. Re-attach on view remount. | 2026-04-21 |
+| simple-swipe-card | Carousel w/ slide-index tracking | WORKS | No `slide-changed` event. `.active-slide` class is VERTICAL-only in v2.8.2 — useless for horizontal swipes. Read `cardEl.currentIndex`, observe `.slider` style/transform mutations + `transitionend`, 750 ms poll fallback. Debounce 80ms. | 2026-04-21 |
 | Browser Mod popup | Fullscreen overlays | WORKS | size: fullscreen, dismissable. | 2026-04-20 |
 
 ## Layout Types

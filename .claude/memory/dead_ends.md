@@ -94,3 +94,27 @@ hairline }. Day/night colors via CSS custom properties flipped by kis-nav.js
 **Broader lesson:** before assuming card_mod styling will work, verify card-mod
 is actually installed — the `card_mod` key is accepted silently by Lovelace's
 schema whether card-mod is loaded or not.
+
+## 2026-04-21: simple-swipe-card .active-slide class for horizontal swipes
+**Tried:** kis-nav.js v25 MutationObserver watching `class` attribute changes
+across the simple-swipe-card subtree, expecting to detect which child slide
+has the `.active-slide` class and push that index to
+`input_number.priority_slide_index`.
+**Failed:** The dynamic header never updated on swipe — observer never fired
+because the class never flipped. Playwright DOM inspection in
+`swipe-inspect.js` showed active-slide is NOT present on any slide in
+horizontal mode. Reading the nutteloost/simple-swipe-card v2.8.2 source
+confirmed the CSS rule is `.vertical .slide.active-slide { ... }` — the class
+is applied unconditionally by the JS but only has visual meaning (and only
+seems to be reliably toggled) in vertical mode. For horizontal mode it's
+dead.
+**Fix:** Read `cardEl.currentIndex` directly (the card exposes it as a
+property) and observe the `.slider` element's inline `style` mutations inside
+the shadow root — the transform matrix changes on every swipe. Back it up
+with a `transitionend` listener on `.slider` and a 750 ms `setInterval` poll
+that re-reads `currentIndex`. Full pattern documented in
+`css_dom_patterns.md` under "simple-swipe-card — read currentIndex, watch
+.slider transform".
+**Broader lesson:** When a custom element ships a property for its public
+state (here `currentIndex`), read it directly rather than inferring from
+class names. Classes are a rendering detail; properties are the API.
