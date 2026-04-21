@@ -210,8 +210,9 @@ DO NOT commit yet — these get committed with code in Phase 3.
 - Open PRs if branches don't have them yet
 
 ### Phase 4: PR MERGE
-- Print merge order with full clickable GitHub PR URLs (ha-config first,
-  ha-dashboard second). Every PR reference MUST be a complete
+- Print the ordered list of open PRs with full clickable GitHub URLs
+  (ha-config FIRST, ha-dashboard SECOND; oldest PR number first within
+  each repo). Every PR reference MUST be a complete
   `https://github.com/chris-kintegratedSystems/<repo>/pull/<number>` URL
   on its own line — never a bare `#9` or repo-only reference. Chris taps
   the URL from the terminal; constructing URLs by hand is not acceptable.
@@ -221,9 +222,17 @@ DO NOT commit yet — these get committed with code in Phase 3.
 - Format each PR on its own line:
   `<repo> #<number>: <title>`
   then the full URL on the very next line by itself (no inline URLs).
-- WAIT for Chris to confirm merges done on GitHub.
-- After confirmed: `git checkout master && git pull origin master` on BOTH repos.
-- Verify merged commits appear in `git log`.
+- Then ask: **"Want me to merge these, or will you do it on GitHub?"**
+- If Chris says "merge them" / "merge all" / similar: execute
+  `gh pr merge <number> --repo chris-kintegratedSystems/<repo> --merge`
+  for each PR in the printed order. Do NOT use `--squash` or `--rebase`
+  unless Chris specifies. If any merge fails (conflicts, failing checks,
+  branch protection), stop immediately and report which PR failed and
+  why — do not proceed to the remaining PRs.
+- If Chris says he will do it on GitHub: WAIT for confirmation.
+- After all merges are complete (either path): run
+  `git checkout master && git pull origin master` on BOTH repos. Verify
+  the merged commits appear in `git log`.
 
 ### Phase 5: SESSION HANDOFF
 Upload SESSION_HANDOFF to Drive ha-dashboard folder
@@ -271,7 +280,16 @@ End with: "Safe to exit" or "Not safe — [reason]"
 
 ### Rules:
 - NEVER auto-commit without asking
-- NEVER merge PRs (guide Chris to merge on GitHub, then verify)
+- PR merges: when Chris says "merge them", "merge all", or similar,
+  execute the merges using `gh pr merge <number> --repo
+  chris-kintegratedSystems/<repo> --merge` in the correct order —
+  ha-config FIRST, ha-dashboard SECOND, oldest PR number first within
+  each repo. After all merges complete, run `git checkout master &&
+  git pull origin master` on BOTH repos and verify merged commits
+  appear in `git log`. If any merge fails (conflicts, failing checks,
+  branch protection), stop immediately and report which PR failed.
+  If Chris does NOT say to merge, print the clickable URLs and wait
+  for him to merge manually on GitHub — same as before.
 - Save memory files BEFORE committing — they go in the same push
 - Always push BEFORE saying "safe to exit"
 - Always pull master AFTER PRs are merged
