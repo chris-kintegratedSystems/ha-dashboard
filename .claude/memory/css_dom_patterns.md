@@ -74,6 +74,38 @@ attribute on its own injected elements (header bar, nav bar, mini player),
 not on document.body/html. Adding it to body would work but requires an
 extra injection path; property bag on documentElement is simpler.
 
+## simple-swipe-card — active-slide class marks the visible tile (2026-04-21)
+`nutteloost/simple-swipe-card` v2.8.2 does NOT dispatch a `slide-changed`
+custom event. Instead, it toggles an `active-slide` class on whichever
+slide wrapper element is currently centered in the carousel (searched
+both shadow DOM and light DOM of the card). To track the active slide
+index from kis-nav.js, attach a MutationObserver watching `class`
+attribute changes across the subtree, then compute the index by finding
+the child with `.active-slide` and counting same-tag siblings.
+
+Debounce the observer (~150ms) to avoid a flurry of callbacks during
+the swipe animation. Detach and re-attach on view remount (the swipe-
+card element is a new instance after navigating away from Home and
+back).
+
+## priority zone sibling conditional pattern (2026-04-21)
+For the mobilev1 priority-display zone (home-view right column), the
+camera takeover + carousel live as DIRECT children of the section,
+not inside an outer grid wrapper. The grid wrapper (previously used
+to impose min-height via card_mod) added ha-card padding that pushed
+the section's first card BELOW the left column's SECURITY header on
+the same row — breaking alignment. Drop the wrapper; each card sits
+in the section's default column-gap slot. Alignment then matches
+peers on the same grid row.
+
+Card visibility is driven by `sensor.priority_camera` (HA-side template
+sensor, most-recent-wins among active motion stickies):
+- 3 conditional cards, one per camera, `condition: state`, `state:
+  'doorbell' | 'living_room' | 'izzy'`
+- 1 simple-swipe-card with `visibility:` block, `state: 'none'`
+Exactly one card renders at any time. No overlap, no stacked empty
+conditionals consuming row space.
+
 ## button-card state-reactive section_label (2026-04-21)
 The `section_label` template accepts overrides at the instance level — both
 `name` and `styles.name.<prop>` can be `[[[ ... ]]]` JS templates that read

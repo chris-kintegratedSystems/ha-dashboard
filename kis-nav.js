@@ -47,7 +47,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 24;
+  window.KIS_NAV_VERSION = 25;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1079,6 +1079,120 @@
     setTimeout(tryShow, 600);
   }
 
+  // ─── Priority-zone carousel slide-index tracker ────────────────────────────
+  // Watches the simple-swipe-card for active-slide class changes and pushes
+  // the active index to input_number.priority_slide_index so the dashboard's
+  // section_label template can show "VEHICLES" / "WEATHER" matching the
+  // currently visible tile.
+  const PRIORITY_SLIDE_ENTITY = 'input_number.priority_slide_index';
+  let _swipeObserverEl = null;       // the swipe-card element currently observed
+  let _swipeObserverInstance = null; // the MutationObserver for cleanup on remount
+  let _swipeObserverAttempts = 0;
+  let _lastPushedSlideIndex = -1;
+
+  function computeActiveSlideIndex(swipeCardEl) {
+    // active-slide class is toggled on the slide's wrapper element.
+    // Search shadow DOM first, then light DOM fallback.
+    const roots = [];
+    if (swipeCardEl.shadowRoot) roots.push(swipeCardEl.shadowRoot);
+    roots.push(swipeCardEl);
+    for (const root of roots) {
+      const active = root.querySelector('.active-slide');
+      if (!active) continue;
+      const parent = active.parentElement;
+      if (!parent) continue;
+      const siblings = Array.from(parent.children).filter(el => {
+        // Count only real slide siblings — exclude nav arrows / pagination
+        // dots that the card mounts alongside the slides. Slides are
+        // typically the largest group; a .active-slide sibling pattern.
+        return el.tagName === active.tagName;
+      });
+      const idx = siblings.indexOf(active);
+      if (idx >= 0) return idx;
+    }
+    return -1;
+  }
+
+  function pushSlideIndex(idx) {
+    if (idx < 0 || idx === _lastPushedSlideIndex) return;
+    const hass = getHass();
+    if (!hass) return;
+    const ent = getState(hass, PRIORITY_SLIDE_ENTITY);
+    if (!ent) return; // helper not yet created — silently skip
+    const current = Math.round(parseFloat(ent.state));
+    if (current === idx) { _lastPushedSlideIndex = idx; return; }
+    _lastPushedSlideIndex = idx;
+    hass.callService('input_number', 'set_value', {
+      entity_id: PRIORITY_SLIDE_ENTITY,
+      value: idx,
+    });
+  }
+
+  function observeSwipeSlideIndex() {
+    if (!onMobileDashboard()) return;
+
+    const tryAttach = () => {
+      const swipeCard = findSwipeCardEl(document.body);
+      if (!swipeCard || (!swipeCard.shadowRoot && !swipeCard.querySelector)) {
+        if (_swipeObserverAttempts++ < 30) setTimeout(tryAttach, 400);
+        return;
+      }
+      // Already attached to THIS element — nothing to do.
+      if (_swipeObserverEl === swipeCard && _swipeObserverInstance) return;
+      // Different element (remount) — tear down previous observer.
+      if (_swipeObserverInstance) {
+        try { _swipeObserverInstance.disconnect(); } catch (e) {}
+      }
+      _swipeObserverInstance = null;
+      _swipeObserverEl = swipeCard;
+      _lastPushedSlideIndex = -1;
+
+      // Initial push to sync HA's view with what's actually rendered.
+      const initial = computeActiveSlideIndex(swipeCard);
+      if (initial >= 0) pushSlideIndex(initial);
+
+      let debounceTimer = null;
+      const schedule = () => {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          const idx = computeActiveSlideIndex(swipeCard);
+          if (idx >= 0) pushSlideIndex(idx);
+        }, 150);
+      };
+
+      const mo = new MutationObserver((records) => {
+        // Only care about class attr mutations that may have added active-slide.
+        for (const r of records) {
+          if (r.type === 'attributes' && r.attributeName === 'class') {
+            schedule();
+            return;
+          }
+          if (r.type === 'childList') {
+            schedule();
+            return;
+          }
+        }
+      });
+
+      const targets = [];
+      if (swipeCard.shadowRoot) targets.push(swipeCard.shadowRoot);
+      targets.push(swipeCard);
+      for (const t of targets) {
+        mo.observe(t, {
+          subtree: true,
+          childList: true,
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+      }
+
+      _swipeObserverInstance = mo;
+    };
+
+    _swipeObserverAttempts = 0;
+    setTimeout(tryAttach, 600);
+  }
+
   // ─── Layout patches ────────────────────────────────────────────────────────
   function patchHALayout(attempt) {
     attempt = attempt || 0;
@@ -1156,6 +1270,7 @@
         });
         patchHALayout(0);
         maybeShowSwipeHint();
+        observeSwipeSlideIndex();
       }, 100);
     } else {
       nav.setAttribute('hidden', '');
