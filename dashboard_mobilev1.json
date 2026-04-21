@@ -1317,7 +1317,7 @@
                       ]
                     },
                     {
-                      "type": "markdown",
+                      "type": "custom:simple-swipe-card",
                       "visibility": [
                         {
                           "condition": "not",
@@ -1345,10 +1345,165 @@
                           ]
                         }
                       ],
-                      "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%;min-height:232px;color:rgba(138,154,184,0.35);font-size:10px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;\">NO MOTION</div>",
+                      "loop_mode": "none",
+                      "show_pagination": true,
+                      "card_spacing": 0,
+                      "enable_resize_observer": true,
+                      "reset_after": 0,
+                      "view_mode": "single",
                       "card_mod": {
-                        "style": "ha-card { background: transparent !important; border: 1px dashed rgba(138,154,184,0.22) !important; border-radius: 12px; box-shadow: none !important; min-height: 240px; } @media (min-width: 768px) { ha-card { min-height: 44vh; } }"
-                      }
+                        "style": "ha-card { background: transparent !important; border: none !important; box-shadow: none !important; height: 240px !important; min-height: 240px !important; padding: 0 !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; } } :host { --simple-swipe-card-pagination-dot-active-color: #00d4f0; --simple-swipe-card-pagination-dot-inactive-color: rgba(138,154,184,0.25); --simple-swipe-card-pagination-dot-size: 6px; --simple-swipe-card-pagination-gap: 6px; --simple-swipe-card-pagination-bottom: 6px; }"
+                      },
+                      "cards": [
+                        {
+                          "type": "horizontal-stack",
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "name": "Tesla Model Y",
+                              "icon": "mdi:car-electric",
+                              "show_icon": true,
+                              "show_name": true,
+                              "show_label": true,
+                              "size": "36px",
+                              "label": "[[[ if (states['sensor.tesla_battery_level']) { var b=states['sensor.tesla_battery_level'].state; var r=states['sensor.tesla_range'] ? ' · ' + Math.round(parseFloat(states['sensor.tesla_range'].state)) + ' mi' : ''; return b + '%' + r; } return 'Setup Required'; ]]]",
+                              "styles": {
+                                "card": [
+                                  { "padding": "18px 12px" },
+                                  { "border-radius": "14px" },
+                                  { "height": "220px" },
+                                  { "background": "var(--ha-card-background, rgba(16,21,31,0.72))" },
+                                  { "border": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '2px solid #10d090' : '1px solid rgba(255,255,255,0.06)'; ]]]" },
+                                  { "box-shadow": "[[[ return (states['binary_sensor.tesla_charging'] && states['binary_sensor.tesla_charging'].state === 'on') ? '0 0 14px rgba(16,208,144,0.45)' : 'none'; ]]]" },
+                                  { "display": "flex" },
+                                  { "flex-direction": "column" },
+                                  { "justify-content": "center" },
+                                  { "align-items": "center" }
+                                ],
+                                "icon": [
+                                  { "color": "#e81c24" },
+                                  { "margin-bottom": "8px" }
+                                ],
+                                "name": [
+                                  { "font-size": "13px" },
+                                  { "font-weight": "600" },
+                                  { "color": "#eef2f8" },
+                                  { "margin-top": "10px" },
+                                  { "letter-spacing": "0.02em" }
+                                ],
+                                "label": [
+                                  { "font-size": "11px" },
+                                  { "letter-spacing": "0.06em" },
+                                  { "text-transform": "uppercase" },
+                                  { "color": "[[[ return states['sensor.tesla_battery_level'] ? '#10d090' : 'rgba(138,154,184,0.55)'; ]]]" },
+                                  { "margin-top": "6px" }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "name": "Mercedes G580",
+                              "icon": "mdi:car-estate",
+                              "show_icon": true,
+                              "show_name": true,
+                              "show_label": true,
+                              "size": "36px",
+                              "label": "Home",
+                              "styles": {
+                                "card": [
+                                  { "padding": "18px 12px" },
+                                  { "border-radius": "14px" },
+                                  { "height": "220px" },
+                                  { "background": "var(--ha-card-background, rgba(16,21,31,0.72))" },
+                                  { "border": "1px solid rgba(255,255,255,0.06)" },
+                                  { "display": "flex" },
+                                  { "flex-direction": "column" },
+                                  { "justify-content": "center" },
+                                  { "align-items": "center" }
+                                ],
+                                "icon": [
+                                  { "color": "#c0c5d0" },
+                                  { "margin-bottom": "8px" }
+                                ],
+                                "name": [
+                                  { "font-size": "13px" },
+                                  { "font-weight": "600" },
+                                  { "color": "#eef2f8" },
+                                  { "margin-top": "10px" },
+                                  { "letter-spacing": "0.02em" }
+                                ],
+                                "label": [
+                                  { "font-size": "11px" },
+                                  { "letter-spacing": "0.06em" },
+                                  { "text-transform": "uppercase" },
+                                  { "color": "#10d090" },
+                                  { "margin-top": "6px" }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "vertical-stack",
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "entity": "weather.forecast_home",
+                              "show_icon": true,
+                              "show_name": true,
+                              "show_label": true,
+                              "show_state": false,
+                              "size": "44px",
+                              "icon": "[[[ var c=entity.state; var m={'sunny':'mdi:weather-sunny','clear-night':'mdi:weather-night','cloudy':'mdi:weather-cloudy','partlycloudy':'mdi:weather-partly-cloudy','rainy':'mdi:weather-pouring','pouring':'mdi:weather-pouring','snowy':'mdi:weather-snowy','fog':'mdi:weather-fog','windy':'mdi:weather-windy','lightning':'mdi:weather-lightning','lightning-rainy':'mdi:weather-lightning-rainy','hail':'mdi:weather-hail'}; return m[c] || 'mdi:weather-cloudy'; ]]]",
+                              "name": "[[[ var t=entity.attributes.temperature; return (t==null) ? '--' : (Math.round(t) + '°F'); ]]]",
+                              "label": "[[[ var s=(entity.state||'').replace(/-/g,' ').replace(/\\b\\w/g,function(c){return c.toUpperCase();}); var h=entity.attributes.humidity; var w=entity.attributes.wind_speed; var parts=[s]; if (h!=null) parts.push(h+'% hum'); if (w!=null) parts.push(Math.round(w)+' mph'); return parts.join(' · '); ]]]",
+                              "styles": {
+                                "card": [
+                                  { "padding": "16px 14px 10px" },
+                                  { "border-radius": "14px 14px 0 0" },
+                                  { "height": "148px" },
+                                  { "background": "var(--ha-card-background, rgba(16,21,31,0.72))" },
+                                  { "border": "1px solid rgba(255,255,255,0.06)" },
+                                  { "border-bottom": "none" },
+                                  { "display": "flex" },
+                                  { "flex-direction": "column" },
+                                  { "justify-content": "center" },
+                                  { "align-items": "center" }
+                                ],
+                                "icon": [
+                                  { "color": "[[[ var c=entity.state; var m={'sunny':'#f5a623','clear-night':'#9d6ef0','cloudy':'#8a9ab8','partlycloudy':'#4d8ef0','rainy':'#4d8ef0','pouring':'#4d8ef0','snowy':'#eef2f8','fog':'#8a9ab8','windy':'#8a9ab8','lightning':'#f5a623','lightning-rainy':'#f5a623'}; return m[c] || '#8a9ab8'; ]]]" },
+                                  { "margin-bottom": "4px" }
+                                ],
+                                "name": [
+                                  { "font-size": "40px" },
+                                  { "font-weight": "300" },
+                                  { "color": "#eef2f8" },
+                                  { "letter-spacing": "-0.02em" },
+                                  { "line-height": "1" }
+                                ],
+                                "label": [
+                                  { "font-size": "10px" },
+                                  { "letter-spacing": "0.08em" },
+                                  { "text-transform": "uppercase" },
+                                  { "color": "rgba(138,154,184,0.8)" },
+                                  { "margin-top": "8px" },
+                                  { "text-align": "center" }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "weather-forecast",
+                              "entity": "weather.forecast_home",
+                              "forecast_type": "daily",
+                              "show_current": false,
+                              "show_forecast": true,
+                              "card_mod": {
+                                "style": "ha-card { background: rgba(10,14,22,0.55) !important; border: 1px solid rgba(255,255,255,0.06) !important; border-top: none !important; border-radius: 0 0 14px 14px !important; padding: 6px 8px !important; height: 72px !important; min-height: 72px !important; box-shadow: none !important; } .forecast { padding: 0 !important; margin: 0 !important; } .temp { color: #eef2f8 !important; font-weight: 600 !important; } .templow { color: rgba(138,154,184,0.7) !important; } .name, .dayname { color: rgba(138,154,184,1) !important; font-size: 9px !important; letter-spacing: 0.12em !important; text-transform: uppercase !important; }"
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
