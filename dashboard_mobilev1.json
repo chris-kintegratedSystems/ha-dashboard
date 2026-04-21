@@ -1103,6 +1103,7 @@
                           "type": "conditional",
                           "conditions": [
                             {
+                              "condition": "state",
                               "entity": "binary_sensor.doorbell_motion_sticky",
                               "state": "on"
                             }
@@ -1114,9 +1115,9 @@
                             "camera_view": "live",
                             "show_state": false,
                             "show_name": false,
-                            "fit_mode": "cover",
+                            "fit_mode": "fill",
                             "card_mod": {
-                              "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #f04060 !important; box-shadow: 0 0 12px rgba(240,64,96,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: cover !important; width: 100% !important; height: 100% !important; }"
+                              "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #f04060 !important; box-shadow: 0 0 12px rgba(240,64,96,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
                             },
                             "tap_action": {
                               "action": "fire-dom-event",
@@ -1180,6 +1181,7 @@
                           "type": "conditional",
                           "conditions": [
                             {
+                              "condition": "state",
                               "entity": "binary_sensor.living_room_camera_motion_sticky",
                               "state": "on"
                             }
@@ -1191,9 +1193,9 @@
                             "camera_view": "live",
                             "show_state": false,
                             "show_name": false,
-                            "fit_mode": "cover",
+                            "fit_mode": "fill",
                             "card_mod": {
-                              "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: cover !important; width: 100% !important; height: 100% !important; }"
+                              "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
                             },
                             "tap_action": {
                               "action": "fire-dom-event",
@@ -1249,6 +1251,7 @@
                           "type": "conditional",
                           "conditions": [
                             {
+                              "condition": "state",
                               "entity": "binary_sensor.izzy_camera_motion_sticky",
                               "state": "on"
                             }
@@ -1260,9 +1263,9 @@
                             "camera_view": "live",
                             "show_state": false,
                             "show_name": false,
-                            "fit_mode": "cover",
+                            "fit_mode": "fill",
                             "card_mod": {
-                              "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img { object-fit: cover !important; width: 100% !important; height: 100% !important; }"
+                              "style": "ha-card { height: 240px !important; min-height: 240px !important; max-height: 240px !important; border: 2px solid #00c8e8 !important; box-shadow: 0 0 12px rgba(0,200,232,0.4) !important; border-radius: 12px !important; overflow: hidden !important; } @media (min-width: 768px) { ha-card { height: 44vh !important; min-height: 44vh !important; max-height: 44vh !important; } } hui-image, hui-image > * { width: 100% !important; height: 100% !important; } hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important; } hui-image div { object-fit: fill !important; width: 100% !important; height: 100% !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; } ha-hls-player, ha-hls-player video, ha-camera-stream, ha-camera-stream video { width: 100% !important; height: 100% !important; object-fit: fill !important; }"
                             },
                             "tap_action": {
                               "action": "fire-dom-event",

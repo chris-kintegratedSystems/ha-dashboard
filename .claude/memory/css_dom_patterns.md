@@ -48,8 +48,15 @@ collapses around it, breaking any container-sizing expectation.
 matching the sibling card it alternates with. Match it on `min-height`
 AND `max-height` so the feed cannot overflow either way.
 
-## object-fit on camera feeds (2026-04-21)
-`fit_mode: cover` on picture-entity + `hui-image img { object-fit: cover !important }`
-in card_mod. `fill` stretches and distorts; `cover` preserves aspect
-and crops the overflow side — use cover for motion-takeover cameras
-where visual integrity matters more than seeing every pixel.
+## object-fit on camera feeds — Chris prefers fill (2026-04-21)
+For the motion-takeover zone on mobilev1, Chris wants `object-fit: fill`
+(stretch to fit exact zone dimensions), NOT cover (which crops) and NOT
+contain (which letterboxes). The takeover card must be pixel-identical
+in footprint to the carousel it replaces; any crop or letterbox reads
+as layout shift. Apply via:
+- `fit_mode: "fill"` at picture-entity native level
+- card_mod on the picture-entity: `hui-image img, hui-image video { object-fit: fill !important; width: 100% !important; height: 100% !important }`
+- Also cover `ha-hls-player video, ha-camera-stream video` for Nest/HLS
+  streaming cameras where the element tree is different.
+- `hui-image div` + `background-size: 100% 100%` for the fallback
+  div-with-background-image path picture-entity sometimes takes.
