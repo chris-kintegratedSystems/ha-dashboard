@@ -47,7 +47,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 28;
+  window.KIS_NAV_VERSION = 29;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -889,11 +889,13 @@
     if (isDayMode) {
       bar.setAttribute('data-kis-day', '');
       if (navBar) navBar.setAttribute('data-kis-day', '');
+      document.body.setAttribute('data-kis-day', '');
       document.documentElement.style.setProperty('--kis-section-label', '#7a8698');
       document.documentElement.style.setProperty('--kis-section-rule', 'rgba(0,0,0,0.06)');
     } else {
       bar.removeAttribute('data-kis-day');
       if (navBar) navBar.removeAttribute('data-kis-day');
+      document.body.removeAttribute('data-kis-day');
       document.documentElement.style.setProperty('--kis-section-label', '#4a5570');
       document.documentElement.style.setProperty('--kis-section-rule', 'rgba(255,255,255,0.06)');
     }
@@ -1471,6 +1473,59 @@
     _camerasStaggerNode = null;
   }
 
+  // Stagger placeholder sits in the light tree but the grid card that
+  // hosts it lives inside a shadow root, so document.head styles don't
+  // reach it. We inject the same stylesheet into the placeholder's own
+  // root (wherever it ends up) and also into document.head — keyframes
+  // resolve by global name, so @keyframes defined in either works.
+  const CAM_STAGGER_CSS = `
+    [data-kis-cam-stagger] {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 12px;
+      background: rgba(16,21,31,0.92);
+      color: rgba(255,255,255,0.82);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 12px;
+      box-sizing: border-box;
+    }
+    [data-kis-cam-stagger][data-kis-day] {
+      background: rgba(244,247,252,0.94);
+      color: rgba(26,32,48,0.72);
+    }
+    [data-kis-cam-stagger] .kis-cam-spinner {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.18);
+      border-top-color: rgba(255,255,255,0.75);
+      animation: kis-cam-spin 900ms linear infinite;
+    }
+    [data-kis-cam-stagger][data-kis-day] .kis-cam-spinner {
+      border-color: rgba(26,32,48,0.14);
+      border-top-color: rgba(26,32,48,0.55);
+    }
+    @keyframes kis-cam-spin { to { transform: rotate(360deg); } }
+  `;
+
+  function injectStaggerStylesInto(rootNode) {
+    const scope = rootNode === document ? document.head : rootNode;
+    if (!scope) return;
+    if (scope.querySelector && scope.querySelector('style[data-kis-stagger]')) return;
+    const s = document.createElement('style');
+    s.setAttribute('data-kis-stagger', '');
+    s.textContent = CAM_STAGGER_CSS;
+    scope.appendChild(s);
+  }
+
+  function ensureLightCamPlaceholderStyles() {
+    injectStaggerStylesInto(document);
+  }
+
   function applyCamerasStagger() {
     if (!onMobileDashboard() || getActiveSlug() !== 'cameras') {
       // Left the page — restore the node immediately if it's still detached,
@@ -1481,6 +1536,8 @@
     }
     if (_camerasStaggerActiveSlug === 'cameras') return; // already armed
     _camerasStaggerActiveSlug = 'cameras';
+
+    ensureLightCamPlaceholderStyles();
 
     const tryApply = (attempts) => {
       const pe = findCameraPictureEntity(CAMERAS_STAGGER_ENTITY);
@@ -1493,9 +1550,21 @@
       const rect = pe.getBoundingClientRect();
       const placeholder = document.createElement('div');
       placeholder.setAttribute('data-kis-cam-stagger', CAMERAS_STAGGER_ENTITY);
+      if (document.body.hasAttribute('data-kis-day')) {
+        placeholder.setAttribute('data-kis-day', '');
+      }
       placeholder.style.width = rect.width > 0 ? rect.width + 'px' : '100%';
       placeholder.style.height = rect.height > 0 ? rect.height + 'px' : 'auto';
-      placeholder.style.visibility = 'hidden';
+      const spinner = document.createElement('div');
+      spinner.className = 'kis-cam-spinner';
+      placeholder.appendChild(spinner);
+      const label = document.createElement('span');
+      label.textContent = cameraFriendlyName(CAMERAS_STAGGER_ENTITY);
+      placeholder.appendChild(label);
+      // Inject the stagger CSS into whatever root the placeholder ends
+      // up in (typically a grid-card shadow root) so the rules actually
+      // reach the element.
+      injectStaggerStylesInto(parent.getRootNode());
 
       _camerasStaggerParent = parent;
       _camerasStaggerPlaceholder = placeholder;
@@ -1521,6 +1590,227 @@
       }, CAMERAS_STAGGER_MS);
     };
     tryApply(0);
+  }
+
+  // ─── Camera placeholder overlay (no-flash stream init) ────────────────────
+  // Every picture-entity camera card gets an absolutely-positioned overlay
+  // showing the camera friendly name + pulsing spinner. When the underlying
+  // <video> emits 'loadeddata' / 'playing' (or <img> 'load'), the overlay
+  // crossfades to opacity 0 over 300 ms revealing the live feed — no black
+  // or white flash while HA wires up HLS / ha-camera-stream.
+  //
+  // Applied to both the Cameras page (all 5 feeds) and the Home priority-
+  // zone motion takeover (doorbell / living_room / izzy). The overlay
+  // colors follow kis-nav's day/night state via the data-kis-day attribute
+  // propagated onto each picture-entity host on every tick.
+  const PLACEHOLDER_CAM_ENTITIES = [
+    'camera.doorbell',
+    'camera.living_room_camera',
+    'camera.izzy_camera',
+    'camera.nanit_benjamin',
+    'camera.nanit_travel',
+  ];
+  const CAM_PLACEHOLDER_CSS_ID = 'kis-cam-placeholder';
+  const CAM_PLACEHOLDER_CSS = `
+    ha-card { position: relative !important; overflow: hidden !important; }
+    .kis-cam-placeholder {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(16,21,31,0.92);
+      color: rgba(255,255,255,0.82);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 1;
+      transition: opacity 300ms ease;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .kis-cam-placeholder::before {
+      content: "";
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.18);
+      border-top-color: rgba(255,255,255,0.75);
+      animation: kis-cam-spin 900ms linear infinite;
+    }
+    @keyframes kis-cam-spin { to { transform: rotate(360deg); } }
+    .kis-cam-placeholder.kis-ready {
+      opacity: 0;
+    }
+    :host([data-kis-day]) .kis-cam-placeholder {
+      background: rgba(244,247,252,0.94);
+      color: rgba(26,32,48,0.72);
+    }
+    :host([data-kis-day]) .kis-cam-placeholder::before {
+      border-color: rgba(26,32,48,0.14);
+      border-top-color: rgba(26,32,48,0.55);
+    }
+  `;
+
+  function findAllCameraPictureEntities() {
+    const out = [];
+    const seen = new Set();
+    function walk(root) {
+      if (!root || seen.has(root)) return;
+      seen.add(root);
+      const pes = root.querySelectorAll
+        ? root.querySelectorAll('hui-picture-entity-card')
+        : [];
+      for (const pe of pes) {
+        const cfg = pe._config || pe.config;
+        if (cfg && PLACEHOLDER_CAM_ENTITIES.indexOf(cfg.entity) !== -1) {
+          out.push(pe);
+        }
+      }
+      const all = root.querySelectorAll ? root.querySelectorAll('*') : [];
+      for (const el of all) {
+        if (el.shadowRoot) walk(el.shadowRoot);
+      }
+    }
+    walk(document.body);
+    return out;
+  }
+
+  function findFeedElement(peShadowRoot) {
+    function walk(root) {
+      if (!root) return null;
+      const hit = root.querySelector('video, img');
+      if (hit) return hit;
+      const all = root.querySelectorAll('*');
+      for (const el of all) {
+        if (el.shadowRoot) {
+          const hit2 = walk(el.shadowRoot);
+          if (hit2) return hit2;
+        }
+      }
+      return null;
+    }
+    return walk(peShadowRoot);
+  }
+
+  function cameraFriendlyName(entityId) {
+    const hass = getHass();
+    if (hass && hass.states && hass.states[entityId]) {
+      const s = hass.states[entityId];
+      if (s.attributes && s.attributes.friendly_name) return s.attributes.friendly_name;
+    }
+    return (entityId || '')
+      .replace(/^camera\./, '')
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  function installCameraPlaceholder(pe) {
+    if (!pe || !pe.shadowRoot) return;
+    const sr = pe.shadowRoot;
+    injectShadowCSS(sr, CAM_PLACEHOLDER_CSS_ID, CAM_PLACEHOLDER_CSS);
+
+    // Propagate day/night onto the host so :host([data-kis-day]) fires.
+    const isDay = document.getElementById('kis-header-bar')?.hasAttribute('data-kis-day');
+    if (isDay) pe.setAttribute('data-kis-day', '');
+    else pe.removeAttribute('data-kis-day');
+
+    const haCard = sr.querySelector('ha-card');
+    if (!haCard) return;
+
+    let overlay = haCard.querySelector(':scope > .kis-cam-placeholder');
+
+    // If the feed has already painted at least one frame, skip the
+    // placeholder entirely — adding one now would cause a brief flash
+    // of the placeholder OVER an already-visible feed, a regression.
+    if (!overlay) {
+      const feedNow = findFeedElement(sr);
+      let alreadyReady = false;
+      if (feedNow) {
+        if (feedNow.tagName === 'VIDEO') alreadyReady = feedNow.readyState >= 2;
+        else if (feedNow.tagName === 'IMG') alreadyReady = feedNow.complete && feedNow.naturalHeight > 0;
+      }
+      if (alreadyReady) return;
+
+      overlay = document.createElement('div');
+      overlay.className = 'kis-cam-placeholder';
+      const cfg = pe._config || pe.config;
+      const label = document.createElement('span');
+      label.textContent = cameraFriendlyName(cfg && cfg.entity);
+      overlay.appendChild(label);
+      haCard.appendChild(overlay);
+    }
+
+    // Already revealed — nothing more to do.
+    if (overlay.classList.contains('kis-ready')) return;
+    // Already polling for this pe — don't start a second loop.
+    if (pe._kisCamPoll) return;
+
+    let tries = 0;
+    pe._kisCamPoll = setInterval(() => {
+      tries++;
+      const feed = findFeedElement(sr);
+      let ready = false;
+      if (feed) {
+        if (feed.tagName === 'VIDEO') {
+          ready = feed.readyState >= 2;
+          if (!ready && !feed._kisReadyHandler) {
+            feed._kisReadyHandler = () => {
+              overlay.classList.add('kis-ready');
+              if (pe._kisCamPoll) { clearInterval(pe._kisCamPoll); pe._kisCamPoll = null; }
+            };
+            feed.addEventListener('loadeddata', feed._kisReadyHandler);
+            feed.addEventListener('playing', feed._kisReadyHandler);
+          }
+        } else if (feed.tagName === 'IMG') {
+          ready = feed.complete && feed.naturalHeight > 0;
+          if (!ready && !feed._kisReadyHandler) {
+            feed._kisReadyHandler = () => {
+              overlay.classList.add('kis-ready');
+              if (pe._kisCamPoll) { clearInterval(pe._kisCamPoll); pe._kisCamPoll = null; }
+            };
+            feed.addEventListener('load', feed._kisReadyHandler);
+          }
+        }
+      }
+      if (ready) {
+        overlay.classList.add('kis-ready');
+        clearInterval(pe._kisCamPoll); pe._kisCamPoll = null;
+      } else if (tries > 60) {
+        // 30 s safety — reveal feed even if we never caught a ready event.
+        overlay.classList.add('kis-ready');
+        clearInterval(pe._kisCamPoll); pe._kisCamPoll = null;
+      }
+    }, 500);
+  }
+
+  function updateCameraPlaceholders() {
+    if (!onMobileDashboard()) return;
+    const slug = getActiveSlug();
+    if (slug !== 'cameras' && slug !== 'home') return;
+    const pes = findAllCameraPictureEntities();
+    for (const pe of pes) installCameraPlaceholder(pe);
+  }
+
+  // Rapid poll for the first ~4 s after syncState fires — picture-entity
+  // elements mount lazily inside sections-view, so the 1-s tick misses
+  // them. This burst installs placeholders the instant they appear so
+  // the user never sees the black/white init flash.
+  let _camPlaceholderBurstTimer = null;
+  function startCameraPlaceholderBurst() {
+    if (_camPlaceholderBurstTimer) clearInterval(_camPlaceholderBurstTimer);
+    let ticks = 0;
+    _camPlaceholderBurstTimer = setInterval(() => {
+      ticks++;
+      updateCameraPlaceholders();
+      if (ticks >= 24) { // 24 * 180ms ≈ 4.3 s
+        clearInterval(_camPlaceholderBurstTimer);
+        _camPlaceholderBurstTimer = null;
+      }
+    }, 180);
   }
 
   // ─── Layout patches ────────────────────────────────────────────────────────
@@ -1603,6 +1893,8 @@
         observeSwipeSlideIndex();
         updateMotionCamOverlay();
         applyCamerasStagger();
+        updateCameraPlaceholders();
+        startCameraPlaceholderBurst();
       }, 100);
     } else {
       nav.setAttribute('hidden', '');
@@ -1771,6 +2063,7 @@
         maybeReattachSwipeObserver();
         updateMotionCamOverlay();
         applyCamerasStagger();
+        updateCameraPlaceholders();
       }
     }, 1000);
 
