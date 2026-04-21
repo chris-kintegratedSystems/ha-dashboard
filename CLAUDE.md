@@ -210,10 +210,20 @@ DO NOT commit yet — these get committed with code in Phase 3.
 - Open PRs if branches don't have them yet
 
 ### Phase 4: PR MERGE
-- Print merge order with GitHub links (ha-config first, ha-dashboard second)
-- WAIT for Chris to confirm merges done on GitHub
-- After confirmed: git checkout master && git pull origin master on BOTH repos
-- Verify merged commits appear in git log
+- Print merge order with full clickable GitHub PR URLs (ha-config first,
+  ha-dashboard second). Every PR reference MUST be a complete
+  `https://github.com/chris-kintegratedSystems/<repo>/pull/<number>` URL
+  on its own line — never a bare `#9` or repo-only reference. Chris taps
+  the URL from the terminal; constructing URLs by hand is not acceptable.
+- Get PR data via `gh pr list --repo chris-kintegratedSystems/<repo> --state open --json number,title,url`.
+  If `gh` is unavailable, construct URLs from the PR numbers known during
+  the session using `https://github.com/chris-kintegratedSystems/<repo>/pull/<number>`.
+- Format each PR on its own line:
+  `<repo> #<number>: <title>`
+  then the full URL on the very next line by itself (no inline URLs).
+- WAIT for Chris to confirm merges done on GitHub.
+- After confirmed: `git checkout master && git pull origin master` on BOTH repos.
+- Verify merged commits appear in `git log`.
 
 ### Phase 5: SESSION HANDOFF
 Upload SESSION_HANDOFF to Drive ha-dashboard folder
@@ -221,7 +231,11 @@ Upload SESSION_HANDOFF to Drive ha-dashboard folder
 date, what was done, deployed state, open PRs, known issues, next session work
 
 ### Phase 6: FINAL REPORT
-Print green/red checklist:
+Print a GREEN / RED checklist. GREEN is the usual pass list. RED must
+contain three subsections, each with full clickable URLs on their own lines
+— never inline with other text, always tappable from the terminal.
+
+**GREEN** (pass list, as before):
 - Memory files updated
 - All changes committed and pushed
 - All PRs merged (or list remaining)
@@ -230,6 +244,29 @@ Print green/red checklist:
 - Deployed state matches git
 - No scratch files
 - Ready for next session
+
+**RED** — three subsections, every URL on its own line:
+
+*(1) PRs to merge* — for every open PR across both repos, print one line
+with `<repo> #<number>: <title>` then the full URL on the next line by
+itself. Get PR data via `gh pr list --repo chris-kintegratedSystems/<repo>
+--state open --json number,title,url` on BOTH repos. If `gh` is
+unavailable, construct URLs from known PR numbers using
+`https://github.com/chris-kintegratedSystems/<repo>/pull/<number>`.
+List ha-config PRs FIRST, ha-dashboard PRs SECOND.
+
+*(2) Latest commits* — for each repo on its current branch, run
+`git rev-parse HEAD` and `git log --oneline -1`. Print the branch name,
+short hash, and commit message on one line, then the full commit URL on
+the next line by itself:
+`https://github.com/chris-kintegratedSystems/<repo>/commit/<full-sha>`.
+
+*(3) Drive uploads* — for any file uploaded to Drive during Phase 5,
+print the filename on one line, then the full Drive view URL on the next
+line by itself:
+`https://drive.google.com/file/d/<file-id>/view`.
+Use the file `id` returned by `create_file` — do not guess.
+
 End with: "Safe to exit" or "Not safe — [reason]"
 
 ### Rules:
