@@ -405,3 +405,27 @@
 ---
 
 *Created: 2026-04-11*
+
+---
+
+## Frigate Implementation
+
+### Phase 1: Strip motion priority logic
+- [ ] Delete freshness-based priority automation from ha-config
+- [ ] Delete helpers: `input_text.active_priority_camera`, `timer.priority_camera_linger`, `input_datetime` freshness trackers
+- [ ] Keep sticky sensors at 30s delay
+- [ ] Revert `sensor.priority_camera` to simple logic: doorbell if motion, else none
+- [ ] Rename Google Nest cameras: `camera.izzy_camera` → `camera.nest_cam_1`, `camera.living_room_camera` → `camera.nest_cam_2`
+
+### Phase 2: Stand up Frigate on Pi
+- [ ] Docker Compose on same Pi as HA
+- [ ] CPU detection only (no Coral TPU yet)
+- [ ] Ingest all 5 cameras: doorbell, nest_cam_1, nest_cam_2, nanit_benjamin, nanit_travel
+- [ ] Configure local RTMP/HLS streams
+
+### Phase 3: Point dashboard at Frigate feeds
+- [ ] Replace camera entities with Frigate entities
+- [ ] Test on Tab S9 and iPhone
+
+### Phase 4: Rebuild priority logic on Frigate
+- [ ] Implement after validation
