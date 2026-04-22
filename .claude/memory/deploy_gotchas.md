@@ -65,3 +65,19 @@ looks exactly like a code regression. Before blaming recent CSS/JS changes:
 read the in-UI error banner text. If it says 429 / RESOURCE_EXHAUSTED, the
 code is likely fine — wait 90 s with the tablet on a non-camera page for
 quota refill, then retest. See dead_ends.md entry of the same date.
+
+## 2026-04-22: go2rtc env var substitution does NOT work
+Frigate's `{ENV_VAR}` substitution applies to its own config sections
+(cameras, detectors, objects, etc.) but NOT to the `go2rtc:` block.
+go2rtc receives the raw template strings and fails silently. Credentials
+in `go2rtc.streams` must be hardcoded in the deployed config.yml on Pi.
+Keep a `.env.example` in git with placeholder names; the real `.env` is
+gitignored but only Frigate (not go2rtc) reads it.
+
+## 2026-04-22: go2rtc nest: URL must be query-param-only
+go2rtc v1.9.10 `nest:` source reads ALL 5 params from `url.Query()` —
+it never parses the URL path. The path-based format
+`nest:///enterprises/PROJECT/devices/DEVICE?client_id=...` puts
+project_id and device_id in the path where go2rtc ignores them →
+"wrong query" error. Correct format:
+`nest:?client_id=X&client_secret=X&refresh_token=X&project_id=X&device_id=X`
