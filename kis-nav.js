@@ -1545,184 +1545,9 @@
     } catch (e) {}
   }
 
-  // ─── Cameras page: stagger Nest stream init ────────────────────────────────
-  // Nest SDM rate limits: 5 QPM per device per user. Starting both Nest
-  // streams simultaneously on a Tab S9 refresh brushes the cap when a
-  // keepalive from a prior session is still in-flight — this produced
-  // WebRTC RESOURCE_EXHAUSTED / HTTP 429 errors on Cameras page load.
-  //
-  // Per-camera delay map (2026-04-21):
-  //   camera.doorbell        — immediate (Vivint, separate auth path)
-  //   camera.nanit_benjamin  — immediate (local RTMP, zero limit)
-  //   camera.nanit_travel    — immediate (local RTMP, zero limit)
-  //   camera.nest_cam_2 (Nest) — delay 1000 ms
-  //   camera.nest_cam_1        (Nest) — delay 2000 ms
-  //
-  // Implementation: detach each staggered camera's picture-entity from DOM
-  // on Cameras-page entry (a placeholder of the same size holds the grid
-  // cell open), then re-attach it after its delay. Detachment disconnects
-  // the custom element, so its connectedCallback / stream init don't run
-  // until re-attach — a true stream-start delay, not just visual.
-  const CAMERAS_STAGGER = {
-    'camera.nest_cam_2': 1000,
-    'camera.nest_cam_1': 2000,
-  };
-  let _camerasStaggerActiveSlug = null;
-  // Map<entityId, { parent, placeholder, node, timer }>
-  const _camerasStaggerState = new Map();
-
-  function findCameraPictureEntity(entityId) {
-    function walk(root) {
-      if (!root) return null;
-      const pes = root.querySelectorAll
-        ? root.querySelectorAll('hui-picture-entity-card')
-        : [];
-      for (const pe of pes) {
-        const cfg = pe._config || pe.config;
-        if (cfg && cfg.entity === entityId) return pe;
-      }
-      const all = root.querySelectorAll ? root.querySelectorAll('*') : [];
-      for (const el of all) {
-        if (el.shadowRoot) {
-          const hit = walk(el.shadowRoot);
-          if (hit) return hit;
-        }
-      }
-      return null;
-    }
-    return walk(document.body);
-  }
-
-  function restoreStaggeredCamera(entityId) {
-    if (!entityId) {
-      // Called without an arg — restore all.
-      for (const id of Array.from(_camerasStaggerState.keys())) {
-        restoreStaggeredCamera(id);
-      }
-      return;
-    }
-    const st = _camerasStaggerState.get(entityId);
-    if (!st) return;
-    if (st.timer) clearTimeout(st.timer);
-    if (
-      st.parent &&
-      st.placeholder &&
-      st.node &&
-      st.placeholder.parentElement === st.parent
-    ) {
-      st.parent.replaceChild(st.node, st.placeholder);
-    }
-    _camerasStaggerState.delete(entityId);
-  }
-
-  // Stagger placeholder sits in the light tree but the grid card that
-  // hosts it lives inside a shadow root, so document.head styles don't
-  // reach it. We inject the same stylesheet into the placeholder's own
-  // root (wherever it ends up) and also into document.head — keyframes
-  // resolve by global name, so @keyframes defined in either works.
-  const CAM_STAGGER_CSS = `
-    [data-kis-cam-stagger] {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 12px;
-      background: rgba(16,21,31,0.92);
-      color: rgba(255,255,255,0.82);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      border-radius: 12px;
-      box-sizing: border-box;
-    }
-    [data-kis-cam-stagger][data-kis-day] {
-      background: rgba(244,247,252,0.94);
-      color: rgba(26,32,48,0.72);
-    }
-    [data-kis-cam-stagger] .kis-cam-spinner {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.18);
-      border-top-color: rgba(255,255,255,0.75);
-      animation: kis-cam-spin 900ms linear infinite;
-    }
-    [data-kis-cam-stagger][data-kis-day] .kis-cam-spinner {
-      border-color: rgba(26,32,48,0.14);
-      border-top-color: rgba(26,32,48,0.55);
-    }
-    @keyframes kis-cam-spin { to { transform: rotate(360deg); } }
-  `;
-
-  function injectStaggerStylesInto(rootNode) {
-    const scope = rootNode === document ? document.head : rootNode;
-    if (!scope) return;
-    if (scope.querySelector && scope.querySelector('style[data-kis-stagger]')) return;
-    const s = document.createElement('style');
-    s.setAttribute('data-kis-stagger', '');
-    s.textContent = CAM_STAGGER_CSS;
-    scope.appendChild(s);
-  }
-
-  function ensureLightCamPlaceholderStyles() {
-    injectStaggerStylesInto(document);
-  }
-
-  function applyCamerasStagger() {
-    if (!onMobileDashboard() || getActiveSlug() !== 'cameras') {
-      // Left the page — restore all detached nodes immediately so returning
-      // to Cameras finds a sane DOM.
-      if (_camerasStaggerActiveSlug === 'cameras') restoreStaggeredCamera();
-      _camerasStaggerActiveSlug = null;
-      return;
-    }
-    if (_camerasStaggerActiveSlug === 'cameras') return; // already armed
-    _camerasStaggerActiveSlug = 'cameras';
-
-    ensureLightCamPlaceholderStyles();
-
-    for (const [entityId, delayMs] of Object.entries(CAMERAS_STAGGER)) {
-      applyStaggerFor(entityId, delayMs, 0);
-    }
-  }
-
-  function applyStaggerFor(entityId, delayMs, attempts) {
-    const pe = findCameraPictureEntity(entityId);
-    if (!pe) {
-      if (attempts < 20) setTimeout(() => applyStaggerFor(entityId, delayMs, attempts + 1), 200);
-      return;
-    }
-    if (_camerasStaggerState.has(entityId)) return; // already detached
-    const parent = pe.parentElement;
-    if (!parent) return;
-    const rect = pe.getBoundingClientRect();
-    const placeholder = document.createElement('div');
-    placeholder.setAttribute('data-kis-cam-stagger', entityId);
-    if (document.body.hasAttribute('data-kis-day')) {
-      placeholder.setAttribute('data-kis-day', '');
-    }
-    placeholder.style.width = rect.width > 0 ? rect.width + 'px' : '100%';
-    placeholder.style.height = rect.height > 0 ? rect.height + 'px' : 'auto';
-    const spinner = document.createElement('div');
-    spinner.className = 'kis-cam-spinner';
-    placeholder.appendChild(spinner);
-    const label = document.createElement('span');
-    label.textContent = cameraFriendlyName(entityId);
-    placeholder.appendChild(label);
-    injectStaggerStylesInto(parent.getRootNode());
-
-    const state = { parent, placeholder, node: pe, timer: null };
-    _camerasStaggerState.set(entityId, state);
-    parent.replaceChild(placeholder, pe);
-
-    state.timer = setTimeout(() => {
-      const st = _camerasStaggerState.get(entityId);
-      if (st && st.placeholder && st.node && st.placeholder.parentElement === st.parent) {
-        st.parent.replaceChild(st.node, st.placeholder);
-      }
-      _camerasStaggerState.delete(entityId);
-    }, delayMs);
-  }
+  // ─── Cameras stagger removed (2026-04-22) ──────────────────────────────────
+  // All cameras now stream via Frigate's embedded go2rtc (local RTSP).
+  // No Nest SDM rate limits — stagger logic no longer needed.
 
   // ─── Camera placeholder (no-flash stream init) ────────────────────────────
   // v31 approach — hoist the fix to the earliest possible point: patch
@@ -2144,7 +1969,6 @@
         maybeShowSwipeHint();
         observeSwipeSlideIndex();
         autoSnapPriorityCamera();
-        applyCamerasStagger();
         updateCameraPlaceholders();
         startCameraPlaceholderBurst();
         installZoneHeightObserver();
@@ -2325,7 +2149,6 @@
         renderHeaderContent();
         maybeReattachSwipeObserver();
         autoSnapPriorityCamera();
-        applyCamerasStagger();
         updateCameraPlaceholders();
         installZoneHeightObserver();
       }
