@@ -1401,7 +1401,7 @@
                 {
                   "type": "custom:button-card",
                   "template": "section_label",
-                  "name": "[[[\n    var cam = states['sensor.priority_camera'] ? states['sensor.priority_camera'].state : 'none';\n    var idx = states['input_number.priority_slide_index'] ? Math.round(parseFloat(states['input_number.priority_slide_index'].state)) : 0;\n    var camMap = {\"doorbell\":\"FRONT DOOR\",\"living_room\":\"LIVING ROOM\",\"izzy\":\"IZZY CAM\"};\n    var labels = [\"PORSCHE 911\",\"TESLA MODEL Y\",\"MERCEDES G580\",\"WEATHER\"];\n    if (cam !== 'none' && camMap[cam]) {\n      if (idx === 0) return 'MOTION DETECTED: ' + camMap[cam];\n      return labels[idx - 1] || labels[labels.length - 1];\n    }\n    return labels[idx] || labels[0];\n  ]]]",
+                  "name": "[[[\n    var cam = states['sensor.priority_camera'] ? states['sensor.priority_camera'].state : 'none';\n    var idx = states['input_number.priority_slide_index'] ? Math.round(parseFloat(states['input_number.priority_slide_index'].state)) : 0;\n    var camEntities = {\"doorbell\":\"camera.doorbell\",\"living_room\":\"camera.nest_cam_2\",\"izzy\":\"camera.nest_cam_1\",\"nanit_benjamin\":\"camera.nanit_benjamin\",\"nanit_travel\":\"camera.nanit_travel\"};\n    var labels = [\"PORSCHE 911\",\"TESLA MODEL Y\",\"MERCEDES G580\",\"WEATHER\"];\n    var entity = camEntities[cam];\n    if (cam !== 'none' && entity) {\n      var fn = states[entity] && states[entity].attributes && states[entity].attributes.friendly_name ? states[entity].attributes.friendly_name : cam.replace(/_/g, ' ');\n      if (idx === 0) return 'MOTION DETECTED: ' + fn.toUpperCase();\n      return labels[idx - 1] || labels[labels.length - 1];\n    }\n    return labels[idx] || labels[0];\n  ]]]",
                   "triggers_update": [
                     "sensor.priority_camera",
                     "input_number.priority_slide_index"
@@ -2848,7 +2848,6 @@
                       }
                     }
                   },
-                  "name": "Doorbell",
                   "aspect_ratio": "16:9"
                 },
                 {
@@ -2910,7 +2909,6 @@
                       }
                     }
                   },
-                  "name": "Izzy",
                   "aspect_ratio": "16:9"
                 },
                 {
@@ -2972,7 +2970,6 @@
                       }
                     }
                   },
-                  "name": "Living Room",
                   "aspect_ratio": "16:9"
                 },
                 {

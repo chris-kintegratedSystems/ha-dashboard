@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 41;
+  window.KIS_NAV_VERSION = 42;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1295,7 +1295,7 @@
             if (h) {
               const ps = getState(h, 'sensor.priority_camera');
               const cam = ps && ps.state;
-              if (cam === 'doorbell' || cam === 'living_room' || cam === 'izzy') {
+              if (PRIORITY_CAMERA_MAP[cam]) {
                 _cameraCooldownUntil[cam] = Date.now() + SWIPE_AWAY_COOLDOWN_MS;
               }
             }
