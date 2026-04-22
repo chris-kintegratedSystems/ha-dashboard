@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 37;
+  window.KIS_NAV_VERSION = 38;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -908,6 +908,16 @@
       document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#f0f2f5');
       document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#7a8698');
       document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(0,0,0,0.06)');
+      // Lights page day palette — glass-morph flips to a warm-white pane,
+      // text darkens to dark-gray. Amber fill stays amber in both modes.
+      document.documentElement.style.setProperty('--kis-lights-room-bg', 'rgba(255,255,255,0.85)');
+      document.documentElement.style.setProperty('--kis-lights-room-border', 'rgba(0,0,0,0.08)');
+      document.documentElement.style.setProperty('--kis-lights-room-name', '#1b2230');
+      document.documentElement.style.setProperty('--kis-lights-room-count', '#6a7689');
+      document.documentElement.style.setProperty('--kis-lights-row-rule', 'rgba(0,0,0,0.06)');
+      document.documentElement.style.setProperty('--kis-lights-name', '#2b3142');
+      document.documentElement.style.setProperty('--kis-lights-bar-track', 'rgba(0,0,0,0.09)');
+      document.documentElement.style.setProperty('--kis-lights-bar-fill', '#f5a623');
     } else {
       bar.removeAttribute('data-kis-day');
       if (navBar) navBar.removeAttribute('data-kis-day');
@@ -917,6 +927,15 @@
       document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#151c2a');
       document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#4a5570');
       document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(255,255,255,0.06)');
+      // Lights page night palette — dark glass, light text.
+      document.documentElement.style.setProperty('--kis-lights-room-bg', 'rgba(16,21,31,0.72)');
+      document.documentElement.style.setProperty('--kis-lights-room-border', 'rgba(255,255,255,0.06)');
+      document.documentElement.style.setProperty('--kis-lights-room-name', '#eef2f8');
+      document.documentElement.style.setProperty('--kis-lights-room-count', '#8a95a6');
+      document.documentElement.style.setProperty('--kis-lights-row-rule', 'rgba(255,255,255,0.04)');
+      document.documentElement.style.setProperty('--kis-lights-name', '#cfd5e0');
+      document.documentElement.style.setProperty('--kis-lights-bar-track', 'rgba(255,255,255,0.08)');
+      document.documentElement.style.setProperty('--kis-lights-bar-fill', '#f5a623');
     }
 
     // Clock + date
