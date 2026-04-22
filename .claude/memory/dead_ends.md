@@ -248,3 +248,44 @@ check its shadow-DOM structure before assuming the config property
 cascade. button-card specifically has an `#aspect-ratio` div that
 becomes a zero-height wrapper unless `aspect_ratio:` is set; use
 `extra_styles` to force every ancestor in the chain explicitly.
+
+## 2026-04-21: button-card extra_styles :host without !important
+**Tried:** Using `extra_styles: ":host { width: 100%; display: block }"`
+alone to make a button-card fill a simple-swipe-card slide.
+**Failed:** button-card's own `adoptedStyleSheets` set `:host {
+display: flex; max-width: fit-content; flex: 0 0 auto }` at equal
+specificity, and those WIN unless you use `!important`. Probe showed
+only one `<style>` element in the shadow root (the extra_styles one)
+yet computed styles still reflected button-card's sheet — the competing
+rules come from adoptedStyleSheets, invisible to `querySelectorAll
+('style')`.
+**Fix:** Append `!important` to every `:host` property the override
+needs to win: `width`, `min-width`, `max-width`, `flex`, `display`,
+`height`. See `css_dom_patterns.md` → "button-card extra_styles needs
+!important on :host".
+
+## 2026-04-21: querying hui-grid-section from light DOM
+**Tried:** `document.querySelector('hui-sections-view')
+.querySelectorAll('hui-grid-section')` from kis-nav.js to find the
+right column for the priority-zone ResizeObserver.
+**Failed:** The `hui-grid-section` elements live inside a shadow root
+of `hui-sections-view`. `querySelectorAll` doesn't cross shadow
+boundaries. The observer attached to nothing and `--kis-zone-h` was
+never published.
+**Fix:** walk UP from a known-deep element (the `simple-swipe-card`,
+findable via recursive shadow-root descent) using
+`el.getRootNode().host` when crossing shadow boundaries. Pattern in
+`css_dom_patterns.md`.
+
+## 2026-04-21: ResizeObserver attach race on shadow-mount
+**Tried:** caching `_zoneSwipeCard = findSwipeCardEl(rightSection)`
+once in `installZoneHeightObserver()` during initial attach.
+**Failed:** The swipe-card's shadow root was not yet mounted when the
+observer attached, so `findSwipeCardEl` returned null. Subsequent
+ResizeObserver fires updated the CSS custom property (`--kis-zone-h`)
+but left `_zoneSwipeCard.style.height` empty because the cached
+reference was permanently null. Result: tiles sized correctly but the
+swipe-card container stayed at intrinsic ~100px tall.
+**Fix:** re-find the swipe-card at the top of every
+`recomputeZoneHeight()` call if `_zoneSwipeCard` is null or
+disconnected. Cheap (a few shadow-root walks) and self-heals.

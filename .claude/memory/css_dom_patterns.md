@@ -407,3 +407,89 @@ confirmed this is the post-2024.11 community-standard workaround.
 
 Applied 2026-04-21 to the priority-zone vehicle + weather tiles in
 `dashboard_mobilev1.json` section s[2].
+
+## 2026-04-21 — button-card extra_styles needs !important on :host
+
+`extra_styles` injects a `<style>` element into button-card's shadow
+root, so `:host { ... }` rules DO apply. But button-card ships its
+own `adoptedStyleSheets` with `:host { display: flex; max-width:
+fit-content; flex: 0 0 auto; ... }` that win at equal specificity.
+
+Symptom: inside a simple-swipe-card `.slide` (display: flex, width:
+500px), the button-card renders at `width: 133px` despite
+`extra_styles: ":host { width: 100% }"` — the computed styles show
+`display: flex`, `max-width: fit-content` from button-card's own
+sheet.
+
+**Fix:** use `!important` on every `:host` property you need to
+override:
+```
+:host {
+  height: var(--kis-zone-h, 400px) !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+  display: block !important;
+  box-sizing: border-box;
+}
+```
+
+Probe confirmation: `shadowRoot.querySelectorAll('style')` shows
+exactly ONE style element (the extra_styles one), so the competing
+rules must come from adoptedStyleSheets which are NOT listed there.
+The `!important` tips specificity in your favor regardless of source.
+
+Applied to `dashboard_mobilev1.json` priority-zone tiles 2026-04-21.
+
+## 2026-04-21 — HA sections right-column hui-grid-section is inside shadow
+
+The right column on a `type: sections` home view lives inside a
+shadow root of `hui-sections-view`. `document.querySelectorAll(
+'hui-grid-section')` from light DOM misses it.
+
+**Fix:** walk UP from a known-deep element (e.g. the swipe-card)
+through shadow boundaries using
+`el.getRootNode().host` when crossing shadow roots:
+```
+function findPriorityZoneSection() {
+  const swipe = findSwipeCardEl(document.body);
+  if (!swipe) return null;
+  let el = swipe;
+  for (let i = 0; i < 30; i++) {
+    const tag = el.tagName ? el.tagName.toLowerCase() : '';
+    if (tag === 'hui-grid-section' || tag === 'hui-section') return el;
+    const next = el.parentElement
+      || (el.getRootNode && el.getRootNode() !== document
+           ? el.getRootNode().host : null);
+    if (!next || next === document.body || next === document.documentElement) break;
+    el = next;
+  }
+  return swipe.parentElement || swipe;
+}
+```
+
+Use this whenever kis-nav.js needs to observe or measure a
+`hui-grid-section` on a `type: sections` dashboard.
+
+## 2026-04-21 — ResizeObserver attach can beat shadow-mount: re-find
+
+When `installZoneHeightObserver()` attaches during initial page load,
+the swipe-card's shadow root often isn't mounted yet. `findSwipeCardEl
+(rightSection)` returns null. Later ResizeObserver fires set the CSS
+custom property but NOT the inline `style.height` on the swipe-card
+(because `_zoneSwipeCard` is still null), so tiles that look at
+`var(--kis-zone-h)` render correctly while the swipe-card container
+stays at its intrinsic ~100px.
+
+**Fix:** re-find the swipe-card at the top of `recomputeZoneHeight()`
+on every call, not just once in `installZoneHeightObserver`:
+```
+if (!_zoneSwipeCard || !_zoneSwipeCard.isConnected) {
+  _zoneSwipeCard = findSwipeCardEl(_zoneRightSection)
+                || findSwipeCardEl(document.body);
+}
+```
+
+This also self-heals if HA ever replaces the swipe-card DOM (route
+swap, rebuild).

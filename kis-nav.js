@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 35;
+  window.KIS_NAV_VERSION = 37;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1329,6 +1329,144 @@
     }
   }
 
+  // ─── Priority-display zone height observer (Home page only) ──────────────
+  // Right-column width W drives the carousel height (16:9 camera aspect) and
+  // the left-column lock/cover card heights, so both columns end at the exact
+  // same bottom edge. Runs only on /home and only when the sections-view is
+  // in 2-column layout (portrait phone → 1-column stacked gets natural rows).
+  //
+  // Math:
+  //   W      = right hui-grid-section contentRect.width
+  //   swipeH = W * 9/16                     (camera-aspect zone height)
+  //   labelH = measured section_label height
+  //   gapH   = measured grid row-gap (HA default ≈ 8px)
+  //   cardH  = (swipeH - labelH - 4*gapH) / 4
+  //
+  // Publishes --kis-zone-h and --kis-card-h on <html>. Custom properties
+  // inherit through every shadow root, so button-card `extra_styles` hooks
+  // (`:host { height: var(--kis-card-h) }`) pick them up without per-shadow
+  // injection. Also writes inline height on the simple-swipe-card element
+  // since its grid row is auto-sized once grid_options.rows is removed.
+  let _zoneObserver = null;
+  let _zoneRightSection = null;
+  let _zoneSwipeCard = null;
+
+  // Walk up from the swipe-card (across shadow boundaries) to the enclosing
+  // hui-grid-section. That element's contentRect is the right-column width
+  // used by the zone-height math. Querying from sectionsView downward misses
+  // hui-grid-section because it's inside a shadow root.
+  function findPriorityZoneSection() {
+    const swipe = findSwipeCardEl(document.body);
+    if (!swipe) return null;
+    let el = swipe;
+    for (let i = 0; i < 30; i++) {
+      if (!el) break;
+      const tag = el.tagName ? el.tagName.toLowerCase() : '';
+      if (tag === 'hui-grid-section' || tag === 'hui-section') return el;
+      const next = el.parentElement
+        || (el.getRootNode && el.getRootNode() !== document ? el.getRootNode().host : null);
+      if (!next || next === document.body || next === document.documentElement) break;
+      el = next;
+    }
+    return swipe.parentElement || swipe;
+  }
+
+  function zoneIs2ColumnMode(rightSection) {
+    if (!rightSection) return false;
+    const sectionW = rightSection.getBoundingClientRect().width;
+    return sectionW > 100 && sectionW < window.innerWidth * 0.75;
+  }
+
+  function measureZoneLabelHeight(section) {
+    if (!section) return 20;
+    const first = section.firstElementChild;
+    if (first) {
+      const r = first.getBoundingClientRect();
+      if (r.height > 0 && r.height < 60) return Math.ceil(r.height);
+    }
+    return 20;
+  }
+
+  function measureZoneGap(section) {
+    if (!section) return 8;
+    const s = getComputedStyle(section);
+    const g = parseFloat(s.rowGap) || parseFloat(s.gap);
+    return isFinite(g) && g > 0 ? g : 8;
+  }
+
+  function clearZoneVars() {
+    const ds = document.documentElement.style;
+    ds.removeProperty('--kis-zone-h');
+    ds.removeProperty('--kis-card-h');
+    if (_zoneSwipeCard) _zoneSwipeCard.style.removeProperty('height');
+  }
+
+  function recomputeZoneHeight() {
+    if (!_zoneRightSection) return;
+    const W = _zoneRightSection.getBoundingClientRect().width;
+    if (!W || W < 100) return;
+    const swipeH = Math.round(W * 9 / 16);
+    const labelH = measureZoneLabelHeight(_zoneRightSection);
+    const gapH = measureZoneGap(_zoneRightSection);
+    const cardH = Math.max(48, Math.round((swipeH - labelH - 4 * gapH) / 4));
+    const ds = document.documentElement.style;
+    const zonePx = swipeH + 'px';
+    const cardPx = cardH + 'px';
+    if (ds.getPropertyValue('--kis-zone-h') !== zonePx) {
+      ds.setProperty('--kis-zone-h', zonePx);
+    }
+    if (ds.getPropertyValue('--kis-card-h') !== cardPx) {
+      ds.setProperty('--kis-card-h', cardPx);
+    }
+    // Re-find swipe-card if we lost it (or never had it) — the first observer
+    // attach often beats the swipe-card's shadow-dom mount.
+    if (!_zoneSwipeCard || !_zoneSwipeCard.isConnected) {
+      _zoneSwipeCard = findSwipeCardEl(_zoneRightSection) || findSwipeCardEl(document.body);
+    }
+    if (_zoneSwipeCard && _zoneSwipeCard.style.height !== zonePx) {
+      _zoneSwipeCard.style.height = zonePx;
+      // Force Android WebView reflow so percent-height descendants re-evaluate.
+      void _zoneSwipeCard.offsetHeight;
+    }
+  }
+
+  function installZoneHeightObserver() {
+    if (!onMobileDashboard() || getActiveSlug() !== 'home') {
+      if (_zoneObserver) { try { _zoneObserver.disconnect(); } catch (e) {} }
+      _zoneObserver = null;
+      _zoneRightSection = null;
+      _zoneSwipeCard = null;
+      clearZoneVars();
+      return;
+    }
+    const rightSection = findPriorityZoneSection();
+    if (!rightSection) return;
+
+    if (rightSection !== _zoneRightSection) {
+      if (_zoneObserver) { try { _zoneObserver.disconnect(); } catch (e) {} }
+      _zoneRightSection = rightSection;
+      _zoneSwipeCard = findSwipeCardEl(rightSection);
+      _zoneObserver = new ResizeObserver(() => {
+        if (!zoneIs2ColumnMode(_zoneRightSection)) {
+          clearZoneVars();
+          return;
+        }
+        recomputeZoneHeight();
+      });
+      try { _zoneObserver.observe(_zoneRightSection); } catch (e) {}
+    } else if (!_zoneSwipeCard) {
+      _zoneSwipeCard = findSwipeCardEl(rightSection);
+    }
+
+    // ResizeObserver's initial fire is sometimes skipped on Android WebView
+    // mid-attach — run a synchronous compute pass so the first paint is right.
+    if (zoneIs2ColumnMode(_zoneRightSection)) {
+      recomputeZoneHeight();
+    } else {
+      clearZoneVars();
+    }
+  }
+
   // ─── Priority-camera auto-snap (camera-as-carousel-tile) ───────────────────
   // Cameras live as conditional tiles inside the simple-swipe-card priority
   // zone (dashboard_mobilev1.json home view). When a camera's sticky motion
@@ -1990,6 +2128,7 @@
         applyCamerasStagger();
         updateCameraPlaceholders();
         startCameraPlaceholderBurst();
+        installZoneHeightObserver();
       }, 100);
     } else {
       nav.setAttribute('hidden', '');
@@ -2133,7 +2272,10 @@
     window.addEventListener('resize', () => {
       applyDynamicHeaderClearance();
       // Re-patch HA layout after resize to handle section column reflow
-      setTimeout(() => patchHALayout(0), 200);
+      setTimeout(() => {
+        patchHALayout(0);
+        installZoneHeightObserver();
+      }, 200);
     });
     window.addEventListener('orientationchange', () => {
       // Orientation change: delay for reflow, then re-measure + re-patch fully.
@@ -2145,10 +2287,12 @@
           delete el._kisPadded;
         });
         patchHALayout(0);
+        installZoneHeightObserver();
         // Second pass after HA finishes internal reflow
         setTimeout(() => {
           applyDynamicHeaderClearance();
           patchHALayout(0);
+          installZoneHeightObserver();
         }, 500);
       }, 150);
     });
@@ -2164,6 +2308,7 @@
         autoSnapPriorityCamera();
         applyCamerasStagger();
         updateCameraPlaceholders();
+        installZoneHeightObserver();
       }
     }, 1000);
 
