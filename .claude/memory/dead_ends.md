@@ -221,3 +221,30 @@ don't rewrite working code because the cameras "look broken".
 actual in-UI error banner. HA surfaces upstream errors inline (Nest
 429, Vivint auth, etc) right on the card, and those look very similar
 to "my CSS broke it" at a glance.
+
+## 2026-04-21: button-card `styles.card: height: 100%` alone to fill swipe-card slide
+**Tried:** Added `{ height: '100%' }`, `{ 'min-height': '100%' }`, `{ width: '100%' }`
+to `styles.card` on each button-card in the priority-zone swipe-card,
+expecting the tile to fill simple-swipe-card's 568px `.slide` height
+(established via `grid_options: { rows: 9 }`).
+**Failed:** Tile still rendered at ~153px content height. Playwright
+probe showed `tileHostH: 568px` (swipe-card cascade reaches the host
+correctly) but `tileInnerHaCardH: 153px` (ha-card inside button-card's
+shadow root did not stretch).
+**Root cause:** button-card's shadow DOM is `:host > #aspect-ratio >
+ha-card`. `styles.card` IS applied to ha-card directly, but when
+`aspect_ratio:` config is unset the parent `#aspect-ratio` div is
+`display: inline` with no height. `height: 100%` on ha-card resolves
+against a zero-height parent and collapses.
+**Fix:** Add `extra_styles` to the button-card (top-level key, not
+inside `styles`) with the full `:host → #aspect-ratio → ha-card`
+chain all set to `height: 100%; display: block`. Full pattern in
+`css_dom_patterns.md` → "button-card fill parent height — extra_styles
+:host chain". No card-mod required; `extra_styles` emits a raw
+`<style>` into the shadow root.
+**Broader lesson:** When a custom element doesn't fill its parent,
+check its shadow-DOM structure before assuming the config property
+"just wraps in height:100%" — intermediate divs often break the
+cascade. button-card specifically has an `#aspect-ratio` div that
+becomes a zero-height wrapper unless `aspect_ratio:` is set; use
+`extra_styles` to force every ancestor in the chain explicitly.

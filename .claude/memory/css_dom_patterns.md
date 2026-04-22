@@ -365,3 +365,45 @@ cooldown expires the sensor state still equals cam and the next tick
 would auto-snap — defeating the dismissal. Only a transition through
 `priority_camera == 'none'` back into a camera name resets
 `_lastSnappedPriorityCamera` and earns another snap.
+
+## button-card fill parent height — `extra_styles` :host chain (2026-04-21)
+Context: a `custom:button-card` inside `custom:simple-swipe-card` with
+`grid_options: { rows: 9 }` — swipe-card host resolves to 568px, but
+button-card's inner ha-card renders at ~153px (content height — icon
++ name + label). simple-swipe-card's internal `.slide > * > ha-card`
+CSS reaches the button-card HOST (light DOM), but cannot cross the
+shadow-DOM boundary into button-card's internal ha-card.
+
+Root cause from button-card source (`src/button-card.ts`): shadow
+structure is `:host > #aspect-ratio > ha-card`. `styles.card:` is
+applied directly to ha-card via inline styleMap, so `styles.card:
+height: 100%` IS reaching ha-card — but resolves against a
+parent `#aspect-ratio` div that is `display: inline` with no height
+when `aspect_ratio:` config is unset. 100% of zero height = zero,
+so ha-card collapses to content.
+
+**Fix — card-mod NOT required.** button-card exposes a top-level
+`extra_styles` key that emits a raw `<style>` inside its shadow root.
+Set height:100% on ALL THREE ancestors in the chain:
+
+```yaml
+type: custom:button-card
+extra_styles: |
+  :host { height: 100%; display: block; }
+  #aspect-ratio { height: 100%; display: block; }
+  ha-card { height: 100%; }
+```
+
+In JSON: a single string key `"extra_styles"` with the three rules
+concatenated on one line.
+
+Do NOT also set the `aspect_ratio:` config prop — it flips
+`#aspect-ratio` into `position: absolute` mode and ha-card fights
+the swipe-card slot differently. Leave `aspect_ratio:` unset.
+
+Related refs: custom-cards/button-card issue #861, home-assistant/
+frontend issue #22616 (HA 2024.11+ grid height regression). Community
+confirmed this is the post-2024.11 community-standard workaround.
+
+Applied 2026-04-21 to the priority-zone vehicle + weather tiles in
+`dashboard_mobilev1.json` section s[2].
