@@ -1244,8 +1244,8 @@
                 },
                 {
                   "type": "picture-entity",
-                  "entity": "camera.izzy_camera",
-                  "camera_image": "camera.izzy_camera",
+                  "entity": "camera.nest_cam_1",
+                  "camera_image": "camera.nest_cam_1",
                   "camera_view": "auto",
                   "show_state": false,
                   "show_name": true,
@@ -1262,8 +1262,8 @@
                         "dismissable": true,
                         "content": {
                           "type": "picture-entity",
-                          "entity": "camera.izzy_camera",
-                          "camera_image": "camera.izzy_camera",
+                          "entity": "camera.nest_cam_1",
+                          "camera_image": "camera.nest_cam_1",
                           "camera_view": "live",
                           "show_state": false,
                           "show_name": false,
@@ -1276,8 +1276,8 @@
                 },
                 {
                   "type": "picture-entity",
-                  "entity": "camera.living_room_camera",
-                  "camera_image": "camera.living_room_camera",
+                  "entity": "camera.nest_cam_2",
+                  "camera_image": "camera.nest_cam_2",
                   "camera_view": "auto",
                   "show_state": false,
                   "show_name": true,
@@ -1294,8 +1294,8 @@
                         "dismissable": true,
                         "content": {
                           "type": "picture-entity",
-                          "entity": "camera.living_room_camera",
-                          "camera_image": "camera.living_room_camera",
+                          "entity": "camera.nest_cam_2",
+                          "camera_image": "camera.nest_cam_2",
                           "camera_view": "live",
                           "show_state": false,
                           "show_name": false,

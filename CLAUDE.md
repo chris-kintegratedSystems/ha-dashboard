@@ -100,8 +100,8 @@ code regression (empty cells). Pick the right tool:
 - When: iterating on camera zone layout, card sizing, borders,
   placeholder styling, section headers, grid alignment, day/night
   theming on camera-containing views
-- Cost: ZERO Nest API calls. `camera.living_room_camera` and
-  `camera.izzy_camera` show a static SVG "CAMERA MOCK" placeholder.
+- Cost: ZERO Nest API calls. `camera.nest_cam_2` and
+  `camera.nest_cam_1` show a static SVG "CAMERA MOCK" placeholder.
   Vivint doorbell and Nanit cameras still load live (no rate limits).
 - Works with existing view + device filters:
   ```bash

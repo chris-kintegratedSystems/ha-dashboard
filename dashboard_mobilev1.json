@@ -1508,14 +1508,14 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "binary_sensor.living_room_camera_motion_sticky",
+                          "entity": "binary_sensor.nest_cam_2_motion_sticky",
                           "state": "on"
                         }
                       ],
                       "card": {
                         "type": "picture-entity",
-                        "entity": "camera.living_room_camera",
-                        "camera_image": "camera.living_room_camera",
+                        "entity": "camera.nest_cam_2",
+                        "camera_image": "camera.nest_cam_2",
                         "camera_view": "auto",
                         "show_state": false,
                         "show_name": false,
@@ -1532,7 +1532,7 @@
                               "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
                               "content": {
                                 "type": "picture-elements",
-                                "camera_image": "camera.living_room_camera",
+                                "camera_image": "camera.nest_cam_2",
                                 "camera_view": "live",
                                 "card_mod": {
                                   "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
@@ -1576,14 +1576,14 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "binary_sensor.izzy_camera_motion_sticky",
+                          "entity": "binary_sensor.nest_cam_1_motion_sticky",
                           "state": "on"
                         }
                       ],
                       "card": {
                         "type": "picture-entity",
-                        "entity": "camera.izzy_camera",
-                        "camera_image": "camera.izzy_camera",
+                        "entity": "camera.nest_cam_1",
+                        "camera_image": "camera.nest_cam_1",
                         "camera_view": "auto",
                         "show_state": false,
                         "show_name": false,
@@ -1600,7 +1600,7 @@
                               "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
                               "content": {
                                 "type": "picture-elements",
-                                "camera_image": "camera.izzy_camera",
+                                "camera_image": "camera.nest_cam_1",
                                 "camera_view": "live",
                                 "card_mod": {
                                   "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
@@ -2853,8 +2853,8 @@
                 },
                 {
                   "type": "picture-entity",
-                  "entity": "camera.izzy_camera",
-                  "camera_image": "camera.izzy_camera",
+                  "entity": "camera.nest_cam_1",
+                  "camera_image": "camera.nest_cam_1",
                   "camera_view": "live",
                   "show_state": false,
                   "show_name": false,
@@ -2873,7 +2873,7 @@
                         "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
                         "content": {
                           "type": "picture-elements",
-                          "camera_image": "camera.izzy_camera",
+                          "camera_image": "camera.nest_cam_1",
                           "camera_view": "live",
                           "card_mod": {
                             "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
@@ -2915,8 +2915,8 @@
                 },
                 {
                   "type": "picture-entity",
-                  "entity": "camera.living_room_camera",
-                  "camera_image": "camera.living_room_camera",
+                  "entity": "camera.nest_cam_2",
+                  "camera_image": "camera.nest_cam_2",
                   "camera_view": "live",
                   "show_state": false,
                   "show_name": false,
@@ -2935,7 +2935,7 @@
                         "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
                         "content": {
                           "type": "picture-elements",
-                          "camera_image": "camera.living_room_camera",
+                          "camera_image": "camera.nest_cam_2",
                           "camera_view": "live",
                           "card_mod": {
                             "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"

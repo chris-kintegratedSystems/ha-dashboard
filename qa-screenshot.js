@@ -19,7 +19,7 @@
  *
  * Flags:
  *   --mock-cameras        Replace the two Nest camera streams
- *                         (camera.living_room_camera, camera.izzy_camera)
+ *                         (camera.nest_cam_2, camera.nest_cam_1)
  *                         with a generated SVG "CAMERA MOCK" placeholder.
  *                         Zero Nest SDM API calls. Use this for all
  *                         iterative camera-containing-view layout work so
@@ -92,7 +92,7 @@ const REQUIRED_SELECTORS = ['#kis-header-bar', '#kis-nav-bar'];
 
 // Nest SDM cameras are the only ones that get rate-limited (5 QPM per device
 // on ExecuteDeviceCommand). Vivint doorbell + Nanit never need mocking.
-const MOCK_CAMERA_ENTITIES = ['camera.living_room_camera', 'camera.izzy_camera'];
+const MOCK_CAMERA_ENTITIES = ['camera.nest_cam_2', 'camera.nest_cam_1'];
 
 // Views whose layout typically renders Nest camera streams. --camera-delay
 // applies between device profiles on these views only.

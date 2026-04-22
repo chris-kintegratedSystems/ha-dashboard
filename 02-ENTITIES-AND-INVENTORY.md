@@ -33,8 +33,8 @@ Sensor output alphabet is the public contract with `kis-nav.js`
 | Entity | Source | Off delay |
 |--------|--------|-----------|
 | `binary_sensor.doorbell_motion_sticky` | Vivint `binary_sensor.doorbell_motion` | `delay_off: 00:00:30` |
-| `binary_sensor.living_room_camera_motion_sticky` | Nest `event.living_room_camera_motion` (trigger-based) | `auto_off: 00:00:30` |
-| `binary_sensor.izzy_camera_motion_sticky` | Nest `event.izzy_camera_motion` (trigger-based) | `auto_off: 00:00:30` |
+| `binary_sensor.nest_cam_2_motion_sticky` | Nest `event.nest_cam_2_motion` (trigger-based) | `auto_off: 00:00:30` |
+| `binary_sensor.nest_cam_1_motion_sticky` | Nest `event.nest_cam_1_motion` (trigger-based) | `auto_off: 00:00:30` |
 
 ---
 
@@ -131,16 +131,16 @@ Obstruction sensors (used by auto-close automation):
 | Entity | Type | Notes |
 |--------|------|-------|
 | `camera.doorbell` | Vivint DBC300 | Fronted by go2rtc. Use `camera_view: auto`. |
-| `camera.living_room_camera` | Nest | Rate-limit prone. `camera_view: auto`. |
-| `camera.izzy_camera` | Nest | Same. |
+| `camera.nest_cam_2` | Nest | Rate-limit prone. `camera_view: auto`. |
+| `camera.nest_cam_1` | Nest | Same. |
 | `camera.nanit_benjamin` | ffmpeg → Nanit RTMP restream | Local RTMP, no cloud dependency. |
 | `camera.nanit_travel` | ffmpeg → Nanit RTMP restream | Portable Nanit. |
 
 Motion inputs feeding the priority state machine:
 
 - `binary_sensor.doorbell_motion` → stickied (Vivint, steady-state)
-- `event.living_room_camera_motion` → stickied (Nest, event pulses)
-- `event.izzy_camera_motion` → stickied
+- `event.nest_cam_2_motion` → stickied (Nest, event pulses)
+- `event.nest_cam_1_motion` → stickied
 
 Nanit motion/sound/cry events are **not** available — the fork publishes
 via MQTT but Chris's HA has no MQTT broker yet.

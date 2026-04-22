@@ -231,7 +231,7 @@ as layout shift. Apply via:
 
 ## Playwright camera mock — two-layer intercept (2026-04-21)
 `qa-screenshot.js --mock-cameras` replaces Nest camera feeds
-(`camera.living_room_camera`, `camera.izzy_camera`) with a generated
+(`camera.nest_cam_2`, `camera.nest_cam_1`) with a generated
 SVG placeholder so iterative Playwright sweeps over camera-containing
 views burn zero Nest SDM quota. The implementation uses BOTH layers
 simultaneously because neither alone covers every picture-entity

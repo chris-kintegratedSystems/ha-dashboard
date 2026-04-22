@@ -1504,8 +1504,8 @@
   // back to the same camera — the user wanted a break.
   const PRIORITY_CAMERA_MAP = {
     doorbell: 'camera.doorbell',
-    living_room: 'camera.living_room_camera',
-    izzy: 'camera.izzy_camera',
+    living_room: 'camera.nest_cam_2',
+    izzy: 'camera.nest_cam_1',
   };
   const SWIPE_AWAY_COOLDOWN_MS = 60000;
   const _cameraCooldownUntil = Object.create(null);
@@ -1555,8 +1555,8 @@
   //   camera.doorbell        — immediate (Vivint, separate auth path)
   //   camera.nanit_benjamin  — immediate (local RTMP, zero limit)
   //   camera.nanit_travel    — immediate (local RTMP, zero limit)
-  //   camera.living_room_camera (Nest) — delay 1000 ms
-  //   camera.izzy_camera        (Nest) — delay 2000 ms
+  //   camera.nest_cam_2 (Nest) — delay 1000 ms
+  //   camera.nest_cam_1        (Nest) — delay 2000 ms
   //
   // Implementation: detach each staggered camera's picture-entity from DOM
   // on Cameras-page entry (a placeholder of the same size holds the grid
@@ -1564,8 +1564,8 @@
   // the custom element, so its connectedCallback / stream init don't run
   // until re-attach — a true stream-start delay, not just visual.
   const CAMERAS_STAGGER = {
-    'camera.living_room_camera': 1000,
-    'camera.izzy_camera': 2000,
+    'camera.nest_cam_2': 1000,
+    'camera.nest_cam_1': 2000,
   };
   let _camerasStaggerActiveSlug = null;
   // Map<entityId, { parent, placeholder, node, timer }>
@@ -1752,8 +1752,8 @@
   // custom properties inherit through shadow-DOM boundaries.
   const PLACEHOLDER_CAM_ENTITIES = [
     'camera.doorbell',
-    'camera.living_room_camera',
-    'camera.izzy_camera',
+    'camera.nest_cam_2',
+    'camera.nest_cam_1',
     'camera.nanit_benjamin',
     'camera.nanit_travel',
   ];
