@@ -81,3 +81,35 @@ it never parses the URL path. The path-based format
 project_id and device_id in the path where go2rtc ignores them →
 "wrong query" error. Correct format:
 `nest:?client_id=X&client_secret=X&refresh_token=X&project_id=X&device_id=X`
+
+## 2026-04-22: Frigate 5-cam CPU overload causes WebRTC freeze-resume cycle
+Running 5 cameras at 640x480@5fps detect on a Pi 5 (CPU detector,
+91ms inference) pegs all 4 cores at 100%. Symptoms: live WebRTC feeds
+freeze for a few seconds then resume cyclically; Frigate logs show
+`corrupt decoded frame`, `cabac decode failed`, `Connection timed out`;
+ffmpeg watchdog restarts camera processes. go2rtc has no CPU left to
+serve WebRTC packets consistently.
+**Fix:** reduce detect fps to 2 on non-critical cameras (nest_cam_1/2),
+disable detect+motion entirely on cameras using external detection
+(nanit). Result: CPU idle went from 0% → 42%, inference speed from
+91ms → 34ms. For 5+ cameras on Pi 5 without a Coral USB, budget at
+most ~9 detect fps total (e.g. 1×5fps + 2×2fps).
+
+## 2026-04-22: Frigate detect.enabled:false does NOT stop ffmpeg
+Setting `detect: enabled: false` on a Frigate camera stops inference
+but does NOT stop the ffmpeg decode process. Frigate still spawns
+ffmpeg for the `roles: [detect]` input to feed the motion processor.
+Adding `motion: enabled: false` stops the Python-side processing but
+the ffmpeg process STILL runs (lower priority, but still consumes CPU).
+The only way to fully eliminate the ffmpeg process is to remove the
+camera from the `cameras:` section — but that removes the HA entity.
+Accept the residual CPU cost for streaming-only cameras.
+
+## 2026-04-22: Frigate snapshot aspect ratio ≠ live feed aspect ratio
+Frigate's `/api/<cam>/latest.jpg` snapshots are the detection frame
+(640x480, 4:3). Live WebRTC feeds are the camera's native resolution
+(typically 16:9). Using a snapshot as a placeholder background causes
+a visible aspect ratio jump on transition. Fix: use
+`background-size: 100% 100%` (stretch) instead of `cover` (crop) on
+the placeholder so it fills the exact same container rectangle as the
+video, producing a seamless dimensional transition.

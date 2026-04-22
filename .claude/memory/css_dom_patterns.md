@@ -493,3 +493,37 @@ if (!_zoneSwipeCard || !_zoneSwipeCard.isConnected) {
 
 This also self-heals if HA ever replaces the swipe-card DOM (route
 swap, rebuild).
+
+## 2026-04-22 — Event-driven state subscription from extra_module_url JS
+`window.hassConnection` is a Promise (set by HA frontend) that resolves
+to `{ auth, conn }`. The `conn` object is a `home-assistant-js-websocket`
+Connection with `subscribeEvents(callback, eventType)`. From an
+`extra_module_url` script (kis-nav.js), subscribe to `state_changed` for
+instant reaction to entity state updates — no polling needed:
+```js
+window.hassConnection.then(({ conn }) => {
+  conn.subscribeEvents((event) => {
+    if (event.data.entity_id === 'sensor.priority_camera') {
+      autoSnapPriorityCamera();
+    }
+  }, 'state_changed');
+});
+```
+Retry with setTimeout if `window.hassConnection` isn't set yet (HA
+sets it late in the boot sequence). Keep the 1s setInterval as a
+fallback for other periodic work (clock, placeholders) but remove the
+specific function from the interval since the subscription handles it.
+
+## 2026-04-22 — Frigate snapshot as placeholder background
+Frigate `/api/<camera_name>/latest.jpg` returns the most recent
+detection frame (640x480). Set as a CSS custom property per
+picture-entity host element:
+```js
+pe.style.setProperty('--kis-cam-snapshot',
+  'url("http://192.168.51.179:5000/api/' + camName + '/latest.jpg?t=' + Date.now() + '")');
+```
+Use in `ha-card::before` as `background: var(--kis-cam-snapshot, none)`.
+Cache-bust with `?t=` ensures a fresh snapshot on each card mount.
+Use `background-size: 100% 100%` (stretch) not `cover` (crop) because
+Frigate snapshots are 4:3 but the live WebRTC feed is 16:9 — `cover`
+causes a visible content shift during the overlay fade-out.

@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 39;
+  window.KIS_NAV_VERSION = 41;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1506,6 +1506,8 @@
     doorbell: 'camera.doorbell',
     living_room: 'camera.nest_cam_2',
     izzy: 'camera.nest_cam_1',
+    nanit_benjamin: 'camera.nanit_benjamin',
+    nanit_travel: 'camera.nanit_travel',
   };
   const SWIPE_AWAY_COOLDOWN_MS = 60000;
   const _cameraCooldownUntil = Object.create(null);
@@ -1519,8 +1521,7 @@
     if (!ps) return;
     const cam = ps.state;
 
-    if (cam !== 'doorbell' && cam !== 'living_room' && cam !== 'izzy') {
-      // No active camera — reset memory so the next motion event snaps.
+    if (!PRIORITY_CAMERA_MAP[cam]) {
       _lastSnappedPriorityCamera = null;
       return;
     }
@@ -1618,23 +1619,21 @@
       inset: 0;
       z-index: 5;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
-      background: var(--kis-cam-placeholder-bg, #151c2a);
-      color: var(--kis-cam-placeholder-text, #4a5570);
-      font-size: 11px;
+      padding-bottom: 6px;
+      background: var(--kis-cam-snapshot, none) center/100% 100% no-repeat;
+      background-color: var(--kis-cam-placeholder-bg, #151c2a);
+      color: rgba(255,255,255,0.5);
+      font-size: 9px;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
       pointer-events: none;
       border-radius: inherit;
-      transition: opacity 300ms ease;
-      animation: kis-cam-pulse 2.4s ease-in-out infinite;
-    }
-    @keyframes kis-cam-pulse {
-      0%, 100% { opacity: 1; }
-      50%      { opacity: 0.55; }
+      transition: opacity 100ms ease;
     }
     :host(.kis-feed-ready) ha-card::before {
       opacity: 0;
@@ -1757,6 +1756,9 @@
       const label = cameraFriendlyName(cfg.entity);
       const safe = String(label).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
       pe.style.setProperty('--kis-cam-label-text', '"' + safe + '"');
+      const camName = cfg.entity.replace(/^camera\./, '');
+      const snapUrl = 'http://192.168.51.179:5000/api/' + camName + '/latest.jpg?t=' + Date.now();
+      pe.style.setProperty('--kis-cam-snapshot', 'url("' + snapUrl + '")');
       pe._kisCamLabelSet = true;
     }
     watchFeedReady(pe);
@@ -2140,15 +2142,31 @@
       }, 150);
     });
 
+    // Event-driven priority camera subscription — reacts instantly to
+    // sensor.priority_camera state changes instead of waiting for 1s poll.
+    (function installPriorityCameraSubscription() {
+      if (!window.hassConnection) {
+        setTimeout(installPriorityCameraSubscription, 500);
+        return;
+      }
+      window.hassConnection.then(function (result) {
+        var conn = result.conn;
+        if (!conn || !conn.subscribeEvents) return;
+        conn.subscribeEvents(function (event) {
+          if (event.data && event.data.entity_id === 'sensor.priority_camera') {
+            autoSnapPriorityCamera();
+          }
+        }, 'state_changed');
+      }).catch(function () {});
+    })();
+
     // Update header content every second (live clock + entity states).
     // Also opportunistically re-attach the swipe-card observer, and refresh
-    // the motion-camera overlay (winner z-index / losers hidden), in case
-    // the relevant elements remounted since the last syncState call.
+    // camera placeholders, in case elements remounted since last syncState.
     setInterval(() => {
       if (onMobileDashboard()) {
         renderHeaderContent();
         maybeReattachSwipeObserver();
-        autoSnapPriorityCamera();
         updateCameraPlaceholders();
         installZoneHeightObserver();
       }
