@@ -12,8 +12,8 @@ const data = JSON.parse(fs.readFileSync(DASHBOARD, 'utf8'));
 
 const CAM_CONFIG = [
   { camState: 'doorbell',     sticky: 'binary_sensor.doorbell_motion_sticky' },
-  { camState: 'living_room',  sticky: 'binary_sensor.living_room_camera_motion_sticky' },
-  { camState: 'izzy',         sticky: 'binary_sensor.izzy_camera_motion_sticky' },
+  { camState: 'living_room',  sticky: 'binary_sensor.nest_cam_2_motion_sticky' },
+  { camState: 'izzy',         sticky: 'binary_sensor.nest_cam_1_motion_sticky' },
 ];
 
 let rewriteCount = 0;

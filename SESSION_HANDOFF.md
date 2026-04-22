@@ -88,8 +88,8 @@ End-of-day handoff. Two repos, two open PRs, Pi state clean.
 | `configuration.yaml` → `frontend.extra_module_url` | `/local/mobile_v1/kis-nav.js?v=17` (verified present) |
 | `dashboard_mobilev1` | storage key `lovelace.dashboard_mobilev1` (root:root 644). Latest commit `7386da4` deployed — panel + grid + aspect_ratio. |
 | `dashboard_tabletv1` | storage key `lovelace.dashboard_tabletv1`. Unchanged today. |
-| Camera entities | `camera.doorbell`, `camera.izzy_camera`, `camera.living_room_camera`, `camera.nanit_benjamin`, `camera.nanit_travel` |
-| Motion sticky sensors | `binary_sensor.doorbell_motion_sticky`, `living_room_camera_motion_sticky`, `izzy_camera_motion_sticky` (2-min delay_off) |
+| Camera entities | `camera.doorbell`, `camera.nest_cam_1`, `camera.nest_cam_2`, `camera.nanit_benjamin`, `camera.nanit_travel` |
+| Motion sticky sensors | `binary_sensor.doorbell_motion_sticky`, `nest_cam_2_motion_sticky`, `nest_cam_1_motion_sticky` (2-min delay_off) |
 | go2rtc | `alexxit/go2rtc:latest`, running **v1.9.14**. Only `doorbell` stream configured. Nest + Nanit NOT in go2rtc. |
 | Nanit container | `indiefan/nanit`, bind-mounted `/home/cooper5389/nanit/data:/data`, RTMP `:1935` |
 | `/tmp/` scratch | CLEAN (six stale `dashboard_*.json` files removed 2026-04-20) |

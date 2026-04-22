@@ -171,8 +171,8 @@ Card type: light-group entity or custom:button-card tap_action: more-info for in
 ### Section 5: Cameras
 Three camera feeds in a 3-column grid:
 - Doorbell (`camera.doorbell`)
-- Izzy (`camera.izzy_camera`)
-- Living Room (`camera.living_room_camera`)
+- Izzy (`camera.nest_cam_1`)
+- Living Room (`camera.nest_cam_2`)
 
 Each card: picture-glance or custom-image with camera_view: auto. Tap opens browser_mod popup with full-size stream.
 

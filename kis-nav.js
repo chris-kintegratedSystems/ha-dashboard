@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 37;
+  window.KIS_NAV_VERSION = 38;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -908,6 +908,16 @@
       document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#f0f2f5');
       document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#7a8698');
       document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(0,0,0,0.06)');
+      // Lights page day palette — glass-morph flips to a warm-white pane,
+      // text darkens to dark-gray. Amber fill stays amber in both modes.
+      document.documentElement.style.setProperty('--kis-lights-room-bg', 'rgba(255,255,255,0.85)');
+      document.documentElement.style.setProperty('--kis-lights-room-border', 'rgba(0,0,0,0.08)');
+      document.documentElement.style.setProperty('--kis-lights-room-name', '#1b2230');
+      document.documentElement.style.setProperty('--kis-lights-room-count', '#6a7689');
+      document.documentElement.style.setProperty('--kis-lights-row-rule', 'rgba(0,0,0,0.06)');
+      document.documentElement.style.setProperty('--kis-lights-name', '#2b3142');
+      document.documentElement.style.setProperty('--kis-lights-bar-track', 'rgba(0,0,0,0.09)');
+      document.documentElement.style.setProperty('--kis-lights-bar-fill', '#f5a623');
     } else {
       bar.removeAttribute('data-kis-day');
       if (navBar) navBar.removeAttribute('data-kis-day');
@@ -917,6 +927,15 @@
       document.documentElement.style.setProperty('--kis-cam-placeholder-bg', '#151c2a');
       document.documentElement.style.setProperty('--kis-cam-placeholder-text', '#4a5570');
       document.documentElement.style.setProperty('--kis-cam-placeholder-border', 'rgba(255,255,255,0.06)');
+      // Lights page night palette — dark glass, light text.
+      document.documentElement.style.setProperty('--kis-lights-room-bg', 'rgba(16,21,31,0.72)');
+      document.documentElement.style.setProperty('--kis-lights-room-border', 'rgba(255,255,255,0.06)');
+      document.documentElement.style.setProperty('--kis-lights-room-name', '#eef2f8');
+      document.documentElement.style.setProperty('--kis-lights-room-count', '#8a95a6');
+      document.documentElement.style.setProperty('--kis-lights-row-rule', 'rgba(255,255,255,0.04)');
+      document.documentElement.style.setProperty('--kis-lights-name', '#cfd5e0');
+      document.documentElement.style.setProperty('--kis-lights-bar-track', 'rgba(255,255,255,0.08)');
+      document.documentElement.style.setProperty('--kis-lights-bar-fill', '#f5a623');
     }
 
     // Clock + date
@@ -1485,8 +1504,8 @@
   // back to the same camera — the user wanted a break.
   const PRIORITY_CAMERA_MAP = {
     doorbell: 'camera.doorbell',
-    living_room: 'camera.living_room_camera',
-    izzy: 'camera.izzy_camera',
+    living_room: 'camera.nest_cam_2',
+    izzy: 'camera.nest_cam_1',
   };
   const SWIPE_AWAY_COOLDOWN_MS = 60000;
   const _cameraCooldownUntil = Object.create(null);
@@ -1536,8 +1555,8 @@
   //   camera.doorbell        — immediate (Vivint, separate auth path)
   //   camera.nanit_benjamin  — immediate (local RTMP, zero limit)
   //   camera.nanit_travel    — immediate (local RTMP, zero limit)
-  //   camera.living_room_camera (Nest) — delay 1000 ms
-  //   camera.izzy_camera        (Nest) — delay 2000 ms
+  //   camera.nest_cam_2 (Nest) — delay 1000 ms
+  //   camera.nest_cam_1        (Nest) — delay 2000 ms
   //
   // Implementation: detach each staggered camera's picture-entity from DOM
   // on Cameras-page entry (a placeholder of the same size holds the grid
@@ -1545,8 +1564,8 @@
   // the custom element, so its connectedCallback / stream init don't run
   // until re-attach — a true stream-start delay, not just visual.
   const CAMERAS_STAGGER = {
-    'camera.living_room_camera': 1000,
-    'camera.izzy_camera': 2000,
+    'camera.nest_cam_2': 1000,
+    'camera.nest_cam_1': 2000,
   };
   let _camerasStaggerActiveSlug = null;
   // Map<entityId, { parent, placeholder, node, timer }>
@@ -1733,8 +1752,8 @@
   // custom properties inherit through shadow-DOM boundaries.
   const PLACEHOLDER_CAM_ENTITIES = [
     'camera.doorbell',
-    'camera.living_room_camera',
-    'camera.izzy_camera',
+    'camera.nest_cam_2',
+    'camera.nest_cam_1',
     'camera.nanit_benjamin',
     'camera.nanit_travel',
   ];

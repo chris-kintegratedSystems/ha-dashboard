@@ -100,8 +100,8 @@ code regression (empty cells). Pick the right tool:
 - When: iterating on camera zone layout, card sizing, borders,
   placeholder styling, section headers, grid alignment, day/night
   theming on camera-containing views
-- Cost: ZERO Nest API calls. `camera.living_room_camera` and
-  `camera.izzy_camera` show a static SVG "CAMERA MOCK" placeholder.
+- Cost: ZERO Nest API calls. `camera.nest_cam_2` and
+  `camera.nest_cam_1` show a static SVG "CAMERA MOCK" placeholder.
   Vivint doorbell and Nanit cameras still load live (no rate limits).
 - Works with existing view + device filters:
   ```bash
@@ -388,6 +388,45 @@ made v34 the second attempt, not the sixth.
 
 **Rule:** after one failed approach, the next action is ALWAYS
 research, never another code attempt.
+
+### Probe before deploy — measure the DOM first
+
+Before deploying a layout or CSS fix to the Pi, write a throwaway
+Playwright probe script that measures the actual rendered DOM state on
+the live dashboard. The probe should answer: what are the computed
+styles, rendered dimensions, shadow-root structure, and specificity
+winners for the elements you're about to change?
+
+The priority-zone fix (v35→v37) burned 3 deploys because each failure
+revealed a new DOM reality that could have been discovered with a
+pre-fix probe:
+
+- button-card's adoptedStyleSheets override extra_styles at equal
+  specificity (needed !important)
+- hui-grid-section lives inside a shadow root (can't query from light
+  DOM)
+- ResizeObserver attaches before swipe-card's shadow root mounts
+  (findSwipeCardEl returns null)
+
+All three would have been caught by a single probe script run BEFORE
+writing any fix code.
+
+**Rule:** For any fix that changes CSS, layout, or shadow-DOM
+injection targeting the dashboard:
+
+1. Write a scratch probe script (Playwright, authenticated, same
+   device profiles as QA)
+2. Measure the CURRENT state: element dimensions, computed styles,
+   shadow-root children, CSS variable values
+3. Identify which rules are winning (check adoptedStyleSheets, inline
+   styles, shadow `<style>` elements)
+4. THEN write the fix informed by the probe results
+5. Delete the probe script before committing (it's scratch — never
+   committed)
+
+The probe costs ~30 seconds to run. A failed deploy costs ~5 minutes
+plus a version bump. Three failed deploys cost 15 minutes plus 3
+version bumps plus 3 HA restarts. Probe first.
 
 ### Real-device-first for WebView bugs
 

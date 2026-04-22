@@ -23,8 +23,8 @@ REQUIREMENT 1: Sticky delay 30 seconds (up from 5s)
 Increase delay_off / auto_off on all three sticky sensors to 30 seconds 
 in ha-config configuration.yaml:
 - binary_sensor.doorbell_motion_sticky: delay_off 00:00:30
-- binary_sensor.living_room_camera_motion_sticky: auto_off 00:00:30
-- binary_sensor.izzy_camera_motion_sticky: auto_off 00:00:30
+- binary_sensor.nest_cam_2_motion_sticky: auto_off 00:00:30
+- binary_sensor.nest_cam_1_motion_sticky: auto_off 00:00:30
 
 Bridges gaps between Nest motion event pulses during continuous motion.
 
@@ -36,7 +36,7 @@ camera is currently showing and regardless of freshness calculations.
 No freshness check needed for doorbell — it always wins.
 
 REQUIREMENT 3: Interior cameras use freshness-based priority
-For camera.living_room_camera and camera.izzy_camera, use a 
+For camera.nest_cam_2 and camera.nest_cam_1, use a 
 "freshness" concept to decide which camera gets priority:
 
 DEFINITION OF FRESH: A camera is "fresh" if it had NO motion for 

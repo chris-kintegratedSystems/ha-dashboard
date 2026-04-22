@@ -102,7 +102,7 @@
 
 **2.6 Conditional Motion Camera on Home**
 - Added new section at Home index 0 with 3 conditional `picture-entity` cards
-- Mapping: `binary_sensor.doorbell_motion`→`camera.doorbell`, `living_room_camera_motion`→`camera.living_room_camera`, `izzy_camera_motion`→`camera.izzy_camera`
+- Mapping: `binary_sensor.doorbell_motion`→`camera.doorbell`, `nest_cam_2_motion`→`camera.nest_cam_2`, `nest_cam_1_motion`→`camera.nest_cam_1`
 - Each card: 24vh height, `camera_view: "auto"`, tap navigates to `/dashboard-mobilev1/cameras`
 - Section collapses cleanly when no motion is active (Home visually identical to pre-Phase-3 in idle state)
 - Verified via forced `state: "off"` QA (doorbell card rendered correctly)
@@ -405,3 +405,27 @@
 ---
 
 *Created: 2026-04-11*
+
+---
+
+## Frigate Implementation
+
+### Phase 1: Strip motion priority logic
+- [ ] Delete freshness-based priority automation from ha-config
+- [ ] Delete helpers: `input_text.active_priority_camera`, `timer.priority_camera_linger`, `input_datetime` freshness trackers
+- [ ] Keep sticky sensors at 30s delay
+- [ ] Revert `sensor.priority_camera` to simple logic: doorbell if motion, else none
+- [ ] Rename Google Nest cameras: `camera.nest_cam_1` → `camera.nest_cam_1`, `camera.nest_cam_2` → `camera.nest_cam_2`
+
+### Phase 2: Stand up Frigate on Pi
+- [ ] Docker Compose on same Pi as HA
+- [ ] CPU detection only (no Coral TPU yet)
+- [ ] Ingest all 5 cameras: doorbell, nest_cam_1, nest_cam_2, nanit_benjamin, nanit_travel
+- [ ] Configure local RTMP/HLS streams
+
+### Phase 3: Point dashboard at Frigate feeds
+- [ ] Replace camera entities with Frigate entities
+- [ ] Test on Tab S9 and iPhone
+
+### Phase 4: Rebuild priority logic on Frigate
+- [ ] Implement after validation

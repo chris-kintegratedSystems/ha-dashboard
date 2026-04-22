@@ -289,3 +289,47 @@ swipe-card container stayed at intrinsic ~100px tall.
 **Fix:** re-find the swipe-card at the top of every
 `recomputeZoneHeight()` call if `_zoneSwipeCard` is null or
 disconnected. Cheap (a few shadow-root walks) and self-heals.
+
+## 2026-04-21: Lights page expand/collapse via input_boolean that doesn't exist
+**Tried:** `type: conditional` cards inside each Lights room whose
+condition gates on `state: on` of `input_boolean.lights_<room>_expanded`.
+The chevron button called `input_boolean.toggle` on the same entity. On
+tablet, tapping the chevron appeared to do nothing and no per-light rows
+ever rendered.
+**Failed:** All four `input_boolean.lights_*_expanded` helpers were
+in state `unavailable` — they had never been created in HA. The
+conditional cards evaluated false permanently, so per-light rows never
+mounted. `input_boolean.toggle` on an unavailable entity is a silent
+no-op, producing zero user-visible feedback. HA also does not log a
+warning for referencing an undeclared helper in Lovelace.
+**Fix:** Spec change removed expand/collapse entirely (all rooms always
+expanded). Deleted the conditional wrappers and the chevron buttons.
+**Broader lesson:** Any Lovelace card that depends on an `input_*`
+helper will silently fail if the helper is never declared in
+`configuration.yaml` (or created via HA UI). Before building a flow
+around a helper, check it exists via `curl /api/states/<entity>` —
+"unavailable" is the giveaway. Listing every helper this dashboard
+references in a pre-deploy probe prevents this class of bug.
+
+## 2026-04-21: grid_options: full alone doesn't widen custom:button-card in sections view
+**Tried:** `grid_options: { columns: 'full', rows: 'auto' }` on a
+`custom:button-card` room wrapper inside a `type: sections` view to
+make it fill the section's column.
+**Failed:** card rendered at content-width (~280 px) with the rest of
+the column empty, on both Tab S9 landscape and iPhone portrait. The
+`grid_options` setting was present in the deployed JSON per
+`.storage/lovelace.*` inspection but did not win over button-card's
+own `:host` rules.
+**Root cause:** button-card ships `adoptedStyleSheets` with `:host {
+display: flex; max-width: fit-content; flex: 0 0 auto }` that win at
+equal specificity against HA's sections-view grid placement rules.
+Same class of bug as the priority-zone tile collapse (2026-04-21
+entry above).
+**Fix:** Add `extra_styles: ":host { width: 100% !important; max-width:
+100% !important; min-width: 0 !important; display: block !important;
+flex: 1 1 100% !important; box-sizing: border-box }"` to every
+button-card that needs to fill its parent in a grid / sections /
+flex container. `grid_options: { columns: 'full' }` is still required
+— without it the section grid gives the card a narrower column slot.
+Both pieces are needed: `grid_options` for the placement, `extra_styles`
+with !important for the element width inside that slot.
