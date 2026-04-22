@@ -221,3 +221,71 @@ don't rewrite working code because the cameras "look broken".
 actual in-UI error banner. HA surfaces upstream errors inline (Nest
 429, Vivint auth, etc) right on the card, and those look very similar
 to "my CSS broke it" at a glance.
+
+## 2026-04-21: button-card `styles.card: height: 100%` alone to fill swipe-card slide
+**Tried:** Added `{ height: '100%' }`, `{ 'min-height': '100%' }`, `{ width: '100%' }`
+to `styles.card` on each button-card in the priority-zone swipe-card,
+expecting the tile to fill simple-swipe-card's 568px `.slide` height
+(established via `grid_options: { rows: 9 }`).
+**Failed:** Tile still rendered at ~153px content height. Playwright
+probe showed `tileHostH: 568px` (swipe-card cascade reaches the host
+correctly) but `tileInnerHaCardH: 153px` (ha-card inside button-card's
+shadow root did not stretch).
+**Root cause:** button-card's shadow DOM is `:host > #aspect-ratio >
+ha-card`. `styles.card` IS applied to ha-card directly, but when
+`aspect_ratio:` config is unset the parent `#aspect-ratio` div is
+`display: inline` with no height. `height: 100%` on ha-card resolves
+against a zero-height parent and collapses.
+**Fix:** Add `extra_styles` to the button-card (top-level key, not
+inside `styles`) with the full `:host → #aspect-ratio → ha-card`
+chain all set to `height: 100%; display: block`. Full pattern in
+`css_dom_patterns.md` → "button-card fill parent height — extra_styles
+:host chain". No card-mod required; `extra_styles` emits a raw
+`<style>` into the shadow root.
+**Broader lesson:** When a custom element doesn't fill its parent,
+check its shadow-DOM structure before assuming the config property
+"just wraps in height:100%" — intermediate divs often break the
+cascade. button-card specifically has an `#aspect-ratio` div that
+becomes a zero-height wrapper unless `aspect_ratio:` is set; use
+`extra_styles` to force every ancestor in the chain explicitly.
+
+## 2026-04-21: button-card extra_styles :host without !important
+**Tried:** Using `extra_styles: ":host { width: 100%; display: block }"`
+alone to make a button-card fill a simple-swipe-card slide.
+**Failed:** button-card's own `adoptedStyleSheets` set `:host {
+display: flex; max-width: fit-content; flex: 0 0 auto }` at equal
+specificity, and those WIN unless you use `!important`. Probe showed
+only one `<style>` element in the shadow root (the extra_styles one)
+yet computed styles still reflected button-card's sheet — the competing
+rules come from adoptedStyleSheets, invisible to `querySelectorAll
+('style')`.
+**Fix:** Append `!important` to every `:host` property the override
+needs to win: `width`, `min-width`, `max-width`, `flex`, `display`,
+`height`. See `css_dom_patterns.md` → "button-card extra_styles needs
+!important on :host".
+
+## 2026-04-21: querying hui-grid-section from light DOM
+**Tried:** `document.querySelector('hui-sections-view')
+.querySelectorAll('hui-grid-section')` from kis-nav.js to find the
+right column for the priority-zone ResizeObserver.
+**Failed:** The `hui-grid-section` elements live inside a shadow root
+of `hui-sections-view`. `querySelectorAll` doesn't cross shadow
+boundaries. The observer attached to nothing and `--kis-zone-h` was
+never published.
+**Fix:** walk UP from a known-deep element (the `simple-swipe-card`,
+findable via recursive shadow-root descent) using
+`el.getRootNode().host` when crossing shadow boundaries. Pattern in
+`css_dom_patterns.md`.
+
+## 2026-04-21: ResizeObserver attach race on shadow-mount
+**Tried:** caching `_zoneSwipeCard = findSwipeCardEl(rightSection)`
+once in `installZoneHeightObserver()` during initial attach.
+**Failed:** The swipe-card's shadow root was not yet mounted when the
+observer attached, so `findSwipeCardEl` returned null. Subsequent
+ResizeObserver fires updated the CSS custom property (`--kis-zone-h`)
+but left `_zoneSwipeCard.style.height` empty because the cached
+reference was permanently null. Result: tiles sized correctly but the
+swipe-card container stayed at intrinsic ~100px tall.
+**Fix:** re-find the swipe-card at the top of every
+`recomputeZoneHeight()` call if `_zoneSwipeCard` is null or
+disconnected. Cheap (a few shadow-root walks) and self-heals.

@@ -322,3 +322,174 @@ camera load transitions.
 (placeholder CSS race vs. first HA render). v34 fixed Layer 2 (UA
 default video paint + wrong reveal gate). Keep both patterns
 together.
+
+## Priority-camera auto-snap + per-camera swipe cooldown (2026-04-21, kis-nav v35)
+Carousel takeover pattern: 3 camera conditionals + 2 static tiles
+inside simple-swipe-card. Upstream tier-priority state machine
+(`sensor.priority_camera`, hold-until-clear logic in
+`ha-config/automations.yaml`) guarantees the active priority camera
+is ALWAYS the first currently-rendered tile. kis-nav.js auto-snaps
+the carousel to rendered-index 0 whenever `sensor.priority_camera`
+transitions into a new camera name:
+
+```js
+function autoSnapPriorityCamera() {
+  const cam = getState(hass, 'sensor.priority_camera')?.state;
+  if (!['doorbell','living_room','izzy'].includes(cam)) {
+    _lastSnappedPriorityCamera = null;  // reset on 'none' so next snap fires
+    return;
+  }
+  if (cam === _lastSnappedPriorityCamera) return;           // already snapped
+  if (Date.now() < (_cameraCooldownUntil[cam] || 0)) {
+    _lastSnappedPriorityCamera = cam;                       // ACK during cooldown so expiry doesn't re-snap
+    return;
+  }
+  swipeCard.goToSlide(0);                                   // 0 = rendered index, not config index
+  _lastSnappedPriorityCamera = cam;
+}
+```
+
+Called from both the post-navigation 100ms setTimeout and the
+1-second setInterval in onMobileDashboard tick.
+
+**Swipe-away cooldown (user dismiss):** pointerup handler on the
+swipe card reads `currentIndex` BEFORE and 120ms AFTER release; if
+pre=0 and post>0 during an active priority camera, records
+`_cameraCooldownUntil[cam] = Date.now() + 60000` so that camera
+cannot auto-snap back for 60s. Per-camera, so a higher-tier camera
+still snaps even if the user dismissed a lower-tier one.
+
+**Cooldown-ACK subtlety:** during cooldown, still set
+`_lastSnappedPriorityCamera = cam`. Without the ACK, the moment
+cooldown expires the sensor state still equals cam and the next tick
+would auto-snap — defeating the dismissal. Only a transition through
+`priority_camera == 'none'` back into a camera name resets
+`_lastSnappedPriorityCamera` and earns another snap.
+
+## button-card fill parent height — `extra_styles` :host chain (2026-04-21)
+Context: a `custom:button-card` inside `custom:simple-swipe-card` with
+`grid_options: { rows: 9 }` — swipe-card host resolves to 568px, but
+button-card's inner ha-card renders at ~153px (content height — icon
++ name + label). simple-swipe-card's internal `.slide > * > ha-card`
+CSS reaches the button-card HOST (light DOM), but cannot cross the
+shadow-DOM boundary into button-card's internal ha-card.
+
+Root cause from button-card source (`src/button-card.ts`): shadow
+structure is `:host > #aspect-ratio > ha-card`. `styles.card:` is
+applied directly to ha-card via inline styleMap, so `styles.card:
+height: 100%` IS reaching ha-card — but resolves against a
+parent `#aspect-ratio` div that is `display: inline` with no height
+when `aspect_ratio:` config is unset. 100% of zero height = zero,
+so ha-card collapses to content.
+
+**Fix — card-mod NOT required.** button-card exposes a top-level
+`extra_styles` key that emits a raw `<style>` inside its shadow root.
+Set height:100% on ALL THREE ancestors in the chain:
+
+```yaml
+type: custom:button-card
+extra_styles: |
+  :host { height: 100%; display: block; }
+  #aspect-ratio { height: 100%; display: block; }
+  ha-card { height: 100%; }
+```
+
+In JSON: a single string key `"extra_styles"` with the three rules
+concatenated on one line.
+
+Do NOT also set the `aspect_ratio:` config prop — it flips
+`#aspect-ratio` into `position: absolute` mode and ha-card fights
+the swipe-card slot differently. Leave `aspect_ratio:` unset.
+
+Related refs: custom-cards/button-card issue #861, home-assistant/
+frontend issue #22616 (HA 2024.11+ grid height regression). Community
+confirmed this is the post-2024.11 community-standard workaround.
+
+Applied 2026-04-21 to the priority-zone vehicle + weather tiles in
+`dashboard_mobilev1.json` section s[2].
+
+## 2026-04-21 — button-card extra_styles needs !important on :host
+
+`extra_styles` injects a `<style>` element into button-card's shadow
+root, so `:host { ... }` rules DO apply. But button-card ships its
+own `adoptedStyleSheets` with `:host { display: flex; max-width:
+fit-content; flex: 0 0 auto; ... }` that win at equal specificity.
+
+Symptom: inside a simple-swipe-card `.slide` (display: flex, width:
+500px), the button-card renders at `width: 133px` despite
+`extra_styles: ":host { width: 100% }"` — the computed styles show
+`display: flex`, `max-width: fit-content` from button-card's own
+sheet.
+
+**Fix:** use `!important` on every `:host` property you need to
+override:
+```
+:host {
+  height: var(--kis-zone-h, 400px) !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+  display: block !important;
+  box-sizing: border-box;
+}
+```
+
+Probe confirmation: `shadowRoot.querySelectorAll('style')` shows
+exactly ONE style element (the extra_styles one), so the competing
+rules must come from adoptedStyleSheets which are NOT listed there.
+The `!important` tips specificity in your favor regardless of source.
+
+Applied to `dashboard_mobilev1.json` priority-zone tiles 2026-04-21.
+
+## 2026-04-21 — HA sections right-column hui-grid-section is inside shadow
+
+The right column on a `type: sections` home view lives inside a
+shadow root of `hui-sections-view`. `document.querySelectorAll(
+'hui-grid-section')` from light DOM misses it.
+
+**Fix:** walk UP from a known-deep element (e.g. the swipe-card)
+through shadow boundaries using
+`el.getRootNode().host` when crossing shadow roots:
+```
+function findPriorityZoneSection() {
+  const swipe = findSwipeCardEl(document.body);
+  if (!swipe) return null;
+  let el = swipe;
+  for (let i = 0; i < 30; i++) {
+    const tag = el.tagName ? el.tagName.toLowerCase() : '';
+    if (tag === 'hui-grid-section' || tag === 'hui-section') return el;
+    const next = el.parentElement
+      || (el.getRootNode && el.getRootNode() !== document
+           ? el.getRootNode().host : null);
+    if (!next || next === document.body || next === document.documentElement) break;
+    el = next;
+  }
+  return swipe.parentElement || swipe;
+}
+```
+
+Use this whenever kis-nav.js needs to observe or measure a
+`hui-grid-section` on a `type: sections` dashboard.
+
+## 2026-04-21 — ResizeObserver attach can beat shadow-mount: re-find
+
+When `installZoneHeightObserver()` attaches during initial page load,
+the swipe-card's shadow root often isn't mounted yet. `findSwipeCardEl
+(rightSection)` returns null. Later ResizeObserver fires set the CSS
+custom property but NOT the inline `style.height` on the swipe-card
+(because `_zoneSwipeCard` is still null), so tiles that look at
+`var(--kis-zone-h)` render correctly while the swipe-card container
+stays at its intrinsic ~100px.
+
+**Fix:** re-find the swipe-card at the top of `recomputeZoneHeight()`
+on every call, not just once in `installZoneHeightObserver`:
+```
+if (!_zoneSwipeCard || !_zoneSwipeCard.isConnected) {
+  _zoneSwipeCard = findSwipeCardEl(_zoneRightSection)
+                || findSwipeCardEl(document.body);
+}
+```
+
+This also self-heals if HA ever replaces the swipe-card DOM (route
+swap, rebuild).
