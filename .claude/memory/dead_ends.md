@@ -360,3 +360,12 @@ so `clearZoneVars()` ran and the carousel collapsed to content height.
 **Fix:** Remove the `zoneIs2ColumnMode()` gate. The `W * 9/16` math in
 `recomputeZoneHeight()` works at any column width — it should always run.
 Keep the home-page guard (`clearZoneVars()` when not on Home) intact.
+
+## 2026-04-23: styles.name position:absolute for card centering (PRs #23–#25)
+**Tried:** Three approaches to center lock/garage card name + pin label to bottom:
+1. PR #23: `position:absolute` in `styles.name`/`styles.label` arrays (inline style objects)
+2. PR #24: Same positioning in `styles.name`/`styles.label` but with font properties moved to extra_styles `.name`/`.label` selectors
+3. PR #25: All font + positioning in `extra_styles` shadow CSS with `!important`, `styles.name`/`styles.label` set to `[{display:block}]`
+**Failed:** All three caused name and label text to overlap in the center of the card. button-card's grid engine manages `.name` and `.label` elements as grid children — `position:absolute` in inline styles (approach 1) is overridden by grid layout. Shadow CSS with `!important` (approaches 2–3) wins the specificity battle but the grid still assigns both elements to overlapping positions before absolute positioning kicks in, and the result is fragile across HA versions.
+**Fix:** Reverted to `285b15e` (PR #23 state) which was the closest to working — name has inline `position:absolute` and grid is single-row `'i . badge'` so name/label float free. Overlap exists but is less severe than approaches 2–3. A proper fix likely requires a different card structure (e.g. `custom_fields` for the centered name) rather than fighting button-card's grid.
+**Broader lesson:** button-card's `.name` and `.label` are grid children managed by the card's internal layout engine. Overriding their positioning with CSS (inline or shadow) is inherently fragile. For layout changes that go beyond the grid's built-in areas, use `custom_fields` (which render in their own grid area) or restructure the card template.

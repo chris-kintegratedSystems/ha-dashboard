@@ -553,3 +553,28 @@ scrollEl.scrollTop = saved;
 
 `overflow-anchor` is NOT supported in Safari/WKWebView — JS
 save/restore is the only option for iOS scroll preservation.
+
+## 2026-04-23 — button-card .name/.label are grid children, not free-floating
+
+button-card renders `.name` and `.label` as CSS Grid children inside
+`.grid`. Their position is controlled by `styles.grid` →
+`grid-template-areas`. Setting `position: absolute` on them (via
+`styles.name` inline objects OR `extra_styles` shadow CSS) does NOT
+reliably remove them from grid flow — the grid engine still assigns
+their slots before CSS positioning takes effect, causing overlap.
+
+What DOES work for visual-only changes on `.name`/`.label`:
+- Font properties in `styles.name`/`styles.label` arrays (inline styles)
+- Color, font-size, font-weight, letter-spacing, text-transform, margin
+- These apply correctly because they don't fight the grid layout
+
+What DOES NOT work:
+- `position: absolute` in `styles.name` (grid overrides)
+- `position: absolute !important` in `extra_styles` `.name {}` (wins
+  specificity but grid still assigns overlapping slots)
+- `transform: translateY(-50%)` centering (conflicts with grid)
+
+For layout changes beyond the grid's built-in areas (e.g. centering
+name across full card width independently of icon/badge), use
+`custom_fields` which render in their own named grid area and can be
+positioned independently.

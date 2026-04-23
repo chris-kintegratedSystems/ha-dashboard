@@ -868,7 +868,7 @@
                   "name": "Front Door",
                   "show_state": false,
                   "show_label": true,
-                  "label": "[[[ return entity.last_changed ? 'Last changed ' + (new Date(entity.last_changed).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) : '' ]]]",
+                  "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'locked' ? 'Locked'\n            : s === 'unlocked' ? 'Unlocked'\n            : s === 'jammed' ? 'Jammed' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
                   "layout": "icon_name_state2nd",
                   "size": "24px",
                   "show_name": true,
@@ -885,45 +885,90 @@
                       },
                       {
                         "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
+                      },
+                      {
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
                       {
-                        "grid-template-areas": "'i n badge' 'i l badge'"
+                        "grid-template-areas": "'i . badge'"
                       },
                       {
                         "grid-template-columns": "auto 1fr auto"
                       },
                       {
-                        "grid-template-rows": "auto auto"
+                        "grid-template-rows": "1fr"
+                      },
+                      {
+                        "align-items": "center"
                       }
                     ],
                     "name": [
                       {
+                        "position": "absolute"
+                      },
+                      {
+                        "left": "0"
+                      },
+                      {
+                        "right": "0"
+                      },
+                      {
+                        "top": "0"
+                      },
+                      {
+                        "bottom": "0"
+                      },
+                      {
+                        "display": "flex"
+                      },
+                      {
+                        "align-items": "center"
+                      },
+                      {
+                        "justify-content": "center"
+                      },
+                      {
                         "font-size": "14px"
                       },
                       {
-                        "font-weight": "600"
+                        "font-weight": "500"
                       },
                       {
-                        "text-align": "left"
+                        "color": "var(--kis-lights-room-count, #8a95a6)"
                       },
                       {
-                        "color": "#eef2f8"
+                        "pointer-events": "none"
                       }
                     ],
                     "label": [
                       {
+                        "position": "absolute"
+                      },
+                      {
+                        "bottom": "6px"
+                      },
+                      {
+                        "left": "0"
+                      },
+                      {
+                        "right": "0"
+                      },
+                      {
+                        "text-align": "center"
+                      },
+                      {
                         "font-size": "11px"
                       },
                       {
-                        "text-align": "left"
+                        "color": "rgba(74,85,112,0.7)"
                       },
                       {
-                        "color": "rgba(74,85,112,1)"
+                        "margin": "0"
                       },
                       {
-                        "margin-top": "2px"
+                        "pointer-events": "none"
                       }
                     ],
                     "custom_fields": {
@@ -933,6 +978,9 @@
                         },
                         {
                           "justify-self": "end"
+                        },
+                        {
+                          "overflow": "visible"
                         }
                       ]
                     }
@@ -960,7 +1008,7 @@
                       "icon": "mdi:lock-alert"
                     }
                   ],
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; }",
+                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
                   "card_mod": {
                     "style": "ha-card { border-left: 2px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n#icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }"
                   }
@@ -971,7 +1019,7 @@
                   "name": "Back Door",
                   "show_state": false,
                   "show_label": true,
-                  "label": "[[[ return entity.last_changed ? 'Last changed ' + (new Date(entity.last_changed).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) : '' ]]]",
+                  "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'locked' ? 'Locked'\n            : s === 'unlocked' ? 'Unlocked'\n            : s === 'jammed' ? 'Jammed' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
                   "layout": "icon_name_state2nd",
                   "size": "24px",
                   "show_name": true,
@@ -988,45 +1036,90 @@
                       },
                       {
                         "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
+                      },
+                      {
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
                       {
-                        "grid-template-areas": "'i n badge' 'i l badge'"
+                        "grid-template-areas": "'i . badge'"
                       },
                       {
                         "grid-template-columns": "auto 1fr auto"
                       },
                       {
-                        "grid-template-rows": "auto auto"
+                        "grid-template-rows": "1fr"
+                      },
+                      {
+                        "align-items": "center"
                       }
                     ],
                     "name": [
                       {
+                        "position": "absolute"
+                      },
+                      {
+                        "left": "0"
+                      },
+                      {
+                        "right": "0"
+                      },
+                      {
+                        "top": "0"
+                      },
+                      {
+                        "bottom": "0"
+                      },
+                      {
+                        "display": "flex"
+                      },
+                      {
+                        "align-items": "center"
+                      },
+                      {
+                        "justify-content": "center"
+                      },
+                      {
                         "font-size": "14px"
                       },
                       {
-                        "font-weight": "600"
+                        "font-weight": "500"
                       },
                       {
-                        "text-align": "left"
+                        "color": "var(--kis-lights-room-count, #8a95a6)"
                       },
                       {
-                        "color": "#eef2f8"
+                        "pointer-events": "none"
                       }
                     ],
                     "label": [
                       {
+                        "position": "absolute"
+                      },
+                      {
+                        "bottom": "6px"
+                      },
+                      {
+                        "left": "0"
+                      },
+                      {
+                        "right": "0"
+                      },
+                      {
+                        "text-align": "center"
+                      },
+                      {
                         "font-size": "11px"
                       },
                       {
-                        "text-align": "left"
+                        "color": "rgba(74,85,112,0.7)"
                       },
                       {
-                        "color": "rgba(74,85,112,1)"
+                        "margin": "0"
                       },
                       {
-                        "margin-top": "2px"
+                        "pointer-events": "none"
                       }
                     ],
                     "custom_fields": {
@@ -1036,6 +1129,9 @@
                         },
                         {
                           "justify-self": "end"
+                        },
+                        {
+                          "overflow": "visible"
                         }
                       ]
                     }
@@ -1063,7 +1159,7 @@
                       "icon": "mdi:lock-alert"
                     }
                   ],
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; }",
+                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
                   "card_mod": {
                     "style": "ha-card { border-left: 2px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n#icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }"
                   }
@@ -1074,7 +1170,7 @@
                   "name": "Gemelli Door",
                   "show_state": false,
                   "show_label": true,
-                  "label": "[[[ return entity.last_changed ? 'Last changed ' + (new Date(entity.last_changed).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) : '' ]]]",
+                  "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'locked' ? 'Locked'\n            : s === 'unlocked' ? 'Unlocked'\n            : s === 'jammed' ? 'Jammed' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
                   "layout": "icon_name_state2nd",
                   "size": "24px",
                   "show_name": true,
@@ -1091,45 +1187,90 @@
                       },
                       {
                         "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
+                      },
+                      {
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
                       {
-                        "grid-template-areas": "'i n badge' 'i l badge'"
+                        "grid-template-areas": "'i . badge'"
                       },
                       {
                         "grid-template-columns": "auto 1fr auto"
                       },
                       {
-                        "grid-template-rows": "auto auto"
+                        "grid-template-rows": "1fr"
+                      },
+                      {
+                        "align-items": "center"
                       }
                     ],
                     "name": [
                       {
+                        "position": "absolute"
+                      },
+                      {
+                        "left": "0"
+                      },
+                      {
+                        "right": "0"
+                      },
+                      {
+                        "top": "0"
+                      },
+                      {
+                        "bottom": "0"
+                      },
+                      {
+                        "display": "flex"
+                      },
+                      {
+                        "align-items": "center"
+                      },
+                      {
+                        "justify-content": "center"
+                      },
+                      {
                         "font-size": "14px"
                       },
                       {
-                        "font-weight": "600"
+                        "font-weight": "500"
                       },
                       {
-                        "text-align": "left"
+                        "color": "var(--kis-lights-room-count, #8a95a6)"
                       },
                       {
-                        "color": "#eef2f8"
+                        "pointer-events": "none"
                       }
                     ],
                     "label": [
                       {
+                        "position": "absolute"
+                      },
+                      {
+                        "bottom": "6px"
+                      },
+                      {
+                        "left": "0"
+                      },
+                      {
+                        "right": "0"
+                      },
+                      {
+                        "text-align": "center"
+                      },
+                      {
                         "font-size": "11px"
                       },
                       {
-                        "text-align": "left"
+                        "color": "rgba(74,85,112,0.7)"
                       },
                       {
-                        "color": "rgba(74,85,112,1)"
+                        "margin": "0"
                       },
                       {
-                        "margin-top": "2px"
+                        "pointer-events": "none"
                       }
                     ],
                     "custom_fields": {
@@ -1139,6 +1280,9 @@
                         },
                         {
                           "justify-self": "end"
+                        },
+                        {
+                          "overflow": "visible"
                         }
                       ]
                     }
@@ -1166,7 +1310,7 @@
                       "icon": "mdi:lock-alert"
                     }
                   ],
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; }",
+                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
                   "card_mod": {
                     "style": "ha-card { border-left: 2px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n#icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }"
                   }
@@ -1185,7 +1329,7 @@
                       "name": "Left Garage",
                       "show_state": false,
                       "show_label": true,
-                      "label": "[[[ return entity.last_changed ? 'Last changed ' + (new Date(entity.last_changed).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) : '' ]]]",
+                      "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'closed' ? 'Closed'\n            : s === 'open' ? 'Opened'\n            : s === 'opening' ? 'Opening'\n            : s === 'closing' ? 'Closing' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
                       "layout": "icon_name_state2nd",
                       "size": "24px",
                       "show_name": true,
@@ -1199,45 +1343,90 @@
                           },
                           {
                             "border-radius": "14px"
+                          },
+                          {
+                            "overflow": "visible"
                           }
                         ],
                         "grid": [
                           {
-                            "grid-template-areas": "'i n badge' 'i l badge'"
+                            "grid-template-areas": "'i . badge'"
                           },
                           {
                             "grid-template-columns": "auto 1fr auto"
                           },
                           {
-                            "grid-template-rows": "auto auto"
+                            "grid-template-rows": "1fr"
+                          },
+                          {
+                            "align-items": "center"
                           }
                         ],
                         "name": [
                           {
+                            "position": "absolute"
+                          },
+                          {
+                            "left": "0"
+                          },
+                          {
+                            "right": "0"
+                          },
+                          {
+                            "top": "0"
+                          },
+                          {
+                            "bottom": "0"
+                          },
+                          {
+                            "display": "flex"
+                          },
+                          {
+                            "align-items": "center"
+                          },
+                          {
+                            "justify-content": "center"
+                          },
+                          {
                             "font-size": "14px"
                           },
                           {
-                            "font-weight": "600"
+                            "font-weight": "500"
                           },
                           {
-                            "text-align": "left"
+                            "color": "var(--kis-lights-room-count, #8a95a6)"
                           },
                           {
-                            "color": "#eef2f8"
+                            "pointer-events": "none"
                           }
                         ],
                         "label": [
                           {
+                            "position": "absolute"
+                          },
+                          {
+                            "bottom": "6px"
+                          },
+                          {
+                            "left": "0"
+                          },
+                          {
+                            "right": "0"
+                          },
+                          {
+                            "text-align": "center"
+                          },
+                          {
                             "font-size": "11px"
                           },
                           {
-                            "text-align": "left"
+                            "color": "rgba(74,85,112,0.7)"
                           },
                           {
-                            "color": "rgba(74,85,112,1)"
+                            "margin": "0"
                           },
                           {
-                            "margin-top": "2px"
+                            "pointer-events": "none"
                           }
                         ],
                         "custom_fields": {
@@ -1247,11 +1436,14 @@
                             },
                             {
                               "justify-self": "end"
+                            },
+                            {
+                              "overflow": "visible"
                             }
                           ]
                         }
                       },
-                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; }",
+                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
                       "card_mod": {
                         "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'closed' ? '#10d090' : entity.state === 'open' ? '#f04060' : '#f5a623' ]]]; border-radius: 12px; }\n"
                       },
@@ -1290,7 +1482,7 @@
                       "name": "Right Garage",
                       "show_state": false,
                       "show_label": true,
-                      "label": "[[[ return entity.last_changed ? 'Last changed ' + (new Date(entity.last_changed).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) : '' ]]]",
+                      "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'closed' ? 'Closed'\n            : s === 'open' ? 'Opened'\n            : s === 'opening' ? 'Opening'\n            : s === 'closing' ? 'Closing' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
                       "layout": "icon_name_state2nd",
                       "size": "24px",
                       "show_name": true,
@@ -1304,45 +1496,90 @@
                           },
                           {
                             "border-radius": "14px"
+                          },
+                          {
+                            "overflow": "visible"
                           }
                         ],
                         "grid": [
                           {
-                            "grid-template-areas": "'i n badge' 'i l badge'"
+                            "grid-template-areas": "'i . badge'"
                           },
                           {
                             "grid-template-columns": "auto 1fr auto"
                           },
                           {
-                            "grid-template-rows": "auto auto"
+                            "grid-template-rows": "1fr"
+                          },
+                          {
+                            "align-items": "center"
                           }
                         ],
                         "name": [
                           {
+                            "position": "absolute"
+                          },
+                          {
+                            "left": "0"
+                          },
+                          {
+                            "right": "0"
+                          },
+                          {
+                            "top": "0"
+                          },
+                          {
+                            "bottom": "0"
+                          },
+                          {
+                            "display": "flex"
+                          },
+                          {
+                            "align-items": "center"
+                          },
+                          {
+                            "justify-content": "center"
+                          },
+                          {
                             "font-size": "14px"
                           },
                           {
-                            "font-weight": "600"
+                            "font-weight": "500"
                           },
                           {
-                            "text-align": "left"
+                            "color": "var(--kis-lights-room-count, #8a95a6)"
                           },
                           {
-                            "color": "#eef2f8"
+                            "pointer-events": "none"
                           }
                         ],
                         "label": [
                           {
+                            "position": "absolute"
+                          },
+                          {
+                            "bottom": "6px"
+                          },
+                          {
+                            "left": "0"
+                          },
+                          {
+                            "right": "0"
+                          },
+                          {
+                            "text-align": "center"
+                          },
+                          {
                             "font-size": "11px"
                           },
                           {
-                            "text-align": "left"
+                            "color": "rgba(74,85,112,0.7)"
                           },
                           {
-                            "color": "rgba(74,85,112,1)"
+                            "margin": "0"
                           },
                           {
-                            "margin-top": "2px"
+                            "pointer-events": "none"
                           }
                         ],
                         "custom_fields": {
@@ -1352,11 +1589,14 @@
                             },
                             {
                               "justify-self": "end"
+                            },
+                            {
+                              "overflow": "visible"
                             }
                           ]
                         }
                       },
-                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; }",
+                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
                       "card_mod": {
                         "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'closed' ? '#10d090' : entity.state === 'open' ? '#f04060' : '#f5a623' ]]]; border-radius: 12px; }\n"
                       },
@@ -1401,15 +1641,21 @@
                 {
                   "type": "custom:button-card",
                   "template": "section_label",
-                  "name": "[[[\n    var cam = states['sensor.priority_camera'] ? states['sensor.priority_camera'].state : 'none';\n    var idx = states['input_number.priority_slide_index'] ? Math.round(parseFloat(states['input_number.priority_slide_index'].state)) : 0;\n    var camEntities = {\"doorbell\":\"camera.doorbell\",\"living_room\":\"camera.nest_cam_2\",\"izzy\":\"camera.nest_cam_1\",\"nanit_benjamin\":\"camera.nanit_benjamin\",\"nanit_travel\":\"camera.nanit_travel\"};\n    var labels = [\"PORSCHE 911\",\"TESLA MODEL Y\",\"MERCEDES G580\",\"WEATHER\"];\n    var entity = camEntities[cam];\n    if (cam !== 'none' && entity) {\n      var fn = states[entity] && states[entity].attributes && states[entity].attributes.friendly_name ? states[entity].attributes.friendly_name : cam.replace(/_/g, ' ');\n      if (idx === 0) return 'MOTION DETECTED: ' + fn.toUpperCase();\n      return labels[idx - 1] || labels[labels.length - 1];\n    }\n    return labels[idx] || labels[0];\n  ]]]",
+                  "name": "[[[\n    const cam = states['sensor.priority_camera']?.state;\n    const idx = Math.round(\n      parseFloat(\n        states['input_number.priority_slide_index']?.state || '0'\n      )\n    );\n\n    const CAM_ENTITY = {\n      doorbell:       'camera.doorbell',\n      living_room:    'camera.nest_cam_2',\n      izzy:           'camera.nest_cam_1',\n      nanit_benjamin: 'camera.nanit_benjamin',\n      nanit_travel:   'camera.nanit_travel',\n    };\n\n    if (cam && cam !== 'none') {\n      const eid = CAM_ENTITY[cam];\n      const fn = eid && states[eid]?.attributes?.friendly_name;\n      return 'MOTION: ' +\n        (fn || cam.replace(/_/g,' ')).toUpperCase();\n    }\n\n    const SLIDE_LABELS = [\n      'Porsche 911',\n      'Tesla Model Y',\n      'Mercedes G580',\n      'Weather',\n    ];\n    return (SLIDE_LABELS[idx] || SLIDE_LABELS[0]).toUpperCase();\n  ]]]",
                   "triggers_update": [
                     "sensor.priority_camera",
-                    "input_number.priority_slide_index"
+                    "input_number.priority_slide_index",
+                    "camera.doorbell",
+                    "camera.nest_cam_1",
+                    "camera.nest_cam_2",
+                    "camera.nanit_benjamin",
+                    "camera.nanit_travel",
+                    "weather.forecast_home"
                   ],
                   "styles": {
                     "name": [
                       {
-                        "color": "[[[\n    var cam = states['sensor.priority_camera'] ? states['sensor.priority_camera'].state : 'none';\n    var idx = states['input_number.priority_slide_index'] ? Math.round(parseFloat(states['input_number.priority_slide_index'].state)) : 0;\n    return (cam !== 'none' && idx === 0) ? '#f04060' : 'var(--kis-section-label, #4a5570)';\n  ]]]"
+                        "color": "[[[ return states['sensor.priority_camera']?.state && states['sensor.priority_camera'].state !== 'none' ? '#f04060' : 'var(--kis-section-label, #4a5570)'; ]]]"
                       }
                     ]
                   }
