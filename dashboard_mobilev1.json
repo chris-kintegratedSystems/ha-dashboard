@@ -885,6 +885,9 @@
                       },
                       {
                         "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
+                      },
+                      {
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
@@ -896,6 +899,9 @@
                       },
                       {
                         "grid-template-rows": "auto auto"
+                      },
+                      {
+                        "align-content": "center"
                       }
                     ],
                     "name": [
@@ -909,7 +915,7 @@
                         "text-align": "left"
                       },
                       {
-                        "color": "#eef2f8"
+                        "color": "var(--kis-lights-room-name, #eef2f8)"
                       }
                     ],
                     "label": [
@@ -920,10 +926,10 @@
                         "text-align": "left"
                       },
                       {
-                        "color": "rgba(74,85,112,1)"
+                        "color": "rgba(74,85,112,0.7)"
                       },
                       {
-                        "margin-top": "2px"
+                        "margin-top": "6px"
                       }
                     ],
                     "custom_fields": {
@@ -933,6 +939,9 @@
                         },
                         {
                           "justify-self": "end"
+                        },
+                        {
+                          "overflow": "visible"
                         }
                       ]
                     }
@@ -988,6 +997,9 @@
                       },
                       {
                         "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
+                      },
+                      {
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
@@ -999,6 +1011,9 @@
                       },
                       {
                         "grid-template-rows": "auto auto"
+                      },
+                      {
+                        "align-content": "center"
                       }
                     ],
                     "name": [
@@ -1012,7 +1027,7 @@
                         "text-align": "left"
                       },
                       {
-                        "color": "#eef2f8"
+                        "color": "var(--kis-lights-room-name, #eef2f8)"
                       }
                     ],
                     "label": [
@@ -1023,10 +1038,10 @@
                         "text-align": "left"
                       },
                       {
-                        "color": "rgba(74,85,112,1)"
+                        "color": "rgba(74,85,112,0.7)"
                       },
                       {
-                        "margin-top": "2px"
+                        "margin-top": "6px"
                       }
                     ],
                     "custom_fields": {
@@ -1036,6 +1051,9 @@
                         },
                         {
                           "justify-self": "end"
+                        },
+                        {
+                          "overflow": "visible"
                         }
                       ]
                     }
@@ -1091,6 +1109,9 @@
                       },
                       {
                         "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
+                      },
+                      {
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
@@ -1102,6 +1123,9 @@
                       },
                       {
                         "grid-template-rows": "auto auto"
+                      },
+                      {
+                        "align-content": "center"
                       }
                     ],
                     "name": [
@@ -1115,7 +1139,7 @@
                         "text-align": "left"
                       },
                       {
-                        "color": "#eef2f8"
+                        "color": "var(--kis-lights-room-name, #eef2f8)"
                       }
                     ],
                     "label": [
@@ -1126,10 +1150,10 @@
                         "text-align": "left"
                       },
                       {
-                        "color": "rgba(74,85,112,1)"
+                        "color": "rgba(74,85,112,0.7)"
                       },
                       {
-                        "margin-top": "2px"
+                        "margin-top": "6px"
                       }
                     ],
                     "custom_fields": {
@@ -1139,6 +1163,9 @@
                         },
                         {
                           "justify-self": "end"
+                        },
+                        {
+                          "overflow": "visible"
                         }
                       ]
                     }
@@ -1199,6 +1226,9 @@
                           },
                           {
                             "border-radius": "14px"
+                          },
+                          {
+                            "overflow": "visible"
                           }
                         ],
                         "grid": [
@@ -1210,6 +1240,9 @@
                           },
                           {
                             "grid-template-rows": "auto auto"
+                          },
+                          {
+                            "align-content": "center"
                           }
                         ],
                         "name": [
@@ -1223,7 +1256,7 @@
                             "text-align": "left"
                           },
                           {
-                            "color": "#eef2f8"
+                            "color": "var(--kis-lights-room-name, #eef2f8)"
                           }
                         ],
                         "label": [
@@ -1234,10 +1267,10 @@
                             "text-align": "left"
                           },
                           {
-                            "color": "rgba(74,85,112,1)"
+                            "color": "rgba(74,85,112,0.7)"
                           },
                           {
-                            "margin-top": "2px"
+                            "margin-top": "6px"
                           }
                         ],
                         "custom_fields": {
@@ -1247,6 +1280,9 @@
                             },
                             {
                               "justify-self": "end"
+                            },
+                            {
+                              "overflow": "visible"
                             }
                           ]
                         }
@@ -1304,6 +1340,9 @@
                           },
                           {
                             "border-radius": "14px"
+                          },
+                          {
+                            "overflow": "visible"
                           }
                         ],
                         "grid": [
@@ -1315,6 +1354,9 @@
                           },
                           {
                             "grid-template-rows": "auto auto"
+                          },
+                          {
+                            "align-content": "center"
                           }
                         ],
                         "name": [
@@ -1328,7 +1370,7 @@
                             "text-align": "left"
                           },
                           {
-                            "color": "#eef2f8"
+                            "color": "var(--kis-lights-room-name, #eef2f8)"
                           }
                         ],
                         "label": [
@@ -1339,10 +1381,10 @@
                             "text-align": "left"
                           },
                           {
-                            "color": "rgba(74,85,112,1)"
+                            "color": "rgba(74,85,112,0.7)"
                           },
                           {
-                            "margin-top": "2px"
+                            "margin-top": "6px"
                           }
                         ],
                         "custom_fields": {
@@ -1352,6 +1394,9 @@
                             },
                             {
                               "justify-self": "end"
+                            },
+                            {
+                              "overflow": "visible"
                             }
                           ]
                         }
@@ -1401,15 +1446,21 @@
                 {
                   "type": "custom:button-card",
                   "template": "section_label",
-                  "name": "[[[\n    var cam = states['sensor.priority_camera'] ? states['sensor.priority_camera'].state : 'none';\n    var idx = states['input_number.priority_slide_index'] ? Math.round(parseFloat(states['input_number.priority_slide_index'].state)) : 0;\n    var camEntities = {\"doorbell\":\"camera.doorbell\",\"living_room\":\"camera.nest_cam_2\",\"izzy\":\"camera.nest_cam_1\",\"nanit_benjamin\":\"camera.nanit_benjamin\",\"nanit_travel\":\"camera.nanit_travel\"};\n    var labels = [\"PORSCHE 911\",\"TESLA MODEL Y\",\"MERCEDES G580\",\"WEATHER\"];\n    var entity = camEntities[cam];\n    if (cam !== 'none' && entity) {\n      var fn = states[entity] && states[entity].attributes && states[entity].attributes.friendly_name ? states[entity].attributes.friendly_name : cam.replace(/_/g, ' ');\n      if (idx === 0) return 'MOTION DETECTED: ' + fn.toUpperCase();\n      return labels[idx - 1] || labels[labels.length - 1];\n    }\n    return labels[idx] || labels[0];\n  ]]]",
+                  "name": "[[[\n    const cam = states['sensor.priority_camera']?.state;\n    const idx = Math.round(\n      parseFloat(states['input_number.priority_slide_index']?.state || '0')\n    );\n\n    // MODE A: priority event active — show camera friendly name in red\n    const CAM_ENTITY = {\n      doorbell:       'camera.doorbell',\n      living_room:    'camera.nest_cam_2',\n      izzy:           'camera.nest_cam_1',\n      nanit_benjamin: 'camera.nanit_benjamin',\n      nanit_travel:   'camera.nanit_travel',\n    };\n    if (cam && cam !== 'none') {\n      const eid = CAM_ENTITY[cam];\n      const fn = eid && states[eid]?.attributes?.friendly_name;\n      return 'MOTION: ' + (fn || cam.replace(/_/g,' ')).toUpperCase();\n    }\n\n    // MODE B: idle — show current slide label using friendly_name\n    // where entity exists, hardcoded fallback otherwise.\n    // Swap hardcoded vehicle strings for entity friendly_name\n    // lookups once those integrations are added to HA.\n    const SLIDE_LABELS = [\n      states['weather.forecast_home']?.attributes?.friendly_name\n        || 'Weather',\n      'Porsche 911',\n      'Tesla Model Y',\n      'Mercedes G580',\n    ];\n    return (SLIDE_LABELS[idx] || SLIDE_LABELS[0]).toUpperCase();\n  ]]]",
                   "triggers_update": [
                     "sensor.priority_camera",
-                    "input_number.priority_slide_index"
+                    "input_number.priority_slide_index",
+                    "camera.doorbell",
+                    "camera.nest_cam_1",
+                    "camera.nest_cam_2",
+                    "camera.nanit_benjamin",
+                    "camera.nanit_travel",
+                    "weather.forecast_home"
                   ],
                   "styles": {
                     "name": [
                       {
-                        "color": "[[[\n    var cam = states['sensor.priority_camera'] ? states['sensor.priority_camera'].state : 'none';\n    var idx = states['input_number.priority_slide_index'] ? Math.round(parseFloat(states['input_number.priority_slide_index'].state)) : 0;\n    return (cam !== 'none' && idx === 0) ? '#f04060' : 'var(--kis-section-label, #4a5570)';\n  ]]]"
+                        "color": "[[[ return states['sensor.priority_camera']?.state && states['sensor.priority_camera'].state !== 'none' ? '#f04060' : 'var(--kis-section-label, #4a5570)'; ]]]"
                       }
                     ]
                   }
