@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 45;
+  window.KIS_NAV_VERSION = 46;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1466,10 +1466,6 @@
       _zoneRightSection = rightSection;
       _zoneSwipeCard = findSwipeCardEl(rightSection);
       _zoneObserver = new ResizeObserver(() => {
-        if (!zoneIs2ColumnMode(_zoneRightSection)) {
-          clearZoneVars();
-          return;
-        }
         recomputeZoneHeight();
       });
       try { _zoneObserver.observe(_zoneRightSection); } catch (e) {}
@@ -1479,11 +1475,7 @@
 
     // ResizeObserver's initial fire is sometimes skipped on Android WebView
     // mid-attach — run a synchronous compute pass so the first paint is right.
-    if (zoneIs2ColumnMode(_zoneRightSection)) {
-      recomputeZoneHeight();
-    } else {
-      clearZoneVars();
-    }
+    recomputeZoneHeight();
   }
 
   // ─── Priority-camera auto-snap (camera-as-carousel-tile) ───────────────────
