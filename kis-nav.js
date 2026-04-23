@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 42;
+  window.KIS_NAV_VERSION = 44;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -2154,6 +2154,51 @@
         if (!conn || !conn.subscribeEvents) return;
         conn.subscribeEvents(function (event) {
           if (event.data && event.data.entity_id === 'sensor.priority_camera') {
+            var newState = event.data.new_state ? event.data.new_state.state : '?';
+            var oldState = event.data.old_state ? event.data.old_state.state : '?';
+            console.log('[KIS priority change]', oldState, '→', newState);
+
+            // ──── DIAGNOSTIC: programmatic scroll test (Task 2) ──────────
+            var hs = getHuiShadow();
+            if (hs) {
+              var view = hs.querySelector('#view');
+              var sv = view && view.querySelector('hui-sections-view');
+              var candidates = [
+                { name: '#view', el: view },
+                { name: 'hui-sections-view', el: sv },
+              ];
+              if (sv && sv.shadowRoot) {
+                var wrapper = sv.shadowRoot.querySelector('.wrapper')
+                  || sv.shadowRoot.querySelector('.sections-container')
+                  || sv.shadowRoot.firstElementChild;
+                if (wrapper) candidates.push({ name: 'sv-shadow .wrapper', el: wrapper });
+              }
+              candidates.forEach(function (c) {
+                if (!c.el) return;
+                var before = c.el.scrollTop;
+                var behavior = getComputedStyle(c.el).scrollBehavior;
+                console.log('[KIS scroll test] ' + c.name +
+                  ' — before:', before,
+                  ' scrollBehavior:', behavior);
+                if (before > 0) {
+                  var origBehavior = c.el.style.scrollBehavior;
+                  c.el.style.scrollBehavior = 'auto';
+                  setTimeout(function () {
+                    c.el.scrollTop = 999;
+                    console.log('[KIS scroll test] ' + c.name +
+                      ' — after set to 999:', c.el.scrollTop,
+                      '(scrollBehavior forced auto)');
+                    setTimeout(function () {
+                      c.el.scrollTop = before;
+                      c.el.style.scrollBehavior = origBehavior || '';
+                      console.log('[KIS scroll test] ' + c.name +
+                        ' — restored to:', c.el.scrollTop);
+                    }, 300);
+                  }, 100);
+                }
+              });
+            }
+
             autoSnapPriorityCamera();
           }
         }, 'state_changed');
@@ -2163,6 +2208,55 @@
     // Update header content every second (live clock + entity states).
     // Also opportunistically re-attach the swipe-card observer, and refresh
     // camera placeholders, in case elements remounted since last syncState.
+    // ──── DIAGNOSTIC: scroll container probe (Task 1) ────────────────────
+    // Logs every 2s to find which element actually holds scrollTop.
+    // Remove before real fix.
+    var _diagScrollListenerInstalled = false;
+    setInterval(() => {
+      if (!onMobileDashboard()) return;
+      var hs = getHuiShadow();
+      if (!hs) return;
+      var view = hs.querySelector('#view');
+      var sv = view && view.querySelector('hui-sections-view');
+      var wrapper = null;
+      var wrapperOverflow = 'no SR';
+      if (sv && sv.shadowRoot) {
+        wrapper = sv.shadowRoot.querySelector('.wrapper')
+          || sv.shadowRoot.querySelector('.sections-container')
+          || sv.shadowRoot.firstElementChild;
+        if (wrapper) wrapperOverflow = getComputedStyle(wrapper).overflowY;
+      }
+      console.log('[KIS scroll probe]',
+        'view.scrollTop:', view ? view.scrollTop : 'null',
+        'sv.scrollTop:', sv ? sv.scrollTop : 'null',
+        'wrapper.scrollTop:', wrapper ? wrapper.scrollTop : 'null',
+        'sv.overflow-y:', sv ? getComputedStyle(sv).overflowY : 'null',
+        'wrapper.overflow-y:', wrapperOverflow,
+        'view.overflow-y:', view ? getComputedStyle(view).overflowY : 'null'
+      );
+
+      // ──── DIAGNOSTIC: scroll event listener (Task 3) ──────────────────
+      // Attaches once to ALL candidate scroll containers. Reports which
+      // element fires the scroll event + stack trace on priority camera changes.
+      if (!_diagScrollListenerInstalled) {
+        _diagScrollListenerInstalled = true;
+        var candidates = [
+          { name: '#view', el: view },
+          { name: 'hui-sections-view', el: sv },
+          { name: 'sv-shadow .wrapper', el: wrapper },
+        ];
+        candidates.forEach(function (c) {
+          if (!c.el) return;
+          c.el.addEventListener('scroll', function () {
+            console.log('[KIS scroll event] on:', c.name,
+              'scrollTop now:', c.el.scrollTop,
+              'stack:', new Error().stack.split('\n').slice(0, 4).join(' | '));
+          });
+          console.log('[KIS scroll diag] Listener attached to:', c.name);
+        });
+      }
+    }, 2000);
+
     setInterval(() => {
       if (onMobileDashboard()) {
         renderHeaderContent();
