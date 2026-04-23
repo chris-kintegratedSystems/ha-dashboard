@@ -878,13 +878,10 @@
                   "styles": {
                     "card": [
                       {
-                        "padding": "12px 14px"
+                        "padding": "12px 14px 12px 11px"
                       },
                       {
                         "border-radius": "14px"
-                      },
-                      {
-                        "min-height": "40px"
                       },
                       {
                         "background": "var(--ha-card-background)"
@@ -896,7 +893,7 @@
                         "cursor": "pointer"
                       },
                       {
-                        "overflow": "hidden"
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
@@ -909,7 +906,7 @@
                     ]
                   },
                   "custom_fields": {
-                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, iconBg, pillBg, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    iconBg = 'rgba(240,64,96,0.10)';\n    pillBg = 'rgba(240,64,96,0.10)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    iconBg = 'rgba(0,212,240,0.10)';\n    pillBg = 'rgba(0,212,240,0.10)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open-variant';\n    accentColor = 'var(--warning-color)';\n    iconBg = 'rgba(245,166,35,0.10)';\n    pillBg = 'rgba(245,166,35,0.10)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:3px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:22px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--primary-text-color);\">Front Door</div>\n        <div style=\"font-size:10px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    pillBg = 'rgba(0,212,240,0.08)';\n    pillBorder = 'rgba(0,212,240,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:2px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Front Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   },
                   "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
                 },
@@ -929,13 +926,10 @@
                   "styles": {
                     "card": [
                       {
-                        "padding": "12px 14px"
+                        "padding": "12px 14px 12px 11px"
                       },
                       {
                         "border-radius": "14px"
-                      },
-                      {
-                        "min-height": "40px"
                       },
                       {
                         "background": "var(--ha-card-background)"
@@ -947,7 +941,7 @@
                         "cursor": "pointer"
                       },
                       {
-                        "overflow": "hidden"
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
@@ -960,7 +954,7 @@
                     ]
                   },
                   "custom_fields": {
-                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, iconBg, pillBg, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    iconBg = 'rgba(240,64,96,0.10)';\n    pillBg = 'rgba(240,64,96,0.10)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    iconBg = 'rgba(0,212,240,0.10)';\n    pillBg = 'rgba(0,212,240,0.10)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open-variant';\n    accentColor = 'var(--warning-color)';\n    iconBg = 'rgba(245,166,35,0.10)';\n    pillBg = 'rgba(245,166,35,0.10)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:3px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:22px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--primary-text-color);\">Back Door</div>\n        <div style=\"font-size:10px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    pillBg = 'rgba(0,212,240,0.08)';\n    pillBorder = 'rgba(0,212,240,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:2px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Back Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   },
                   "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
                 },
@@ -980,13 +974,10 @@
                   "styles": {
                     "card": [
                       {
-                        "padding": "12px 14px"
+                        "padding": "12px 14px 12px 11px"
                       },
                       {
                         "border-radius": "14px"
-                      },
-                      {
-                        "min-height": "40px"
                       },
                       {
                         "background": "var(--ha-card-background)"
@@ -998,7 +989,7 @@
                         "cursor": "pointer"
                       },
                       {
-                        "overflow": "hidden"
+                        "overflow": "visible"
                       }
                     ],
                     "grid": [
@@ -1011,7 +1002,7 @@
                     ]
                   },
                   "custom_fields": {
-                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, iconBg, pillBg, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    iconBg = 'rgba(240,64,96,0.10)';\n    pillBg = 'rgba(240,64,96,0.10)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    iconBg = 'rgba(0,212,240,0.10)';\n    pillBg = 'rgba(0,212,240,0.10)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open-variant';\n    accentColor = 'var(--warning-color)';\n    iconBg = 'rgba(245,166,35,0.10)';\n    pillBg = 'rgba(245,166,35,0.10)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:3px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:22px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--primary-text-color);\">Gemelli Door</div>\n        <div style=\"font-size:10px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    pillBg = 'rgba(0,212,240,0.08)';\n    pillBorder = 'rgba(0,212,240,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:2px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Gemelli Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   },
                   "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
                 },
@@ -1045,9 +1036,6 @@
                             "border-radius": "14px"
                           },
                           {
-                            "min-height": "40px"
-                          },
-                          {
                             "background": "var(--ha-card-background)"
                           },
                           {
@@ -1057,7 +1045,7 @@
                             "cursor": "pointer"
                           },
                           {
-                            "overflow": "hidden"
+                            "overflow": "visible"
                           }
                         ],
                         "grid": [
@@ -1070,7 +1058,7 @@
                         ]
                       },
                       "custom_fields": {
-                        "body": "[[[\n  const isClosed = entity.state === 'closed';\n  const iconName = isClosed ? 'mdi:garage' : 'mdi:garage-open';\n  const accentColor = isClosed ? 'var(--success-color)' : 'var(--warning-color)';\n  const iconBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const pillBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const label = isClosed ? 'CLOSED' : 'OPEN';\n  const verb = isClosed ? 'Closed' : 'Opened';\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:3px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:22px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--primary-text-color);\">Left Garage</div>\n        <div style=\"font-size:10px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                        "body": "[[[\n  const s = entity.state;\n  const isClosed = s === 'closed';\n  const isOpen = s === 'open';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isClosed) {\n    iconName = 'mdi:garage';\n    accentColor = 'var(--success-color)';\n    pillBg = 'rgba(16,208,144,0.08)';\n    pillBorder = 'rgba(16,208,144,0.35)';\n    label = 'CLOSED';\n    verb = 'Closed';\n  } else if (isOpen) {\n    iconName = 'mdi:garage-open';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'OPEN';\n    verb = 'Opened';\n  } else {\n    iconName = s === 'opening' ? 'mdi:garage-open' : 'mdi:garage';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = s.toUpperCase();\n    verb = s.charAt(0).toUpperCase() + s.slice(1);\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:3px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Left Garage</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                       },
                       "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
                     },
@@ -1096,9 +1084,6 @@
                             "border-radius": "14px"
                           },
                           {
-                            "min-height": "40px"
-                          },
-                          {
                             "background": "var(--ha-card-background)"
                           },
                           {
@@ -1108,7 +1093,7 @@
                             "cursor": "pointer"
                           },
                           {
-                            "overflow": "hidden"
+                            "overflow": "visible"
                           }
                         ],
                         "grid": [
@@ -1121,7 +1106,7 @@
                         ]
                       },
                       "custom_fields": {
-                        "body": "[[[\n  const isClosed = entity.state === 'closed';\n  const iconName = isClosed ? 'mdi:garage' : 'mdi:garage-open';\n  const accentColor = isClosed ? 'var(--success-color)' : 'var(--warning-color)';\n  const iconBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const pillBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const label = isClosed ? 'CLOSED' : 'OPEN';\n  const verb = isClosed ? 'Closed' : 'Opened';\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:3px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:22px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--primary-text-color);\">Right Garage</div>\n        <div style=\"font-size:10px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                        "body": "[[[\n  const s = entity.state;\n  const isClosed = s === 'closed';\n  const isOpen = s === 'open';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isClosed) {\n    iconName = 'mdi:garage';\n    accentColor = 'var(--success-color)';\n    pillBg = 'rgba(16,208,144,0.08)';\n    pillBorder = 'rgba(16,208,144,0.35)';\n    label = 'CLOSED';\n    verb = 'Closed';\n  } else if (isOpen) {\n    iconName = 'mdi:garage-open';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'OPEN';\n    verb = 'Opened';\n  } else {\n    iconName = s === 'opening' ? 'mdi:garage-open' : 'mdi:garage';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = s.toUpperCase();\n    verb = s.charAt(0).toUpperCase() + s.slice(1);\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:0;bottom:0;width:3px;background:${accentColor};border-radius:14px 0 0 14px;\"></div>\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Right Garage</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                       },
                       "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
                     }
