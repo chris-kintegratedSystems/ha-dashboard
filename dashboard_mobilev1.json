@@ -1401,10 +1401,14 @@
                 {
                   "type": "custom:button-card",
                   "template": "section_label",
-                  "name": "[[[\n    var cam = states['sensor.priority_camera'] ? states['sensor.priority_camera'].state : 'none';\n    var idx = states['input_number.priority_slide_index'] ? Math.round(parseFloat(states['input_number.priority_slide_index'].state)) : 0;\n    var camEntities = {\"doorbell\":\"camera.doorbell\",\"living_room\":\"camera.nest_cam_2\",\"izzy\":\"camera.nest_cam_1\",\"nanit_benjamin\":\"camera.nanit_benjamin\",\"nanit_travel\":\"camera.nanit_travel\"};\n    var labels = [\"PORSCHE 911\",\"TESLA MODEL Y\",\"MERCEDES G580\",\"WEATHER\"];\n    var entity = camEntities[cam];\n    if (cam !== 'none' && entity) {\n      var fn = states[entity] && states[entity].attributes && states[entity].attributes.friendly_name ? states[entity].attributes.friendly_name : cam.replace(/_/g, ' ');\n      if (idx === 0) return 'MOTION DETECTED: ' + fn.toUpperCase();\n      return labels[idx - 1] || labels[labels.length - 1];\n    }\n    return labels[idx] || labels[0];\n  ]]]",
+                  "name": "[[[\n      const CAM_LABELS = {\n        doorbell: states['camera.doorbell']?.attributes?.friendly_name || 'Front Door',\n        living_room: states['camera.nest_cam_2']?.attributes?.friendly_name || \"Ben's Room\",\n        izzy: states['camera.nest_cam_1']?.attributes?.friendly_name || 'Living Room',\n        nanit_benjamin: states['camera.nanit_benjamin']?.attributes?.friendly_name || \"Ben's Bed\",\n        nanit_travel: states['camera.nanit_travel']?.attributes?.friendly_name || 'Dining Room',\n      };\n      const cam = states['sensor.priority_camera']?.state;\n      if (!cam || cam === 'none') return 'PRIORITY DISPLAY';\n      const label = CAM_LABELS[cam] || cam;\n      return 'MOTION: ' + label.toUpperCase();\n    ]]]",
                   "triggers_update": [
                     "sensor.priority_camera",
-                    "input_number.priority_slide_index"
+                    "camera.doorbell",
+                    "camera.nest_cam_1",
+                    "camera.nest_cam_2",
+                    "camera.nanit_benjamin",
+                    "camera.nanit_travel"
                   ],
                   "styles": {
                     "name": [
