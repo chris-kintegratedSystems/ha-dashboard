@@ -1640,6 +1640,106 @@
                       }
                     },
                     {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "binary_sensor.nanit_benjamin_motion_sticky",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "picture-entity",
+                        "entity": "camera.nanit_benjamin",
+                        "camera_image": "camera.nanit_benjamin",
+                        "camera_view": "live",
+                        "show_state": false,
+                        "show_name": false,
+                        "fit_mode": "fill",
+                        "aspect_ratio": "16:9",
+                        "tap_action": {
+                          "action": "fire-dom-event",
+                          "browser_mod": {
+                            "service": "browser_mod.popup",
+                            "data": {
+                              "title": false,
+                              "size": "fullscreen",
+                              "dismissable": true,
+                              "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                              "content": {
+                                "type": "picture-elements",
+                                "camera_image": "camera.nanit_benjamin",
+                                "camera_view": "live",
+                                "card_mod": {
+                                  "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                                },
+                                "elements": [
+                                  {
+                                    "type": "custom:button-card",
+                                    "template": "cam_close",
+                                    "style": {
+                                      "top": "16px",
+                                      "right": "16px"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "binary_sensor.nanit_travel_motion_sticky",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "picture-entity",
+                        "entity": "camera.nanit_travel",
+                        "camera_image": "camera.nanit_travel",
+                        "camera_view": "live",
+                        "show_state": false,
+                        "show_name": false,
+                        "fit_mode": "fill",
+                        "aspect_ratio": "16:9",
+                        "tap_action": {
+                          "action": "fire-dom-event",
+                          "browser_mod": {
+                            "service": "browser_mod.popup",
+                            "data": {
+                              "title": false,
+                              "size": "fullscreen",
+                              "dismissable": true,
+                              "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                              "content": {
+                                "type": "picture-elements",
+                                "camera_image": "camera.nanit_travel",
+                                "camera_view": "live",
+                                "card_mod": {
+                                  "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                                },
+                                "elements": [
+                                  {
+                                    "type": "custom:button-card",
+                                    "template": "cam_close",
+                                    "style": {
+                                      "top": "16px",
+                                      "right": "16px"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
                       "type": "custom:button-card",
                       "name": "Porsche 911",
                       "icon": "mdi:car-sports",
