@@ -604,3 +604,56 @@ Available project agents (`.claude/agents/`):
   Consume its brief, then implement.
 - Plus the KIS-org agents inherited from `C:\Projects\kintegrated\CLAUDE.md`:
   PM, Product, Dev, QA.
+
+---
+
+## Working Standard — Research Before Implementing Fixes
+
+To reduce failed attempts and wasted effort, always follow a
+research-first rule before implementing any fix.
+
+**Bug that has already failed once:**
+- Read the relevant source files before writing any code
+- Web search the specific browser/platform behavior involved
+- Confirm root cause before implementing
+
+**New bug involving browser, HA internals, or third-party behavior:**
+- Web search first, read source files second
+- Ask clarifying questions if root cause is ambiguous
+
+**New bug in our own code with a clear root cause:**
+- Read source files, web search optional
+
+**Diagnostic-first pattern for stubborn bugs:**
+When a fix has failed once, the next step is a diagnostic pass —
+instrument the code, log the relevant state, report findings to Chris
+BEFORE applying any fix. Never attempt a second fix without confirmed
+root cause.
+
+---
+
+## iOS WKWebView Scroll Container — Critical Pattern (2026-04-23)
+
+When kis-nav.js needs to save/restore scroll position on the Home
+page, the target element is `hui-sections-view`, NOT `#view`.
+
+Why: `applyDynamicHeaderClearance()` sets `overflow-y: auto` and a
+constrained height directly on `hui-sections-view` via inline style.
+The sections-view fits exactly inside `#view`'s box, so `#view` never
+overflows and `#view.scrollTop` is always 0.
+
+Correct pattern:
+  const viewEl = huiShadow.querySelector('#view');
+  const sectionsView = viewEl && viewEl.querySelector('hui-sections-view');
+  const scrollEl = sectionsView || viewEl;
+  const saved = scrollEl.scrollTop;
+
+Additional iOS gotcha: iOS WKWebView 15.4+ silently blocks programmatic
+`scrollTop = x` when `scroll-behavior: smooth` is set on the element.
+Always force `scrollEl.style.scrollBehavior = 'auto'` before setting
+scrollTop, then restore the original value after.
+
+`overflow-anchor` is NOT supported in Safari/WKWebView — the browser
+native scroll anchoring fix does not exist on iOS. JS save/restore is
+the only option. PC browsers have native scroll anchoring so this bug
+only appears on iOS.
