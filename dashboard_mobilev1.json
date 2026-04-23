@@ -865,454 +865,142 @@
                 {
                   "type": "custom:button-card",
                   "entity": "lock.front_door_lock",
-                  "name": "Front Door",
+                  "show_icon": false,
+                  "show_name": false,
+                  "show_label": false,
                   "show_state": false,
-                  "show_label": true,
-                  "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'locked' ? 'Locked'\n            : s === 'unlocked' ? 'Unlocked'\n            : s === 'jammed' ? 'Jammed' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
-                  "layout": "icon_name_state2nd",
-                  "size": "24px",
-                  "show_name": true,
-                  "custom_fields": {
-                    "badge": "[[[ return '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid;white-space:nowrap;' + (entity.state === 'locked' ? 'color:var(--accent-color, #00d4f0);border-color:rgba(0,212,240,0.35);background:rgba(0,212,240,0.08)' : entity.state === 'unlocked' ? 'color:#f5a623;border-color:rgba(245,166,35,0.35);background:rgba(245,166,35,0.08)' : 'color:#f04060;border-color:rgba(240,64,96,0.35);background:rgba(240,64,96,0.08)') + '\">' + entity.state.toUpperCase() + '</span>' ]]]"
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "padding": "12px 14px 12px 11px"
-                      },
-                      {
-                        "border-radius": "14px"
-                      },
-                      {
-                        "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
-                      },
-                      {
-                        "overflow": "visible"
-                      }
-                    ],
-                    "grid": [
-                      {
-                        "grid-template-areas": "'i . badge'"
-                      },
-                      {
-                        "grid-template-columns": "auto 1fr auto"
-                      },
-                      {
-                        "grid-template-rows": "1fr"
-                      },
-                      {
-                        "align-items": "center"
-                      }
-                    ],
-                    "name": [
-                      {
-                        "position": "absolute"
-                      },
-                      {
-                        "left": "0"
-                      },
-                      {
-                        "right": "0"
-                      },
-                      {
-                        "top": "0"
-                      },
-                      {
-                        "bottom": "0"
-                      },
-                      {
-                        "display": "flex"
-                      },
-                      {
-                        "align-items": "center"
-                      },
-                      {
-                        "justify-content": "center"
-                      },
-                      {
-                        "font-size": "14px"
-                      },
-                      {
-                        "font-weight": "500"
-                      },
-                      {
-                        "color": "var(--kis-lights-room-count, #8a95a6)"
-                      },
-                      {
-                        "pointer-events": "none"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "position": "absolute"
-                      },
-                      {
-                        "bottom": "6px"
-                      },
-                      {
-                        "left": "0"
-                      },
-                      {
-                        "right": "0"
-                      },
-                      {
-                        "text-align": "center"
-                      },
-                      {
-                        "font-size": "11px"
-                      },
-                      {
-                        "color": "rgba(74,85,112,0.7)"
-                      },
-                      {
-                        "margin": "0"
-                      },
-                      {
-                        "pointer-events": "none"
-                      }
-                    ],
-                    "custom_fields": {
-                      "badge": [
-                        {
-                          "align-self": "center"
-                        },
-                        {
-                          "justify-self": "end"
-                        },
-                        {
-                          "overflow": "visible"
-                        }
-                      ]
-                    }
-                  },
                   "tap_action": {
                     "action": "toggle"
                   },
                   "hold_action": {
                     "action": "more-info"
                   },
-                  "state": [
-                    {
-                      "value": "locked",
-                      "color": "var(--accent-color, #00d4f0)",
-                      "icon": "mdi:lock"
-                    },
-                    {
-                      "value": "unlocked",
-                      "color": "#f5a623",
-                      "icon": "mdi:lock-open"
-                    },
-                    {
-                      "value": "jammed",
-                      "color": "#f04060",
-                      "icon": "mdi:lock-alert"
-                    }
-                  ],
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
-                  "card_mod": {
-                    "style": "ha-card { border-left: 2px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n#icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }"
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "min-height": "40px"
+                      },
+                      {
+                        "background": "var(--glass-bg, rgba(16,21,31,0.72))"
+                      },
+                      {
+                        "border": "1px solid var(--glass-border, rgba(255,255,255,0.06))"
+                      },
+                      {
+                        "cursor": "pointer"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "grid-template-areas": "'body'"
+                      },
+                      {
+                        "grid-template-columns": "1fr"
+                      }
+                    ]
+                  },
+                  "custom_fields": {
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let icon, iconBg, pillColor, pillBg, label, verb;\n  if (isJammed) {\n    icon = '\ud83d\udd12';\n    iconBg = 'rgba(240,64,96,0.10)';\n    pillColor = 'var(--red, #f04060)';\n    pillBg = 'rgba(240,64,96,0.10)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    icon = '\ud83d\udd12';\n    iconBg = 'rgba(0,212,240,0.10)';\n    pillColor = 'var(--cyan, #00d4f0)';\n    pillBg = 'rgba(0,212,240,0.10)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    icon = '\ud83d\udd13';\n    iconBg = 'rgba(245,166,35,0.10)';\n    pillColor = 'var(--amber, #f5a623)';\n    pillBg = 'rgba(245,166,35,0.10)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;font-size:18px;\">${icon}</div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--text-mid, #8a9ab8);\">Front Door</div>\n        <div style=\"font-size:10px;color:var(--text-lo, #4a5570);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${pillColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   }
                 },
                 {
                   "type": "custom:button-card",
                   "entity": "lock.back_door_lock",
-                  "name": "Back Door",
+                  "show_icon": false,
+                  "show_name": false,
+                  "show_label": false,
                   "show_state": false,
-                  "show_label": true,
-                  "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'locked' ? 'Locked'\n            : s === 'unlocked' ? 'Unlocked'\n            : s === 'jammed' ? 'Jammed' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
-                  "layout": "icon_name_state2nd",
-                  "size": "24px",
-                  "show_name": true,
-                  "custom_fields": {
-                    "badge": "[[[ return '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid;white-space:nowrap;' + (entity.state === 'locked' ? 'color:var(--accent-color, #00d4f0);border-color:rgba(0,212,240,0.35);background:rgba(0,212,240,0.08)' : entity.state === 'unlocked' ? 'color:#f5a623;border-color:rgba(245,166,35,0.35);background:rgba(245,166,35,0.08)' : 'color:#f04060;border-color:rgba(240,64,96,0.35);background:rgba(240,64,96,0.08)') + '\">' + entity.state.toUpperCase() + '</span>' ]]]"
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "padding": "12px 14px 12px 11px"
-                      },
-                      {
-                        "border-radius": "14px"
-                      },
-                      {
-                        "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
-                      },
-                      {
-                        "overflow": "visible"
-                      }
-                    ],
-                    "grid": [
-                      {
-                        "grid-template-areas": "'i . badge'"
-                      },
-                      {
-                        "grid-template-columns": "auto 1fr auto"
-                      },
-                      {
-                        "grid-template-rows": "1fr"
-                      },
-                      {
-                        "align-items": "center"
-                      }
-                    ],
-                    "name": [
-                      {
-                        "position": "absolute"
-                      },
-                      {
-                        "left": "0"
-                      },
-                      {
-                        "right": "0"
-                      },
-                      {
-                        "top": "0"
-                      },
-                      {
-                        "bottom": "0"
-                      },
-                      {
-                        "display": "flex"
-                      },
-                      {
-                        "align-items": "center"
-                      },
-                      {
-                        "justify-content": "center"
-                      },
-                      {
-                        "font-size": "14px"
-                      },
-                      {
-                        "font-weight": "500"
-                      },
-                      {
-                        "color": "var(--kis-lights-room-count, #8a95a6)"
-                      },
-                      {
-                        "pointer-events": "none"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "position": "absolute"
-                      },
-                      {
-                        "bottom": "6px"
-                      },
-                      {
-                        "left": "0"
-                      },
-                      {
-                        "right": "0"
-                      },
-                      {
-                        "text-align": "center"
-                      },
-                      {
-                        "font-size": "11px"
-                      },
-                      {
-                        "color": "rgba(74,85,112,0.7)"
-                      },
-                      {
-                        "margin": "0"
-                      },
-                      {
-                        "pointer-events": "none"
-                      }
-                    ],
-                    "custom_fields": {
-                      "badge": [
-                        {
-                          "align-self": "center"
-                        },
-                        {
-                          "justify-self": "end"
-                        },
-                        {
-                          "overflow": "visible"
-                        }
-                      ]
-                    }
-                  },
                   "tap_action": {
                     "action": "toggle"
                   },
                   "hold_action": {
                     "action": "more-info"
                   },
-                  "state": [
-                    {
-                      "value": "locked",
-                      "color": "var(--accent-color, #00d4f0)",
-                      "icon": "mdi:lock"
-                    },
-                    {
-                      "value": "unlocked",
-                      "color": "#f5a623",
-                      "icon": "mdi:lock-open"
-                    },
-                    {
-                      "value": "jammed",
-                      "color": "#f04060",
-                      "icon": "mdi:lock-alert"
-                    }
-                  ],
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
-                  "card_mod": {
-                    "style": "ha-card { border-left: 2px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n#icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }"
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "min-height": "40px"
+                      },
+                      {
+                        "background": "var(--glass-bg, rgba(16,21,31,0.72))"
+                      },
+                      {
+                        "border": "1px solid var(--glass-border, rgba(255,255,255,0.06))"
+                      },
+                      {
+                        "cursor": "pointer"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "grid-template-areas": "'body'"
+                      },
+                      {
+                        "grid-template-columns": "1fr"
+                      }
+                    ]
+                  },
+                  "custom_fields": {
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let icon, iconBg, pillColor, pillBg, label, verb;\n  if (isJammed) {\n    icon = '\ud83d\udd12';\n    iconBg = 'rgba(240,64,96,0.10)';\n    pillColor = 'var(--red, #f04060)';\n    pillBg = 'rgba(240,64,96,0.10)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    icon = '\ud83d\udd12';\n    iconBg = 'rgba(0,212,240,0.10)';\n    pillColor = 'var(--cyan, #00d4f0)';\n    pillBg = 'rgba(0,212,240,0.10)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    icon = '\ud83d\udd13';\n    iconBg = 'rgba(245,166,35,0.10)';\n    pillColor = 'var(--amber, #f5a623)';\n    pillBg = 'rgba(245,166,35,0.10)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;font-size:18px;\">${icon}</div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--text-mid, #8a9ab8);\">Back Door</div>\n        <div style=\"font-size:10px;color:var(--text-lo, #4a5570);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${pillColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   }
                 },
                 {
                   "type": "custom:button-card",
                   "entity": "lock.gemelli_door_lock",
-                  "name": "Gemelli Door",
+                  "show_icon": false,
+                  "show_name": false,
+                  "show_label": false,
                   "show_state": false,
-                  "show_label": true,
-                  "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'locked' ? 'Locked'\n            : s === 'unlocked' ? 'Unlocked'\n            : s === 'jammed' ? 'Jammed' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
-                  "layout": "icon_name_state2nd",
-                  "size": "24px",
-                  "show_name": true,
-                  "custom_fields": {
-                    "badge": "[[[ return '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid;white-space:nowrap;' + (entity.state === 'locked' ? 'color:var(--accent-color, #00d4f0);border-color:rgba(0,212,240,0.35);background:rgba(0,212,240,0.08)' : entity.state === 'unlocked' ? 'color:#f5a623;border-color:rgba(245,166,35,0.35);background:rgba(245,166,35,0.08)' : 'color:#f04060;border-color:rgba(240,64,96,0.35);background:rgba(240,64,96,0.08)') + '\">' + entity.state.toUpperCase() + '</span>' ]]]"
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "padding": "12px 14px 12px 11px"
-                      },
-                      {
-                        "border-radius": "14px"
-                      },
-                      {
-                        "border-left": "[[[ return entity.state === 'locked' ? '2px solid var(--accent-color, #00d4f0)' : entity.state === 'unlocked' ? '2px solid #f5a623' : '2px solid #f04060' ]]]"
-                      },
-                      {
-                        "overflow": "visible"
-                      }
-                    ],
-                    "grid": [
-                      {
-                        "grid-template-areas": "'i . badge'"
-                      },
-                      {
-                        "grid-template-columns": "auto 1fr auto"
-                      },
-                      {
-                        "grid-template-rows": "1fr"
-                      },
-                      {
-                        "align-items": "center"
-                      }
-                    ],
-                    "name": [
-                      {
-                        "position": "absolute"
-                      },
-                      {
-                        "left": "0"
-                      },
-                      {
-                        "right": "0"
-                      },
-                      {
-                        "top": "0"
-                      },
-                      {
-                        "bottom": "0"
-                      },
-                      {
-                        "display": "flex"
-                      },
-                      {
-                        "align-items": "center"
-                      },
-                      {
-                        "justify-content": "center"
-                      },
-                      {
-                        "font-size": "14px"
-                      },
-                      {
-                        "font-weight": "500"
-                      },
-                      {
-                        "color": "var(--kis-lights-room-count, #8a95a6)"
-                      },
-                      {
-                        "pointer-events": "none"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "position": "absolute"
-                      },
-                      {
-                        "bottom": "6px"
-                      },
-                      {
-                        "left": "0"
-                      },
-                      {
-                        "right": "0"
-                      },
-                      {
-                        "text-align": "center"
-                      },
-                      {
-                        "font-size": "11px"
-                      },
-                      {
-                        "color": "rgba(74,85,112,0.7)"
-                      },
-                      {
-                        "margin": "0"
-                      },
-                      {
-                        "pointer-events": "none"
-                      }
-                    ],
-                    "custom_fields": {
-                      "badge": [
-                        {
-                          "align-self": "center"
-                        },
-                        {
-                          "justify-self": "end"
-                        },
-                        {
-                          "overflow": "visible"
-                        }
-                      ]
-                    }
-                  },
                   "tap_action": {
                     "action": "toggle"
                   },
                   "hold_action": {
                     "action": "more-info"
                   },
-                  "state": [
-                    {
-                      "value": "locked",
-                      "color": "var(--accent-color, #00d4f0)",
-                      "icon": "mdi:lock"
-                    },
-                    {
-                      "value": "unlocked",
-                      "color": "#f5a623",
-                      "icon": "mdi:lock-open"
-                    },
-                    {
-                      "value": "jammed",
-                      "color": "#f04060",
-                      "icon": "mdi:lock-alert"
-                    }
-                  ],
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
-                  "card_mod": {
-                    "style": "ha-card { border-left: 2px solid [[[ return entity.state === 'locked' ? '#00d4ff' : entity.state === 'unlocked' ? '#f5a623' : '#f04060' ]]]; border-radius: 14px; }\n#icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }"
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "12px 14px"
+                      },
+                      {
+                        "border-radius": "14px"
+                      },
+                      {
+                        "min-height": "40px"
+                      },
+                      {
+                        "background": "var(--glass-bg, rgba(16,21,31,0.72))"
+                      },
+                      {
+                        "border": "1px solid var(--glass-border, rgba(255,255,255,0.06))"
+                      },
+                      {
+                        "cursor": "pointer"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "grid-template-areas": "'body'"
+                      },
+                      {
+                        "grid-template-columns": "1fr"
+                      }
+                    ]
+                  },
+                  "custom_fields": {
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let icon, iconBg, pillColor, pillBg, label, verb;\n  if (isJammed) {\n    icon = '\ud83d\udd12';\n    iconBg = 'rgba(240,64,96,0.10)';\n    pillColor = 'var(--red, #f04060)';\n    pillBg = 'rgba(240,64,96,0.10)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    icon = '\ud83d\udd12';\n    iconBg = 'rgba(0,212,240,0.10)';\n    pillColor = 'var(--cyan, #00d4f0)';\n    pillBg = 'rgba(0,212,240,0.10)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    icon = '\ud83d\udd13';\n    iconBg = 'rgba(245,166,35,0.10)';\n    pillColor = 'var(--amber, #f5a623)';\n    pillBg = 'rgba(245,166,35,0.10)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;font-size:18px;\">${icon}</div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--text-mid, #8a9ab8);\">Gemelli Door</div>\n        <div style=\"font-size:10px;color:var(--text-lo, #4a5570);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${pillColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   }
                 },
                 {
@@ -1326,15 +1014,15 @@
                     {
                       "type": "custom:button-card",
                       "entity": "cover.ratgdov25i_1746c3_door",
-                      "name": "Left Garage",
+                      "show_icon": false,
+                      "show_name": false,
+                      "show_label": false,
                       "show_state": false,
-                      "show_label": true,
-                      "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'closed' ? 'Closed'\n            : s === 'open' ? 'Opened'\n            : s === 'opening' ? 'Opening'\n            : s === 'closing' ? 'Closing' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
-                      "layout": "icon_name_state2nd",
-                      "size": "24px",
-                      "show_name": true,
-                      "custom_fields": {
-                        "badge": "[[[ return '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid;white-space:nowrap;' + (entity.state === 'closed' ? 'color:#10d090;border-color:rgba(16,208,144,0.35);background:rgba(16,208,144,0.08)' : entity.state === 'open' ? 'color:#f04060;border-color:rgba(240,64,96,0.35);background:rgba(240,64,96,0.08)' : 'color:#f5a623;border-color:rgba(245,166,35,0.35);background:rgba(245,166,35,0.08)') + '\">' + entity.state.toUpperCase() + '</span>' ]]]"
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
                       },
                       "styles": {
                         "card": [
@@ -1345,149 +1033,43 @@
                             "border-radius": "14px"
                           },
                           {
-                            "overflow": "visible"
+                            "min-height": "40px"
+                          },
+                          {
+                            "background": "var(--glass-bg, rgba(16,21,31,0.72))"
+                          },
+                          {
+                            "border": "1px solid var(--glass-border, rgba(255,255,255,0.06))"
+                          },
+                          {
+                            "cursor": "pointer"
                           }
                         ],
                         "grid": [
                           {
-                            "grid-template-areas": "'i . badge'"
+                            "grid-template-areas": "'body'"
                           },
                           {
-                            "grid-template-columns": "auto 1fr auto"
-                          },
-                          {
-                            "grid-template-rows": "1fr"
-                          },
-                          {
-                            "align-items": "center"
+                            "grid-template-columns": "1fr"
                           }
-                        ],
-                        "name": [
-                          {
-                            "position": "absolute"
-                          },
-                          {
-                            "left": "0"
-                          },
-                          {
-                            "right": "0"
-                          },
-                          {
-                            "top": "0"
-                          },
-                          {
-                            "bottom": "0"
-                          },
-                          {
-                            "display": "flex"
-                          },
-                          {
-                            "align-items": "center"
-                          },
-                          {
-                            "justify-content": "center"
-                          },
-                          {
-                            "font-size": "14px"
-                          },
-                          {
-                            "font-weight": "500"
-                          },
-                          {
-                            "color": "var(--kis-lights-room-count, #8a95a6)"
-                          },
-                          {
-                            "pointer-events": "none"
-                          }
-                        ],
-                        "label": [
-                          {
-                            "position": "absolute"
-                          },
-                          {
-                            "bottom": "6px"
-                          },
-                          {
-                            "left": "0"
-                          },
-                          {
-                            "right": "0"
-                          },
-                          {
-                            "text-align": "center"
-                          },
-                          {
-                            "font-size": "11px"
-                          },
-                          {
-                            "color": "rgba(74,85,112,0.7)"
-                          },
-                          {
-                            "margin": "0"
-                          },
-                          {
-                            "pointer-events": "none"
-                          }
-                        ],
-                        "custom_fields": {
-                          "badge": [
-                            {
-                              "align-self": "center"
-                            },
-                            {
-                              "justify-self": "end"
-                            },
-                            {
-                              "overflow": "visible"
-                            }
-                          ]
-                        }
+                        ]
                       },
-                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'closed' ? '#10d090' : entity.state === 'open' ? '#f04060' : '#f5a623' ]]]; border-radius: 12px; }\n"
-                      },
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "state": [
-                        {
-                          "value": "closed",
-                          "color": "#10d090",
-                          "icon": "mdi:garage"
-                        },
-                        {
-                          "value": "open",
-                          "color": "#f04060",
-                          "icon": "mdi:garage-open"
-                        },
-                        {
-                          "value": "opening",
-                          "color": "#f5a623",
-                          "icon": "mdi:garage-open"
-                        },
-                        {
-                          "value": "closing",
-                          "color": "#f5a623",
-                          "icon": "mdi:garage"
-                        }
-                      ]
+                      "custom_fields": {
+                        "body": "[[[\n  const isClosed = entity.state === 'closed';\n  const icon = isClosed ? '\ud83d\ude97' : '\ud83d\ude99';\n  const iconBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const pillColor = isClosed ? 'var(--green, #10d090)' : 'var(--amber, #f5a623)';\n  const pillBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const label = isClosed ? 'CLOSED' : 'OPEN';\n  const verb = isClosed ? 'Closed' : 'Opened';\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;font-size:18px;\">${icon}</div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--text-mid, #8a9ab8);\">Left Garage</div>\n        <div style=\"font-size:10px;color:var(--text-lo, #4a5570);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${pillColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                      }
                     },
                     {
                       "type": "custom:button-card",
                       "entity": "cover.ratgdov25i_1746b4_door",
-                      "name": "Right Garage",
+                      "show_icon": false,
+                      "show_name": false,
+                      "show_label": false,
                       "show_state": false,
-                      "show_label": true,
-                      "label": "[[[ if (!entity || !entity.last_changed) return '';\n    var s = entity.state;\n    var lbl = s === 'closed' ? 'Closed'\n            : s === 'open' ? 'Opened'\n            : s === 'opening' ? 'Opening'\n            : s === 'closing' ? 'Closing' : null;\n    if (!lbl) return '';\n    return lbl + ' at ' + new Date(entity.last_changed)\n      .toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});\n  ]]]",
-                      "layout": "icon_name_state2nd",
-                      "size": "24px",
-                      "show_name": true,
-                      "custom_fields": {
-                        "badge": "[[[ return '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid;white-space:nowrap;' + (entity.state === 'closed' ? 'color:#10d090;border-color:rgba(16,208,144,0.35);background:rgba(16,208,144,0.08)' : entity.state === 'open' ? 'color:#f04060;border-color:rgba(240,64,96,0.35);background:rgba(240,64,96,0.08)' : 'color:#f5a623;border-color:rgba(245,166,35,0.35);background:rgba(245,166,35,0.08)') + '\">' + entity.state.toUpperCase() + '</span>' ]]]"
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
                       },
                       "styles": {
                         "card": [
@@ -1498,136 +1080,30 @@
                             "border-radius": "14px"
                           },
                           {
-                            "overflow": "visible"
+                            "min-height": "40px"
+                          },
+                          {
+                            "background": "var(--glass-bg, rgba(16,21,31,0.72))"
+                          },
+                          {
+                            "border": "1px solid var(--glass-border, rgba(255,255,255,0.06))"
+                          },
+                          {
+                            "cursor": "pointer"
                           }
                         ],
                         "grid": [
                           {
-                            "grid-template-areas": "'i . badge'"
+                            "grid-template-areas": "'body'"
                           },
                           {
-                            "grid-template-columns": "auto 1fr auto"
-                          },
-                          {
-                            "grid-template-rows": "1fr"
-                          },
-                          {
-                            "align-items": "center"
+                            "grid-template-columns": "1fr"
                           }
-                        ],
-                        "name": [
-                          {
-                            "position": "absolute"
-                          },
-                          {
-                            "left": "0"
-                          },
-                          {
-                            "right": "0"
-                          },
-                          {
-                            "top": "0"
-                          },
-                          {
-                            "bottom": "0"
-                          },
-                          {
-                            "display": "flex"
-                          },
-                          {
-                            "align-items": "center"
-                          },
-                          {
-                            "justify-content": "center"
-                          },
-                          {
-                            "font-size": "14px"
-                          },
-                          {
-                            "font-weight": "500"
-                          },
-                          {
-                            "color": "var(--kis-lights-room-count, #8a95a6)"
-                          },
-                          {
-                            "pointer-events": "none"
-                          }
-                        ],
-                        "label": [
-                          {
-                            "position": "absolute"
-                          },
-                          {
-                            "bottom": "6px"
-                          },
-                          {
-                            "left": "0"
-                          },
-                          {
-                            "right": "0"
-                          },
-                          {
-                            "text-align": "center"
-                          },
-                          {
-                            "font-size": "11px"
-                          },
-                          {
-                            "color": "rgba(74,85,112,0.7)"
-                          },
-                          {
-                            "margin": "0"
-                          },
-                          {
-                            "pointer-events": "none"
-                          }
-                        ],
-                        "custom_fields": {
-                          "badge": [
-                            {
-                              "align-self": "center"
-                            },
-                            {
-                              "justify-self": "end"
-                            },
-                            {
-                              "overflow": "visible"
-                            }
-                          ]
-                        }
+                        ]
                       },
-                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }",
-                      "card_mod": {
-                        "style": "ha-card { border-left: 3px solid [[[ return entity.state === 'closed' ? '#10d090' : entity.state === 'open' ? '#f04060' : '#f5a623' ]]]; border-radius: 12px; }\n"
-                      },
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "state": [
-                        {
-                          "value": "closed",
-                          "color": "#10d090",
-                          "icon": "mdi:garage"
-                        },
-                        {
-                          "value": "open",
-                          "color": "#f04060",
-                          "icon": "mdi:garage-open"
-                        },
-                        {
-                          "value": "opening",
-                          "color": "#f5a623",
-                          "icon": "mdi:garage-open"
-                        },
-                        {
-                          "value": "closing",
-                          "color": "#f5a623",
-                          "icon": "mdi:garage"
-                        }
-                      ]
+                      "custom_fields": {
+                        "body": "[[[\n  const isClosed = entity.state === 'closed';\n  const icon = isClosed ? '\ud83d\ude97' : '\ud83d\ude99';\n  const iconBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const pillColor = isClosed ? 'var(--green, #10d090)' : 'var(--amber, #f5a623)';\n  const pillBg = isClosed ? 'rgba(16,208,144,0.10)' : 'rgba(245,166,35,0.10)';\n  const label = isClosed ? 'CLOSED' : 'OPEN';\n  const verb = isClosed ? 'Closed' : 'Opened';\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;font-size:18px;\">${icon}</div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:13px;font-weight:600;color:var(--text-mid, #8a9ab8);\">Right Garage</div>\n        <div style=\"font-size:10px;color:var(--text-lo, #4a5570);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:${pillBg};color:${pillColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                      }
                     }
                   ]
                 }
@@ -2086,7 +1562,7 @@
                       "show_name": true,
                       "show_label": true,
                       "size": "56px",
-                      "label": "[[[\n    if (states['sensor.tesla_battery_level']) {\n      var b = states['sensor.tesla_battery_level'].state;\n      var r = states['sensor.tesla_range'] ? ' · ' + Math.round(parseFloat(states['sensor.tesla_range'].state)) + ' mi' : '';\n      return b + '%' + r;\n    }\n    return 'Setup Required';\n  ]]]",
+                      "label": "[[[\n    if (states['sensor.tesla_battery_level']) {\n      var b = states['sensor.tesla_battery_level'].state;\n      var r = states['sensor.tesla_range'] ? ' \u00b7 ' + Math.round(parseFloat(states['sensor.tesla_range'].state)) + ' mi' : '';\n      return b + '%' + r;\n    }\n    return 'Setup Required';\n  ]]]",
                       "styles": {
                         "card": [
                           {
@@ -2273,8 +1749,8 @@
                       "show_state": false,
                       "size": "56px",
                       "icon": "[[[\n    var c = entity.state;\n    var m = {'sunny':'mdi:weather-sunny','clear-night':'mdi:weather-night','cloudy':'mdi:weather-cloudy','partlycloudy':'mdi:weather-partly-cloudy','rainy':'mdi:weather-pouring','pouring':'mdi:weather-pouring','snowy':'mdi:weather-snowy','fog':'mdi:weather-fog','windy':'mdi:weather-windy','lightning':'mdi:weather-lightning','lightning-rainy':'mdi:weather-lightning-rainy','hail':'mdi:weather-hail'};\n    return m[c] || 'mdi:weather-cloudy';\n  ]]]",
-                      "name": "[[[\n    var t = entity.attributes.temperature;\n    return (t == null) ? '--' : (Math.round(t) + '°F');\n  ]]]",
-                      "label": "[[[\n    var s = (entity.state || '').replace(/-/g,' ').replace(/\\b\\w/g, function(c){return c.toUpperCase();});\n    var h = entity.attributes.humidity;\n    var w = entity.attributes.wind_speed;\n    var parts = [s];\n    if (h != null) parts.push(h + '% hum');\n    if (w != null) parts.push(Math.round(w) + ' mph');\n    return parts.join(' · ');\n  ]]]",
+                      "name": "[[[\n    var t = entity.attributes.temperature;\n    return (t == null) ? '--' : (Math.round(t) + '\u00b0F');\n  ]]]",
+                      "label": "[[[\n    var s = (entity.state || '').replace(/-/g,' ').replace(/\\b\\w/g, function(c){return c.toUpperCase();});\n    var h = entity.attributes.humidity;\n    var w = entity.attributes.wind_speed;\n    var parts = [s];\n    if (h != null) parts.push(h + '% hum');\n    if (w != null) parts.push(Math.round(w) + ' mph');\n    return parts.join(' \u00b7 ');\n  ]]]",
                       "styles": {
                         "card": [
                           {
@@ -2466,7 +1942,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Living Room · Daikin\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Living Room \u00b7 Daikin\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">\u2212</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set \u2192 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -2533,7 +2009,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Gemelli Suite\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Gemelli Suite\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">\u2212</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set \u2192 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -2600,7 +2076,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Master Bedroom\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Master Bedroom\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">\u2212</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set \u2192 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -2667,7 +2143,7 @@
                   "double_tap_action": {
                     "action": "more-info"
                   },
-                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Upstairs\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">−</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set → <strong style=\"color:#8a9ab8;\">' + setpoint + '°F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
+                  "label": "[[[ const e = entity; const currentTemp = e.attributes.current_temperature != null ? Math.round(e.attributes.current_temperature) : '--'; const setpoint = e.attributes.temperature != null ? Math.round(e.attributes.temperature) : '--'; const hvacMode = e.state || 'off'; const modeColor = {cool:'#4d8ef0',heat:'#f5a623',heat_cool:'#10d090',auto:'#10d090',off:'#4a5570',fan_only:'var(--accent-color, #00d4f0)',dry:'#f5a623'}[hvacMode] || '#8a9ab8'; const modeBg = {cool:'rgba(77,142,240,0.08)',heat:'rgba(245,166,35,0.08)',heat_cool:'rgba(16,208,144,0.08)',auto:'rgba(16,208,144,0.08)',off:'rgba(74,85,112,0.08)',fan_only:'rgba(0,212,240,0.08)',dry:'rgba(245,166,35,0.08)'}[hvacMode] || 'rgba(138,154,184,0.08)'; const modeBorder = {cool:'rgba(77,142,240,0.35)',heat:'rgba(245,166,35,0.35)',heat_cool:'rgba(16,208,144,0.35)',auto:'rgba(16,208,144,0.35)',off:'rgba(74,85,112,0.20)',fan_only:'rgba(0,212,240,0.35)',dry:'rgba(245,166,35,0.35)'}[hvacMode] || 'rgba(138,154,184,0.20)'; const modeLabel = {cool:'Cool',heat:'Heat',heat_cool:'Auto',auto:'Auto',off:'Off',fan_only:'Fan',dry:'Dry'}[hvacMode] || hvacMode; const progressColor = hvacMode === 'cool' ? 'linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0))' : 'linear-gradient(to right,#f0a030,#f06040)'; const minT = e.attributes.min_temp || 60; const maxT = e.attributes.max_temp || 90; const pct = setpoint !== '--' ? Math.min(100, Math.max(0, Math.round((setpoint - minT) / (maxT - minT) * 100))) : 40; const rl = \"Upstairs\"; return '<div style=\"width:100%;padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<span style=\"font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--disabled-text-color,#4a5570);\">' + rl + '</span>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid ' + modeBorder + ';background:' + modeBg + ';color:' + modeColor + ';\">' + modeLabel + '</span>'   + '</div>'   + '<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;\">'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">\u2212</div>'   + '<div style=\"text-align:center;\">'   + '<div style=\"font-size:52px;font-weight:300;letter-spacing:-0.04em;line-height:1;color:var(--primary-text-color,#eef2f8);font-variant-numeric:tabular-nums;\">' + currentTemp + '</div>'   + '<div style=\"font-size:11px;color:var(--disabled-text-color,#4a5570);margin-top:1px;\">Set \u2192 <strong style=\"color:#8a9ab8;\">' + setpoint + '\u00b0F</strong></div>'   + '</div>'   + '<div style=\"width:40px;height:40px;border-radius:8px;background:rgba(0,212,240,0.08);border:1px solid rgba(0,212,240,0.18);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:200;color:var(--accent-color, #00d4f0);\">+</div>'   + '</div>'   + '<div style=\"height:3px;border-radius:3px;background:#1c2438;overflow:hidden;\">'   + '<div style=\"height:100%;width:' + pct + '%;border-radius:3px;background:' + progressColor + ';\"></div>'   + '</div>'   + '</div>'; ]]]",
                   "styles": {
                     "card": [
                       {
@@ -4010,7 +3486,7 @@
                     },
                     {
                       "type": "template",
-                      "content": "{% set t = state_attr('climate.daikin','current_temperature') %}{% if t != None %}{{ t | round(0) | int }}°F{% else %}--°F{% endif %}",
+                      "content": "{% set t = state_attr('climate.daikin','current_temperature') %}{% if t != None %}{{ t | round(0) | int }}\u00b0F{% else %}--\u00b0F{% endif %}",
                       "icon": "mdi:thermometer",
                       "icon_color": "#f5a623",
                       "tap_action": {

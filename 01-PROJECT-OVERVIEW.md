@@ -102,6 +102,18 @@ Open PRs for these via `gh pr create` or the web UI when ready.
 `root:root 644`); `kis-nav.js` goes to `www/mobile_v1/`. Anything put in
 `www/` that looks like a Lovelace storage blob is silently ignored by HA.
 
+> **⚠️ DASHBOARD TARGETS — COPY EXACTLY. DO NOT DEPLOY TO `www/`:**
+> ```
+> /home/cooper5389/homeassistant/config/.storage/lovelace.dashboard_mobilev1
+> /home/cooper5389/homeassistant/config/.storage/lovelace.dashboard_tabletv1
+> ```
+> No `.json` extension. `root:root` ownership. `644` permissions.
+> `sudo docker restart homeassistant` afterwards — HA caches Lovelace
+> configs in memory. `/config/www/mobile_v1/dashboard_*.json` is a
+> **dead letter**: HA never reads dashboard configs from there. Burned
+> ~1h on 2026-04-20 (Nanit incident) and again on 2026-04-23
+> (lock/garage v16 restore) because this was not loud enough.
+
 **Restart rule:** every JSON or config change requires
 `sudo docker restart homeassistant` — HA caches Lovelace configs in memory.
 The WebSocket push alternative (`C:\Projects\kintegrated\scripts\push-dashboards.js`)
