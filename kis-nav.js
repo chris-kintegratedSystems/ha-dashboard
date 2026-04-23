@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 42;
+  window.KIS_NAV_VERSION = 43;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1522,6 +1522,14 @@
     const cam = ps.state;
 
     if (!PRIORITY_CAMERA_MAP[cam]) {
+      if (_lastSnappedPriorityCamera !== null) {
+        const huiShadow = getHuiShadow();
+        const viewEl = huiShadow && huiShadow.querySelector('#view');
+        const saved = viewEl ? viewEl.scrollTop : 0;
+        if (saved > 0) {
+          setTimeout(function () { if (viewEl) viewEl.scrollTop = saved; }, 200);
+        }
+      }
       _lastSnappedPriorityCamera = null;
       return;
     }
