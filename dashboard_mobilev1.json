@@ -504,6 +504,73 @@
                   "cards": [
                     {
                       "type": "custom:button-card",
+                      "entity": "script.scene_secure",
+                      "name": "Secure",
+                      "icon": "mdi:shield-lock",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.scene_secure"
+                      },
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "12px 8px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "background": "var(--ha-card-background)"
+                          },
+                          {
+                            "border": "1px solid var(--ha-card-border-color)"
+                          },
+                          {
+                            "cursor": "pointer"
+                          },
+                          {
+                            "--kis-state-accent": "[[[\n  const lockIds = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door_lock'];\n  const garageIds = ['cover.ratgdov25i_1746c3_door', 'cover.ratgdov25i_1746b4_door'];\n  const allIds = [...lockIds, ...garageIds];\n  const stateOf = (id) => (states[id] && states[id].state) || 'unknown';\n  const anyJammed = allIds.some(id => stateOf(id) === 'jammed');\n  if (anyJammed) return 'var(--error-color)';\n  const allLocksLocked = lockIds.every(id => stateOf(id) === 'locked');\n  const allGaragesClosed = garageIds.every(id => stateOf(id) === 'closed');\n  if (allLocksLocked && allGaragesClosed) return 'var(--success-color)';\n  return 'var(--warning-color)';\n]]]"
+                          },
+                          {
+                            "box-shadow": "inset 3px 0 0 var(--kis-state-accent)"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "var(--secondary-text-color)"
+                          },
+                          {
+                            "margin-top": "4px"
+                          }
+                        ],
+                        "icon": [
+                          {
+                            "color": "var(--kis-state-accent)"
+                          },
+                          {
+                            "width": "28px"
+                          },
+                          {
+                            "height": "28px"
+                          }
+                        ]
+                      },
+                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } ha-card { height: 100%; position: relative; }"
+                    },
+                    {
+                      "type": "custom:button-card",
                       "name": "Morning",
                       "icon": "mdi:white-balance-sunny",
                       "show_icon": true,
@@ -785,63 +852,6 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.scene_movie_time"
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "scene.dinner_time",
-                      "name": "Dinner",
-                      "icon": "mdi:food-fork-drink",
-                      "color": "#9d6ef0",
-                      "size": "28px",
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "14px 8px 12px"
-                          },
-                          {
-                            "border-radius": "14px"
-                          },
-                          {
-                            "min-height": "80px"
-                          },
-                          {
-                            "flex-direction": "column"
-                          },
-                          {
-                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_dinner_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #9d6ef0':'1px solid rgba(255,255,255,0.06)'; ]]]"
-                          },
-                          {
-                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_dinner_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(157,110,240,0.45)':'none'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "rgba(138,154,184,1)"
-                          },
-                          {
-                            "margin-top": "8px"
-                          }
-                        ]
-                      },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 12px; padding: 10px; }\n"
-                      },
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "script.scene_dinner_time"
                       }
                     }
                   ],
