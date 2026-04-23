@@ -527,3 +527,29 @@ Cache-bust with `?t=` ensures a fresh snapshot on each card mount.
 Use `background-size: 100% 100%` (stretch) not `cover` (crop) because
 Frigate snapshots are 4:3 but the live WebRTC feed is 16:9 — `cover`
 causes a visible content shift during the overlay fade-out.
+
+## 2026-04-23 — Real scroll container is hui-sections-view, NOT #view
+
+`applyDynamicHeaderClearance()` sets `overflow-y: auto` + constrained
+`height: calc(100vh - (NAV_H + clearance)px)` directly on
+`hui-sections-view` via `element.style`. The sections-view outer
+height (margin-top + height) fits exactly inside `#view`'s box, so
+`#view` never overflows and `#view.scrollTop` is always 0.
+
+Correct save/restore pattern:
+```js
+var viewEl = huiShadow.querySelector('#view');
+var sectionsView = viewEl && viewEl.querySelector('hui-sections-view');
+var scrollEl = sectionsView || viewEl;
+var saved = scrollEl.scrollTop;
+```
+
+iOS WKWebView 15.4+ silently blocks `scrollTop = x` when
+`scroll-behavior: smooth` is active. Force `auto` before setting:
+```js
+scrollEl.style.scrollBehavior = 'auto';
+scrollEl.scrollTop = saved;
+```
+
+`overflow-anchor` is NOT supported in Safari/WKWebView — JS
+save/restore is the only option for iOS scroll preservation.

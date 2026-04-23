@@ -333,3 +333,30 @@ flex container. `grid_options: { columns: 'full' }` is still required
 — without it the section grid gives the card a narrower column slot.
 Both pieces are needed: `grid_options` for the placement, `extra_styles`
 with !important for the element width inside that slot.
+
+## 2026-04-23: Scroll restore reading #view.scrollTop (v43)
+**Tried:** Save/restore `#view.scrollTop` when `sensor.priority_camera`
+transitions. Two attempts — v43 on `hotfix/scroll-restore-priority-reset`.
+**Failed:** `#view.scrollTop` is always 0. `hui-sections-view` fits
+exactly inside `#view`'s box (margin-top + height = `#view` height), so
+`#view` never overflows. The real scroll container is `hui-sections-view`
+itself — it has `overflow-y: auto` + constrained height set by
+`applyDynamicHeaderClearance()`.
+**Fix:** Read/write `hui-sections-view.scrollTop` instead, with
+`scrollBehavior = 'auto'` forced before programmatic set (iOS WKWebView
+silently blocks scrollTop= when smooth is active).
+**Broader lesson:** When two nested elements both have `overflow-y: auto`,
+the inner one with the constrained height is the actual scroll container.
+Check which element's `scrollTop` is non-zero before writing save/restore
+code.
+
+## 2026-04-23: zoneIs2ColumnMode() gate blocking portrait 16:9 height
+**Tried:** `zoneIs2ColumnMode()` gated the ResizeObserver callback in
+`installZoneHeightObserver()` — intended to only apply 16:9 height in
+tablet 2-column layout.
+**Failed:** In portrait/single-column mode, the priority zone section
+spans full viewport width, `sectionW < innerWidth * 0.75` returns false,
+so `clearZoneVars()` ran and the carousel collapsed to content height.
+**Fix:** Remove the `zoneIs2ColumnMode()` gate. The `W * 9/16` math in
+`recomputeZoneHeight()` works at any column width — it should always run.
+Keep the home-page guard (`clearZoneVars()` when not on Home) intact.
