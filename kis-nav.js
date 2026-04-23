@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 42;
+  window.KIS_NAV_VERSION = 45;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1513,6 +1513,29 @@
   const _cameraCooldownUntil = Object.create(null);
   let _lastSnappedPriorityCamera = null;
 
+  function saveAndRestoreScroll() {
+    var huiShadow = getHuiShadow();
+    if (!huiShadow) return;
+    var viewEl = huiShadow.querySelector('#view');
+    if (!viewEl) return;
+    var sectionsView = viewEl.querySelector('hui-sections-view');
+    var scrollEl = sectionsView || viewEl;
+    var saved = scrollEl.scrollTop;
+    if (!saved || saved <= 0) return;
+    console.log('[KIS scroll fix]', 'scrollEl:', scrollEl.tagName,
+      'saved:', saved, 'scrollBehavior:', getComputedStyle(scrollEl).scrollBehavior);
+    var prevBehavior = scrollEl.style.scrollBehavior;
+    scrollEl.style.scrollBehavior = 'auto';
+    setTimeout(function () {
+      scrollEl.style.scrollBehavior = 'auto';
+      scrollEl.scrollTop = saved;
+      setTimeout(function () {
+        scrollEl.scrollTop = saved;
+        scrollEl.style.scrollBehavior = prevBehavior || '';
+      }, 100);
+    }, 200);
+  }
+
   function autoSnapPriorityCamera() {
     if (!onMobileDashboard()) return;
     const hass = getHass();
@@ -1522,6 +1545,9 @@
     const cam = ps.state;
 
     if (!PRIORITY_CAMERA_MAP[cam]) {
+      if (_lastSnappedPriorityCamera !== null) {
+        saveAndRestoreScroll();
+      }
       _lastSnappedPriorityCamera = null;
       return;
     }
@@ -1536,6 +1562,10 @@
     if (Date.now() < (_cameraCooldownUntil[cam] || 0)) {
       _lastSnappedPriorityCamera = cam;
       return;
+    }
+
+    if (_lastSnappedPriorityCamera === null) {
+      saveAndRestoreScroll();
     }
 
     const swipeCard = findSwipeCardEl(document.body);
