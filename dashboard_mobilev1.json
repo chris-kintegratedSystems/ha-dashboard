@@ -504,6 +504,73 @@
                   "cards": [
                     {
                       "type": "custom:button-card",
+                      "entity": "script.scene_secure",
+                      "name": "Secure",
+                      "icon": "mdi:shield-lock",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.scene_secure"
+                      },
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "12px 8px"
+                          },
+                          {
+                            "border-radius": "14px"
+                          },
+                          {
+                            "background": "var(--ha-card-background)"
+                          },
+                          {
+                            "border": "1px solid var(--ha-card-border-color)"
+                          },
+                          {
+                            "cursor": "pointer"
+                          },
+                          {
+                            "--kis-state-accent": "[[[\n  const lockIds = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door_lock'];\n  const garageIds = ['cover.ratgdov25i_1746c3_door', 'cover.ratgdov25i_1746b4_door'];\n  const allIds = [...lockIds, ...garageIds];\n  const stateOf = (id) => (states[id] && states[id].state) || 'unknown';\n  const anyJammed = allIds.some(id => stateOf(id) === 'jammed');\n  if (anyJammed) return 'var(--error-color)';\n  const allLocksLocked = lockIds.every(id => stateOf(id) === 'locked');\n  const allGaragesClosed = garageIds.every(id => stateOf(id) === 'closed');\n  if (allLocksLocked && allGaragesClosed) return 'var(--success-color)';\n  return 'var(--warning-color)';\n]]]"
+                          },
+                          {
+                            "box-shadow": "inset 3px 0 0 var(--kis-state-accent)"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "10px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "letter-spacing": "0.05em"
+                          },
+                          {
+                            "text-transform": "uppercase"
+                          },
+                          {
+                            "color": "var(--secondary-text-color)"
+                          },
+                          {
+                            "margin-top": "4px"
+                          }
+                        ],
+                        "icon": [
+                          {
+                            "color": "var(--kis-state-accent)"
+                          },
+                          {
+                            "width": "28px"
+                          },
+                          {
+                            "height": "28px"
+                          }
+                        ]
+                      },
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
+                    },
+                    {
+                      "type": "custom:button-card",
                       "name": "Morning",
                       "icon": "mdi:white-balance-sunny",
                       "show_icon": true,
@@ -557,7 +624,8 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.scene_good_morning"
-                      }
+                      },
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     },
                     {
                       "type": "custom:button-card",
@@ -614,7 +682,8 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.scene_good_night"
-                      }
+                      },
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     },
                     {
                       "type": "custom:button-card",
@@ -671,7 +740,8 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.scene_away_mode"
-                      }
+                      },
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     },
                     {
                       "type": "custom:button-card",
@@ -728,7 +798,8 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.scene_welcome_home"
-                      }
+                      },
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     },
                     {
                       "type": "custom:button-card",
@@ -785,64 +856,8 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.scene_movie_time"
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "scene.dinner_time",
-                      "name": "Dinner",
-                      "icon": "mdi:food-fork-drink",
-                      "color": "#9d6ef0",
-                      "size": "28px",
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "14px 8px 12px"
-                          },
-                          {
-                            "border-radius": "14px"
-                          },
-                          {
-                            "min-height": "80px"
-                          },
-                          {
-                            "flex-direction": "column"
-                          },
-                          {
-                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_dinner_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #9d6ef0':'1px solid rgba(255,255,255,0.06)'; ]]]"
-                          },
-                          {
-                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_dinner_time';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(157,110,240,0.45)':'none'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "rgba(138,154,184,1)"
-                          },
-                          {
-                            "margin-top": "8px"
-                          }
-                        ]
                       },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 12px; padding: 10px; }\n"
-                      },
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "script.scene_dinner_time"
-                      }
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     }
                   ],
                   "grid_options": {
@@ -909,9 +924,9 @@
                     ]
                   },
                   "custom_fields": {
-                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    pillBg = 'rgba(0,212,240,0.08)';\n    pillBorder = 'rgba(0,212,240,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Front Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--success-color)';\n    pillBg = 'rgba(16,208,144,0.08)';\n    pillBorder = 'rgba(16,208,144,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Front Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   },
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
+                  "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                 },
                 {
                   "type": "custom:button-card",
@@ -960,9 +975,9 @@
                     ]
                   },
                   "custom_fields": {
-                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    pillBg = 'rgba(0,212,240,0.08)';\n    pillBorder = 'rgba(0,212,240,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Back Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--success-color)';\n    pillBg = 'rgba(16,208,144,0.08)';\n    pillBorder = 'rgba(16,208,144,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Back Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   },
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
+                  "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                 },
                 {
                   "type": "custom:button-card",
@@ -1011,9 +1026,9 @@
                     ]
                   },
                   "custom_fields": {
-                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--accent-color)';\n    pillBg = 'rgba(0,212,240,0.08)';\n    pillBorder = 'rgba(0,212,240,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Gemelli Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
+                    "body": "[[[\n  const s = entity.state;\n  const isLocked = s === 'locked';\n  const isJammed = s === 'jammed';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isJammed) {\n    iconName = 'mdi:lock-alert';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'JAMMED';\n    verb = 'Jammed';\n  } else if (isLocked) {\n    iconName = 'mdi:lock';\n    accentColor = 'var(--success-color)';\n    pillBg = 'rgba(16,208,144,0.08)';\n    pillBorder = 'rgba(16,208,144,0.35)';\n    label = 'LOCKED';\n    verb = 'Locked';\n  } else {\n    iconName = 'mdi:lock-open';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = 'UNLOCKED';\n    verb = 'Unlocked';\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Gemelli Door</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                   },
-                  "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
+                  "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                 },
                 {
                   "type": "custom:button-card",
@@ -1072,7 +1087,7 @@
                       "custom_fields": {
                         "body": "[[[\n  const s = entity.state;\n  const isClosed = s === 'closed';\n  const isOpen = s === 'open';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isClosed) {\n    iconName = 'mdi:garage';\n    accentColor = 'var(--success-color)';\n    pillBg = 'rgba(16,208,144,0.08)';\n    pillBorder = 'rgba(16,208,144,0.35)';\n    label = 'CLOSED';\n    verb = 'Closed';\n  } else if (isOpen) {\n    iconName = 'mdi:garage-open';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'OPEN';\n    verb = 'Opened';\n  } else {\n    iconName = s === 'opening' ? 'mdi:garage-open' : 'mdi:garage';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = s.toUpperCase();\n    verb = s.charAt(0).toUpperCase() + s.slice(1);\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Left Garage</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                       },
-                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     },
                     {
                       "type": "custom:button-card",
@@ -1123,7 +1138,7 @@
                       "custom_fields": {
                         "body": "[[[\n  const s = entity.state;\n  const isClosed = s === 'closed';\n  const isOpen = s === 'open';\n  let iconName, accentColor, pillBg, pillBorder, label, verb;\n  if (isClosed) {\n    iconName = 'mdi:garage';\n    accentColor = 'var(--success-color)';\n    pillBg = 'rgba(16,208,144,0.08)';\n    pillBorder = 'rgba(16,208,144,0.35)';\n    label = 'CLOSED';\n    verb = 'Closed';\n  } else if (isOpen) {\n    iconName = 'mdi:garage-open';\n    accentColor = 'var(--error-color)';\n    pillBg = 'rgba(240,64,96,0.08)';\n    pillBorder = 'rgba(240,64,96,0.35)';\n    label = 'OPEN';\n    verb = 'Opened';\n  } else {\n    iconName = s === 'opening' ? 'mdi:garage-open' : 'mdi:garage';\n    accentColor = 'var(--warning-color)';\n    pillBg = 'rgba(245,166,35,0.08)';\n    pillBorder = 'rgba(245,166,35,0.35)';\n    label = s.toUpperCase();\n    verb = s.charAt(0).toUpperCase() + s.slice(1);\n  }\n  const changed = new Date(entity.last_changed);\n  const timeStr = changed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });\n  return `\n    <div style=\"position:relative;display:flex;justify-content:center;align-items:center;min-height:40px;width:100%;height:100%;\">\n      <div style=\"position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;\">\n        <ha-icon icon=\"${iconName}\" style=\"--mdc-icon-size:24px;color:${accentColor};\"></ha-icon>\n      </div>\n      <div style=\"display:flex;flex-direction:column;align-items:center;text-align:center;\">\n        <div style=\"font-size:14px;font-weight:500;color:var(--kis-lights-room-count, #8a95a6);\">Right Garage</div>\n        <div style=\"font-size:11px;color:var(--secondary-text-color);\">${verb} at ${timeStr}</div>\n      </div>\n      <div style=\"position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid ${pillBorder};background:${pillBg};color:${accentColor};white-space:nowrap;\">${label}</div>\n    </div>\n  `;\n]]]"
                       },
-                      "extra_styles": ":host { height: var(--kis-card-h, 80px); display: block; } #aspect-ratio { height: 100%; display: block; } ha-card { height: 100%; position: relative; }"
+                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     }
                   ]
                 }
