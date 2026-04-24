@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 47;
+  window.KIS_NAV_VERSION = 48;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -563,6 +563,33 @@
       /* Zero out HA's default 80px spacer for view headers (we use #kis-header-bar instead) */
       .wrapper.top-margin, .top-margin {
         margin-top: 0 !important;
+      }
+      /* Narrow-viewport single-column override. Below 1100px, column-aligned
+         2-col layout breaks down because content-min (66px locks / 77px scenes)
+         exceeds the zone-derived cardH target, producing 57–92px misalignment
+         between left and right column bottoms. Force 1-col in that band and
+         let the priority zone expand to full width. Tab S9 landscape (1400)
+         and iPad landscape (1194) stay 2-col.
+
+         Cranks HA's own min-column-width past the viewport so the native
+         layout picks 1-col (more reliable than overriding grid-template-columns,
+         which loses to HA's inline track sizing on .container). */
+      @media (max-width: 1100px) {
+        :host {
+          --ha-view-sections-column-min-width: 100vw !important;
+          --grid-column-min-width: 100vw !important;
+        }
+        .container, .sections-container, [class*="container"], .content {
+          grid-template-columns: minmax(0, 1fr) !important;
+          grid-auto-flow: row !important;
+        }
+        /* Sections carry their own grid-column assignments from dashboard
+           column_span. Under 1-col, reset every child so it spans the single
+           track instead of overflowing into a non-existent second column. */
+        .content > * {
+          grid-column: 1 / -1 !important;
+          grid-row: auto !important;
+        }
       }
     `;
   }
