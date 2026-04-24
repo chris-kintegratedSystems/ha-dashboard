@@ -569,10 +569,19 @@
          exceeds the zone-derived cardH target, producing 57–92px misalignment
          between left and right column bottoms. Force 1-col in that band and
          let the priority zone expand to full width. Tab S9 landscape (1400)
-         and iPad landscape (1194) stay 2-col. */
+         and iPad landscape (1194) stay 2-col.
+
+         Cranks HA's own min-column-width past the viewport so the native
+         layout picks 1-col (more reliable than overriding grid-template-columns,
+         which loses to HA's inline track sizing on .container). */
       @media (max-width: 1100px) {
+        :host {
+          --ha-view-sections-column-min-width: 100vw !important;
+          --grid-column-min-width: 100vw !important;
+        }
         .container, .sections-container, [class*="container"] {
-          grid-template-columns: 1fr !important;
+          grid-template-columns: minmax(0, 1fr) !important;
+          grid-auto-flow: row !important;
         }
       }
     `;
