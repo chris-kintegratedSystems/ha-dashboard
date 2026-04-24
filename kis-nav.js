@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 46;
+  window.KIS_NAV_VERSION = 47;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -519,7 +519,11 @@
     return `
       :host {
         display: block;
-        /* margin-top controlled from outside via element.style */
+        /* Fallback until applyDynamicHeaderClearance runs — prevents first-paint
+           flash where content renders under #kis-header-bar on iOS WKWebView.
+           The dynamic clearance overrides this via element.style.marginTop on
+           first RAF (usually with the same 68px, so no visible change). */
+        margin-top: 68px;
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
         /* Edge-to-edge: neutralize HA's column max-width / min-width clamps so
