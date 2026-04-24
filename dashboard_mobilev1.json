@@ -508,7 +508,7 @@
                       "name": "Secure",
                       "icon": "mdi:shield-lock",
                       "show_icon": true,
-                      "size": "28px",
+                      "size": "clamp(14px, calc(var(--kis-card-h) * 0.30), 28px)",
                       "styles": {
                         "card": [
                           {
@@ -554,10 +554,24 @@
                           {
                             "color": "var(--kis-state-accent)"
                           }
+                        ],
+                        "img_cell": [
+                          {
+                            "background": "rgba(186,117,23,0.22)"
+                          },
+                          {
+                            "width": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "height": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "border-radius": "clamp(6px, calc(var(--kis-card-h) * 0.14), 12px)"
+                          },
+                          {
+                            "padding": "0"
+                          }
                         ]
-                      },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: color-mix(in srgb, var(--kis-state-accent) 20%, transparent); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
@@ -571,7 +585,7 @@
                       "icon": "mdi:white-balance-sunny",
                       "show_icon": true,
                       "color": "#f5a623",
-                      "size": "28px",
+                      "size": "clamp(14px, calc(var(--kis-card-h) * 0.30), 28px)",
                       "styles": {
                         "card": [
                           {
@@ -609,10 +623,29 @@
                           {
                             "margin-top": "8px"
                           }
+                        ],
+                        "img_cell": [
+                          {
+                            "background": "rgba(245,166,35,0.22)"
+                          },
+                          {
+                            "width": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "height": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "border-radius": "clamp(6px, calc(var(--kis-card-h) * 0.14), 12px)"
+                          },
+                          {
+                            "padding": "0"
+                          }
+                        ],
+                        "icon": [
+                          {
+                            "color": "#f5a623"
+                          }
                         ]
-                      },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(245,166,35,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
@@ -626,7 +659,7 @@
                       "name": "Night",
                       "icon": "mdi:moon-waning-crescent",
                       "color": "#9d6ef0",
-                      "size": "28px",
+                      "size": "clamp(14px, calc(var(--kis-card-h) * 0.30), 28px)",
                       "styles": {
                         "card": [
                           {
@@ -664,10 +697,29 @@
                           {
                             "margin-top": "8px"
                           }
+                        ],
+                        "img_cell": [
+                          {
+                            "background": "rgba(157,110,240,0.22)"
+                          },
+                          {
+                            "width": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "height": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "border-radius": "clamp(6px, calc(var(--kis-card-h) * 0.14), 12px)"
+                          },
+                          {
+                            "padding": "0"
+                          }
+                        ],
+                        "icon": [
+                          {
+                            "color": "#9d6ef0"
+                          }
                         ]
-                      },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(157,110,240,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
@@ -681,7 +733,7 @@
                       "name": "Welcome",
                       "icon": "mdi:home-import-outline",
                       "color": "#10d090",
-                      "size": "28px",
+                      "size": "clamp(14px, calc(var(--kis-card-h) * 0.30), 28px)",
                       "styles": {
                         "card": [
                           {
@@ -719,10 +771,29 @@
                           {
                             "margin-top": "8px"
                           }
+                        ],
+                        "img_cell": [
+                          {
+                            "background": "rgba(16,208,144,0.22)"
+                          },
+                          {
+                            "width": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "height": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "border-radius": "clamp(6px, calc(var(--kis-card-h) * 0.14), 12px)"
+                          },
+                          {
+                            "padding": "0"
+                          }
+                        ],
+                        "icon": [
+                          {
+                            "color": "#10d090"
+                          }
                         ]
-                      },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(16,208,144,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
@@ -736,7 +807,7 @@
                       "name": "Movie",
                       "icon": "mdi:television-play",
                       "color": "#4d8ef0",
-                      "size": "28px",
+                      "size": "clamp(14px, calc(var(--kis-card-h) * 0.30), 28px)",
                       "styles": {
                         "card": [
                           {
@@ -774,10 +845,29 @@
                           {
                             "margin-top": "8px"
                           }
+                        ],
+                        "img_cell": [
+                          {
+                            "background": "rgba(77,142,240,0.22)"
+                          },
+                          {
+                            "width": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "height": "clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)"
+                          },
+                          {
+                            "border-radius": "clamp(6px, calc(var(--kis-card-h) * 0.14), 12px)"
+                          },
+                          {
+                            "padding": "0"
+                          }
+                        ],
+                        "icon": [
+                          {
+                            "color": "#4d8ef0"
+                          }
                         ]
-                      },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(77,142,240,0.25); border-radius: 12px; padding: 10px; }\n"
                       },
                       "tap_action": {
                         "action": "call-service",
