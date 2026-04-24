@@ -376,18 +376,53 @@ because research happened too late, deploys were too frequent, and Nest
 rate limits were mistaken for code regressions. These rules keep that
 from repeating.
 
-### Research before code — mandatory after first failure
+### 1. Research before code — mandatory after first failure, AND with teeth
 
-If a bug fix or feature approach fails on the first attempt, STOP
-writing code. Invoke `ha-lovelace-expert` (or web research) for a root
-cause brief BEFORE proposing the next approach. The v29–v34 camera
-placeholder arc burned 5 iterations because the root cause
-(`loadeddata` fires on a black I-frame, not on visible frames) was not
-understood until the research agent ran. Research first would have
-made v34 the second attempt, not the sixth.
+**Definition of "failure":** any deploy or patch that does not produce
+the intended effect on the first QA probe.
 
-**Rule:** after one failed approach, the next action is ALWAYS
-research, never another code attempt.
+**On first failure:**
+
+- STOP. Do not write another code attempt.
+- Next message from CC MUST BE a research brief in this format:
+  - **a) What was attempted** — the exact change and where it shipped
+  - **b) What was expected** — the behavior the change should have
+        produced
+  - **c) What actually happened** — measurement-backed observation
+        (probe output, DOM inspection, console output — not vibes)
+  - **d) Hypothesis for root cause** — minimum 3 possibilities,
+        ordered by likelihood with reasoning
+  - **e) Verification plan** — which DOM/CSS/docs/source will be
+        inspected to discriminate between hypotheses
+  - **f) Pause for Chris approval** before proceeding to the next
+        code attempt
+- If CC cannot produce all six sections (e.g. no measurement data
+  available, hypotheses feel like guesses), CC is NOT allowed to
+  iterate — invoke the `ha-lovelace-expert` subagent instead.
+
+**On second failure of the same problem (even with research):**
+
+- STOP. Invoke the `ha-lovelace-expert` subagent automatically. Do not
+  continue iterating on CC's own authority.
+
+**On third failure:**
+
+- HARD STOP. Revert all commits on the current branch since the first
+  failure. Close any open PR as superseded. Open a new research-only
+  PR with findings and wait for Chris to re-scope the work.
+
+**Deploy counter — kis-nav.js version bumps:**
+
+If the session has shipped a `kis-nav.js` version bump (any v → v+1),
+no second bump is permitted in the same session without explicit
+Chris approval. This caps the blast radius of speculative fixes that
+burn cache-bust versions faster than the debugging loop can converge.
+
+**Historical note:** The v29–v34 camera placeholder arc burned 5
+iterations because the root cause (`loadeddata` fires on a black
+I-frame, not on visible frames) was not understood until the research
+agent ran. Research first would have made v34 the second attempt,
+not the sixth. This rule has teeth to prevent that from repeating.
 
 ### Probe before deploy — measure the DOM first
 
