@@ -579,9 +579,16 @@
           --ha-view-sections-column-min-width: 100vw !important;
           --grid-column-min-width: 100vw !important;
         }
-        .container, .sections-container, [class*="container"] {
+        .container, .sections-container, [class*="container"], .content {
           grid-template-columns: minmax(0, 1fr) !important;
           grid-auto-flow: row !important;
+        }
+        /* Sections carry their own grid-column assignments from dashboard
+           column_span. Under 1-col, reset every child so it spans the single
+           track instead of overflowing into a non-existent second column. */
+        .content > * {
+          grid-column: 1 / -1 !important;
+          grid-row: auto !important;
         }
       }
     `;
