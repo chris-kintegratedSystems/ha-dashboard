@@ -62,18 +62,16 @@ This is the ONLY fixed ratio in the design. Every other dimension on the Home vi
 
 ## Card sizing contract
 
-**Scenes** (always a single row of 5, regardless of orientation):
-- Card height = `--kis-card-h`
-- In landscape: scene cards sit at top, full-width row
-- In portrait: scene cards are the first section, full-width row
+**Scenes** (always a single row of 5):
+- Scene cards sit above the 2-column section (landscape) or at the top of the stack (portrait)
+- Scene card height is **content-driven** (icon chip + label + padding)
+- Scene cards all have uniform height as each other
+- Scene cards may be **taller than** lock/garage cards — this is acceptable and expected. The scenes row reads as a distinct "quick actions" band, not as part of the status column stack.
 
-**Locks** (3 stacked):
-- Each card height = `--kis-card-h`
-- All 3 same height, uniform
-
-**Garage** (2 side-by-side):
-- Each card height = `--kis-card-h`
-- Same height as locks
+**Locks, Garages** (in the 2-column layout, left column on landscape):
+- Height driven by `--kis-card-h` formula: `(zone_h − labels − gaps) / 4`
+- All 5 row items (3 locks + 1 garage row containing 2 cards) render at same height
+- Left column bottom aligns with priority zone bottom on landscape (2-col mode)
 
 **Priority zone:**
 - Height = `--kis-zone-h` = column_width × 9/16
