@@ -369,3 +369,30 @@ Keep the home-page guard (`clearZoneVars()` when not on Home) intact.
 **Failed:** All three caused name and label text to overlap in the center of the card. button-card's grid engine manages `.name` and `.label` elements as grid children — `position:absolute` in inline styles (approach 1) is overridden by grid layout. Shadow CSS with `!important` (approaches 2–3) wins the specificity battle but the grid still assigns both elements to overlapping positions before absolute positioning kicks in, and the result is fragile across HA versions.
 **Fix:** Reverted to `285b15e` (PR #23 state) which was the closest to working — name has inline `position:absolute` and grid is single-row `'i . badge'` so name/label float free. Overlap exists but is less severe than approaches 2–3. A proper fix likely requires a different card structure (e.g. `custom_fields` for the centered name) rather than fighting button-card's grid.
 **Broader lesson:** button-card's `.name` and `.label` are grid children managed by the card's internal layout engine. Overriding their positioning with CSS (inline or shadow) is inherently fragile. For layout changes that go beyond the grid's built-in areas, use `custom_fields` (which render in their own grid area) or restructure the card template.
+
+## 2026-04-23: button-card scene chip — card_mod `#icon { width/height }` direct
+**Tried:** Making a dynamic-size scene chip by setting `width: var(--scene-chip-size); height: var(--scene-chip-size)` on `#icon` via `card_mod`, with `styles.icon.width/height` on the ha-icon.
+**Failed:** `#icon` inside button-card's shadow has default `position:absolute; width:100%; height:100%` (from button-card's `styles.ts`). External width/height declarations on `#icon` compete with the 100% defaults and lose — `#icon` sizes to its content (the ha-icon) instead of the declared clamp values. Playwright measured `#icon` at ~icon-size (25×25) on Tab S9 landscape where the target was 48×48. Chip background painted at icon-size dimensions, so visually the chip was invisible — it looked identical to a bare icon.
+**Fix:** Don't style `#icon` directly. See the 2nd and 3rd entries below.
+
+## 2026-04-23: button-card scene chip — padding-based extension on `#icon`
+**Tried:** `card_mod { #icon { padding: calc((var(--scene-chip-size) - var(--scene-icon-size)) / 2); border-radius: ...; } ha-icon { --mdc-icon-size: var(--scene-icon-size); width: var(...); height: var(...); } }`. Padding was meant to extend `#icon` out from the ha-icon child. Worked on the old hardcoded code when both `size:"28px"` set ha-icon dimensions AND `padding:10px` wrapped it.
+**Failed:** Without the top-level `size` prop, ha-icon's element box doesn't respect the `width`/`height` set via external CSS — ha-icon sizes via `--mdc-icon-size` which propagates through `:host { width: 100% }` on the custom element. Result: chip computed `padding` correctly but was applied to an ha-icon that rendered much larger than `--scene-icon-size`, making the chip render at ~100px on Tab S9 landscape (target was 48). Compounding: bigger chip → bigger content-min → bigger card → worse layout.
+**Fix:** Use button-card's exposed `styles.img_cell` API instead of card_mod on `#icon`. See next entry.
+
+## 2026-04-23: button-card scene chip — final fix via `styles.img_cell`
+**Works:** Button-card exposes `styles.img_cell` as the style hook for the grid cell that backs the icon (grid-area `"i"`). This element is block-level, NOT `position:absolute`, and honors explicit `width/height/background/border-radius`. Writing the chip dimensions through this native API avoids the card_mod specificity fight entirely.
+```yaml
+size: clamp(14px, calc(var(--kis-card-h) * 0.30), 28px)  # top-level — feeds ha-icon via button-card's internal size path
+styles:
+  img_cell:
+    - background: rgba(<r>,<g>,<b>,0.22)
+    - width: clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)
+    - height: clamp(24px, calc(var(--kis-card-h) * 0.58), 48px)
+    - border-radius: clamp(6px, calc(var(--kis-card-h) * 0.14), 12px)
+    - padding: 0
+  icon:
+    - color: "#hex or var(--kis-state-accent)"
+```
+**Why this wins:** `styles.img_cell` is button-card's intended hook for the chip container. No card_mod needed. No shadow-piercing. No `!important`. Pre-flight Playwright probe (modifying a deployed card's config in-memory via `setConfig()` and measuring `#img-cell.getBoundingClientRect()`) confirmed the clamped values resolve at the element exactly: 48/40/28 at `--kis-card-h` 83/69/48, 0px delta.
+**Broader lesson:** Before fighting button-card's shadow DOM with card_mod + `!important`, check whether the thing you want to style has a dedicated `styles.*` hook. Button-card's style surface (`card`, `name`, `label`, `icon`, `img_cell`, `grid`, `state`, `custom_fields`) covers most layout needs natively and avoids the specificity war documented throughout this file.
