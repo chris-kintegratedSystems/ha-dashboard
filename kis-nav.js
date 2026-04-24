@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 48;
+  window.KIS_NAV_VERSION = 49;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1458,7 +1458,7 @@
     const swipeH = Math.round(W * 9 / 16);
     const labelH = measureZoneLabelHeight(_zoneRightSection);
     const gapH = measureZoneGap(_zoneRightSection);
-    const cardH = Math.max(48, Math.round((swipeH - labelH - 4 * gapH) / 4));
+    const cardH = Math.max(48, (swipeH - labelH - 4 * gapH) / 4);
     const ds = document.documentElement.style;
     const zonePx = swipeH + 'px';
     const cardPx = cardH + 'px';
