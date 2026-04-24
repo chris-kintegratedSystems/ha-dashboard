@@ -496,7 +496,7 @@
                 },
                 {
                   "type": "grid",
-                  "columns": 6,
+                  "columns": 5,
                   "square": false,
                   "card_mod": {
                     "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }"
@@ -672,61 +672,6 @@
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.scene_good_night"
-                      },
-                      "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "entity": "scene.chill_mode",
-                      "name": "Away",
-                      "icon": "mdi:home-export-outline",
-                      "color": "#f04060",
-                      "size": "28px",
-                      "styles": {
-                        "card": [
-                          {
-                            "padding": "14px 8px 12px"
-                          },
-                          {
-                            "border-radius": "14px"
-                          },
-                          {
-                            "flex-direction": "column"
-                          },
-                          {
-                            "border": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_away_mode';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'2px solid #f04060':'1px solid rgba(255,255,255,0.06)'; ]]]"
-                          },
-                          {
-                            "box-shadow": "[[[ var g=['script.scene_good_morning','script.scene_good_night','script.scene_away_mode','script.scene_welcome_home','script.scene_movie_time','script.scene_dinner_time'];var me='script.scene_away_mode';var r=g.map(function(id){return states[id];}).filter(function(s){return s&&s.attributes&&s.attributes.last_triggered;}).sort(function(a,b){return new Date(b.attributes.last_triggered)-new Date(a.attributes.last_triggered);});var active=r.length>0&&r[0].entity_id===me&&(Date.now()-new Date(r[0].attributes.last_triggered).getTime())<3600000;return active?'0 0 14px rgba(240,64,96,0.45)':'none'; ]]]"
-                          }
-                        ],
-                        "name": [
-                          {
-                            "font-size": "10px"
-                          },
-                          {
-                            "font-weight": "600"
-                          },
-                          {
-                            "letter-spacing": "0.05em"
-                          },
-                          {
-                            "text-transform": "uppercase"
-                          },
-                          {
-                            "color": "rgba(138,154,184,1)"
-                          },
-                          {
-                            "margin-top": "8px"
-                          }
-                        ]
-                      },
-                      "card_mod": {
-                        "style": "ha-card { background: var(--ha-card-background, rgba(16,21,31,0.72)); border-radius: 14px; }\n #icon { background: rgba(240,64,96,0.25); border-radius: 12px; padding: 10px; }\n"
-                      },
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "script.scene_away_mode"
                       },
                       "extra_styles": ":host { min-height: var(--kis-card-h, 80px); display: block; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } ha-card { min-height: 100%; position: relative; transition: min-height 0.25s cubic-bezier(0.4, 0, 0.2, 1); } @media (max-width: 599px) { :host { max-width: min(100%, calc(55vh * 16 / 9)); margin-left: auto; margin-right: auto; } }"
                     },
