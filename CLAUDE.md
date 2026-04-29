@@ -2,7 +2,7 @@
 
 Mobile + tablet dashboard JSONs and the shared kis-nav.js fixed UI for
 Chris's Home Assistant. See parent `C:\Projects\kintegrated\CLAUDE.md`
-for KIS master context and `C:\Projects\ha-config\CLAUDE.md` for HA-side
+for KIS master context and `C:\Projects\kintegrated\customers\ha-config\CLAUDE.md` for HA-side
 deploy rules.
 
 ---

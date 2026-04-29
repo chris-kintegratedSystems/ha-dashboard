@@ -50,8 +50,8 @@ Both repos are **private** on GitHub under `chris-kintegratedSystems`.
 
 | Repo | URL | Local clone |
 |------|-----|-------------|
-| ha-dashboard | https://github.com/chris-kintegratedSystems/ha-dashboard | `C:\Projects\kintegrated\projects\ha-dashboard\` |
-| ha-config | https://github.com/chris-kintegratedSystems/ha-config | `C:\Projects\ha-config\` |
+| ha-dashboard | https://github.com/chris-kintegratedSystems/ha-dashboard | `C:\Projects\kintegrated\customers\ha-dashboard\` |
+| ha-config | https://github.com/chris-kintegratedSystems/ha-config | `C:\Projects\kintegrated\customers\ha-config\` |
 
 **Access:** Chris's GitHub account owns both. `gh` CLI is authenticated
 locally; the saved session can `gh pr create`, `gh pr merge`, `gh api`, etc.
@@ -161,7 +161,7 @@ fire motion via HA REST before the burst.
   `.claude/memory/` discipline (dead_ends, component_compat,
   css_dom_patterns, deploy_gotchas — all four should be read on session
   start).
-- **HA-side rules:** `C:\Projects\ha-config\CLAUDE.md` — entity inventory,
+- **HA-side rules:** `C:\Projects\kintegrated\customers\ha-config\CLAUDE.md` — entity inventory,
   Z-Wave quirks, go2rtc / Nest / Nanit specifics, deploy targets.
 - **KIS master:** `C:\Projects\kintegrated\CLAUDE.md` — business-level
   context for the parent KIS org.

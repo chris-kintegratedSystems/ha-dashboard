@@ -108,7 +108,7 @@
 - Verified via forced `state: "off"` QA (doorbell card rendered correctly)
 
 **2.3 Scene Active-State Tracking**
-- Created `C:\Projects\ha-config\scripts.yaml` with 6 wrapper scripts: `scene_good_morning`, `scene_good_night`, `scene_away_mode`, `scene_welcome_home`, `scene_movie_time`, `scene_dinner_time` (each calls the underlying `scene.turn_on` for its mapped scene)
+- Created `C:\Projects\kintegrated\customers\ha-config\scripts.yaml` with 6 wrapper scripts: `scene_good_morning`, `scene_good_night`, `scene_away_mode`, `scene_welcome_home`, `scene_movie_time`, `scene_dinner_time` (each calls the underlying `scene.turn_on` for its mapped scene)
 - 6 scene buttons in dashboard updated:
   - `tap_action` now calls `script.scene_*` (enables `last_triggered` tracking)
   - `styles.card` uses button-card JS templates (`[[[ ... ]]]`) to compute "active" = this script has the most-recent `last_triggered` AND triggered within the last hour
@@ -395,7 +395,7 @@
 - iPhone (Chris — Companion app)
 - iPad (Companion app)
 
-**Source of truth for devices/entities:** C:\Projects\ha-config\CLAUDE.md
+**Source of truth for devices/entities:** C:\Projects\kintegrated\customers\ha-config\CLAUDE.md
 
 **Stack:**
 - Custom cards: button-card, mushroom, card_mod, bubble-card, kiosk-mode, clock-weather-card, browser_mod

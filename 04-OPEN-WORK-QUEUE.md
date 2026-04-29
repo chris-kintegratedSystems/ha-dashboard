@@ -76,7 +76,7 @@ In rough priority order as of 2026-04-22:
 - Move `NANIT_PASSWORD` out of plain-text
   `C:\Projects\kintegrated\nanit\docker-compose.yaml` into an
   `.env` or `secrets:` mount. Currently flagged in
-  `C:\Projects\ha-config\CLAUDE.md` under Nanit Integration.
+  `C:\Projects\kintegrated\customers\ha-config\CLAUDE.md` under Nanit Integration.
 
 ---
 

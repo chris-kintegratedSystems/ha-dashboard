@@ -31,7 +31,7 @@ YAML CONVENTIONS:
 - Check CLAUDE.md in ha-config for complete entity list before assuming entity IDs
 
 DEPLOY SEQUENCE FOR HA CONFIG:
-1. Edit locally at C:\projects\ha-config\
+1. Edit locally at C:\Projects\kintegrated\customers\ha-config\
 2. scp file to /home/cooper5389/ (staging)
 3. sudo mv to correct location with root ownership
 4. sudo docker restart homeassistant

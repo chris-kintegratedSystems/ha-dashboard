@@ -21,7 +21,7 @@
  *   burst captures the full motion→takeover→stream sequence as rendered on
  *   the real tablet. Sleeps 500 ms between trigger and first shot.
  *
- *   Mechanism (confirmed by reading C:\Projects\ha-config\configuration.yaml
+ *   Mechanism (confirmed by reading C:\Projects\kintegrated\customers\ha-config\configuration.yaml
  *   on 2026-04-21):
  *     • doorbell     → POST /api/states/binary_sensor.doorbell_motion {state: "on"}
  *                      The doorbell_motion_sticky template binary_sensor reads

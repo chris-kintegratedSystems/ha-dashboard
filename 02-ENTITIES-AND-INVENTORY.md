@@ -10,7 +10,7 @@
 > or whenever a conditional / template card fails silently (first check
 > whether its trigger entity is actually `unavailable`).
 
-Source of truth for the HA side: `C:\Projects\ha-config\CLAUDE.md`.
+Source of truth for the HA side: `C:\Projects\kintegrated\customers\ha-config\CLAUDE.md`.
 
 ---
 

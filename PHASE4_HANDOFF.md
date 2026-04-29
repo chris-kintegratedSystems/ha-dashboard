@@ -24,7 +24,7 @@ Session close: 2026-04-20. Two repos, two open PRs, merge ha-config first.
     extra_module_url:
       - /local/mobile_v1/kis-nav.js?v=17
   ```
-- Critical patterns added to `C:\Projects\ha-config\CLAUDE.md` so this
+- Critical patterns added to `C:\Projects\kintegrated\customers\ha-config\CLAUDE.md` so this
   regression cannot recur silently: `extra_module_url` preservation rule +
   Playwright-limitations note.
 
