@@ -21,24 +21,22 @@
  *   burst captures the full motion→takeover→stream sequence as rendered on
  *   the real tablet. Sleeps 500 ms between trigger and first shot.
  *
- *   Mechanism (confirmed by reading C:\Projects\ha-config\configuration.yaml
- *   on 2026-04-21):
- *     • doorbell     → POST /api/states/binary_sensor.doorbell_motion {state: "on"}
- *                      The doorbell_motion_sticky template binary_sensor reads
- *                      this source and latches "on" via delay_off: 5s.
- *     • living_room  → POST /api/states/event.nest_cam_2_motion
- *                      {state: "<ISO timestamp>"}
- *                      The nest_cam_2_motion_sticky is a trigger-based
- *                      template binary_sensor watching for state changes on
- *                      this event entity; auto_off: 5s.
- *     • izzy         → POST /api/states/event.nest_cam_1_motion (same pattern).
+ *   Mechanism (Camera Follow Code — see ha-config automations.yaml):
+ *     • doorbell     → POST /api/states/binary_sensor.doorbell_person_occupancy
+ *                      {state: "on"} — triggers the Camera Follow Code
+ *                      doorbell lock automation, which sets
+ *                      input_text.priority_camera_lock to 'doorbell'.
+ *     • living_room  → POST /api/states/binary_sensor.nest_cam_2_person_occupancy
+ *                      {state: "on"} — triggers lock onto nest_cam_2.
+ *     • izzy         → POST /api/states/binary_sensor.nest_cam_1_person_occupancy
+ *                      {state: "on"} — triggers lock onto nest_cam_1.
  *
  *   Caveat: the forced state is only authoritative until the source
- *   integration pushes the next real update (Vivint for doorbell, Nest SDM
- *   pubsub for the event entities). That is fine — we only need the sticky
- *   to flip "on" for a few seconds so sensor.priority_camera selects the
- *   target camera and the mobilev1 priority-display zone swaps to the
- *   takeover card.
+ *   integration pushes the next real update. That is fine — we only need
+ *   person_occupancy to flip "on" long enough for the Camera Follow Code
+ *   automations to lock, then sensor.priority_camera selects the target
+ *   camera and the mobilev1 priority-display zone swaps to the takeover
+ *   card. The 60-second trailing hold keeps it visible.
  *
  * .env (gitignored):
  *   FKB_IP=192.168.51.150                    # required
