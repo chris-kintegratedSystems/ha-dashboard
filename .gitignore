@@ -4,3 +4,7 @@ qa-screenshots/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 .phase5b-staging.json
+CHAT_CHECKPOINT_*.md
+SESSION_HANDOFF*.md
+SESSION_HANDOFF*.gdoc
+KIS_Restructure_Plan_*.pdf
