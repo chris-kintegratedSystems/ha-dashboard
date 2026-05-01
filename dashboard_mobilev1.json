@@ -1205,8 +1205,8 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "binary_sensor.doorbell_motion_sticky",
-                          "state": "on"
+                          "entity": "sensor.priority_camera",
+                          "state": "doorbell"
                         }
                       ],
                       "card": {
@@ -1281,8 +1281,8 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "binary_sensor.nest_cam_2_motion_sticky",
-                          "state": "on"
+                          "entity": "sensor.priority_camera",
+                          "state": "living_room"
                         }
                       ],
                       "card": {
@@ -1349,8 +1349,8 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "binary_sensor.nest_cam_1_motion_sticky",
-                          "state": "on"
+                          "entity": "sensor.priority_camera",
+                          "state": "izzy"
                         }
                       ],
                       "card": {
@@ -1417,8 +1417,8 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "binary_sensor.nanit_benjamin_motion_sticky",
-                          "state": "on"
+                          "entity": "sensor.priority_camera",
+                          "state": "nanit_benjamin"
                         }
                       ],
                       "card": {
@@ -1467,8 +1467,8 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "binary_sensor.nanit_travel_motion_sticky",
-                          "state": "on"
+                          "entity": "sensor.priority_camera",
+                          "state": "nanit_travel"
                         }
                       ],
                       "card": {

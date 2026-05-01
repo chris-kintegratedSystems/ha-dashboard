@@ -202,6 +202,37 @@ curl -s "http://${FKB_IP}:2323/?cmd=getScreenshot&password=${FKB_PASSWORD}" -o q
 
 ---
 
+## Camera Follow Code — Priority Camera State Machine
+
+The priority camera zone on the Home view is driven by a stateful
+lock-and-hold system called "Camera Follow Code" (implemented in
+ha-config, consumed here via `sensor.priority_camera`).
+
+### How it works
+- `sensor.priority_camera` reads from `input_text.priority_camera_lock`
+  (with `nest_cam_2`→`living_room` and `nest_cam_1`→`izzy` mapping)
+- 7 automations in ha-config's `automations.yaml` (aliased "Camera
+  Follow Code — <step>") manage lock acquisition, preemption, and
+  release with a 60-second trailing hold
+- Doorbell is a hard override — always wins regardless of current lock
+
+### Dashboard wiring
+The 5 conditional cards in the priority swipe section each check
+`sensor.priority_camera == '<key>'` (doorbell / living_room / izzy /
+nanit_benjamin / nanit_travel). Only one card is visible at a time
+(the locked camera).
+
+### kis-nav.js contract
+`PRIORITY_CAMERA_MAP` keys (doorbell / living_room / izzy /
+nanit_benjamin / nanit_travel) match `sensor.priority_camera` output
+values. No kis-nav.js changes were needed for Camera Follow Code.
+
+### Slideshow fallback
+When `sensor.priority_camera == 'none'`, the existing slideshow logic
+(`input_number.priority_slide_index`) takes over unchanged.
+
+---
+
 ## Session Knowledge Capture
 
 `.claude/memory/` holds four append-only project-memory files that
