@@ -1,0 +1,70 @@
+version: "3.8"
+
+# Nanit local RTMP restreamer — scgreenhalgh/home_assistant_nanit fork
+# Upstream: https://github.com/scgreenhalgh/home_assistant_nanit
+# Fork of: https://github.com/indiefan/home_assistant_nanit
+# Pinned to tag: v2.2.1 (published 2026-01-24)
+#
+# AUTH FLOW (run once, interactively, BEFORE `docker compose up`):
+#   docker run -it -v nanit_data:/data \
+#     --entrypoint=/app/scripts/init-nanit.sh \
+#     seangreenhalgh/nanit:v2.2.1
+# Enter Nanit email + password + emailed 2FA code. Writes session.json
+# into the nanit_data volume. Container reuses that refresh token
+# going forward; do NOT re-run init unless the session is invalidated.
+#
+# After first `docker compose up -d`, baby UIDs appear in the logs
+# (`docker logs nanit | grep -i baby`). Copy those UIDs into the HA
+# secrets.yaml keys referenced by configuration.yaml / cameras.yaml.
+
+services:
+  nanit:
+    image: seangreenhalgh/nanit:v2.2.1
+    container_name: nanit
+    restart: unless-stopped
+    ports:
+      - "1935:1935"                       # RTMP — consumed by HA ffmpeg cameras
+    volumes:
+      - nanit_data:/data                  # persists session.json + refresh token
+    environment:
+      # Local address the camera connects back to (Pi LAN IP + RTMP port).
+      # MUST be reachable from the Nanit camera's network — cannot be
+      # 127.0.0.1. If Chris ever moves the HA Pi off 192.168.51.179,
+      # update this value and restart the container.
+      - NANIT_RTMP_ADDR=192.168.51.179:1935
+
+      - NANIT_SESSION_FILE=/data/session.json
+
+      # IP access control — v2.0+ is deny-by-default. `private` allows all
+      # RFC1918 ranges (10/8, 172.16/12, 192.168/16), which covers the
+      # camera, the HA container, and Chris's LAN clients. Tighten later
+      # if we restructure networks.
+      - NANIT_RTMP_ALLOWED_PRESETS=private
+      - NANIT_RTMP_LOG_DENIED=true
+      - NANIT_RTMP_LOG_ALLOWED=false
+
+      - NANIT_LOG_LEVEL=info
+
+      # MQTT / motion-event polling — intentionally disabled.
+      # Chris's HA stack has no MQTT broker (mosquitto) configured as of
+      # 2026-04-20, so auto-discovery sensors (motion, sound, crying, etc.)
+      # cannot be published. See ha-config CLAUDE.md "Nanit integration"
+      # for the plan to enable MQTT in a later phase.
+      - NANIT_MQTT_ENABLED=false
+      # - NANIT_MQTT_BROKER_URL=tcp://192.168.51.179:1883
+      # - NANIT_MQTT_USERNAME=nanit
+      # - NANIT_MQTT_PASSWORD=<set via .env post-broker-setup>
+      # - NANIT_MQTT_PREFIX=nanit
+      # - NANIT_MQTT_DISCOVERY=true
+      # - NANIT_NOTIFICATIONS_ENABLED=true
+
+volumes:
+  nanit_data:
+    driver: local
+
+# ───────────────────────────────────────────────────────────────────
+# Two cameras provisioned. Baby UIDs live only in the Pi's gitignored
+# secrets.yaml; pull them from `docker logs nanit | grep baby_uid`.
+#   - Benjamin (primary) → secrets.yaml nanit_benjamin_rtmp
+#   - Travel (portable)  → secrets.yaml nanit_travel_rtmp
+# ───────────────────────────────────────────────────────────────────
