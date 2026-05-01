@@ -510,7 +510,7 @@
                         },
                         {
                           "type": "custom:button-card",
-                          "entity": "lock.gemelli_door_lock",
+                          "entity": "lock.gemelli_door",
                           "name": "Gemelli Door",
                           "show_state": true,
                           "size": "32px",
@@ -660,9 +660,9 @@
                           "chips": [
                             {
                               "type": "template",
-                              "content": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}All Secure{% elif not (f and b and g) %}Check Locks{% elif not (lg and rg) %}Garage Open{% else %}Check Alarm{% endif %}",
-                              "icon": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}mdi:shield-check{% else %}mdi:shield-alert{% endif %}",
-                              "icon_color": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}green{% else %}red{% endif %}",
+                              "content": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}All Secure{% elif not (f and b and g) %}Check Locks{% elif not (lg and rg) %}Garage Open{% else %}Check Alarm{% endif %}",
+                              "icon": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}mdi:shield-check{% else %}mdi:shield-alert{% endif %}",
+                              "icon_color": "{% set a=is_state('alarm_control_panel.kuprycz_home','disarmed') %}{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if a and f and b and g and lg and rg %}green{% else %}red{% endif %}",
                               "tap_action": {
                                 "action": "more-info",
                                 "entity": "alarm_control_panel.kuprycz_home"
