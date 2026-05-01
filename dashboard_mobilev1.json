@@ -524,7 +524,7 @@
                             "border": "1px solid var(--ha-card-border-color)"
                           },
                           {
-                            "--kis-state-accent": "[[[\n  const lockIds = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door_lock'];\n  const garageIds = ['cover.ratgdov25i_1746c3_door', 'cover.ratgdov25i_1746b4_door'];\n  const allIds = [...lockIds, ...garageIds];\n  const stateOf = (id) => (states[id] && states[id].state) || 'unknown';\n  const anyJammed = allIds.some(id => stateOf(id) === 'jammed');\n  if (anyJammed) return 'var(--error-color)';\n  const allLocksLocked = lockIds.every(id => stateOf(id) === 'locked');\n  const allGaragesClosed = garageIds.every(id => stateOf(id) === 'closed');\n  if (allLocksLocked && allGaragesClosed) return 'var(--success-color)';\n  return 'var(--warning-color)';\n]]]"
+                            "--kis-state-accent": "[[[\n  const lockIds = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door'];\n  const garageIds = ['cover.ratgdov25i_1746c3_door', 'cover.ratgdov25i_1746b4_door'];\n  const allIds = [...lockIds, ...garageIds];\n  const stateOf = (id) => (states[id] && states[id].state) || 'unknown';\n  const anyJammed = allIds.some(id => stateOf(id) === 'jammed');\n  if (anyJammed) return 'var(--error-color)';\n  const allLocksLocked = lockIds.every(id => stateOf(id) === 'locked');\n  const allGaragesClosed = garageIds.every(id => stateOf(id) === 'closed');\n  if (allLocksLocked && allGaragesClosed) return 'var(--success-color)';\n  return 'var(--warning-color)';\n]]]"
                           },
                           {
                             "box-shadow": "inset 3px 0 0 var(--kis-state-accent)"
@@ -997,7 +997,7 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "entity": "lock.gemelli_door_lock",
+                  "entity": "lock.gemelli_door",
                   "show_icon": false,
                   "show_name": false,
                   "show_label": false,
@@ -3517,9 +3517,9 @@
                   "chips": [
                     {
                       "type": "template",
-                      "content": "{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if f and b and g and lg and rg %}All Secure{% elif not (f and b and g) %}Check Locks{% elif not (lg and rg) %}Garage Open{% else %}Check{% endif %}",
+                      "content": "{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if f and b and g and lg and rg %}All Secure{% elif not (f and b and g) %}Check Locks{% elif not (lg and rg) %}Garage Open{% else %}Check{% endif %}",
                       "icon": "mdi:lock",
-                      "icon_color": "{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door_lock','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if f and b and g and lg and rg %}#10d090{% else %}#f04060{% endif %}",
+                      "icon_color": "{% set f=is_state('lock.front_door_lock','locked') %}{% set b=is_state('lock.back_door_lock','locked') %}{% set g=is_state('lock.gemelli_door','locked') %}{% set lg=is_state('cover.ratgdov25i_1746c3_door','closed') %}{% set rg=is_state('cover.ratgdov25i_1746b4_door','closed') %}{% if f and b and g and lg and rg %}#10d090{% else %}#f04060{% endif %}",
                       "tap_action": {
                         "action": "navigate",
                         "navigation_path": "/dashboard-mobilev1/home"
