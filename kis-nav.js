@@ -1517,8 +1517,9 @@
   // automations.yaml) guarantees the highest-priority active camera is the
   // first rendered tile, so auto-snap target is always rendered-index 0.
   //
-  // PRIORITY_CAMERA_MAP is the public contract shared with sensor.priority_camera
-  // — do NOT change the key alphabet (doorbell / living_room / izzy / none).
+  // PRIORITY_CAMERA_MAP is the public contract shared with sensor.priority_camera.
+  // Keys are physical-room names matching the lock values stored by Camera Follow Code.
+  // Key alphabet: doorbell / living_room / bens_room / nanit_benjamin / nanit_travel / none.
   //
   // Swipe-away cooldown: if the user actively swipes off the active camera
   // tile (pointer-up transitions carousel from index 0 to a later tile
@@ -1527,8 +1528,8 @@
   // back to the same camera — the user wanted a break.
   const PRIORITY_CAMERA_MAP = {
     doorbell: 'camera.doorbell',
-    living_room: 'camera.nest_cam_2',
-    izzy: 'camera.nest_cam_1',
+    living_room: 'camera.nest_cam_1',
+    bens_room: 'camera.nest_cam_2',
     nanit_benjamin: 'camera.nanit_benjamin',
     nanit_travel: 'camera.nanit_travel',
   };

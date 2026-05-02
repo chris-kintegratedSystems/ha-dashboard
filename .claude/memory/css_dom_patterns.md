@@ -119,7 +119,7 @@ peers on the same grid row.
 Card visibility is driven by `sensor.priority_camera` (HA-side template
 sensor, most-recent-wins among active motion stickies):
 - 3 conditional cards, one per camera, `condition: state`, `state:
-  'doorbell' | 'living_room' | 'izzy'`
+  'doorbell' | 'living_room' | 'bens_room' | 'nanit_benjamin' | 'nanit_travel'`
 - 1 simple-swipe-card with `visibility:` block, `state: 'none'`
 Exactly one card renders at any time. No overlap, no stacked empty
 conditionals consuming row space.
@@ -335,7 +335,7 @@ transitions into a new camera name:
 ```js
 function autoSnapPriorityCamera() {
   const cam = getState(hass, 'sensor.priority_camera')?.state;
-  if (!['doorbell','living_room','izzy'].includes(cam)) {
+  if (!['doorbell','living_room','bens_room','nanit_benjamin','nanit_travel'].includes(cam)) {
     _lastSnappedPriorityCamera = null;  // reset on 'none' so next snap fires
     return;
   }
