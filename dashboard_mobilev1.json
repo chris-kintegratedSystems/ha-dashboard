@@ -1168,7 +1168,7 @@
                 {
                   "type": "custom:button-card",
                   "template": "section_label",
-                  "name": "[[[\n    const cam = states['sensor.priority_camera']?.state;\n    const idx = Math.round(\n      parseFloat(\n        states['input_number.priority_slide_index']?.state || '0'\n      )\n    );\n\n    const CAM_ENTITY = {\n      doorbell:       'camera.doorbell',\n      living_room:    'camera.nest_cam_2',\n      izzy:           'camera.nest_cam_1',\n      nanit_benjamin: 'camera.nanit_benjamin',\n      nanit_travel:   'camera.nanit_travel',\n    };\n\n    if (cam && cam !== 'none') {\n      const eid = CAM_ENTITY[cam];\n      const fn = eid && states[eid]?.attributes?.friendly_name;\n      return 'MOTION: ' +\n        (fn || cam.replace(/_/g,' ')).toUpperCase();\n    }\n\n    const SLIDE_LABELS = [\n      'Porsche 911',\n      'Tesla Model Y',\n      'Mercedes G580',\n      'Weather',\n    ];\n    return (SLIDE_LABELS[idx] || SLIDE_LABELS[0]).toUpperCase();\n  ]]]",
+                  "name": "[[[\n    const cam = states['sensor.priority_camera']?.state;\n    const idx = Math.round(\n      parseFloat(\n        states['input_number.priority_slide_index']?.state || '0'\n      )\n    );\n\n    const CAM_ENTITY = {\n      doorbell:       'camera.doorbell',\n      living_room:    'camera.nest_cam_1',\n      bens_room:      'camera.nest_cam_2',\n      nanit_benjamin: 'camera.nanit_benjamin',\n      nanit_travel:   'camera.nanit_travel',\n    };\n\n    if (cam && cam !== 'none') {\n      const eid = CAM_ENTITY[cam];\n      const fn = eid && states[eid]?.attributes?.friendly_name;\n      return 'MOTION: ' +\n        (fn || cam.replace(/_/g,' ')).toUpperCase();\n    }\n\n    const SLIDE_LABELS = [\n      'Porsche 911',\n      'Tesla Model Y',\n      'Mercedes G580',\n      'Weather',\n    ];\n    return (SLIDE_LABELS[idx] || SLIDE_LABELS[0]).toUpperCase();\n  ]]]",
                   "triggers_update": [
                     "sensor.priority_camera",
                     "input_number.priority_slide_index",
@@ -1287,8 +1287,8 @@
                       ],
                       "card": {
                         "type": "picture-entity",
-                        "entity": "camera.nest_cam_2",
-                        "camera_image": "camera.nest_cam_2",
+                        "entity": "camera.nest_cam_1",
+                        "camera_image": "camera.nest_cam_1",
                         "camera_view": "live",
                         "show_state": false,
                         "show_name": false,
@@ -1305,7 +1305,7 @@
                               "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
                               "content": {
                                 "type": "picture-elements",
-                                "camera_image": "camera.nest_cam_2",
+                                "camera_image": "camera.nest_cam_1",
                                 "camera_view": "live",
                                 "card_mod": {
                                   "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
@@ -1350,13 +1350,13 @@
                         {
                           "condition": "state",
                           "entity": "sensor.priority_camera",
-                          "state": "izzy"
+                          "state": "bens_room"
                         }
                       ],
                       "card": {
                         "type": "picture-entity",
-                        "entity": "camera.nest_cam_1",
-                        "camera_image": "camera.nest_cam_1",
+                        "entity": "camera.nest_cam_2",
+                        "camera_image": "camera.nest_cam_2",
                         "camera_view": "live",
                         "show_state": false,
                         "show_name": false,
@@ -1373,7 +1373,7 @@
                               "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
                               "content": {
                                 "type": "picture-elements",
-                                "camera_image": "camera.nest_cam_1",
+                                "camera_image": "camera.nest_cam_2",
                                 "camera_view": "live",
                                 "card_mod": {
                                   "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"

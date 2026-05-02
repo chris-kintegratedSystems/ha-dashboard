@@ -21,7 +21,7 @@ KEY ENTITY IDs:
 - lock.front_door_lock, lock.back_door_lock, lock.gemelli_door_lock
 - alarm_control_panel.kuprycz_home
 - climate.daikin, climate.gemelli, climate.master, climate.upstairs
-- camera.doorbell, camera.izzy_camera, camera.living_room_camera
+- camera.doorbell, camera.nest_cam_1, camera.nest_cam_2
 - person.claire, notify.mobile_app_chriss_iphone
 
 YAML CONVENTIONS:

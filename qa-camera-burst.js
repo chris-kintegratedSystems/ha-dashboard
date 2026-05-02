@@ -16,7 +16,7 @@
  *   node qa-camera-burst.js --trigger doorbell               # fire motion first, then burst
  *   node qa-camera-burst.js --trigger living_room --count 12 --interval 500
  *
- * --trigger <doorbell|living_room|izzy>
+ * --trigger <doorbell|living_room|bens_room>
  *   Fires a motion pulse via HA REST API BEFORE starting the burst, so the
  *   burst captures the full motion→takeover→stream sequence as rendered on
  *   the real tablet. Sleeps 500 ms between trigger and first shot.
@@ -26,10 +26,10 @@
  *                      {state: "on"} — triggers the Camera Follow Code
  *                      doorbell lock automation, which sets
  *                      input_text.priority_camera_lock to 'doorbell'.
- *     • living_room  → POST /api/states/binary_sensor.nest_cam_2_person_occupancy
- *                      {state: "on"} — triggers lock onto nest_cam_2.
- *     • izzy         → POST /api/states/binary_sensor.nest_cam_1_person_occupancy
- *                      {state: "on"} — triggers lock onto nest_cam_1.
+ *     • living_room  → POST /api/states/binary_sensor.nest_cam_1_person_occupancy
+ *                      {state: "on"} — triggers lock onto living_room (nest_cam_1).
+ *     • bens_room    → POST /api/states/binary_sensor.nest_cam_2_person_occupancy
+ *                      {state: "on"} — triggers lock onto bens_room (nest_cam_2).
  *
  *   Caveat: the forced state is only authoritative until the source
  *   integration pushes the next real update. That is fine — we only need
@@ -66,8 +66,8 @@ const OUT_DIR = path.join(__dirname, 'qa-screenshots', 'burst');
 
 const TRIGGER_MAP = {
   doorbell:    { entity: 'binary_sensor.doorbell_motion',       state: 'on' },
-  living_room: { entity: 'event.nest_cam_2_motion',     state: '__iso_now__' },
-  izzy:        { entity: 'event.nest_cam_1_motion',            state: '__iso_now__' },
+  living_room: { entity: 'event.nest_cam_1_motion',     state: '__iso_now__' },
+  bens_room:   { entity: 'event.nest_cam_2_motion',     state: '__iso_now__' },
 };
 
 function parseArgs(argv) {

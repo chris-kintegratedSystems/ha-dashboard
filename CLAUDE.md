@@ -118,7 +118,7 @@ code regression (empty cells). Pick the right tool:
   sequences, checking what the real tablet actually shows
 - Cost: ZERO API calls — captures what the Tab S9 is already
   displaying via Fully Kiosk Remote Admin REST
-- Use `--trigger doorbell|living_room|izzy` to fire motion via HA REST
+- Use `--trigger doorbell|living_room|bens_room` to fire motion via HA REST
   before the burst, so the capture covers the full
   motion→takeover→stream sequence on the real device
 - Use for the crossfade/placeholder flash bug specifically
@@ -210,7 +210,7 @@ ha-config, consumed here via `sensor.priority_camera`).
 
 ### How it works
 - `sensor.priority_camera` reads from `input_text.priority_camera_lock`
-  (with `nest_cam_2`→`living_room` and `nest_cam_1`→`izzy` mapping)
+  (passthrough — lock values are physical-room keys, no remapping)
 - 7 automations in ha-config's `automations.yaml` (aliased "Camera
   Follow Code — <step>") manage lock acquisition, preemption, and
   release with a 60-second trailing hold
@@ -218,14 +218,14 @@ ha-config, consumed here via `sensor.priority_camera`).
 
 ### Dashboard wiring
 The 5 conditional cards in the priority swipe section each check
-`sensor.priority_camera == '<key>'` (doorbell / living_room / izzy /
+`sensor.priority_camera == '<key>'` (doorbell / living_room / bens_room /
 nanit_benjamin / nanit_travel). Only one card is visible at a time
 (the locked camera).
 
 ### kis-nav.js contract
-`PRIORITY_CAMERA_MAP` keys (doorbell / living_room / izzy /
+`PRIORITY_CAMERA_MAP` keys (doorbell / living_room / bens_room /
 nanit_benjamin / nanit_travel) match `sensor.priority_camera` output
-values. No kis-nav.js changes were needed for Camera Follow Code.
+values.
 
 ### Slideshow fallback
 When `sensor.priority_camera == 'none'`, the existing slideshow logic
