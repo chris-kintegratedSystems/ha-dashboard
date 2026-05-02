@@ -145,7 +145,7 @@
 | G7 | P2 | Room lights missing count chip + All On/Off | ✅ CONFIRMED ALREADY IMPLEMENTED — All 4 room headers have X/Y count chip and All On/All Off buttons. Were in JSON, needed deploy. |
 | G8 | P2 | Media page blank | NOT IN THIS RUN — Media page has the Now Playing card. When player is idle/unavailable the card shows "Nothing Playing" state. Carried to next QA. |
 | G9 | P3 | No LIVE badge on cameras | DEFERRED — Camera card_mod has LIVE badge markup. May require device verification. |
-| G10 | P3 | Izzy + Living Room cameras black | DEFERRED — Entity availability issue, not a JSON bug. Chris to verify. |
+| G10 | P3 | Izzy + Living Room cameras black | ✅ RESOLVED 2026-05-01 — Old entities replaced by Frigate/Nest SDM (`camera.nest_cam_1`, `camera.nest_cam_2`). Both live. |
 
 ### Screenshot Observations (QA Run #5)
 - **Home**: Single header row ✓, 6-scene grid with Dinner Time ✓, colored lock accent bars ✓, "Alarm: Disarmed" chip ✓, Check Locks chip (correct — front+gemelli unlocked in real state) ✓
@@ -262,7 +262,7 @@
 
 ### Known remaining issues (deferred)
 
-**P3 — Camera feeds 2/3 black (Izzy, Living Room):** Camera entities appear offline. Doorbell works. Entity availability issue — not a dashboard JSON bug. Chris to verify cameras are live.
+**P3 — Camera feeds 2/3 black (Izzy, Living Room):** ✅ RESOLVED 2026-05-01. Old `camera.izzy_camera` / `camera.living_room_camera` entities replaced by Frigate/Nest SDM (`camera.nest_cam_1`, `camera.nest_cam_2`). Both live and rendering.
 
 **P3 — Now Playing card bright cyan background:** Native HA `media-control` card uses cyan/teal default styling that doesn't match the dark obsidian theme. Would require card_mod override. Deferred.
 
@@ -385,6 +385,7 @@
 **Actual:** Doorbell camera shows live image; Izzy Camera and Living Room camera display as solid black frames with labels only. Cameras may be offline or snapshots unavailable at time of test.
 **Screenshot:** qa-mobile-cameras.png
 **Assigned to:** Dev — verify entity availability in HA developer tools
+**Resolution (2026-05-01):** RESOLVED. Old entities (`camera.izzy_camera`, `camera.living_room_camera`) replaced by Frigate/Nest SDM (`camera.nest_cam_1`, `camera.nest_cam_2`). Both cameras live and rendering correctly.
 
 ---
 

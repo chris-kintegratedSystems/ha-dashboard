@@ -9,7 +9,7 @@
 > `TASKS.md` remains as historical record — this file is the canonical
 > current-state queue.
 
-Last updated: 2026-04-22
+Last updated: 2026-05-01
 
 ---
 
@@ -25,6 +25,8 @@ motion-camera-timing must merge before the ha-config lights-page-redesign
 | ha-config | `fix/motion-camera-timing` | `d2e9faf` | 1 | Freshness-based motion priority (doorbell Tier 1, fresh vs stale for interior cameras). 30 s stickies + linger preserved. Exposed via `sensor.priority_camera` with unchanged alphabet `doorbell/living_room/izzy/none`. |
 | ha-config | `fix/lights-page-redesign` | `81ddeb7` | 2 (after motion-timing) | Cache-bump v37 → v38 + stale patio light entity fix in `CLAUDE.md`. Branched off `fix/motion-camera-timing` to keep the freshness work included. |
 | ha-dashboard | `fix/lights-page-redesign` | `6560835` | 3 | v38 Lights page redesign — glass-morph room cards, amber-fill brightness bars, no expand/collapse, day/night palette. Also includes `753fa60` (probe-before-deploy rule in CLAUDE.md). |
+| ha-config | `hotfix/camera-follow-code-key-mapping` | — | — | Physical-room key migration (entity-stem → room keys). Deployed 2026-05-01. PR #30. |
+| ha-dashboard | `hotfix/camera-follow-code-key-mapping` | — | — | Dashboard + kis-nav side of key migration. PR #41. |
 
 Real-world verification still needed for both sets of changes:
 
@@ -35,6 +37,11 @@ Real-world verification still needed for both sets of changes:
   (Tab S9 + iPhone). Playwright sweeps confirm rendering but not
   gesture handling. See `qa-camera-burst.js` companion for similar
   WebView vs Chromium regressions in the past.
+
+**Note:** The `fix/motion-camera-timing` branch uses the old key
+alphabet (`doorbell/living_room/izzy/none`). When this merges, it
+will conflict with `hotfix/camera-follow-code-key-mapping` which
+replaced `izzy` with `bens_room`. Merge the hotfix branch first.
 
 ---
 
@@ -72,11 +79,42 @@ In rough priority order as of 2026-04-22:
 - Proposal: tag `v<N>` on every merge that bumps `kis-nav.js`, so
   `git show v38` returns the full shipping context.
 
-### 6. Pi operational cleanup — Nanit secret
+### 6. Docs hygiene — stale izzy / entity-stem references
+- The `hotfix/camera-follow-code-key-mapping` work (2026-05-01) replaced
+  `izzy` with `bens_room` and entity-stem keys with physical-room keys
+  across automations, dashboard JSON, kis-nav.js, and CLAUDE.md files.
+- Several doc files still reference the old key alphabet or the
+  retired `camera.izzy_camera` / `camera.living_room_camera` entities:
+  - `01-PROJECT-OVERVIEW.md`
+  - `02-ENTITIES-AND-INVENTORY.md`
+  - `PRD.md`
+  - `transform.py`
+  - `Motion-Camera-Priority-Logic.md`
+- Sweep: grep for `izzy`, `nest_cam_1` (as a key, not entity ref),
+  `nest_cam_2` (as a key), `camera.izzy_camera`,
+  `camera.living_room_camera` and update to match the current
+  physical-room key alphabet:
+  `doorbell / living_room / bens_room / nanit_benjamin / nanit_travel / none`
+- Priority: low — cosmetic docs-only, no runtime impact.
+
+### 7. Pi operational cleanup — Nanit secret
 - Move `NANIT_PASSWORD` out of plain-text
   `C:\Projects\kintegrated\nanit\docker-compose.yaml` into an
   `.env` or `secrets:` mount. Currently flagged in
   `C:\Projects\ha-config\CLAUDE.md` under Nanit Integration.
+
+---
+
+## Closed items (2026-05-01)
+
+- **WiFi cam rename (camera.izzy_camera / camera.living_room_camera):**
+  MOOT. These entities no longer exist in HA — replaced by Frigate/Nest
+  SDM entities `camera.nest_cam_1` and `camera.nest_cam_2` with correct
+  friendly names set at the integration level. No rename needed.
+- **G10 — Izzy + Living Room cameras black:** RESOLVED. Cameras were
+  offline during QA runs #3–#5 due to the entity migration to
+  Frigate/Nest SDM. Both `camera.nest_cam_1` and `camera.nest_cam_2`
+  are live and rendering. Confirmed 2026-05-01.
 
 ---
 
