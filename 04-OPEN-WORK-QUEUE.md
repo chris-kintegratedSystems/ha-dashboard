@@ -9,7 +9,7 @@
 > `TASKS.md` remains as historical record — this file is the canonical
 > current-state queue.
 
-Last updated: 2026-05-01
+Last updated: 2026-05-02
 
 ---
 
@@ -97,7 +97,25 @@ In rough priority order as of 2026-04-22:
   `doorbell / living_room / bens_room / nanit_benjamin / nanit_travel / none`
 - Priority: low — cosmetic docs-only, no runtime impact.
 
-### 7. Pi operational cleanup — Nanit secret
+### 7. WiFi fast roaming (802.11r/k/v) — infrastructure fix
+- Status: QUEUED — high-value, addresses mobile WebRTC choppiness
+- Scope: Araknis AP configuration, NOT a code change
+- Effort: 15-30 min in Araknis admin
+- Blocker: none, hands-on at PC
+- Configure all six WiFi 5 APs for fast BSS transition. Standard
+  integrator work, addresses root cause of mobile WebRTC stutter
+  identified in May 2026 camera investigation.
+
+### 8. Nest camera keyframe interval tuning
+- Status: QUEUED — small, complements WiFi fix
+- Scope: Frigate go2rtc config (`input_kf=1` on nest_cam_1, nest_cam_2)
+- Effort: 30 min config + verification
+- Blocker: none, bridge-ready
+- Reduce Nest WebRTC keyframe interval from 2s to 1s. Reduces
+  freeze-recovery time after any network disruption, mobile or
+  stationary. Pairs with WiFi fast roaming work.
+
+### 9. Pi operational cleanup — Nanit secret
 - Move `NANIT_PASSWORD` out of plain-text
   `C:\Projects\kintegrated\nanit\docker-compose.yaml` into an
   `.env` or `secrets:` mount. Currently flagged in
