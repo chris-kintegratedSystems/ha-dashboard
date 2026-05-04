@@ -3,8 +3,10 @@ node_modules/
 qa-screenshots/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
-.phase5b-staging.json
+# Chat session artifacts (generated, do not commit)
 CHAT_CHECKPOINT_*.md
-SESSION_HANDOFF*.md
+SESSION_HANDOFF_*.md
 SESSION_HANDOFF*.gdoc
+PHASE*_HANDOFF.md
+.phase*-staging.json
 KIS_Restructure_Plan_*.pdf
