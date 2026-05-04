@@ -99,17 +99,17 @@ In rough priority order as of 2026-05-04:
 - Deferred from May 2026 Camera Follow Code key-mapping hotfix to keep
   that PR scoped. No runtime impact.
 
-### 7. WiFi fast roaming (802.11r/k/v) — research + implementation
-- Status: QUEUED — high-value, addresses mobile WebRTC choppiness
-- Scope: Araknis AP configuration + structured test plan
-- Effort: 2 hours active + 1 week soak observation
+### 7. WiFi fast roaming (802.11r/k/v) — research pending verification
+- Status: QUEUED — research, not yet a confirmed fix
+- Was hypothesized as root cause for mobile WebRTC stutter during
+  May 2026 investigation, but stationary wired clients also show
+  choppiness, so handoffs alone don't explain symptom. Current
+  Araknis fast roaming state never verified.
+- Worth investigating in future session, but starts with:
+  (1) verify current state, (2) compare HLS vs WebRTC on same
+  wired client, (3) determine if fast roaming is even relevant
+  before implementing.
 - Reference: `FAST_ROAMING_RESEARCH_AND_TEST_PLAN.md` (Drive)
-- Dependency: IoT SSID separation precursor (verify before enable)
-- Standard Araknis fast BSS transition (802.11r/k/v) work.
-  Default-off on Araknis is for legacy device compatibility, not
-  specifically Wi-Fi Calling. Research confirmed iOS 15+ generally
-  fine with modern AP firmware. Test plan includes baseline +
-  post-change comparison + Wi-Fi Calling validation.
 
 ### 8. Nest camera keyframe interval tuning
 - Status: QUEUED — small, complements WiFi fast roaming
