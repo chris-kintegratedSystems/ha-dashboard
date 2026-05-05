@@ -2655,27 +2655,47 @@
                 {
                   "camera_entity": "camera.doorbell",
                   "live_provider": "ha",
-                  "title": "Doorbell"
+                  "title": "Doorbell",
+                  "dimensions": {
+                    "aspect_ratio_mode": "static",
+                    "aspect_ratio": "1:1"
+                  }
                 },
                 {
                   "camera_entity": "camera.nest_cam_1",
                   "live_provider": "ha",
-                  "title": "Living Room"
+                  "title": "Living Room",
+                  "dimensions": {
+                    "aspect_ratio_mode": "static",
+                    "aspect_ratio": "16:9"
+                  }
                 },
                 {
                   "camera_entity": "camera.nest_cam_2",
                   "live_provider": "ha",
-                  "title": "Ben's Room"
+                  "title": "Ben's Room",
+                  "dimensions": {
+                    "aspect_ratio_mode": "static",
+                    "aspect_ratio": "16:9"
+                  }
                 },
                 {
                   "camera_entity": "camera.nanit_benjamin",
                   "live_provider": "ha",
-                  "title": "Benjamin"
+                  "title": "Benjamin",
+                  "dimensions": {
+                    "aspect_ratio_mode": "static",
+                    "aspect_ratio": "16:9"
+                  }
                 },
                 {
                   "camera_entity": "camera.nanit_travel",
                   "live_provider": "ha",
-                  "title": "Travel"
+                  "title": "Travel",
+                  "dimensions": {
+                    "aspect_ratio_mode": "static",
+                    "aspect_ratio": "4:3"
+                  }
                 }
               ],
               "view": {
@@ -2725,22 +2745,6 @@
               "live": {
                 "controls": {
                   "builtin": false
-                },
-                "layout": {
-                  "fit": "fill"
-                }
-              },
-              "dimensions": {
-                "aspect_ratio_mode": "static",
-                "aspect_ratio": "16:9",
-                "layout": {
-                  "fit": "fill"
-                }
-              },
-              "card_mod": {
-                "style": {
-                  ".": "ha-card { aspect-ratio: 16/9 !important; overflow: hidden !important; } ha-card video, ha-card img { object-fit: fill !important; width: 100% !important; height: 100% !important; }",
-                  "advanced-camera-card-live-provider $ advanced-camera-card-media-dimensions-container $": "video, img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
                 }
               }
             }
