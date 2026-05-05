@@ -2650,186 +2650,90 @@
           "badges": [],
           "cards": [
             {
-              "type": "grid",
-              "columns": 2,
-              "square": false,
-              "cards": [
+              "type": "custom:advanced-camera-card",
+              "cameras": [
                 {
-                  "type": "custom:advanced-camera-card",
-                  "cameras": [
-                    {
-                      "camera_entity": "camera.doorbell",
-                      "live_provider": "ha"
-                    }
-                  ],
-                  "view": {
-                    "default": "live"
-                  },
-                  "live": {
-                    "controls": {
-                      "builtin": false
-                    }
-                  },
-                  "menu": {
-                    "style": "hidden"
-                  },
-                  "dimensions": {
-                    "aspect_ratio": "1:1"
-                  },
-                  "elements": [
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "lock.front_door_lock",
-                          "state": "locked"
-                        }
-                      ],
-                      "elements": [
-                        {
-                          "type": "state-icon",
-                          "entity": "lock.front_door_lock",
-                          "icon": "mdi:lock",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "style": {
-                            "bottom": "8px",
-                            "left": "8px",
-                            "color": "#00c8d4",
-                            "background": "rgba(0,0,0,0.5)",
-                            "border-radius": "50%",
-                            "padding": "6px",
-                            "filter": "drop-shadow(0 1px 3px rgba(0,0,0,0.6))",
-                            "transform": "none"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "lock.front_door_lock",
-                          "state": "unlocked"
-                        }
-                      ],
-                      "elements": [
-                        {
-                          "type": "state-icon",
-                          "entity": "lock.front_door_lock",
-                          "icon": "mdi:lock-open",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "style": {
-                            "bottom": "8px",
-                            "left": "8px",
-                            "color": "#ff9500",
-                            "background": "rgba(0,0,0,0.5)",
-                            "border-radius": "50%",
-                            "padding": "6px",
-                            "filter": "drop-shadow(0 1px 3px rgba(0,0,0,0.6))",
-                            "transform": "none"
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                  "camera_entity": "camera.doorbell",
+                  "live_provider": "ha",
+                  "title": "Doorbell"
                 },
                 {
-                  "type": "custom:advanced-camera-card",
-                  "cameras": [
-                    {
-                      "camera_entity": "camera.nest_cam_1",
-                      "live_provider": "ha"
-                    }
-                  ],
-                  "view": {
-                    "default": "live"
-                  },
-                  "live": {
-                    "controls": {
-                      "builtin": false
-                    }
-                  },
-                  "menu": {
-                    "style": "hidden"
-                  },
-                  "dimensions": {
-                    "aspect_ratio": "16:9"
-                  }
+                  "camera_entity": "camera.nest_cam_1",
+                  "live_provider": "ha",
+                  "title": "Living Room"
                 },
                 {
-                  "type": "custom:advanced-camera-card",
-                  "cameras": [
-                    {
-                      "camera_entity": "camera.nest_cam_2",
-                      "live_provider": "ha"
-                    }
-                  ],
-                  "view": {
-                    "default": "live"
-                  },
-                  "live": {
-                    "controls": {
-                      "builtin": false
-                    }
-                  },
-                  "menu": {
-                    "style": "hidden"
-                  },
-                  "dimensions": {
-                    "aspect_ratio": "16:9"
-                  }
+                  "camera_entity": "camera.nest_cam_2",
+                  "live_provider": "ha",
+                  "title": "Ben's Room"
                 },
                 {
-                  "type": "custom:advanced-camera-card",
-                  "cameras": [
-                    {
-                      "camera_entity": "camera.nanit_benjamin",
-                      "live_provider": "ha"
-                    }
-                  ],
-                  "view": {
-                    "default": "live"
-                  },
-                  "live": {
-                    "controls": {
-                      "builtin": false
-                    }
-                  },
-                  "menu": {
-                    "style": "hidden"
-                  },
-                  "dimensions": {
-                    "aspect_ratio": "16:9"
-                  }
+                  "camera_entity": "camera.nanit_benjamin",
+                  "live_provider": "ha",
+                  "title": "Benjamin"
                 },
                 {
-                  "type": "custom:advanced-camera-card",
-                  "cameras": [
-                    {
-                      "camera_entity": "camera.nanit_travel",
-                      "live_provider": "ha"
-                    }
-                  ],
-                  "view": {
-                    "default": "live"
+                  "camera_entity": "camera.nanit_travel",
+                  "live_provider": "ha",
+                  "title": "Travel"
+                }
+              ],
+              "view": {
+                "default": "live",
+                "camera_select": "live"
+              },
+              "menu": {
+                "style": "outside",
+                "position": "top",
+                "buttons": {
+                  "cameras": {
+                    "enabled": true,
+                    "priority": 50
                   },
                   "live": {
-                    "controls": {
-                      "builtin": false
-                    }
+                    "enabled": true
                   },
-                  "menu": {
-                    "style": "hidden"
+                  "clips": {
+                    "enabled": true
                   },
-                  "dimensions": {
-                    "aspect_ratio": "4:3"
+                  "snapshots": {
+                    "enabled": true
+                  },
+                  "timeline": {
+                    "enabled": true
+                  },
+                  "fullscreen": {
+                    "enabled": true
+                  },
+                  "camera_ui": {
+                    "enabled": false
+                  },
+                  "download": {
+                    "enabled": false
+                  },
+                  "media_player": {
+                    "enabled": false
+                  },
+                  "microphone": {
+                    "enabled": false
+                  },
+                  "image": {
+                    "enabled": false
                   }
                 }
-              ]
+              },
+              "live": {
+                "controls": {
+                  "builtin": false
+                },
+                "layout": {
+                  "fit": "fill"
+                }
+              },
+              "dimensions": {
+                "aspect_ratio_mode": "static",
+                "aspect_ratio": "16:9"
+              }
             }
           ]
         },
