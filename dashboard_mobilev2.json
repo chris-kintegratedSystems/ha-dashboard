@@ -2732,7 +2732,10 @@
               },
               "dimensions": {
                 "aspect_ratio_mode": "static",
-                "aspect_ratio": "16:9"
+                "aspect_ratio": "16:9",
+                "layout": {
+                  "fit": "fill"
+                }
               }
             }
           ]
