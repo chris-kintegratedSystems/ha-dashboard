@@ -2736,6 +2736,12 @@
                 "layout": {
                   "fit": "fill"
                 }
+              },
+              "card_mod": {
+                "style": {
+                  ".": "ha-card { aspect-ratio: 16/9 !important; overflow: hidden !important; } ha-card video, ha-card img { object-fit: fill !important; width: 100% !important; height: 100% !important; }",
+                  "advanced-camera-card-live-provider $ advanced-camera-card-media-dimensions-container $": "video, img { object-fit: fill !important; width: 100% !important; height: 100% !important; }"
+                }
               }
             }
           ]
