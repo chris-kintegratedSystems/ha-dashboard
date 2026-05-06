@@ -1199,9 +1199,6 @@
                   "enable_resize_observer": true,
                   "reset_after": 0,
                   "view_mode": "single",
-                  "card_mod": {
-                    "style": ".swipe-card-pagination, .pagination, [class*=\"pagination\"] { animation: kis-dots-fade 0.5s ease 3s forwards; } @keyframes kis-dots-fade { to { opacity: 0; } }"
-                  },
                   "cards": [
                     {
                       "type": "conditional",
@@ -1907,10 +1904,7 @@
                       "show_recenter": false,
                       "show_scale": false,
                       "show_color_bar": false,
-                      "radar_opacity": 0.7,
-                      "card_mod": {
-                        "style": "ha-card { height: var(--kis-zone-h, 400px) !important; width: 100% !important; border-radius: 14px; overflow: hidden; }"
-                      }
+                      "radar_opacity": 0.7
                     }
                   ]
                 }
