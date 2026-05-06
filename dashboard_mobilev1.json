@@ -1894,7 +1894,7 @@
                       "data_source": "RainViewer",
                       "center_latitude": 32.814,
                       "center_longitude": -96.940,
-                      "zoom_level": 8,
+                      "zoom_level": 7,
                       "frame_delay": 400,
                       "past_minutes": 120,
                       "map_style": "Dark",
