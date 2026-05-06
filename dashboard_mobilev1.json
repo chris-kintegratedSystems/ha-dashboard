@@ -1168,7 +1168,7 @@
                 {
                   "type": "custom:button-card",
                   "template": "section_label",
-                  "name": "[[[\n    const cam = states['sensor.priority_camera']?.state;\n    const idx = Math.round(\n      parseFloat(\n        states['input_number.priority_slide_index']?.state || '0'\n      )\n    );\n\n    const CAM_ENTITY = {\n      doorbell:       'camera.doorbell',\n      living_room:    'camera.nest_cam_1',\n      bens_room:      'camera.nest_cam_2',\n      nanit_benjamin: 'camera.nanit_benjamin',\n      nanit_travel:   'camera.nanit_travel',\n    };\n\n    if (cam && cam !== 'none') {\n      const eid = CAM_ENTITY[cam];\n      const fn = eid && states[eid]?.attributes?.friendly_name;\n      return 'MOTION: ' +\n        (fn || cam.replace(/_/g,' ')).toUpperCase();\n    }\n\n    const SLIDE_LABELS = [\n      'Porsche 911',\n      'Tesla Model Y',\n      'Mercedes G580',\n      'Weather',\n    ];\n    return (SLIDE_LABELS[idx] || SLIDE_LABELS[0]).toUpperCase();\n  ]]]",
+                  "name": "[[[\n    const cam = states['sensor.priority_camera']?.state;\n    const idx = Math.round(\n      parseFloat(\n        states['input_number.priority_slide_index']?.state || '0'\n      )\n    );\n\n    const CAM_ENTITY = {\n      doorbell:       'camera.doorbell',\n      living_room:    'camera.nest_cam_1',\n      bens_room:      'camera.nest_cam_2',\n      nanit_benjamin: 'camera.nanit_benjamin',\n      nanit_travel:   'camera.nanit_travel',\n    };\n\n    if (cam && cam !== 'none') {\n      const eid = CAM_ENTITY[cam];\n      const fn = eid && states[eid]?.attributes?.friendly_name;\n      return 'MOTION: ' +\n        (fn || cam.replace(/_/g,' ')).toUpperCase();\n    }\n\n    const SLIDE_LABELS = [\n      'Porsche 911',\n      'Tesla Model Y',\n      'Mercedes G580',\n      'Weather',\n      'Weather Radar',\n    ];\n    return (SLIDE_LABELS[idx] || SLIDE_LABELS[0]).toUpperCase();\n  ]]]",
                   "triggers_update": [
                     "sensor.priority_camera",
                     "input_number.priority_slide_index",
@@ -1888,6 +1888,24 @@
                         ]
                       },
                       "extra_styles": ":host { height: var(--kis-zone-h, 400px) !important; width: 100% !important; min-width: 100% !important; max-width: 100% !important; flex: 1 1 100% !important; display: block !important; box-sizing: border-box; } #aspect-ratio { height: 100% !important; width: 100% !important; display: block !important; } ha-card { height: 100% !important; width: 100% !important; box-sizing: border-box; }"
+                    },
+                    {
+                      "type": "custom:weather-radar-card",
+                      "data_source": "RainViewer",
+                      "center_latitude": 32.814,
+                      "center_longitude": -96.940,
+                      "zoom_level": 8,
+                      "frame_delay": 167,
+                      "map_style": "Dark",
+                      "show_marker": true,
+                      "show_playback": true,
+                      "show_zoom": false,
+                      "show_recenter": false,
+                      "show_scale": false,
+                      "radar_opacity": 0.7,
+                      "card_mod": {
+                        "style": "ha-card { height: var(--kis-zone-h, 400px) !important; width: 100% !important; border-radius: 14px; overflow: hidden; }"
+                      }
                     }
                   ]
                 }
