@@ -1,5 +1,5 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v34
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v35
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 49;
+  window.KIS_NAV_VERSION = 51;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1477,6 +1477,42 @@
       _zoneSwipeCard.style.height = zonePx;
       // Force Android WebView reflow so percent-height descendants re-evaluate.
       void _zoneSwipeCard.offsetHeight;
+    }
+    patchSwipeCardChildren();
+  }
+
+  // ─── Swipe-card child patches (weather-radar-card + pagination dots) ───────
+  // weather-radar-card doesn't support extra_styles, so we set height/radius
+  // via inline style on the host and inject CSS into its shadow root for the
+  // Leaflet background color. Pagination dots fade is also injected here since
+  // card_mod is not available.
+  let _swipeChildrenPatched = false;
+
+  function patchSwipeCardChildren() {
+    if (!_zoneSwipeCard) return;
+    const sr = _zoneSwipeCard.shadowRoot;
+    if (!sr) return;
+
+    // --- Pagination dots fade (3s delay, 0.5s ease to opacity 0) ---
+    injectShadowCSS(sr, 'kis-dots-fade',
+      '.pagination { animation: kis-dots-fade 0.5s ease 3s forwards; }' +
+      ' @keyframes kis-dots-fade { to { opacity: 0; } }'
+    );
+
+    // --- Weather-radar-card host sizing + shadow CSS ---
+    const radar = sr.querySelector('weather-radar-card');
+    if (radar) {
+      radar.style.height = '100%';
+      radar.style.width = '100%';
+      radar.style.display = 'block';
+      radar.style.borderRadius = '14px';
+      radar.style.overflow = 'hidden';
+      if (radar.shadowRoot) {
+        injectShadowCSS(radar.shadowRoot, 'kis-radar-patch',
+          'ha-card { height: 100% !important; width: 100% !important; border-radius: 14px; overflow: hidden; }' +
+          ' .leaflet-container { background: var(--ha-card-background, rgba(16,21,31,0.72)) !important; }'
+        );
+      }
     }
   }
 
