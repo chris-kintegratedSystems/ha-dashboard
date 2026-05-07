@@ -578,3 +578,56 @@ For layout changes beyond the grid's built-in areas (e.g. centering
 name across full card width independently of icon/badge), use
 `custom_fields` which render in their own named grid area and can be
 positioned independently.
+
+## 2026-05-07 — weather-radar-card shadow DOM structure + bottom-bar hide
+
+weather-radar-card (custom HACS card, RainViewer) shadow structure:
+```
+weather-radar-card (host)
+  └── shadowRoot
+       └── ha-card
+            ├── .banner-stack (hidden by default)
+            ├── #mapid (Leaflet map container)
+            ├── #div-progress-bar (hidden when show_progress_bar=false)
+            └── #bottom-container (32px, position:relative, flex)
+                 ├── #timestampid → #timestamp → .ts-date + .ts-time
+                 ├── #loading-spinner (hidden by default)
+                 └── #attribution (RainViewer credit)
+```
+
+No card config property to hide the bottom bar (no `show_timestamp`,
+`show_attribution`, or `show_bottom_bar`). Must hide via CSS injection.
+
+The card uses `attributionControl: false` on its Leaflet instance, so
+no `.leaflet-control-attribution` element exists — no need to hide it.
+
+kis-nav.js injects into `weather-radar-card.shadowRoot` via
+`injectShadowCSS(radar.shadowRoot, 'kis-radar-patch', css)`:
+```css
+ha-card { height: 100% !important; width: 100% !important; border-radius: 14px; overflow: hidden; }
+.leaflet-container { background: var(--ha-card-background, rgba(16,21,31,0.72)) !important; }
+#bottom-container { display: none !important; }
+```
+
+Host inline styles also set: `height:100%; width:100%; display:block;
+borderRadius:14px; overflow:hidden`.
+
+## 2026-05-07 — ha-drawer / ha-sidebar shadow DOM for kiosk-mode sidebar
+
+When kiosk_mode is OFF, HA renders the sidebar. Shadow path:
+```
+home-assistant > SR > home-assistant-main > SR > ha-drawer > SR
+  └── aside.mdc-drawer (position:fixed, height:100vh)
+       └── (light DOM child) ha-sidebar > SR
+            └── .panels-list (content overflow, no overflow-y:auto)
+```
+
+`aside.mdc-drawer` extends behind kis-nav header (64px) and nav bar
+(56px) because it's position:fixed at full viewport height. The
+`.panels-list` inside `ha-sidebar` shadow root overflows but has no
+scroll enabled.
+
+**WARNING:** Injecting CSS into these shadow roots via kis-nav.js
+PASSED Playwright QA but FAILED on real devices (2026-05-07). Do not
+trust this approach without real-device diagnostic confirmation first.
+See dead_ends.md entry of same date.

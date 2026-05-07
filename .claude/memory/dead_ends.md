@@ -403,6 +403,24 @@ styles:
 **Fix:** Reference `--kis-card-h` directly on `ha-card`: `ha-card { min-height: var(--kis-card-h, 80px) }`. Bypasses parent-height resolution. Locks now fill their allocation regardless of parent grid context.
 **Rule of thumb for future card work:** when relying on a custom-property-driven min-height, set the var directly on every level that needs it. Don't daisy-chain `:host → ha-card 100%` unless you've confirmed the parent has a definite height in every context the card renders in.
 
+## 2026-05-07: Sidebar scroll fix via kis-nav shadow injection into ha-drawer/ha-sidebar
+**Tried:** kis-nav.js `applyDynamicHeaderClearance()` injects CSS into
+`ha-drawer` shadow root (`aside.mdc-drawer { top: Npx; height: calc(100vh - N - 56px) }`)
+and `ha-sidebar` shadow root (`.panels-list { overflow-y: auto }`) to make the
+sidebar scrollable when kiosk_mode is OFF and kis-nav bars overlap the sidebar.
+**Failed:** Passed Playwright QA (probe confirmed `canScroll: true`, correct
+computed styles). Chris reported it did not work on real devices (Tab S9 FKB,
+iPhone Companion). Reverted in commit `9bee466`.
+**Possible causes (not confirmed):** (1) MutationObserver timing — sidebar
+shadow root may not exist at injection time, (2) adoptedStyleSheets on
+ha-drawer/ha-sidebar win over injected `<style>`, (3) Android WebView renders
+`position: fixed` + injected CSS differently, (4) class names differ between
+Playwright Chromium and production HA version.
+**Fix:** Reverted. Needs diagnostic-first approach — instrument with
+console.log on real device to confirm injection lands before writing another
+CSS fix. Consider modifying kis-nav's own positioning instead of trying to
+fix HA's sidebar from outside.
+
 ## 2026-04-23: `Math.round` on kis-nav cardH formula leaks into column-alignment drift
 **Tried:** `cardH = Math.max(48, Math.round((swipeH - labelH - 4*gapH) / 4))` in `recomputeZoneHeight()`. Rounding cardH to an integer looked like the safe path — CSS var values feel like they should be integer pixels.
 **Problem:** Integer rounding produces column-total drift when the division doesn't resolve cleanly. iPad landscape: `(326 - 52) / 4 = 68.5`, rounded to 69. Total left column = `4 × 69 + 52 = 328`, but right column (zone) is exactly 326. 2px overshoot.

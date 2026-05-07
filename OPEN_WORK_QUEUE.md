@@ -43,6 +43,40 @@ Each item has a source (which session/PR surfaced it) and a status.
 
 ---
 
+## Sidebar non-scrollable when HA chrome visible (kiosk_mode OFF)
+
+**Source:** Phase 4 kiosk toggle work (2026-05-07)
+**Status:** Deferred — fix attempted and reverted
+
+When kiosk_mode is toggled OFF, HA sidebar appears but is not scrollable.
+`aside.mdc-drawer` is `position: fixed` at `100vh`, extending behind
+kis-nav bars. `.panels-list` overflows but has no `overflow-y: auto`.
+A kis-nav.js shadow injection fix was attempted (commit `e5a17c7`),
+passed Playwright QA, but failed on real devices. Reverted in `9bee466`.
+
+Next approach: diagnostic-first — confirm injection lands on real
+devices before writing another fix. Consider MutationObserver timing,
+adoptedStyleSheets specificity, or modifying kis-nav positioning instead.
+
+See: `ha-config/INVESTIGATION_KIOSK_AND_SIDEBAR_BUGS.md` (Bug 2)
+
+---
+
+## Kiosk CSS not applying on iPhone / desktop browsers
+
+**Source:** Phase 4 kiosk toggle work (2026-05-07)
+**Status:** Deferred — not investigated
+
+kiosk-mode toggle works on iPad + Tab S9 but HA chrome does not
+appear/disappear on iPhone Companion or desktop browsers when
+`input_boolean.kiosk_mode` is toggled. Possible causes: per-device CSS
+caching, Companion app URL still has `?kiosk`, template evaluation
+timing (only on load, not reactive).
+
+See: `ha-config/INVESTIGATION_KIOSK_AND_SIDEBAR_BUGS.md` (Bug 1)
+
+---
+
 ## Optiplex 7070 micro migration research
 
 **Source:** Tier A CPU measurements (2026-05-06)
