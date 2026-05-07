@@ -119,6 +119,23 @@ RTSP paths simultaneously regardless of encoder setting in the camera
 UI. Always use h264Preview paths in go2rtc config. Using h265 paths
 causes browser transcode issues (reproduces the Nest decoder problem).
 
+## 2026-05-07: Stacked PR merges to base branch, not main
+When PR B is stacked on PR A (B's baseRefName = A's branch, not main),
+`gh pr merge B` merges into A's branch — NOT into main. To land both on
+main, either: (1) merge A first (which targets main), B's base auto-
+updates; or (2) change B's base to main before merging. In this session,
+PR #49 (stacked on #48) was merged into #48's branch, requiring #48 to
+be reopened and merged to main. Check `gh pr view --json baseRefName`
+before merging any PR to confirm the target.
+
+## 2026-05-07: input_boolean with initial: true resets on HA restart
+`input_boolean.kiosk_mode` has `initial: true` in configuration.yaml.
+Every `docker restart homeassistant` resets it to ON. If you need kiosk
+mode OFF for testing after a restart, call:
+`POST /api/services/input_boolean/turn_off` with
+`{"entity_id": "input_boolean.kiosk_mode"}`.
+Don't forget this during deploy-test cycles that involve HA restarts.
+
 ## 2026-04-22: Frigate snapshot aspect ratio ≠ live feed aspect ratio
 Frigate's `/api/<cam>/latest.jpg` snapshots are the detection frame
 (640x480, 4:3). Live WebRTC feeds are the camera's native resolution
