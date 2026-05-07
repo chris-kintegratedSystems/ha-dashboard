@@ -714,6 +714,26 @@
       return;
     }
 
+    // Adjust HA sidebar drawer to fit between kis-nav bars (top header + bottom nav).
+    // aside.mdc-drawer is position:fixed at full viewport height by default, so its
+    // bottom items land behind #kis-nav-bar and become unreachable.
+    try {
+      const ha = document.querySelector('home-assistant');
+      const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+      const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+      if (drawer?.shadowRoot) {
+        injectShadowCSS(drawer.shadowRoot, 'kis-drawer-clearance',
+          `aside.mdc-drawer { top: ${clearance}px !important; height: calc(100vh - ${clearance + NAV_H}px) !important; }`
+        );
+      }
+      const sidebar = drawer?.querySelector('ha-sidebar');
+      if (sidebar?.shadowRoot) {
+        injectShadowCSS(sidebar.shadowRoot, 'kis-sidebar-scroll',
+          `.panels-list { height: calc(100% - 56px) !important; overflow-y: auto !important; }`
+        );
+      }
+    } catch (e) {}
+
     const viewEl = huiShadow.querySelector('#view');
     const sectionsView = viewEl && viewEl.querySelector('hui-sections-view');
 
