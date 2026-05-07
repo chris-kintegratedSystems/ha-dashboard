@@ -2968,6 +2968,68 @@
                   },
                   "name": "Nanit Travel",
                   "aspect_ratio": "16:9"
+                },
+                {
+                  "type": "picture-entity",
+                  "entity": "camera.reolink_living_room_temp",
+                  "camera_image": "camera.reolink_living_room_temp",
+                  "camera_view": "live",
+                  "show_state": false,
+                  "show_name": false,
+                  "fit_mode": "fill",
+                  "card_mod": {
+                    "style": "ha-card { aspect-ratio: 16/9 !important; width: 100% !important; overflow: hidden !important; padding: 0 !important; } hui-image { padding: 0 !important; padding-top: 0 !important; aspect-ratio: unset !important; height: 100% !important; width: 100% !important; display: block !important; position: relative !important; } hui-image > * { padding: 0 !important; padding-top: 0 !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; } hui-image img { object-fit: fill !important; width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }"
+                  },
+                  "tap_action": {
+                    "action": "fire-dom-event",
+                    "browser_mod": {
+                      "service": "browser_mod.popup",
+                      "data": {
+                        "title": false,
+                        "size": "fullscreen",
+                        "dismissable": true,
+                        "style": "--popup-padding: 0px; --popup-border-radius: 0px; --popup-background: black;",
+                        "content": {
+                          "type": "picture-elements",
+                          "camera_image": "camera.reolink_living_room_temp",
+                          "camera_view": "live",
+                          "card_mod": {
+                            "style": "ha-card { width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }"
+                          },
+                          "elements": [
+                            {
+                              "type": "custom:button-card",
+                              "template": "cam_close",
+                              "style": {
+                                "top": "16px",
+                                "right": "16px"
+                              }
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "template": "cam_ctrl_disabled",
+                              "icon": "mdi:microphone",
+                              "style": {
+                                "bottom": "18px",
+                                "left": "calc(50% - 48px)"
+                              }
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "template": "cam_ctrl_disabled",
+                              "icon": "mdi:volume-high",
+                              "style": {
+                                "bottom": "18px",
+                                "left": "calc(50% + 4px)"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "name": "Reolink (temp)",
+                  "aspect_ratio": "16:9"
                 }
               ]
             }
