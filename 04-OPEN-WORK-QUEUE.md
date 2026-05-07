@@ -9,7 +9,7 @@
 > `TASKS.md` remains as historical record — this file is the canonical
 > current-state queue.
 
-Last updated: 2026-05-02
+Last updated: 2026-05-04
 
 ---
 
@@ -47,7 +47,7 @@ replaced `izzy` with `bens_room`. Merge the hotfix branch first.
 
 ## Active deferred work (unshipped, unbranched)
 
-In rough priority order as of 2026-04-22:
+In rough priority order as of 2026-05-04:
 
 ### 1. Camera two-way audio (talk + listen)
 - Vivint DBC300 backchannel support in go2rtc is unverified.
@@ -80,6 +80,7 @@ In rough priority order as of 2026-04-22:
   `git show v38` returns the full shipping context.
 
 ### 6. Docs hygiene — stale izzy / entity-stem references
+- Status: QUEUED — low priority, cosmetic
 - The `hotfix/camera-follow-code-key-mapping` work (2026-05-01) replaced
   `izzy` with `bens_room` and entity-stem keys with physical-room keys
   across automations, dashboard JSON, kis-nav.js, and CLAUDE.md files.
@@ -95,27 +96,44 @@ In rough priority order as of 2026-04-22:
   `camera.living_room_camera` and update to match the current
   physical-room key alphabet:
   `doorbell / living_room / bens_room / nanit_benjamin / nanit_travel / none`
-- Priority: low — cosmetic docs-only, no runtime impact.
+- Deferred from May 2026 Camera Follow Code key-mapping hotfix to keep
+  that PR scoped. No runtime impact.
 
-### 7. WiFi fast roaming (802.11r/k/v) — infrastructure fix
-- Status: QUEUED — high-value, addresses mobile WebRTC choppiness
-- Scope: Araknis AP configuration, NOT a code change
-- Effort: 15-30 min in Araknis admin
-- Blocker: none, hands-on at PC
-- Configure all six WiFi 5 APs for fast BSS transition. Standard
-  integrator work, addresses root cause of mobile WebRTC stutter
-  identified in May 2026 camera investigation.
+### 7. WiFi fast roaming (802.11r/k/v) — research pending verification
+- Status: QUEUED — research, not yet a confirmed fix
+- Was hypothesized as root cause for mobile WebRTC stutter during
+  May 2026 investigation, but stationary wired clients also show
+  choppiness, so handoffs alone don't explain symptom. Current
+  Araknis fast roaming state never verified.
+- Worth investigating in future session, but starts with:
+  (1) verify current state, (2) compare HLS vs WebRTC on same
+  wired client, (3) determine if fast roaming is even relevant
+  before implementing.
+- Reference: `FAST_ROAMING_RESEARCH_AND_TEST_PLAN.md` (Drive)
 
 ### 8. Nest camera keyframe interval tuning
-- Status: QUEUED — small, complements WiFi fix
+- Status: QUEUED — small, complements WiFi fast roaming
 - Scope: Frigate go2rtc config (`input_kf=1` on nest_cam_1, nest_cam_2)
 - Effort: 30 min config + verification
 - Blocker: none, bridge-ready
 - Reduce Nest WebRTC keyframe interval from 2s to 1s. Reduces
-  freeze-recovery time after any network disruption, mobile or
-  stationary. Pairs with WiFi fast roaming work.
+  freeze-recovery time after any network disruption. Pairs with WiFi
+  fast roaming.
 
-### 9. Pi operational cleanup — Nanit secret
+### 9. Frigate event recording enable
+- Status: QUEUED — audited and ready, propose-first prompt drafted
+- Scope: Frigate config.yml (`record` + `snapshots` blocks, per-camera
+  `record` role on ffmpeg inputs)
+- Spec: person-only events, 14-day retention, all 5 cameras, 10s
+  pre/post buffer, snapshots enabled
+- Storage: 205 GB free on NVMe at audit time, well within capacity
+- Effort: 30 min config + restart + first-event verification
+- Blocker: none, bridge-ready
+- Frigate currently has `detect` role only on all camera ffmpeg
+  inputs. Need to add `record` role and global `record` + events
+  config. Propose-first prompt drafted in May 2026 session.
+
+### 10. Pi operational cleanup — Nanit secret
 - Move `NANIT_PASSWORD` out of plain-text
   `C:\Projects\kintegrated\nanit\docker-compose.yaml` into an
   `.env` or `secrets:` mount. Currently flagged in
@@ -123,7 +141,7 @@ In rough priority order as of 2026-04-22:
 
 ---
 
-## Closed items (2026-05-01)
+## Closed items (2026-05-04)
 
 - **WiFi cam rename (camera.izzy_camera / camera.living_room_camera):**
   MOOT. These entities no longer exist in HA — replaced by Frigate/Nest
@@ -133,6 +151,11 @@ In rough priority order as of 2026-04-22:
   offline during QA runs #3–#5 due to the entity migration to
   Frigate/Nest SDM. Both `camera.nest_cam_1` and `camera.nest_cam_2`
   are live and rendering. Confirmed 2026-05-01.
+- **HA log cleanup — orphan curl loop:** COMPLETED May 2026. Identified
+  and killed orphaned bash `until`-loop (PID 3182446) that had been
+  spamming 4,623 of 5,000 HA log lines for 18 hours with invalid auth
+  attempts. Loop spawned during a deploy, terminal disconnected, process
+  orphaned to PID 1. Deploy discipline updated in ha-config CLAUDE.md.
 
 ---
 
