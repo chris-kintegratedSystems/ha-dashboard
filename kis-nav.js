@@ -1,5 +1,5 @@
 /**
- * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v35
+ * kis-nav.js — KIS Fixed Bottom Navigation + Fixed Header Bar  v36
  * Loaded via frontend: extra_module_url in configuration.yaml.
  * Injects real DOM elements into document.body (completely outside HA's
  * shadow DOM tree), so position:fixed is always viewport-relative.
@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 51;
+  window.KIS_NAV_VERSION = 52;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -1510,7 +1510,8 @@
       if (radar.shadowRoot) {
         injectShadowCSS(radar.shadowRoot, 'kis-radar-patch',
           'ha-card { height: 100% !important; width: 100% !important; border-radius: 14px; overflow: hidden; }' +
-          ' .leaflet-container { background: var(--ha-card-background, rgba(16,21,31,0.72)) !important; }'
+          ' .leaflet-container { background: var(--ha-card-background, rgba(16,21,31,0.72)) !important; }' +
+          ' #bottom-container { display: none !important; }'
         );
       }
     }
