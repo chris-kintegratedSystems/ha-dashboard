@@ -47,6 +47,7 @@ Append new entries at the bottom. Date-stamp every entry.
 | Vivint (alarm) | WORKS | alarm_control_panel.kuprycz_home |
 | Nanit (cameras) | WORKS | RTMP streaming via go2rtc. Frigate detect+motion disabled (using Nanit native detection). Camera entities still created by Frigate integration for HA dashboard streaming. |
 | Nest SDM (WebRTC) | WORKS, RATE-LIMITED | 5 QPM ExecuteDeviceCommand quota per user. Rapid test iteration burns it and returns 429 RESOURCE_EXHAUSTED that looks like a code regression. Wait ≥60s between camera-page reloads; navigate away for 90s to fully refill. For Playwright iteration use `qa-screenshot.js --mock-cameras` (no API calls); for loading-sequence verification use `qa-camera-burst.js` (FKB screenshots only). |
+| Reolink RLC-820A (RTSP/Tier A) | WORKS | First RTSP-native camera. 2K@25fps via Frigate embedded go2rtc, MSE protocol. 0.53s latency, ~10% Pi 5 CPU. Smooth on Tab S9 + iPhone. No rate limiting (unlike Nest). Uses h264Preview paths only (h265 paths cause browser decode issues). |
 | iCloud3 (AirTags) | NOT STARTED | Needs Apple ID auth. |
 | Tesla | NOT STARTED | Needs OAuth + virtual key. |
 | Mercedes mbapi2020 | UNCERTAIN | G580 support unconfirmed. |

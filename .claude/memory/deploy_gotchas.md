@@ -105,6 +105,20 @@ The only way to fully eliminate the ffmpeg process is to remove the
 camera from the `cameras:` section — but that removes the HA entity.
 Accept the residual CPU cost for streaming-only cameras.
 
+## 2026-05-06: Frigate integration reload required for new camera discovery
+Restarting the Frigate Docker container after adding a new camera to
+config.yml makes Frigate see the camera, but HA does NOT auto-discover
+the new entity. Must reload the Frigate config entry via HA REST API:
+POST /api/config/config_entries/entry/{entry_id}/reload
+Frigate entry_id on this install: 01KPV496CWFDH0PEP7YBE5PPVM
+homeassistant.reload_all also works but is slower.
+
+## 2026-05-06: Reolink h264 vs h265 RTSP path quirk
+Reolink RLC-820A serves BOTH h264Preview_01_* and h265Preview_01_*
+RTSP paths simultaneously regardless of encoder setting in the camera
+UI. Always use h264Preview paths in go2rtc config. Using h265 paths
+causes browser transcode issues (reproduces the Nest decoder problem).
+
 ## 2026-04-22: Frigate snapshot aspect ratio ≠ live feed aspect ratio
 Frigate's `/api/<cam>/latest.jpg` snapshots are the detection frame
 (640x480, 4:3). Live WebRTC feeds are the camera's native resolution
