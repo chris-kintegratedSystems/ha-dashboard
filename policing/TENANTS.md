@@ -44,8 +44,9 @@ CC does NOT need to consult for read-only operations: file reads, `git status`, 
 The following operations affect the live Pi or are irreversible and require operator approval before execution:
 
 ### Production deploys (Pi-affecting)
-- SCP/SSH of dashboard JSON to the Pi (`dashboard_mobilev1.json`, `dashboard_tabletv1.json` to `.storage/`)
-- SCP/SSH of `kis-nav.js` to the Pi (`/config/www/mobile_v1/`)
+- Any SCP/SSH write to `/config/www/` on the Pi (mobile_v1, mobile_v2, or any future dashboard path under www)
+- Any SCP/SSH write to `.storage/` on the Pi (Lovelace dashboard JSONs: dashboard_mobilev1.json, dashboard_tabletv1.json, dashboard_mobilev2.json, or any future dashboard)
+- Any SCP/SSH write to `/config/` on the Pi outside of www and .storage (configuration.yaml, automations.yaml, scripts.yaml, themes/, etc.)
 - `sudo docker restart homeassistant` or any HA restart command
 - Any `sudo` command on the Pi
 - Cache-bust version bumps in `configuration.yaml` (ha-config repo)
@@ -104,6 +105,64 @@ CC must not:
 - SSH commands that embed passwords inline instead of using key auth
 
 **On BLOCK:** agent returns "BLOCK T2: <reason>". CC must rephrase the operation to avoid exposing secrets.
+
+---
+
+## Envelope pre-approval (session-scoped batch approval)
+
+The launch prompt for a given CC session may declare a **pre-approved
+envelope** — a scoped set of operations that the operator has approved
+in advance for the entire session. When an envelope is declared:
+
+### Agent behavior with an active envelope
+
+1. **At session start**, CC presents the envelope to the agent during
+   the standard session-start verification. The agent records the
+   envelope in the audit log as a special entry with `kind: envelope`
+   and the envelope items (E1, E2, ... En) with their scope.
+
+2. **For each subsequent T0-routed action**, the agent evaluates
+   whether the action falls within the declared envelope:
+   - **Inside envelope**: agent returns APPROVE with reason
+     "envelope: <item-id>". No per-action `approve T1: <action_id>`
+     message from the operator is required. CC executes and continues.
+   - **Outside envelope**: agent returns BLOCK with reason
+     "out-of-envelope: <description>". CC halts and routes through
+     the standard escalation path (Slack blocker → operator response
+     in terminal).
+
+3. **The agent does not expand the envelope autonomously.** If an
+   operation looks similar to an envelope item but is not explicitly
+   covered, the agent treats it as out-of-envelope. Operator must
+   either approve it as a one-off (`approve T1: <action_id>`) or
+   explicitly extend the envelope.
+
+### Envelope scope rules
+
+- Envelopes are **session-scoped**. They expire when the CC session ends.
+- Envelopes are **path-scoped or operation-scoped**, never blanket.
+  "All Pi writes" is not a valid envelope item; "Pi writes to
+  /config/www/mobile_v2/ only" is.
+- Envelopes do NOT override T2 (credential leak prevention) or T0
+  (consultation requirement). The agent still consults on every
+  T0-required action; the envelope only changes whether the agent
+  returns APPROVE or BLOCK.
+
+### Without an envelope (default behavior)
+
+If no envelope is declared in the launch prompt, the agent operates
+in standard mode: every T1 operation requires per-action operator
+approval via `approve T1: <action_id>` or `approve T1 batch: <action_ids>`.
+
+### Audit log requirements with envelopes
+
+- Envelope declaration logged at session start (kind: envelope)
+- Each in-envelope APPROVE includes the matched envelope item id
+  in the decision reason
+- Out-of-envelope BLOCKs and subsequent operator decisions logged
+  normally
+- Session-end audit log review verifies that every in-envelope
+  APPROVE actually maps to a declared envelope item
 
 ---
 
