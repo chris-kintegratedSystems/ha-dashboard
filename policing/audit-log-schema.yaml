@@ -1,0 +1,50 @@
+# Audit log entry schema for migration policing
+# File: kis-meta/policing/audit-log.yaml (gitignored)
+# Format: YAML list, append-only
+
+# Each entry is a single CC action proposed for execution.
+# CC writes the entry with status: pending and pre_state populated.
+# Agent appends decision fields.
+# CC executes (or doesn't) and updates outcome fields.
+
+example_entry:
+  # CC writes these BEFORE invoking the agent:
+  timestamp: 2026-04-29T15:23:11Z
+  session: session-2-tasks  # or session-3, post-rotation, etc.
+  action_id: a-0042  # sequential within session
+  status: pending  # pending | approved | blocked | executed | failed | overridden
+  action_type: bash  # bash | write | edit | git | gh | op | task | tool
+  intent: "single sentence describing the goal"
+  description: "what CC said it was about to do"
+  command: "the literal command, file write target, or tool call"
+  pre_state:
+    branch: master
+    head: 71c6e80
+    dirty_files: 0
+    cwd: /c/Projects/kintegrated/kis-meta
+
+  # Agent appends these AFTER consultation:
+  decision: APPROVE  # or BLOCK or OPERATOR_REQUIRED
+  violated_tenants: []
+  reason: ""
+  intent_signature: "read-v4-plan-content"
+  consecutive_blocks_on_intent: 0
+  escalate_to_operator: false
+  decided_at: 2026-04-29T15:23:14Z
+  agent_version: "v1"
+
+  # CC appends these AFTER execution (if applicable):
+  outcome:
+    status: success  # success | failure | aborted | skipped
+    exit_code: 0
+    stdout_summary: "first 200 chars + last 200 chars if long"
+    stderr_summary: ""
+    files_changed: []
+    new_head: 31c4694
+    completed_at: 2026-04-29T15:23:18Z
+
+  # Operator override (if applicable, out-of-band):
+  override:
+    operator_message: "approve T1: a-0042"
+    granted_at: 2026-04-29T15:24:00Z
+    notes: "optional operator notes"

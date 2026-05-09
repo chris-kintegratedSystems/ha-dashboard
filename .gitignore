@@ -3,6 +3,10 @@ node_modules/
 qa-screenshots/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+# Policing runtime files (generated, do not commit)
+policing/audit-log.yaml
+policing/decisions.log
+policing/intent-history.yaml
 # Chat session artifacts (generated, do not commit)
 CHAT_CHECKPOINT_*.md
 SESSION_HANDOFF_*.md
