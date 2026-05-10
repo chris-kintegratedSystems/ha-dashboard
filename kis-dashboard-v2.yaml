@@ -148,7 +148,7 @@ views:
                 state: none
             card:
               type: markdown
-              content: ""
+              content: " "
               card_mod:
                 style: |
                   ha-card {
