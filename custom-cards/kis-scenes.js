@@ -11,7 +11,7 @@
  * Used by: kis-dashboard-v2.json (Home page, Scenes section)
  */
 
-import { KIS_TOKENS } from '/local/mobile_v2/kis-design-tokens.js';
+import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=2';
 
 const SCENES = [
   { entity: 'script.scene_good_morning',  name: 'Morning', icon: 'mdi:white-balance-sunny',   color: '#f5a623' },
@@ -57,13 +57,6 @@ class KisScenes extends HTMLElement {
 
   setConfig(config) {
     this._config = config || {};
-    this._scenes = this._resolveScenes();
-  }
-
-  _resolveScenes() {
-    const ids = this._config.scenes;
-    if (!ids || !Array.isArray(ids) || ids.length === 0) return SCENES;
-    return ids.map(id => SCENES.find(s => s.entity === id)).filter(Boolean);
   }
 
   static getStubConfig() {
@@ -80,7 +73,7 @@ class KisScenes extends HTMLElement {
       return;
     }
 
-    for (const scene of this._scenes) {
+    for (const scene of SCENES) {
       const id = scene.entity;
       const cur = hass.states[id];
       const old = prev?.states?.[id];
@@ -107,21 +100,10 @@ class KisScenes extends HTMLElement {
         --sc-icon-box: clamp(24px, calc(var(--sc-h) * 0.58), 48px);
         --sc-icon-r: clamp(6px, calc(var(--sc-h) * 0.14), 12px);
       }
-      .section-label {
-        font-family: ${KIS_TOKENS.fontFamily};
-        font-size: ${KIS_TOKENS.fontSize.navLabel};
-        font-weight: ${KIS_TOKENS.fontWeight.semibold};
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--kis-section-label, ${KIS_TOKENS.night.sectionLabel});
-        padding: 4px 2px;
-        margin: 0 0 6px 0;
-        border-bottom: 1px solid var(--kis-section-rule, ${KIS_TOKENS.night.sectionRule});
-        text-align: left;
-      }
+      ${KIS_SECTION_LABEL_CSS}
       .scene-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: var(--kis-spacing-h, ${KIS_TOKENS.gap.scene});
         flex: 1;
         align-items: stretch;
@@ -174,20 +156,17 @@ class KisScenes extends HTMLElement {
     `;
     s.appendChild(style);
 
-    const label = document.createElement('div');
-    label.className = 'section-label';
     if (this._config.title) {
+      const label = document.createElement('div');
+      label.className = 'kis-section-label';
       label.textContent = this._config.title;
-    } else {
-      label.innerHTML = '&nbsp;';
-      label.style.visibility = 'hidden';
+      s.appendChild(label);
     }
-    s.appendChild(label);
 
     const grid = document.createElement('div');
     grid.className = 'scene-grid';
 
-    for (const scene of this._scenes) {
+    for (const scene of SCENES) {
       const btn = document.createElement('div');
       btn.className = 'scene-btn';
       btn.dataset.entity = scene.entity;
@@ -216,7 +195,7 @@ class KisScenes extends HTMLElement {
 
     s.appendChild(grid);
 
-    for (const scene of this._scenes) {
+    for (const scene of SCENES) {
       this._updateBtn(scene, this._hass?.states?.[scene.entity]);
     }
   }

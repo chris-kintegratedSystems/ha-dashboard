@@ -10,7 +10,7 @@
  * Used by: kis-dashboard-v2.yaml (Settings view)
  */
 
-import { KIS_TOKENS } from '/local/mobile_v2/kis-design-tokens.js';
+import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=2';
 
 const T = KIS_TOKENS;
 
@@ -90,7 +90,7 @@ class KisSettings extends HTMLElement {
 
   _sectionLabel(text) {
     const el = document.createElement('div');
-    el.className = 'section-label';
+    el.className = 'kis-section-label';
     el.textContent = text;
     return el;
   }
@@ -419,19 +419,9 @@ class KisSettings extends HTMLElement {
         max-width: 600px;
         margin: 0 auto;
       }
-      .section-label {
-        font-family: ${T.fontFamily};
-        font-size: ${T.fontSize.navLabel};
-        font-weight: ${T.fontWeight.semibold};
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--kis-section-label, ${T.night.sectionLabel});
-        padding: 4px 2px;
-        border-bottom: 1px solid var(--kis-section-rule, ${T.night.sectionRule});
-        text-align: left;
-        margin-top: 8px;
-      }
-      .section-label:first-child { margin-top: 0; }
+      ${KIS_SECTION_LABEL_CSS}
+      .kis-section-label { margin-top: 8px; }
+      .kis-section-label:first-child { margin-top: 0; }
       .card {
         padding: ${T.padding.card};
         border-radius: ${T.radius.card};

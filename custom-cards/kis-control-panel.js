@@ -10,7 +10,7 @@
  * Used by: kis-dashboard-v2.json (Home page, Security section)
  */
 
-import { KIS_TOKENS } from '/local/mobile_v2/kis-design-tokens.js';
+import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=2';
 
 const LOCKS = [
   { entity: 'lock.front_door_lock', name: 'Front Door' },
@@ -162,17 +162,7 @@ class KisControlPanel extends HTMLElement {
         box-sizing: border-box;
         justify-content: space-between;
       }
-      .section-label {
-        font-family: ${KIS_TOKENS.fontFamily};
-        font-size: ${KIS_TOKENS.fontSize.navLabel};
-        font-weight: ${KIS_TOKENS.fontWeight.semibold};
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--kis-section-label, ${KIS_TOKENS.night.sectionLabel});
-        padding: 4px 2px;
-        border-bottom: 1px solid var(--kis-section-rule, ${KIS_TOKENS.night.sectionRule});
-        text-align: left;
-      }
+      ${KIS_SECTION_LABEL_CSS}
       .row {
         position: relative;
         display: flex;
@@ -281,7 +271,7 @@ class KisControlPanel extends HTMLElement {
 
   _label(text) {
     const el = document.createElement('div');
-    el.className = 'section-label';
+    el.className = 'kis-section-label';
     el.textContent = text;
     return el;
   }

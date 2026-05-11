@@ -896,9 +896,7 @@
 
   function getGridSectionCSS() {
     return `
-      .header { min-height: 0 !important; margin: 0 !important; padding: 0 !important; }
-      .header:has(h2:empty), .header:not(:has(h2)), .header:has(h2:not(:empty)):not(.has-title) { display: none !important; }
-      h2:empty { display: none !important; }
+      .header { display: none !important; }
       ha-sortable { height: 100%; }
       ha-sortable > div { min-height: 100%; }
       hui-card { display: block; height: 100%; }
@@ -912,26 +910,6 @@
         injectShadowCSS(gs.shadowRoot, 'kisv2-gridsection-patch', getGridSectionCSS());
       }
     });
-    equalizeRowHeights(gridSections);
-  }
-
-  function equalizeRowHeights(gridSections) {
-    if (!gridSections.length) return;
-    const rows = new Map();
-    for (const gs of gridSections) {
-      const top = Math.round(gs.getBoundingClientRect().top);
-      if (!rows.has(top)) rows.set(top, []);
-      rows.get(top).push(gs);
-    }
-    for (const [, group] of rows) {
-      if (group.length < 2) continue;
-      const maxH = Math.max(...group.map(gs => gs.getBoundingClientRect().height));
-      for (const gs of group) {
-        if (gs.getBoundingClientRect().height < maxH - 1) {
-          gs.style.minHeight = maxH + 'px';
-        }
-      }
-    }
   }
 
   function patchHALayout(attempt) {
@@ -977,8 +955,6 @@
         if (sectionsView?.shadowRoot) {
           injectShadowCSS(sectionsView.shadowRoot, 'kisv2-sections-patch', getSectionsViewCSS());
           patchGridSections(sectionsView.shadowRoot);
-          setTimeout(() => equalizeRowHeights(sectionsView.shadowRoot.querySelectorAll('hui-grid-section')), 1000);
-          setTimeout(() => equalizeRowHeights(sectionsView.shadowRoot.querySelectorAll('hui-grid-section')), 3000);
         }
       }
     } catch (e) {

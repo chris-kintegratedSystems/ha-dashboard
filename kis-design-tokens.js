@@ -243,3 +243,16 @@ export const KIS_TOKENS = {
     camFade: '100ms ease',
   },
 };
+
+export const KIS_SECTION_LABEL_CSS = `
+  .kis-section-label {
+    font-family: ${KIS_TOKENS.fontFamily};
+    font-size: 0.78rem;
+    font-weight: ${KIS_TOKENS.fontWeight.semibold};
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kis-text-secondary, ${KIS_TOKENS.night.textSecondary});
+    margin: 0 0 var(--kis-spacing-h, 5px) 0;
+    padding: 0;
+  }
+`;

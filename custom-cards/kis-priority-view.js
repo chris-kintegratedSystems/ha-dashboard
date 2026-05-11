@@ -14,7 +14,7 @@
  * Used by: kis-dashboard-v2.yaml (Home view, right column)
  */
 
-import { KIS_TOKENS } from '/local/mobile_v2/kis-design-tokens.js';
+import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=2';
 
 // ── Carousel item configuration ──────────────────────────────────────────────
 const CAMERAS = [
@@ -288,7 +288,7 @@ class KisPriorityView extends HTMLElement {
 
     // Section label
     this._labelEl = document.createElement('div');
-    this._labelEl.className = 'section-label';
+    this._labelEl.className = 'kis-section-label';
     s.appendChild(this._labelEl);
 
     // Carousel viewport
@@ -747,17 +747,7 @@ class KisPriorityView extends HTMLElement {
         box-sizing: border-box;
       }
 
-      .section-label {
-        font-family: ${KIS_TOKENS.fontFamily};
-        font-size: ${KIS_TOKENS.fontSize.chipText};
-        font-weight: ${KIS_TOKENS.fontWeight.semibold};
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--kis-section-label, ${KIS_TOKENS.night.sectionLabel});
-        padding: 4px 2px;
-        margin: 0 0 4px 0;
-        border-bottom: 1px solid var(--kis-section-rule, rgba(255,255,255,0.06));
-      }
+      ${KIS_SECTION_LABEL_CSS}
 
       .carousel-viewport {
         position: relative;
