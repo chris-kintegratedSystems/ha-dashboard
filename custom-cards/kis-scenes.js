@@ -98,7 +98,10 @@ class KisScenes extends HTMLElement {
     const style = document.createElement('style');
     style.textContent = `
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-sizing: border-box;
         --sc-h: var(--kis-card-h, 80px);
         --sc-icon: clamp(14px, calc(var(--sc-h) * 0.30), 28px);
         --sc-icon-box: clamp(24px, calc(var(--sc-h) * 0.58), 48px);
@@ -119,7 +122,9 @@ class KisScenes extends HTMLElement {
       .scene-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: ${KIS_TOKENS.gap.scene};
+        gap: var(--kis-spacing-h, ${KIS_TOKENS.gap.scene});
+        flex: 1;
+        align-items: stretch;
       }
       .scene-btn {
         display: flex;
@@ -128,7 +133,7 @@ class KisScenes extends HTMLElement {
         justify-content: center;
         padding: 14px 8px 12px;
         border-radius: ${KIS_TOKENS.radius.card};
-        background: var(--ha-card-background, ${KIS_TOKENS.night.bgCard});
+        background: var(--ha-card-background, ${KIS_TOKENS.night.bgCardSolid});
         border: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
         cursor: pointer;
         min-height: var(--sc-h);
@@ -169,12 +174,15 @@ class KisScenes extends HTMLElement {
     `;
     s.appendChild(style);
 
+    const label = document.createElement('div');
+    label.className = 'section-label';
     if (this._config.title) {
-      const label = document.createElement('div');
-      label.className = 'section-label';
       label.textContent = this._config.title;
-      s.appendChild(label);
+    } else {
+      label.innerHTML = '&nbsp;';
+      label.style.visibility = 'hidden';
     }
+    s.appendChild(label);
 
     const grid = document.createElement('div');
     grid.className = 'scene-grid';
