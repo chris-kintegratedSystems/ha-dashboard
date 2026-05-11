@@ -178,6 +178,12 @@ class KisPriorityView extends HTMLElement {
     // Radar card ref
     this._radarCard = null;
     this._radarPatched = false;
+
+    // Camera element cache for hass propagation
+    this._cameraElements = new Map();
+
+    // Dots auto-fade timer
+    this._dotsFadeTimer = null;
   }
 
   connectedCallback() { if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this); }
@@ -202,6 +208,10 @@ class KisPriorityView extends HTMLElement {
     if (!this._built) {
       this._build();
       this._built = true;
+    }
+
+    for (const el of this._cameraElements.values()) {
+      el.hass = hass;
     }
 
     this._updatePriorityState(prev);
@@ -288,12 +298,12 @@ class KisPriorityView extends HTMLElement {
     this._sliderEl = document.createElement('div');
     this._sliderEl.className = 'carousel-slider';
     this._viewportEl.appendChild(this._sliderEl);
-    s.appendChild(this._viewportEl);
 
-    // Pagination dots
     this._dotsEl = document.createElement('div');
     this._dotsEl.className = 'dots';
-    s.appendChild(this._dotsEl);
+    this._viewportEl.appendChild(this._dotsEl);
+
+    s.appendChild(this._viewportEl);
 
     // Touch handlers on viewport
     this._viewportEl.addEventListener('touchstart', (e) => this._onTouchStart(e), { passive: true });
@@ -303,11 +313,11 @@ class KisPriorityView extends HTMLElement {
     this._renderCurrentView();
   }
 
-  _renderCurrentView() {
+  async _renderCurrentView() {
     if (!this._sliderEl) return;
 
     if (this._mode === 'motion' || this._mode === 'sticky') {
-      this._renderCameraView();
+      await this._renderCameraView();
     } else {
       this._renderDefaultCarousel();
     }
@@ -316,22 +326,20 @@ class KisPriorityView extends HTMLElement {
     this._updateDots();
   }
 
-  _renderCameraView() {
+  async _renderCameraView() {
     const cam = CAMERAS.find(c => c.id === this._activeCameraId);
     if (!cam) return;
 
     this._sliderEl.innerHTML = '';
     this._slides = [];
 
-    // Single camera slide
-    const slide = this._createCameraSlide(cam);
+    const slide = await this._createCameraSlide(cam);
     this._sliderEl.appendChild(slide);
     this._slides.push(slide);
 
     this._sliderEl.style.transform = 'translateX(0)';
     this._sliderEl.style.transition = 'none';
 
-    // Add border glow
     this._viewportEl.style.border = `2px solid ${cam.border_color}`;
     this._viewportEl.style.boxShadow = `0 0 12px ${cam.glow_rgba}`;
   }
@@ -358,29 +366,35 @@ class KisPriorityView extends HTMLElement {
   }
 
   // ── Slide creation ──────────────────────────────────────────────────────────
-  _createCameraSlide(cam) {
+  async _createCameraSlide(cam) {
     const slide = document.createElement('div');
     slide.className = 'slide camera-slide';
     slide.dataset.camId = cam.id;
 
-    // Use picture-entity approach: create the HA element
-    const pe = document.createElement('hui-picture-entity-card');
-    if (pe.setConfig) {
-      pe.setConfig({
-        entity: cam.entity,
-        camera_image: cam.entity,
-        camera_view: 'live',
-        show_state: false,
-        show_name: false,
-        fit_mode: 'fill',
-        aspect_ratio: '16:9',
-        tap_action: { action: 'none' },
-      });
-    }
-    if (this._hass) pe.hass = this._hass;
-    slide.appendChild(pe);
+    const camConfig = {
+      type: 'picture-entity',
+      entity: cam.entity,
+      camera_image: cam.entity,
+      camera_view: 'auto',
+      show_state: false,
+      show_name: false,
+      aspect_ratio: '16:9',
+      tap_action: { action: 'none' },
+    };
 
-    // Tap handler for popup
+    try {
+      const helpers = await window.loadCardHelpers();
+      const pe = await helpers.createCardElement(camConfig);
+      pe.hass = this._hass;
+      this._cameraElements.set(cam.id, pe);
+      slide.appendChild(pe);
+    } catch (e) {
+      const fallback = document.createElement('div');
+      fallback.style.cssText = 'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#8a9ab8;font-size:12px;';
+      fallback.textContent = 'Camera unavailable';
+      slide.appendChild(fallback);
+    }
+
     slide.addEventListener('click', () => this._openCameraPopup(cam));
 
     return slide;
@@ -531,6 +545,7 @@ class KisPriorityView extends HTMLElement {
     this._touchStartY = e.touches[0].clientY;
     this._touchStartTime = Date.now();
     this._isSwiping = false;
+    this._showDots();
     this._sliderEl.style.transition = 'none';
   }
 
@@ -645,6 +660,17 @@ class KisPriorityView extends HTMLElement {
     for (let i = 0; i < this._dotsEl.children.length; i++) {
       this._dotsEl.children[i].classList.toggle('active', i === this._defaultIndex);
     }
+
+    this._showDots();
+  }
+
+  _showDots() {
+    if (!this._dotsEl) return;
+    this._dotsEl.classList.remove('fade-out');
+    clearTimeout(this._dotsFadeTimer);
+    this._dotsFadeTimer = setTimeout(() => {
+      this._dotsEl.classList.add('fade-out');
+    }, 3000);
   }
 
   // ── Content updates (targeted, not full rebuild) ────────────────────────────
@@ -717,6 +743,8 @@ class KisPriorityView extends HTMLElement {
       :host {
         display: block;
         width: 100%;
+        height: 100%;
+        box-sizing: border-box;
       }
 
       .section-label {
@@ -810,24 +838,38 @@ class KisPriorityView extends HTMLElement {
         overflow: hidden;
       }
 
-      /* Pagination dots */
+      /* Pagination dots — overlaid on viewport */
       .dots {
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
         display: flex;
-        justify-content: center;
         gap: 6px;
-        padding: 8px 0 4px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.35);
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+        transition: opacity 400ms ease;
+      }
+
+      .dots.fade-out {
+        opacity: 0;
+        pointer-events: none;
       }
 
       .dot {
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: var(--kis-text-secondary, rgba(138,154,184,0.4));
+        background: rgba(255, 255, 255, 0.45);
         transition: background 0.2s ease, transform 0.2s ease;
       }
 
       .dot.active {
-        background: var(--kis-accent, ${KIS_TOKENS.night.accent});
+        background: rgba(255, 255, 255, 1);
         transform: scale(1.3);
       }
 
