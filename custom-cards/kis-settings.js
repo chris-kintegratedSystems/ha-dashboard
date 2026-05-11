@@ -35,6 +35,9 @@ class KisSettings extends HTMLElement {
     this._built = false;
   }
 
+  connectedCallback() { if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this); }
+  disconnectedCallback() { if (window.KIS_UNREGISTER_CARD) window.KIS_UNREGISTER_CARD(this); }
+
   setConfig(config) { this._config = config || {}; }
   static getStubConfig() { return {}; }
 

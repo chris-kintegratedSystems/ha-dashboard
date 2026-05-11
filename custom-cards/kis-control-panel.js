@@ -103,6 +103,9 @@ class KisControlPanel extends HTMLElement {
     this._held = {};
   }
 
+  connectedCallback() { if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this); }
+  disconnectedCallback() { if (window.KIS_UNREGISTER_CARD) window.KIS_UNREGISTER_CARD(this); }
+
   setConfig(config) {
     this._config = config || {};
   }
@@ -137,6 +140,7 @@ class KisControlPanel extends HTMLElement {
     style.textContent = `
       :host {
         display: block;
+        height: 100%;
         --cp-h: var(--kis-card-h, 80px);
         --cp-icon: clamp(14px, calc(var(--cp-h) * 0.35), 24px);
         --cp-chip-box: clamp(24px, calc(var(--cp-h) * 0.58), 40px);
@@ -154,6 +158,9 @@ class KisControlPanel extends HTMLElement {
         display: flex;
         flex-direction: column;
         gap: 8px;
+        height: 100%;
+        box-sizing: border-box;
+        justify-content: space-between;
       }
       .section-label {
         font-family: ${KIS_TOKENS.fontFamily};
@@ -239,9 +246,14 @@ class KisControlPanel extends HTMLElement {
       }
       @media (max-width: 599px) {
         :host {
+          height: auto;
           max-width: min(100%, calc(55vh * 16 / 9));
           margin-left: auto;
           margin-right: auto;
+        }
+        .kis-cp {
+          height: auto;
+          justify-content: flex-start;
         }
       }
     `;

@@ -180,6 +180,9 @@ class KisPriorityView extends HTMLElement {
     this._radarPatched = false;
   }
 
+  connectedCallback() { if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this); }
+  disconnectedCallback() { if (window.KIS_UNREGISTER_CARD) window.KIS_UNREGISTER_CARD(this); }
+
   setConfig(config) {
     this._config = config || {};
   }

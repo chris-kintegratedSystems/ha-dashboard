@@ -107,6 +107,11 @@
   let _hass = null;
   let _currentMode = null; // 'day' or 'night'
 
+  // ── Card registration: forward hass to custom cards ────────────────────────
+  const _registeredCards = new Set();
+  window.KIS_REGISTER_CARD = (card) => { _registeredCards.add(card); if (_hass) card.hass = _hass; };
+  window.KIS_UNREGISTER_CARD = (card) => { _registeredCards.delete(card); };
+
   // ── Resolve current theme mode ────────────────────────────────────────────
   function resolveMode(hass) {
     const modeEntity = hass.states['input_select.theme_mode'];
@@ -198,15 +203,42 @@
       Object.defineProperty(haMain, 'hass', {
         get() { return _hassValue; },
         set(newHass) {
-          _hassValue = newHass;
           if (origDescriptor && origDescriptor.set) {
             origDescriptor.set.call(this, newHass);
           }
+          _hassValue = newHass;
           _hass = newHass;
           onHassUpdate(newHass);
+          for (const card of _registeredCards) {
+            if (card.isConnected) card.hass = newHass;
+            else _registeredCards.delete(card);
+          }
         },
         configurable: true,
       });
+
+      // Scan for already-connected kis-* cards that missed connectedCallback registration
+      function scanForCards() {
+        const KIS_TAGS = ['kis-scenes', 'kis-control-panel', 'kis-settings', 'kis-priority-view'];
+        function walk(root, depth) {
+          if (depth > 20) return;
+          for (const tag of KIS_TAGS) {
+            root.querySelectorAll(tag).forEach(el => {
+              if (!_registeredCards.has(el)) {
+                _registeredCards.add(el);
+                el.hass = _hass;
+              }
+            });
+          }
+          root.querySelectorAll('*').forEach(el => {
+            if (el.shadowRoot) walk(el.shadowRoot, depth + 1);
+          });
+        }
+        walk(document, 0);
+      }
+      setTimeout(scanForCards, 1000);
+      setTimeout(scanForCards, 3000);
+      setTimeout(scanForCards, 6000);
     }
 
     if (doc.readyState === 'loading') {
@@ -699,7 +731,9 @@
 
     const ent = hass ? getState(hass, MEDIA_PLAYER_ENTITY) : null;
     const state = ent ? ent.state : 'off';
-    const isActive = state === 'playing' || state === 'paused';
+    const attrs = ent ? (ent.attributes || {}) : {};
+    const hasMedia = !!(attrs.media_title || attrs.media_artist);
+    const isActive = (state === 'playing' || state === 'paused') && hasMedia;
 
     if (!isActive) {
       if (_prevMediaState !== 'hidden') {
@@ -714,7 +748,6 @@
     }
     _prevMediaState = state;
 
-    const attrs = ent.attributes || {};
     const track = attrs.media_title || 'Unknown';
     const artist = attrs.media_artist || '';
     const art = attrs.entity_picture || '';
@@ -758,6 +791,141 @@
     }
   };
 
+  // ── Shadow DOM CSS injection (full-width, hide HA chrome) ──────────────
+  function injectShadowCSS(shadowRoot, id, css) {
+    if (!shadowRoot) return false;
+    const existing = shadowRoot.querySelector('#' + id);
+    if (existing) { existing.textContent = css; return true; }
+    const style = document.createElement('style');
+    style.id = id;
+    style.textContent = css;
+    shadowRoot.appendChild(style);
+    return true;
+  }
+
+  const HEADER_H = 68;
+
+  function getHuiRootCSS() {
+    return `
+      app-header { display: none !important; }
+      ha-app-layout {
+        --header-height: 0px !important;
+        --app-header-height: 0px !important;
+      }
+      #view {
+        height: 100vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        box-sizing: border-box;
+      }
+      hui-sections-view {
+        padding-top: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+    `;
+  }
+
+  function getAppLayoutCSS() {
+    return `
+      :host {
+        --header-height: 0px !important;
+        --app-header-height: 0px !important;
+      }
+      #contentContainer, [part="content"], .content {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+        overflow-y: visible !important;
+      }
+    `;
+  }
+
+  function getSectionsViewCSS() {
+    return `
+      :host {
+        display: block;
+        margin-top: ${HEADER_H}px;
+        padding-bottom: ${NAV_H}px !important;
+        box-sizing: border-box;
+        --ha-view-sections-column-max-width: none !important;
+        --column-max-width: none !important;
+        --ha-view-sections-column-gap: 12px !important;
+        --ha-view-sections-row-gap: 12px !important;
+      }
+      .wrapper {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        max-width: 100% !important;
+      }
+      .container, .sections-container, [class*="container"] {
+        margin-top: 0 !important;
+        max-width: 100% !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .wrapper.top-margin, .top-margin {
+        margin-top: 0 !important;
+      }
+    `;
+  }
+
+  function patchHALayout(attempt) {
+    attempt = attempt || 0;
+    if (!onV2Dashboard()) return;
+
+    try {
+      const ha = document.querySelector('home-assistant');
+      if (!ha?.shadowRoot) throw new Error('no ha root');
+
+      const main = ha.shadowRoot.querySelector('home-assistant-main');
+      if (!main?.shadowRoot) throw new Error('no main');
+
+      let panel = null;
+      const drawer = main.shadowRoot.querySelector('ha-drawer');
+      if (drawer) {
+        panel = drawer.querySelector('ha-panel-lovelace');
+        // Hide sidebar and force full-width content
+        drawer.style.setProperty('--mdc-drawer-width', '0px');
+        const sidebar = drawer.querySelector('ha-sidebar');
+        if (sidebar) sidebar.style.display = 'none';
+        // Force drawer to not show aside
+        if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
+        drawer.setAttribute('type', 'modal');
+      }
+      if (!panel) panel = main.shadowRoot.querySelector('ha-panel-lovelace');
+      if (!panel?.shadowRoot) throw new Error('no panel');
+
+      const huiRoot = panel.shadowRoot.querySelector('hui-root');
+      if (!huiRoot?.shadowRoot) throw new Error('no hui-root');
+
+      const huiShadow = huiRoot.shadowRoot;
+      injectShadowCSS(huiShadow, 'kisv2-hui-patch', getHuiRootCSS());
+
+      const appLayout = huiShadow.querySelector('ha-app-layout');
+      if (appLayout?.shadowRoot) {
+        injectShadowCSS(appLayout.shadowRoot, 'kisv2-applayout-patch', getAppLayoutCSS());
+      }
+
+      const viewEl = huiShadow.querySelector('#view');
+      if (viewEl) {
+        const sectionsView = viewEl.querySelector('hui-sections-view');
+        if (sectionsView?.shadowRoot) {
+          injectShadowCSS(sectionsView.shadowRoot, 'kisv2-sections-patch', getSectionsViewCSS());
+        }
+      }
+    } catch (e) {
+      if (attempt < 30) {
+        setTimeout(() => patchHALayout(attempt + 1), Math.min(300 * (attempt + 1), 2000));
+      }
+    }
+  }
+
   // ── Boot persistent UI ────────────────────────────────────────────────────
   function bootUI() {
     if (customElements.get('ha-icon')) {
@@ -766,13 +934,16 @@
       customElements.whenDefined('ha-icon').then(() => setTimeout(injectUI, 200));
     }
 
-    window.addEventListener('location-changed', syncV2State);
-    window.addEventListener('popstate', syncV2State);
+    window.addEventListener('location-changed', () => { syncV2State(); patchHALayout(0); });
+    window.addEventListener('popstate', () => { syncV2State(); patchHALayout(0); });
 
     // Tick header every second for live clock
     setInterval(() => {
       if (onV2Dashboard() && _hass) renderV2Header();
     }, 1000);
+
+    // Initial layout patch with retries
+    setTimeout(() => patchHALayout(0), 500);
   }
 
   // ── Boot ──────────────────────────────────────────────────────────────────

@@ -52,8 +52,18 @@ class KisScenes extends HTMLElement {
     this._built = false;
   }
 
+  connectedCallback() { if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this); }
+  disconnectedCallback() { if (window.KIS_UNREGISTER_CARD) window.KIS_UNREGISTER_CARD(this); }
+
   setConfig(config) {
     this._config = config || {};
+    this._scenes = this._resolveScenes();
+  }
+
+  _resolveScenes() {
+    const ids = this._config.scenes;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) return SCENES;
+    return ids.map(id => SCENES.find(s => s.entity === id)).filter(Boolean);
   }
 
   static getStubConfig() {
@@ -70,7 +80,7 @@ class KisScenes extends HTMLElement {
       return;
     }
 
-    for (const scene of SCENES) {
+    for (const scene of this._scenes) {
       const id = scene.entity;
       const cur = hass.states[id];
       const old = prev?.states?.[id];
@@ -94,9 +104,21 @@ class KisScenes extends HTMLElement {
         --sc-icon-box: clamp(24px, calc(var(--sc-h) * 0.58), 48px);
         --sc-icon-r: clamp(6px, calc(var(--sc-h) * 0.14), 12px);
       }
+      .section-label {
+        font-family: ${KIS_TOKENS.fontFamily};
+        font-size: ${KIS_TOKENS.fontSize.navLabel};
+        font-weight: ${KIS_TOKENS.fontWeight.semibold};
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--kis-section-label, ${KIS_TOKENS.night.sectionLabel});
+        padding: 4px 2px;
+        margin: 0 0 6px 0;
+        border-bottom: 1px solid var(--kis-section-rule, ${KIS_TOKENS.night.sectionRule});
+        text-align: left;
+      }
       .scene-grid {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: ${KIS_TOKENS.gap.scene};
       }
       .scene-btn {
@@ -138,9 +160,6 @@ class KisScenes extends HTMLElement {
         margin-top: 8px;
       }
       @media (max-width: 599px) {
-        .scene-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
         :host {
           max-width: min(100%, calc(55vh * 16 / 9));
           margin-left: auto;
@@ -150,10 +169,17 @@ class KisScenes extends HTMLElement {
     `;
     s.appendChild(style);
 
+    if (this._config.title) {
+      const label = document.createElement('div');
+      label.className = 'section-label';
+      label.textContent = this._config.title;
+      s.appendChild(label);
+    }
+
     const grid = document.createElement('div');
     grid.className = 'scene-grid';
 
-    for (const scene of SCENES) {
+    for (const scene of this._scenes) {
       const btn = document.createElement('div');
       btn.className = 'scene-btn';
       btn.dataset.entity = scene.entity;
@@ -182,7 +208,7 @@ class KisScenes extends HTMLElement {
 
     s.appendChild(grid);
 
-    for (const scene of SCENES) {
+    for (const scene of this._scenes) {
       this._updateBtn(scene, this._hass?.states?.[scene.entity]);
     }
   }

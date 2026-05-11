@@ -7,12 +7,28 @@ views:
     type: sections
     max_columns: 2
     sections:
-      # Scenes — full width
+      # Scenes — left 3 with header
       - title: ""
         type: grid
-        column_span: 2
+        column_span: 1
         cards:
           - type: custom:kis-scenes
+            title: "SCENES"
+            scenes:
+              - script.scene_good_morning
+              - script.scene_good_night
+              - script.scene_away_mode
+
+      # Scenes — right 3
+      - title: ""
+        type: grid
+        column_span: 1
+        cards:
+          - type: custom:kis-scenes
+            scenes:
+              - script.scene_welcome_home
+              - script.scene_movie_time
+              - script.scene_dinner_time
 
       # Security — left column
       - title: ""
