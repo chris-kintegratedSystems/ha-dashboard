@@ -336,15 +336,15 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
     }
     #kis-v2-header[hidden] { display: none !important; }
-    #kis-v2-header .kh-left { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-    #kis-v2-header .kh-clock-wrap { display: flex; flex-direction: column; line-height: 1; }
+    #kis-v2-header .kh-left { display: flex; align-items: center; gap: 12px; flex-shrink: 0; min-height: 40px; }
+    #kis-v2-header .kh-clock-wrap { display: flex; flex-direction: column; line-height: 1; justify-content: center; }
     #kis-v2-header .kh-clock { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: #eef2f8; font-variant-numeric: tabular-nums; line-height: 1; }
-    #kis-v2-header .kh-ampm { font-size: 11px; font-weight: 600; color: #8a9ab8; }
-    #kis-v2-header .kh-date { font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #4a5570; margin-top: 1px; }
+    #kis-v2-header .kh-ampm { font-size: 11px; font-weight: 600; color: #8a9ab8; vertical-align: baseline; }
+    #kis-v2-header .kh-date { font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #4a5570; margin-top: 2px; }
+    #kis-v2-header .kh-right { display: flex; align-items: center; gap: 6px; flex-shrink: 1; min-width: 0; min-height: 40px; overflow-x: auto; scrollbar-width: none; }
     #kis-v2-header .kh-weather { display: flex; align-items: center; gap: 5px; }
     #kis-v2-header .kh-weather-icon { font-size: 16px; line-height: 1; }
     #kis-v2-header .kh-weather-temp { font-size: 14px; font-weight: 700; color: #f1f5f9; font-variant-numeric: tabular-nums; }
-    #kis-v2-header .kh-right { display: flex; align-items: center; gap: 6px; flex-shrink: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
     #kis-v2-header .kh-right::-webkit-scrollbar { display: none; }
     #kis-v2-header .kh-person-pill { display: flex; align-items: center; gap: 4px; padding: 3px 8px 3px 5px; border-radius: 14px; background: rgba(16,21,31,0.72); border: 1px solid rgba(255,255,255,0.06); white-space: nowrap; flex-shrink: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     #kis-v2-header .kh-pdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
@@ -814,6 +814,7 @@
       }
       #view {
         height: 100vh !important;
+        padding-top: 0 !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch !important;
@@ -846,16 +847,18 @@
       :host {
         display: block;
         margin-top: ${HEADER_H}px;
+        padding-top: 0 !important;
         padding-bottom: ${NAV_H}px !important;
         box-sizing: border-box;
+        --kis-spacing-b: clamp(10px, 1.5vw, 24px);
+        --kis-spacing-h: calc(var(--kis-spacing-b) / 2);
         --ha-view-sections-column-max-width: none !important;
         --column-max-width: none !important;
-        --ha-view-sections-column-gap: 12px !important;
-        --ha-view-sections-row-gap: 12px !important;
+        --ha-view-sections-column-gap: var(--kis-spacing-b) !important;
+        --ha-view-sections-row-gap: var(--kis-spacing-b) !important;
       }
       .wrapper {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding: 0 !important;
         margin-top: 0 !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
@@ -863,6 +866,7 @@
       }
       .container, .sections-container, [class*="container"] {
         margin-top: 0 !important;
+        padding-top: var(--kis-spacing-b) !important;
         max-width: 100% !important;
         padding-left: 12px !important;
         padding-right: 12px !important;
@@ -872,7 +876,62 @@
       .wrapper.top-margin, .top-margin {
         margin-top: 0 !important;
       }
+      hui-grid-section {
+        --grid-section-header-margin: 0 !important;
+        align-self: stretch !important;
+      }
+      .container, .sections-container {
+        align-items: stretch !important;
+      }
+      .section-header, [class*="header"] {
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .section-header:empty, .section-header:has(> :empty) {
+        display: none !important;
+      }
     `;
+  }
+
+  function getGridSectionCSS() {
+    return `
+      .header { min-height: 0 !important; margin: 0 !important; padding: 0 !important; }
+      .header:has(h2:empty), .header:not(:has(h2)), .header:has(h2:not(:empty)):not(.has-title) { display: none !important; }
+      h2:empty { display: none !important; }
+      ha-sortable { height: 100%; }
+      ha-sortable > div { min-height: 100%; }
+      hui-card { display: block; height: 100%; }
+    `;
+  }
+
+  function patchGridSections(sectionsRoot) {
+    const gridSections = sectionsRoot.querySelectorAll('hui-grid-section');
+    gridSections.forEach((gs, i) => {
+      if (gs.shadowRoot) {
+        injectShadowCSS(gs.shadowRoot, 'kisv2-gridsection-patch', getGridSectionCSS());
+      }
+    });
+    equalizeRowHeights(gridSections);
+  }
+
+  function equalizeRowHeights(gridSections) {
+    if (!gridSections.length) return;
+    const rows = new Map();
+    for (const gs of gridSections) {
+      const top = Math.round(gs.getBoundingClientRect().top);
+      if (!rows.has(top)) rows.set(top, []);
+      rows.get(top).push(gs);
+    }
+    for (const [, group] of rows) {
+      if (group.length < 2) continue;
+      const maxH = Math.max(...group.map(gs => gs.getBoundingClientRect().height));
+      for (const gs of group) {
+        if (gs.getBoundingClientRect().height < maxH - 1) {
+          gs.style.minHeight = maxH + 'px';
+        }
+      }
+    }
   }
 
   function patchHALayout(attempt) {
@@ -917,6 +976,9 @@
         const sectionsView = viewEl.querySelector('hui-sections-view');
         if (sectionsView?.shadowRoot) {
           injectShadowCSS(sectionsView.shadowRoot, 'kisv2-sections-patch', getSectionsViewCSS());
+          patchGridSections(sectionsView.shadowRoot);
+          setTimeout(() => equalizeRowHeights(sectionsView.shadowRoot.querySelectorAll('hui-grid-section')), 1000);
+          setTimeout(() => equalizeRowHeights(sectionsView.shadowRoot.querySelectorAll('hui-grid-section')), 3000);
         }
       }
     } catch (e) {

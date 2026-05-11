@@ -157,7 +157,7 @@ class KisControlPanel extends HTMLElement {
       .kis-cp {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--kis-spacing-h, 8px);
         height: 100%;
         box-sizing: border-box;
         justify-content: space-between;
@@ -238,13 +238,13 @@ class KisControlPanel extends HTMLElement {
       }
       .garage-pair {
         display: flex;
-        gap: 8px;
+        gap: var(--kis-spacing-h, 8px);
       }
       .garage-pair > .row {
         flex: 1;
         min-width: 0;
       }
-      @media (max-width: 599px) {
+      @media (max-width: 768px) {
         :host {
           height: auto;
           max-width: min(100%, calc(55vh * 16 / 9));
