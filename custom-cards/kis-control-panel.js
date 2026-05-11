@@ -103,8 +103,18 @@ class KisControlPanel extends HTMLElement {
     this._held = {};
   }
 
-  connectedCallback() { if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this); }
-  disconnectedCallback() { if (window.KIS_UNREGISTER_CARD) window.KIS_UNREGISTER_CARD(this); }
+  connectedCallback() {
+    if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this);
+    this._ro = new ResizeObserver(() => {
+      const cp = this.shadowRoot?.querySelector('.kis-cp');
+      if (cp) cp.style.minHeight = this.getBoundingClientRect().height + 'px';
+    });
+    this._ro.observe(this);
+  }
+  disconnectedCallback() {
+    if (window.KIS_UNREGISTER_CARD) window.KIS_UNREGISTER_CARD(this);
+    this._ro?.disconnect();
+  }
 
   setConfig(config) {
     this._config = config || {};
@@ -141,6 +151,7 @@ class KisControlPanel extends HTMLElement {
       :host {
         display: block;
         height: 100%;
+        min-height: 100%;
         --cp-h: var(--kis-card-h, 80px);
         --cp-icon: clamp(14px, calc(var(--cp-h) * 0.35), 24px);
         --cp-chip-box: clamp(24px, calc(var(--cp-h) * 0.58), 40px);
@@ -160,7 +171,6 @@ class KisControlPanel extends HTMLElement {
         gap: var(--kis-spacing-h, 8px);
         height: 100%;
         box-sizing: border-box;
-        justify-content: space-between;
       }
       ${KIS_SECTION_LABEL_CSS}
       .row {
@@ -243,7 +253,14 @@ class KisControlPanel extends HTMLElement {
         }
         .kis-cp {
           height: auto;
-          justify-content: flex-start;
+        }
+      }
+      @media (max-width: 430px) {
+        .garage-pair {
+          flex-direction: column;
+        }
+        .garage-pair > .row {
+          width: 100%;
         }
       }
     `;

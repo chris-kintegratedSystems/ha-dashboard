@@ -95,30 +95,29 @@ class KisScenes extends HTMLElement {
         flex-direction: column;
         height: 100%;
         box-sizing: border-box;
-        --sc-h: var(--kis-card-h, 80px);
-        --sc-icon: clamp(14px, calc(var(--sc-h) * 0.30), 28px);
-        --sc-icon-box: clamp(24px, calc(var(--sc-h) * 0.58), 48px);
-        --sc-icon-r: clamp(6px, calc(var(--sc-h) * 0.14), 12px);
+        --sc-h: var(--kis-card-h, 64px);
+        --sc-icon: clamp(14px, calc(var(--sc-h) * 0.30), 24px);
+        --sc-icon-box: clamp(24px, calc(var(--sc-h) * 0.50), 36px);
+        --sc-icon-r: clamp(6px, calc(var(--sc-h) * 0.14), 10px);
       }
       ${KIS_SECTION_LABEL_CSS}
       .scene-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: repeat(6, 1fr);
         gap: var(--kis-spacing-h, ${KIS_TOKENS.gap.scene});
-        flex: 1;
-        align-items: stretch;
+        align-items: start;
       }
       .scene-btn {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 14px 8px 12px;
+        padding: 8px 8px 6px;
         border-radius: ${KIS_TOKENS.radius.card};
         background: var(--ha-card-background, ${KIS_TOKENS.night.bgCardSolid});
         border: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
         cursor: pointer;
-        min-height: var(--sc-h);
+        height: var(--sc-h);
         transition: border 0.2s ease, box-shadow 0.2s ease, min-height 0.25s cubic-bezier(0.4,0,0.2,1);
         user-select: none;
         -webkit-user-select: none;

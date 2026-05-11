@@ -741,7 +741,8 @@ class KisPriorityView extends HTMLElement {
   _getCSS() {
     return `
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         height: 100%;
         box-sizing: border-box;
@@ -758,6 +759,13 @@ class KisPriorityView extends HTMLElement {
         border: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
         aspect-ratio: 16 / 9;
         transition: border 0.3s ease, box-shadow 0.3s ease;
+      }
+      @media (min-width: 600px) {
+        .carousel-viewport {
+          aspect-ratio: auto;
+          flex: 1;
+          min-height: 200px;
+        }
       }
 
       .carousel-slider {

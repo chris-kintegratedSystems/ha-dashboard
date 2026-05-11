@@ -855,7 +855,7 @@
         --ha-view-sections-column-max-width: none !important;
         --column-max-width: none !important;
         --ha-view-sections-column-gap: var(--kis-spacing-b) !important;
-        --ha-view-sections-row-gap: var(--kis-spacing-b) !important;
+        --ha-view-sections-row-gap: var(--kis-spacing-h) !important;
       }
       .wrapper {
         padding: 0 !important;
@@ -876,12 +876,24 @@
       .wrapper.top-margin, .top-margin {
         margin-top: 0 !important;
       }
-      hui-grid-section {
+      hui-section, hui-grid-section {
         --grid-section-header-margin: 0 !important;
-        align-self: stretch !important;
+        flex: 1 !important;
+        min-height: 0 !important;
+      }
+      hui-section > hui-grid-section {
+        height: 100% !important;
       }
       .container, .sections-container {
         align-items: stretch !important;
+        align-content: start !important;
+      }
+      .container ha-sortable > div {
+        align-items: stretch !important;
+      }
+      .container ha-sortable > div > div {
+        display: flex !important;
+        flex-direction: column !important;
       }
       .section-header, [class*="header"] {
         min-height: 0 !important;
@@ -898,13 +910,13 @@
     return `
       .header { display: none !important; }
       ha-sortable { height: 100%; }
-      ha-sortable > div { min-height: 100%; grid-template-columns: 1fr !important; }
+      ha-sortable > div { height: 100%; grid-template-columns: 1fr !important; }
       hui-card { display: block; height: 100%; }
     `;
   }
 
   function patchGridSections(sectionsRoot) {
-    const gridSections = sectionsRoot.querySelectorAll('hui-grid-section');
+    const gridSections = sectionsRoot.querySelectorAll('hui-section, hui-grid-section');
     gridSections.forEach((gs, i) => {
       if (gs.shadowRoot) {
         injectShadowCSS(gs.shadowRoot, 'kisv2-gridsection-patch', getGridSectionCSS());
