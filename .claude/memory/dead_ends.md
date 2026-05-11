@@ -426,3 +426,33 @@ fix HA's sidebar from outside.
 **Problem:** Integer rounding produces column-total drift when the division doesn't resolve cleanly. iPad landscape: `(326 - 52) / 4 = 68.5`, rounded to 69. Total left column = `4 × 69 + 52 = 328`, but right column (zone) is exactly 326. 2px overshoot.
 **Fix:** Drop the `Math.round`. Allow fractional `cardH`. CSS handles sub-pixel rendering transparently via the browser's layout engine. `cardH = Math.max(48, (swipeH - labelH - 4*gapH) / 4)`. Column totals match zone exactly. Sub-pixel pixel-diff is invisible in real rendering but eliminates the visible 2px delta that had been there on iPad landscape since the formula was written.
 **Rule of thumb:** in CSS-driven layout math, prefer fractional values when they compose into totals that need to match. Rounding at one step propagates as drift at the total.
+
+## 2026-05-10: customElements.whenDefined gate on customElements.define blocks registration
+**Tried:** `kis-priority-view.js` gated its `customElements.define` call behind
+`customElements.whenDefined('hui-picture-entity-card').then(...)` — waiting for
+the HA-native picture-entity card to be defined before registering itself.
+**Failed:** When the YAML dashboard replaced all inline `picture-entity` cards
+with the single `custom:kis-priority-view`, HA never lazy-loaded
+`hui-picture-entity-card` because no card in the YAML referenced it. The
+`whenDefined` promise never resolved, so `kis-priority-view` never registered,
+and the section rendered as empty — silently dropped from the layout.
+**Fix:** Remove the `whenDefined` gate entirely. Register immediately with
+`customElements.define('kis-priority-view', KisPriorityView)`. The card creates
+`hui-picture-entity-card` elements internally via `document.createElement` which
+triggers HA's lazy-load when the element is actually used.
+**Broader lesson:** Never gate a custom card's `customElements.define` on another
+element being defined unless that element is guaranteed to exist in every page
+context the card appears on. When your card IS the only consumer of that element,
+the gate creates a circular dependency.
+
+## 2026-05-10: Mini-player hidden on first render when _prevMediaState is null
+**Tried:** `updateV2MiniPlayer()` checked `if (_prevMediaState === 'hidden')` to
+decide whether to remove the `hidden` attribute. Initial `_prevMediaState` was
+`null`.
+**Failed:** On first render with media player in `playing` state, the condition
+was false (null !== 'hidden'), so the `hidden` attribute set during `injectUI()`
+was never removed. Player stayed invisible despite active media.
+**Fix:** Changed guard to `if (_prevMediaState === 'hidden' || _prevMediaState === null)`.
+**Broader lesson:** When a DOM element starts in a hidden state and a state
+machine controls its visibility, the initial/null state must be treated the same
+as the hidden state for the "show" transition.

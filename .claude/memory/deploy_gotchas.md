@@ -144,3 +144,15 @@ a visible aspect ratio jump on transition. Fix: use
 `background-size: 100% 100%` (stretch) instead of `cover` (crop) on
 the placeholder so it fills the exact same container rectangle as the
 video, producing a seamless dimensional transition.
+
+## 2026-05-10: mobilev2 resources need WebSocket cache-bust
+mobilev2 cards (kis-app-shell.js, kis-priority-view.js, etc.) are loaded
+via `lovelace_resources` (NOT `extra_module_url`). Cache-bust is done by
+updating the resource URL via WebSocket:
+`lovelace/resources/update` with `resource_id` + `url` including `?v=N`.
+After updating, `docker restart homeassistant` is required. Browsers
+(and FKB) will re-fetch the JS if the URL changed. Unlike kis-nav.js
+(which uses `extra_module_url` in configuration.yaml), mobilev2 resource
+URLs live in `.storage/lovelace_resources` — no configuration.yaml edit
+needed. Get resource IDs from:
+`sudo cat /config/.storage/lovelace_resources | python -c "import sys,json; ..."`
