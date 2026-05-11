@@ -898,7 +898,7 @@
     return `
       .header { display: none !important; }
       ha-sortable { height: 100%; }
-      ha-sortable > div { min-height: 100%; }
+      ha-sortable > div { min-height: 100%; grid-template-columns: 1fr !important; }
       hui-card { display: block; height: 100%; }
     `;
   }
