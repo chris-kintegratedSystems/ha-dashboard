@@ -50,6 +50,7 @@ Append new entries at the bottom. Date-stamp every entry.
 | Reolink RLC-820A (RTSP/Tier A) | WORKS | First RTSP-native camera. 2K@25fps via Frigate embedded go2rtc, MSE protocol. 0.53s latency, ~10% Pi 5 CPU. Smooth on Tab S9 + iPhone. No rate limiting (unlike Nest). Uses h264Preview paths only (h265 paths cause browser decode issues). |
 | weather-radar-card (HACS) | WORKS | RainViewer, Dark map, DFW center. Shadow injection hides `#bottom-container` (timestamp, attribution). No config prop to hide — CSS only. zoom:7, 400ms frame delay, 2hr loop. | 2026-05-07 |
 | kiosk-mode (HACS integration) | PARTIAL | Template `[[[is_state(...)]]]` in dashboard JSON works on iPad + Tab S9. Does NOT work on iPhone Companion or desktop browsers. Not investigated — may be per-device caching, Companion URL residue, or template eval timing. | 2026-05-07 |
+| custom:kis-priority-view | 10-item carousel (cameras + vehicles + weather + radar) | WORKS | mobilev2 custom card. Native touch handling (no simple-swipe-card). Camera motion override via `sensor.priority_camera`, 2-min client-side sticky. Weather radar via `weather-radar-card` element. Must NOT gate `customElements.define` on `hui-picture-entity-card` — see dead_ends.md 2026-05-10. | 2026-05-10 |
 | iCloud3 (AirTags) | NOT STARTED | Needs Apple ID auth. |
 | Tesla | NOT STARTED | Needs OAuth + virtual key. |
 | Mercedes mbapi2020 | UNCERTAIN | G580 support unconfirmed. |
