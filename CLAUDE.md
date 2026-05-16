@@ -1,3 +1,29 @@
+## Session Start Protocol — MANDATORY
+
+Before doing ANY work, read these files in order. Do not respond
+to any prompt until complete.
+
+1. C:\Projects\kintegrated\CLAUDE.md (KIS-wide context)
+2. CLAUDE.md (this file)
+3. AGENTS.md (agent routing)
+4. policing/TENANTS.md (what requires approval)
+5. policing/PERMISSION_BASELINE.md (allowlist/denylist)
+6. HANDOFF.md (last session — skip if missing)
+7. TASKS.md (work queue — skip if missing)
+8. memory/dead_ends.md (skip if missing)
+9. memory/component_compat.md (skip if missing)
+10. memory/css_dom_patterns.md (skip if missing)
+11. memory/deploy_gotchas.md (skip if missing)
+12. Latest file in checkpoints/ (skip if missing)
+
+After reading, confirm:
+"Session start complete. [One sentence from HANDOFF.md, or
+'No previous session found']"
+
+Do not skip this protocol even if the first message implies urgency.
+
+---
+
 # ha-dashboard — Claude Code Project
 
 Mobile + tablet dashboard JSONs and the shared kis-nav.js fixed UI for
