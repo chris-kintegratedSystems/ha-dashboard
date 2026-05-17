@@ -1421,6 +1421,16 @@
       .section-header:empty, .section-header:has(> :empty) {
         display: none !important;
       }
+      @media (orientation: portrait) {
+        .container, .sections-container, [class*="container"] {
+          grid-template-columns: 1fr !important;
+        }
+      }
+      @media (orientation: landscape) and (min-width: 1100px) {
+        .container, .sections-container, [class*="container"] {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
     `;
   }
 
