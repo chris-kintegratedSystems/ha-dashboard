@@ -384,67 +384,68 @@
     /* ── Alarm panel ── */
     #kis-alarm-backdrop {
       position: fixed; inset: 0; z-index: 10000002;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.6);
       opacity: 0; transition: opacity 0.2s ease;
       pointer-events: none;
     }
     #kis-alarm-backdrop.kap-open { opacity: 1; pointer-events: auto; }
     #kis-alarm-panel {
-      position: fixed; top: 72px; right: 12px; z-index: 10000003;
-      width: 240px; background: rgba(16,21,31,0.95);
-      border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
-      padding: 16px; box-sizing: border-box;
+      position: fixed; z-index: 10000003;
+      top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.92);
+      width: 320px; background: rgba(16,21,31,0.95);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 24px;
+      padding: 32px 28px; box-sizing: border-box;
       -webkit-backdrop-filter: blur(24px) saturate(200%);
       backdrop-filter: blur(24px) saturate(200%);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      transform: translateY(-8px); opacity: 0;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.5);
+      opacity: 0;
       transition: transform 0.2s ease, opacity 0.2s ease;
       pointer-events: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     }
-    #kis-alarm-panel.kap-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    #kis-alarm-panel.kap-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
     #kis-alarm-panel[hidden] { display: none !important; }
-    .kap-state-label { display: block; font-size: 15px; font-weight: 700; color: #eef2f8; text-align: center; }
-    .kap-state-time { display: block; font-size: 9px; font-weight: 500; color: #8a9ab8; text-align: center; margin-top: 2px; letter-spacing: 0.06em; }
-    .kap-modes { display: flex; gap: 8px; margin-top: 14px; }
+    .kap-state-label { display: block; font-size: 20px; font-weight: 700; color: #eef2f8; text-align: center; }
+    .kap-state-time { display: block; font-size: 12px; font-weight: 500; color: #8a9ab8; text-align: center; margin-top: 4px; letter-spacing: 0.06em; }
+    .kap-modes { display: flex; gap: 12px; margin-top: 24px; }
     .kap-mode {
-      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-      padding: 10px 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 18px 8px; border-radius: 16px; border: 1.5px solid rgba(255,255,255,0.06);
       background: rgba(255,255,255,0.04); cursor: pointer;
       -webkit-tap-highlight-color: transparent; outline: none;
       transition: background 0.15s ease, border-color 0.15s ease;
     }
-    .kap-mode svg { width: 20px; height: 20px; fill: #8a9ab8; transition: fill 0.15s ease; }
-    .kap-mode span { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #8a9ab8; transition: color 0.15s ease; }
+    .kap-mode svg { width: 32px; height: 32px; fill: #8a9ab8; transition: fill 0.15s ease; }
+    .kap-mode span { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #8a9ab8; transition: color 0.15s ease; }
     .kap-mode.kap-active { border-color: currentColor; }
     .kap-mode.kap-active svg { fill: currentColor; }
     .kap-mode.kap-active span { color: currentColor; }
     .kap-mode.kap-arming { animation: kap-pulse-mode 1.2s ease-in-out infinite; }
     @keyframes kap-pulse-mode { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-    .kap-keypad { margin-top: 14px; }
-    .kap-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; }
-    .kap-dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #4a5570; background: transparent; transition: background 0.1s ease, border-color 0.1s ease; }
+    .kap-keypad { margin-top: 24px; }
+    .kap-dots { display: flex; justify-content: center; gap: 14px; margin-bottom: 16px; }
+    .kap-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #4a5570; background: transparent; transition: background 0.1s ease, border-color 0.1s ease; }
     .kap-dot.kap-filled { background: #eef2f8; border-color: #eef2f8; }
-    .kap-err-msg { font-size: 9px; font-weight: 600; color: #f04060; text-align: center; margin-bottom: 8px; letter-spacing: 0.06em; opacity: 0; transition: opacity 0.15s ease; }
+    .kap-err-msg { font-size: 12px; font-weight: 600; color: #f04060; text-align: center; margin-bottom: 12px; letter-spacing: 0.06em; opacity: 0; transition: opacity 0.15s ease; }
     .kap-err-msg.kap-show { opacity: 1; }
-    .kap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .kap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .kap-key {
-      height: 44px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
+      height: 64px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.04); color: #eef2f8;
-      font-size: 18px; font-weight: 600; cursor: pointer;
+      font-size: 24px; font-weight: 600; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent; outline: none;
       transition: background 0.1s ease;
       font-family: inherit;
     }
     .kap-key:active { background: rgba(255,255,255,0.12); }
-    .kap-key.kap-fn { font-size: 14px; color: #8a9ab8; }
-    .kap-cancel { display: block; width: 100%; margin-top: 10px; padding: 8px; border: none; border-radius: 10px; background: rgba(255,255,255,0.04); color: #8a9ab8; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
-    @keyframes kap-shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+    .kap-key.kap-fn { font-size: 18px; color: #8a9ab8; }
+    .kap-cancel { display: block; width: 100%; margin-top: 16px; padding: 14px; border: none; border-radius: 14px; background: rgba(255,255,255,0.04); color: #8a9ab8; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+    @keyframes kap-shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-8px); } 40%,80% { transform: translateX(8px); } }
     .kap-shake .kap-dots { animation: kap-shake 0.4s ease; }
 
     /* Alarm panel day mode */
-    body:has(#kis-v2-header[data-kis-day]) #kis-alarm-panel { background: rgba(255,255,255,0.96); border-color: rgba(0,0,0,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    body:has(#kis-v2-header[data-kis-day]) #kis-alarm-panel { background: rgba(255,255,255,0.96); border-color: rgba(0,0,0,0.08); box-shadow: 0 16px 64px rgba(0,0,0,0.15); }
     body:has(#kis-v2-header[data-kis-day]) .kap-state-label { color: #1a2030; }
     body:has(#kis-v2-header[data-kis-day]) .kap-state-time { color: #4a5a72; }
     body:has(#kis-v2-header[data-kis-day]) .kap-mode { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); }
@@ -709,10 +710,12 @@
   function toggleAlarmPanel() {
     if (_alarmPanelOpen) { closeAlarmPanel(); return; }
     _alarmPanelOpen = true;
-    _alarmKeypadVisible = false;
     _alarmDigits = [];
     _alarmError = false;
     if (_alarmWaitTimer) { clearTimeout(_alarmWaitTimer); _alarmWaitTimer = null; }
+    const ent = _hass ? getState(_hass, ALARM_ENTITY) : null;
+    const st = ent ? ent.state : 'unavailable';
+    _alarmKeypadVisible = (st === 'armed_home' || st === 'armed_away' || st === 'arming' || st === 'pending');
     renderAlarmPanelContent();
     const backdrop = document.getElementById('kis-alarm-backdrop');
     const panel = document.getElementById('kis-alarm-panel');
@@ -741,23 +744,12 @@
     const isDayMode = _currentMode === 'day';
     const modeColors = isDayMode ? ALARM_MODE_COLORS_DAY : ALARM_MODE_COLORS_NIGHT;
     const stateLabel = (ALARM_NIGHT[state] || ALARM_UNKNOWN_NIGHT).label;
+    const isArmed = state === 'armed_home' || state === 'armed_away';
 
     let html = `<div class="kap-state-label">${stateLabel}</div>`;
     html += `<div class="kap-state-time">${alarmRelativeTime(lastChanged)}</div>`;
-    html += '<div class="kap-modes">';
-    for (const mode of ['armed_home', 'armed_away', 'disarmed']) {
-      const isActive = state === mode;
-      const isArming = (state === 'arming' && mode === 'armed_home') || (state === 'pending' && mode === 'disarmed');
-      const color = modeColors[mode];
-      const cls = 'kap-mode' + (isActive ? ' kap-active' : '') + (isArming ? ' kap-arming' : '');
-      const style = (isActive || isArming) ? `color:${color}` : '';
-      html += `<button class="${cls}" data-mode="${mode}" style="${style}">`;
-      html += `<svg viewBox="0 0 24 24"><path d="${ALARM_MODE_ICONS[mode]}"/></svg>`;
-      html += `<span>${ALARM_MODE_LABELS[mode]}</span></button>`;
-    }
-    html += '</div>';
 
-    if (_alarmKeypadVisible) {
+    if (isArmed || state === 'arming' || state === 'pending' || _alarmKeypadVisible) {
       html += `<div class="kap-keypad${_alarmError ? ' kap-shake' : ''}">`;
       html += '<div class="kap-dots">';
       for (let i = 0; i < ALARM_CODE_LEN; i++) {
@@ -773,11 +765,32 @@
       html += '</div>';
       html += '<button class="kap-cancel">Cancel</button>';
       html += '</div>';
+    } else if (state === 'disarmed') {
+      html += '<div class="kap-modes">';
+      for (const mode of ['armed_home', 'armed_away']) {
+        const color = modeColors[mode];
+        html += `<button class="kap-mode" data-mode="${mode}" style="">`;
+        html += `<svg viewBox="0 0 24 24"><path d="${ALARM_MODE_ICONS[mode]}"/></svg>`;
+        html += `<span>${ALARM_MODE_LABELS[mode]}</span></button>`;
+      }
+      html += '</div>';
+    } else {
+      html += '<div class="kap-modes">';
+      for (const mode of ['armed_home', 'armed_away', 'disarmed']) {
+        const isActive = state === mode;
+        const isTransitioning = (state === 'arming' && mode === 'armed_home') || (state === 'pending' && mode === 'disarmed');
+        const color = modeColors[mode];
+        const cls = 'kap-mode' + (isActive ? ' kap-active' : '') + (isTransitioning ? ' kap-arming' : '');
+        const style = (isActive || isTransitioning) ? `color:${color}` : '';
+        html += `<button class="${cls}" data-mode="${mode}" style="${style}">`;
+        html += `<svg viewBox="0 0 24 24"><path d="${ALARM_MODE_ICONS[mode]}"/></svg>`;
+        html += `<span>${ALARM_MODE_LABELS[mode]}</span></button>`;
+      }
+      html += '</div>';
     }
 
     panel.innerHTML = html;
 
-    // Event delegation
     panel.onclick = (e) => {
       const modeBtn = e.target.closest('.kap-mode');
       if (modeBtn) { handleAlarmMode(modeBtn.dataset.mode); return; }
@@ -800,27 +813,13 @@
     const ent = getState(_hass, ALARM_ENTITY);
     const state = ent ? ent.state : 'unavailable';
     const lastChanged = ent ? ent.last_changed : null;
-    const isDayMode = _currentMode === 'day';
-    const modeColors = isDayMode ? ALARM_MODE_COLORS_DAY : ALARM_MODE_COLORS_NIGHT;
+    const stateLabel = (ALARM_NIGHT[state] || ALARM_UNKNOWN_NIGHT).label;
 
-    // Update state label + time
     const labelEl = panel.querySelector('.kap-state-label');
     const timeEl = panel.querySelector('.kap-state-time');
-    const stateLabel = (ALARM_NIGHT[state] || ALARM_UNKNOWN_NIGHT).label;
     if (labelEl) labelEl.textContent = stateLabel;
     if (timeEl) timeEl.textContent = alarmRelativeTime(lastChanged);
 
-    // Update mode buttons
-    panel.querySelectorAll('.kap-mode').forEach(btn => {
-      const mode = btn.dataset.mode;
-      const isActive = state === mode;
-      const isArming = (state === 'arming' && mode === 'armed_home') || (state === 'pending' && mode === 'disarmed');
-      btn.classList.toggle('kap-active', isActive);
-      btn.classList.toggle('kap-arming', isArming);
-      btn.style.color = (isActive || isArming) ? (modeColors[mode] || '') : '';
-    });
-
-    // Auto-close on successful transition (watched states)
     if (_alarmWaitTimer && state === 'disarmed') {
       clearTimeout(_alarmWaitTimer);
       _alarmWaitTimer = null;
@@ -844,6 +843,7 @@
 
     const svc = mode === 'armed_home' ? 'alarm_arm_home' : 'alarm_arm_away';
     _hass.callService('alarm_control_panel', svc, { entity_id: ALARM_ENTITY });
+    closeAlarmPanel();
   }
 
   function handleAlarmDigit(d) {
