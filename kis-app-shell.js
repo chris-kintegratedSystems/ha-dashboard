@@ -890,8 +890,7 @@
       }
       .container ha-sortable > div {
         align-items: stretch !important;
-        min-height: calc(100vh - ${HEADER_H}px - 68px - var(--kis-spacing-b, 12px)) !important;
-        grid-template-rows: auto 1fr !important;
+        grid-template-rows: auto auto !important;
       }
       .container ha-sortable > div > div {
         display: flex !important;

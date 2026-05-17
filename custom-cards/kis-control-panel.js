@@ -107,7 +107,12 @@ class KisControlPanel extends HTMLElement {
     if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this);
     this._ro = new ResizeObserver(() => {
       const cp = this.shadowRoot?.querySelector('.kis-cp');
-      if (cp) cp.style.minHeight = this.getBoundingClientRect().height + 'px';
+      if (!cp) return;
+      if (window.innerWidth >= 769) {
+        cp.style.minHeight = '';
+      } else {
+        cp.style.minHeight = this.getBoundingClientRect().height + 'px';
+      }
     });
     this._ro.observe(this);
   }
@@ -245,16 +250,35 @@ class KisControlPanel extends HTMLElement {
         min-width: 0;
       }
       @media (min-width: 769px) {
-        .kis-cp > .row,
-        .kis-cp > .garage-pair {
-          flex: 1;
-          min-height: 48px;
+        :host {
+          contain: size;
         }
-        .garage-pair > .row {
-          min-height: 48px;
+        .kis-cp {
+          display: grid;
+          grid-template-rows: auto 1fr 1fr 1fr auto 1fr;
         }
         .kis-cp > .row {
+          min-height: 0;
+          overflow: hidden;
+          box-sizing: border-box;
+          padding-top: 6px;
+          padding-bottom: 6px;
+          border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+          border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
           transition: none;
+        }
+        .kis-cp > .garage-pair {
+          min-height: 0;
+          overflow: hidden;
+        }
+        .kis-cp > .garage-pair > .row {
+          box-sizing: border-box;
+          height: 100%;
+          min-height: 0;
+          padding-top: 6px;
+          padding-bottom: 6px;
+          border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+          border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
         }
       }
       @media (max-width: 768px) {
