@@ -10,7 +10,7 @@
  * Used by: kis-dashboard-v2.json (Home page, Security section)
  */
 
-import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=2';
+import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=3';
 
 const LOCKS = [
   { entity: 'lock.front_door_lock', name: 'Front Door' },

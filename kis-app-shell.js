@@ -122,6 +122,95 @@
   window.KIS_REGISTER_CARD = (card) => { _registeredCards.add(card); if (_hass) card.hass = _hass; };
   window.KIS_UNREGISTER_CARD = (card) => { _registeredCards.delete(card); };
 
+  // ── Breakpoint Detection Engine ───────────────────────────────────────────
+  // Density token values per level (must match KIS_DENSITY in kis-design-tokens.js)
+  const DENSITY_TOKENS = {
+    compact: {
+      '--kis-spacing-h':    '4px',
+      '--kis-spacing-b':    '8px',
+      '--kis-card-pad-v':   '8px',
+      '--kis-card-pad-h':   '10px',
+      '--kis-row-h':       '54px',
+      '--kis-scene-h':      '44px',
+      '--kis-label-fs':     '9px',
+      '--kis-name-fs':      '11px',
+      '--kis-radius':       '10px',
+      '--kis-icon-scene':   '18px',
+      '--kis-touch-min':    '44px',
+    },
+    normal: {
+      '--kis-spacing-h':    'clamp(8px, 1vw, 12px)',
+      '--kis-spacing-b':    'clamp(12px, 1.5vw, 24px)',
+      '--kis-card-pad-v':   '14px',
+      '--kis-card-pad-h':   '16px',
+      '--kis-row-h':       '80px',
+      '--kis-scene-h':      '64px',
+      '--kis-label-fs':     '10px',
+      '--kis-name-fs':      '14px',
+      '--kis-radius':       '14px',
+      '--kis-icon-scene':   '26px',
+      '--kis-touch-min':    '44px',
+    },
+  };
+
+  window.KIS_BREAKPOINT = { name: null, columns: 0, density: null, width: 0, height: 0 };
+
+  function classifyBreakpoint(w, h, orient, pointer) {
+    const shortDim = Math.min(w, h);
+    if (shortDim < 600) {
+      return orient === 'landscape'
+        ? { name: 'phone-landscape',  columns: 1, density: 'compact', width: w, height: h }
+        : { name: 'phone-portrait',   columns: 1, density: 'compact', width: w, height: h };
+    }
+    if (w >= 1100) {
+      return pointer === 'fine'
+        ? { name: 'desktop',          columns: 2, density: 'normal', width: w, height: h }
+        : { name: 'tablet-landscape', columns: 2, density: 'normal', width: w, height: h };
+    }
+    return { name: 'tablet-portrait', columns: 1, density: 'normal', width: w, height: h };
+  }
+
+  function applyDensityTokens(density) {
+    const tokens = DENSITY_TOKENS[density];
+    if (!tokens) return;
+    let el = document.getElementById('kis-density-vars');
+    if (!el) {
+      el = document.createElement('style');
+      el.id = 'kis-density-vars';
+      (document.head || document.documentElement).appendChild(el);
+    }
+    const vars = Object.entries(tokens).map(([k, v]) => `${k}:${v}`);
+    vars.push(`--kis-breakpoint:${window.KIS_BREAKPOINT.name}`);
+    el.textContent = `:root{${vars.join(';')}}`;
+  }
+
+  function recomputeBreakpoint() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const orient = w >= h ? 'landscape' : 'portrait';
+    const pointer = window.matchMedia('(pointer: fine)').matches ? 'fine' : 'coarse';
+
+    const bp = classifyBreakpoint(w, h, orient, pointer);
+    const prev = window.KIS_BREAKPOINT.name;
+    Object.assign(window.KIS_BREAKPOINT, bp);
+    document.body.dataset.kisBp = bp.name;
+    applyDensityTokens(bp.density);
+
+    if (prev !== null && prev !== bp.name) {
+      for (const card of _registeredCards) {
+        if (card._onBreakpointChange) card._onBreakpointChange(bp);
+      }
+    }
+  }
+
+  // Run synchronously on load — zero async dependency
+  recomputeBreakpoint();
+
+  window.addEventListener('resize', recomputeBreakpoint);
+  if (screen.orientation) {
+    screen.orientation.addEventListener('change', recomputeBreakpoint);
+  }
+
   // ── Resolve current theme mode ────────────────────────────────────────────
   function resolveMode(hass) {
     const modeEntity = hass.states['input_select.theme_mode'];
@@ -181,6 +270,7 @@
     const mode = resolveMode(hass);
     const colors = readColors(hass, mode);
     applyColors(colors);
+    applyDensityTokens(window.KIS_BREAKPOINT.density);
     _currentMode = mode;
   }
 
@@ -1391,7 +1481,7 @@
       customElements.whenDefined('kis-settings'),
     ]).then(() => {
       function checkReady() {
-        if (!_hass) { requestAnimationFrame(checkReady); return; }
+        if (!_hass || !window.KIS_BREAKPOINT.name) { requestAnimationFrame(checkReady); return; }
         requestAnimationFrame(() => requestAnimationFrame(() => {
           sectionsView.classList.add('kis-ready');
           clearTimeout(_revealFailsafe);
@@ -1531,6 +1621,10 @@
     } else {
       customElements.whenDefined('ha-icon').then(() => setTimeout(injectUI, 200));
     }
+
+    // Re-apply density tokens after HA's theme init completes (fixes race where
+    // HA's style writes drop --kis-card-h during initial page load)
+    setTimeout(recomputeBreakpoint, 100);
 
     window.addEventListener('location-changed', () => { resetRevealGate(); syncV2State(); });
     window.addEventListener('popstate', () => { resetRevealGate(); syncV2State(); });

@@ -142,11 +142,11 @@ All mobilev2 resources are registered in `.storage/lovelace_resources` on the Pi
 
 | Resource | Path | Current cache-bust | Git version |
 |----------|------|-------------------|-------------|
-| kis-app-shell.js | `/local/mobile_v2/kis-app-shell.js` | `?v=36` | v36 |
-| kis-control-panel.js | `/local/mobile_v2/custom-cards/kis-control-panel.js` | `?v=26` | v26 |
-| kis-scenes.js | `/local/mobile_v2/custom-cards/kis-scenes.js` | `?v=9` | v9 |
-| kis-settings.js | `/local/mobile_v2/custom-cards/kis-settings.js` | `?v=6` | v6 |
-| kis-priority-view.js | `/local/mobile_v2/custom-cards/kis-priority-view.js` | `?v=14` | v14 |
+| kis-app-shell.js | `/local/mobile_v2/kis-app-shell.js` | `?v=38` | v38 |
+| kis-control-panel.js | `/local/mobile_v2/custom-cards/kis-control-panel.js` | `?v=27` | v27 |
+| kis-scenes.js | `/local/mobile_v2/custom-cards/kis-scenes.js` | `?v=10` | v10 |
+| kis-settings.js | `/local/mobile_v2/custom-cards/kis-settings.js` | `?v=7` | v7 |
+| kis-priority-view.js | `/local/mobile_v2/custom-cards/kis-priority-view.js` | `?v=15` | v15 |
 
 **kis-design-tokens.js** is imported by the cards at runtime (ES module `import`), not registered separately as a resource.
 
@@ -160,11 +160,11 @@ As of 2026-05-17:
 
 | File | Deployed (Pi) | Git (main) | Drift? |
 |------|---------------|------------|--------|
-| kis-app-shell.js | v=36 | v36 (VERSION='2') | No |
-| kis-control-panel.js | v=26 | Matches | No |
-| kis-scenes.js | v=9 | Matches | No |
-| kis-settings.js | v=6 | Matches | No |
-| kis-priority-view.js | v=14 | Matches | No |
+| kis-app-shell.js | v=38 | v38 (VERSION='2') | No |
+| kis-control-panel.js | v=27 | Matches | No |
+| kis-scenes.js | v=10 | Matches | No |
+| kis-settings.js | v=7 | Matches | No |
+| kis-priority-view.js | v=15 | Matches | No |
 
 **No drift detected.** Deployed state matches git on all resources.
 
