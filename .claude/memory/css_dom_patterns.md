@@ -725,6 +725,27 @@ Shadow DOM targets for hide/restore:
 - `ha-sidebar`: `style.display` (none / original)
 - `hui-root` shadowRoot: `kisv2-kiosk-patch` style element with `app-header { display: none !important; }`
 
+## 2026-05-17 — Kiosk-OFF sidebar overlap fix
+
+When chrome bars are position:fixed over the viewport, sidebar items in
+the overlap zones (top 68px, bottom 68px) become untappable. Fix: inject
+`kisv2-sidebar-inset-patch` into ha-sidebar's shadow root matching chrome
+bar heights. CSS uses flex column + padding + overflow to constrain
+`.panels-list` exactly between chrome bars:
+```css
+:host { padding-top/bottom: 68px; height:100%; overflow:hidden; display:flex; flex-direction:column; }
+.panels-list { overflow-y:auto; flex:1; min-height:0; }
+```
+Tie injection to kiosk-OFF state via `syncKioskMode`. Clean up on shell
+disconnect (`syncV2State` else branch) to prevent leaks into other dashboards.
+
+Race condition fix: `syncKioskMode` must guard `if (!_kioskOriginals) return;`
+at the top. Without this, `onHassUpdate` fires `syncKioskMode` before
+`patchHALayout` (500ms delay) captures originals — originals get captured
+as the already-kiosk-modified state (width:0, display:none) instead of true
+defaults. The guard ensures `syncKioskMode` only runs after `patchHALayout`
+has captured the true original drawer state.
+
 ## 2026-05-17 — MutationObserver on #view required for nav reveal
 
 `location-changed` fires BEFORE HA swaps view children. The
