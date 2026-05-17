@@ -787,3 +787,24 @@ integration `disarm_code` config option (code_format: "number"). Panel
 elements: `#kis-alarm-backdrop` (z-index 10000002) + `#kis-alarm-panel`
 (z-index 10000003), both above header (10000001). Day mode uses
 `body:has(#kis-v2-header[data-kis-day])` ancestor selector.
+
+## 2026-05-17: Alarm panel UX — centered modal, state-branched, auto-close
+
+Alarm panel (`#kis-alarm-panel`) is a viewport-centered modal popup with
+semi-transparent backdrop (`#kis-alarm-backdrop`). Panel uses
+`top:50%; left:50%; transform:translate(-50%,-50%) scale(0.92)` → scale(1)
+on open. Width 320px, padding 32px 28px, border-radius 24px. Keypad scaled
+to 2x original: key height 64px (was 44px), font-size 24px (was 18px),
+dots 18px (was 12px), grid gap 12px (was 8px).
+
+State-branched contents at open time:
+- `disarmed` → mode buttons only (Home + Away — no redundant Disarmed button)
+- `armed_home`, `armed_away`, `arming`, `pending` → keypad directly (skip
+  mode selection step)
+- Fallback (unavailable, triggered, etc.) → all three mode buttons
+
+Arm actions (tap Home or Away when disarmed) fire the service call and close
+the popup immediately — no wait for entity transition to armed. Disarm closes
+on entity transition to `disarmed` (watched via `updateAlarmPanel` on hass
+change, with 5s timeout for wrong-code detection). Backdrop tap and Cancel
+button dismiss with full state clear (_alarmDigits, _alarmError, _alarmWaitTimer).
