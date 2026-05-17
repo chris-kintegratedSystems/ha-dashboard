@@ -181,3 +181,11 @@ ssh cooper5389@192.168.51.179 "sudo cp /tmp/kis-dashboard-v2.yaml \
 Note: this YAML lives in `www/` (static asset served at `/local/...`),
 NOT in `.storage/`. HA reads it via lovelace resource loading, not as a
 storage-mode dashboard. Docker restart is still required.
+
+## 2026-05-17: Drift diagnostic — line-ending caveat
+MD5 comparison between local repo files and Pi-deployed files may show
+false drift due to CRLF (local Windows) vs LF (Pi Debian). Always
+normalize line endings before treating an MD5 mismatch as real drift.
+Content-identical files with line-ending-only differences are NOT drift
+— SCP handles this transparently and the Pi copy is functionally
+identical.
