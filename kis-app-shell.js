@@ -28,6 +28,9 @@
   const DASHBOARD_PREFIX = '/mobile-v2';
   const NAV_H = 80;
   const MEDIA_PLAYER_ENTITY = 'media_player.benjamins_hatch_media_player';
+  const ALARM_ENTITY = 'alarm_control_panel.kuprycz_home';
+  const ALARM_CODE_LEN = 4;
+  const ALARM_VERIFY_TIMEOUT = 5000;
 
   // ── Badge signals ──────────────────────────────────────────────────────────
   const BADGE_LOCKS = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door_lock'];
@@ -106,6 +109,13 @@
 
   let _hass = null;
   let _currentMode = null; // 'day' or 'night'
+
+  // ── Alarm panel local state (UI only — never mirrors entity state) ────────
+  let _alarmPanelOpen = false;
+  let _alarmKeypadVisible = false;
+  let _alarmDigits = [];
+  let _alarmError = false;
+  let _alarmWaitTimer = null;
 
   // ── Card registration: forward hass to custom cards ────────────────────────
   const _registeredCards = new Set();
@@ -371,6 +381,82 @@
     #kis-v2-header[data-kis-day] .kh-pdot.unknown { background: #7a8698; }
     #kis-v2-header[data-kis-day] .kh-pname { color: #1a2030; }
 
+    /* ── Alarm panel ── */
+    #kis-alarm-backdrop {
+      position: fixed; inset: 0; z-index: 10000002;
+      background: rgba(0,0,0,0.4);
+      opacity: 0; transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    #kis-alarm-backdrop.kap-open { opacity: 1; pointer-events: auto; }
+    #kis-alarm-panel {
+      position: fixed; top: 72px; right: 12px; z-index: 10000003;
+      width: 240px; background: rgba(16,21,31,0.95);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
+      padding: 16px; box-sizing: border-box;
+      -webkit-backdrop-filter: blur(24px) saturate(200%);
+      backdrop-filter: blur(24px) saturate(200%);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(-8px); opacity: 0;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      pointer-events: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    }
+    #kis-alarm-panel.kap-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    #kis-alarm-panel[hidden] { display: none !important; }
+    .kap-state-label { display: block; font-size: 15px; font-weight: 700; color: #eef2f8; text-align: center; }
+    .kap-state-time { display: block; font-size: 9px; font-weight: 500; color: #8a9ab8; text-align: center; margin-top: 2px; letter-spacing: 0.06em; }
+    .kap-modes { display: flex; gap: 8px; margin-top: 14px; }
+    .kap-mode {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 10px 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.04); cursor: pointer;
+      -webkit-tap-highlight-color: transparent; outline: none;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .kap-mode svg { width: 20px; height: 20px; fill: #8a9ab8; transition: fill 0.15s ease; }
+    .kap-mode span { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #8a9ab8; transition: color 0.15s ease; }
+    .kap-mode.kap-active { border-color: currentColor; }
+    .kap-mode.kap-active svg { fill: currentColor; }
+    .kap-mode.kap-active span { color: currentColor; }
+    .kap-mode.kap-arming { animation: kap-pulse-mode 1.2s ease-in-out infinite; }
+    @keyframes kap-pulse-mode { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .kap-keypad { margin-top: 14px; }
+    .kap-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; }
+    .kap-dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #4a5570; background: transparent; transition: background 0.1s ease, border-color 0.1s ease; }
+    .kap-dot.kap-filled { background: #eef2f8; border-color: #eef2f8; }
+    .kap-err-msg { font-size: 9px; font-weight: 600; color: #f04060; text-align: center; margin-bottom: 8px; letter-spacing: 0.06em; opacity: 0; transition: opacity 0.15s ease; }
+    .kap-err-msg.kap-show { opacity: 1; }
+    .kap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .kap-key {
+      height: 44px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04); color: #eef2f8;
+      font-size: 18px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent; outline: none;
+      transition: background 0.1s ease;
+      font-family: inherit;
+    }
+    .kap-key:active { background: rgba(255,255,255,0.12); }
+    .kap-key.kap-fn { font-size: 14px; color: #8a9ab8; }
+    .kap-cancel { display: block; width: 100%; margin-top: 10px; padding: 8px; border: none; border-radius: 10px; background: rgba(255,255,255,0.04); color: #8a9ab8; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+    @keyframes kap-shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+    .kap-shake .kap-dots { animation: kap-shake 0.4s ease; }
+
+    /* Alarm panel day mode */
+    body:has(#kis-v2-header[data-kis-day]) #kis-alarm-panel { background: rgba(255,255,255,0.96); border-color: rgba(0,0,0,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    body:has(#kis-v2-header[data-kis-day]) .kap-state-label { color: #1a2030; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-state-time { color: #4a5a72; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-mode { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); }
+    body:has(#kis-v2-header[data-kis-day]) .kap-mode svg { fill: #4a5a72; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-mode span { color: #4a5a72; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-dot { border-color: #7a8698; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-dot.kap-filled { background: #1a2030; border-color: #1a2030; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-key { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); color: #1a2030; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-key:active { background: rgba(0,0,0,0.08); }
+    body:has(#kis-v2-header[data-kis-day]) .kap-key.kap-fn { color: #4a5a72; }
+    body:has(#kis-v2-header[data-kis-day]) .kap-cancel { background: rgba(0,0,0,0.03); color: #4a5a72; }
+
     /* ── Bottom nav ── */
     #kis-v2-nav {
       position: fixed !important;
@@ -533,18 +619,30 @@
     if (!onV2Dashboard()) header.setAttribute('hidden', '');
     document.body.appendChild(header);
 
-    // Event delegation on header: person pills + alarm
+    // Alarm panel backdrop + panel
+    const backdrop = document.createElement('div');
+    backdrop.id = 'kis-alarm-backdrop';
+    backdrop.addEventListener('click', () => closeAlarmPanel());
+    document.body.appendChild(backdrop);
+
+    const alarmPanel = document.createElement('div');
+    alarmPanel.id = 'kis-alarm-panel';
+    if (!onV2Dashboard()) alarmPanel.setAttribute('hidden', '');
+    document.body.appendChild(alarmPanel);
+
+    // Event delegation on header: alarm pill → custom panel, person pills → more-info
     header.addEventListener('click', (e) => {
-      let entityId = null;
-      if (e.target.closest('.kh-alarm')) entityId = 'alarm_control_panel.kuprycz_home';
+      if (e.target.closest('.kh-alarm')) {
+        toggleAlarmPanel();
+        return;
+      }
       const personEl = e.target.closest('.kh-person-pill');
-      if (personEl && personEl.dataset.entity) entityId = personEl.dataset.entity;
-      if (entityId) {
+      if (personEl && personEl.dataset.entity) {
         const ha = document.querySelector('home-assistant');
         if (ha) {
           ha.dispatchEvent(new CustomEvent('hass-more-info', {
             bubbles: true, composed: true,
-            detail: { entityId },
+            detail: { entityId: personEl.dataset.entity },
           }));
         }
       }
@@ -561,9 +659,11 @@
     const player = document.getElementById('kis-v2-player');
     if (!nav || !header) return;
 
+    const alarmPanel = document.getElementById('kis-alarm-panel');
     if (onV2Dashboard()) {
       nav.removeAttribute('hidden');
       header.removeAttribute('hidden');
+      if (alarmPanel) alarmPanel.removeAttribute('hidden');
       const activeSlug = getActiveSlug();
       nav.querySelectorAll('.knb-btn').forEach(btn => {
         btn.classList.toggle('knb-active', btn.dataset.slug === activeSlug);
@@ -573,6 +673,7 @@
       nav.setAttribute('hidden', '');
       header.setAttribute('hidden', '');
       if (player) player.setAttribute('hidden', '');
+      if (alarmPanel) { alarmPanel.setAttribute('hidden', ''); closeAlarmPanel(); }
       _headerInitialized = false;
       _prevMediaState = null;
       // Clean up sidebar inset patch so it doesn't leak into other dashboards
@@ -581,6 +682,238 @@
       const sidebar = main?.shadowRoot?.querySelector('ha-drawer')?.querySelector('ha-sidebar');
       if (sidebar?.shadowRoot) removeShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch');
     }
+  }
+
+  // ── Alarm panel ────────────────────────────────────────────────────────────
+
+  const ALARM_MODE_ICONS = {
+    armed_home: 'M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z',
+    armed_away: 'M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z',
+    disarmed: 'M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z',
+  };
+  const ALARM_MODE_LABELS = { armed_home: 'Home', armed_away: 'Away', disarmed: 'Disarm' };
+  const ALARM_MODE_COLORS_NIGHT = { armed_home: '#f5a623', armed_away: '#4d8ef0', disarmed: '#10d090' };
+  const ALARM_MODE_COLORS_DAY = { armed_home: '#c07808', armed_away: '#2d6bc4', disarmed: '#089464' };
+
+  function alarmRelativeTime(isoStr) {
+    if (!isoStr) return '';
+    const mins = Math.floor((Date.now() - new Date(isoStr).getTime()) / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return mins + ' min ago';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + (hrs === 1 ? ' hour ago' : ' hours ago');
+    const days = Math.floor(hrs / 24);
+    return days + (days === 1 ? ' day ago' : ' days ago');
+  }
+
+  function toggleAlarmPanel() {
+    if (_alarmPanelOpen) { closeAlarmPanel(); return; }
+    _alarmPanelOpen = true;
+    _alarmKeypadVisible = false;
+    _alarmDigits = [];
+    _alarmError = false;
+    if (_alarmWaitTimer) { clearTimeout(_alarmWaitTimer); _alarmWaitTimer = null; }
+    renderAlarmPanelContent();
+    const backdrop = document.getElementById('kis-alarm-backdrop');
+    const panel = document.getElementById('kis-alarm-panel');
+    if (backdrop) backdrop.classList.add('kap-open');
+    if (panel) requestAnimationFrame(() => panel.classList.add('kap-open'));
+  }
+
+  function closeAlarmPanel() {
+    _alarmPanelOpen = false;
+    _alarmKeypadVisible = false;
+    _alarmDigits = [];
+    _alarmError = false;
+    if (_alarmWaitTimer) { clearTimeout(_alarmWaitTimer); _alarmWaitTimer = null; }
+    const backdrop = document.getElementById('kis-alarm-backdrop');
+    const panel = document.getElementById('kis-alarm-panel');
+    if (backdrop) backdrop.classList.remove('kap-open');
+    if (panel) panel.classList.remove('kap-open');
+  }
+
+  function renderAlarmPanelContent() {
+    const panel = document.getElementById('kis-alarm-panel');
+    if (!panel || !_hass) return;
+    const ent = getState(_hass, ALARM_ENTITY);
+    const state = ent ? ent.state : 'unavailable';
+    const lastChanged = ent ? ent.last_changed : null;
+    const isDayMode = _currentMode === 'day';
+    const modeColors = isDayMode ? ALARM_MODE_COLORS_DAY : ALARM_MODE_COLORS_NIGHT;
+    const stateLabel = (ALARM_NIGHT[state] || ALARM_UNKNOWN_NIGHT).label;
+
+    let html = `<div class="kap-state-label">${stateLabel}</div>`;
+    html += `<div class="kap-state-time">${alarmRelativeTime(lastChanged)}</div>`;
+    html += '<div class="kap-modes">';
+    for (const mode of ['armed_home', 'armed_away', 'disarmed']) {
+      const isActive = state === mode;
+      const isArming = (state === 'arming' && mode === 'armed_home') || (state === 'pending' && mode === 'disarmed');
+      const color = modeColors[mode];
+      const cls = 'kap-mode' + (isActive ? ' kap-active' : '') + (isArming ? ' kap-arming' : '');
+      const style = (isActive || isArming) ? `color:${color}` : '';
+      html += `<button class="${cls}" data-mode="${mode}" style="${style}">`;
+      html += `<svg viewBox="0 0 24 24"><path d="${ALARM_MODE_ICONS[mode]}"/></svg>`;
+      html += `<span>${ALARM_MODE_LABELS[mode]}</span></button>`;
+    }
+    html += '</div>';
+
+    if (_alarmKeypadVisible) {
+      html += `<div class="kap-keypad${_alarmError ? ' kap-shake' : ''}">`;
+      html += '<div class="kap-dots">';
+      for (let i = 0; i < ALARM_CODE_LEN; i++) {
+        html += `<div class="kap-dot${i < _alarmDigits.length ? ' kap-filled' : ''}"></div>`;
+      }
+      html += '</div>';
+      html += `<div class="kap-err-msg${_alarmError ? ' kap-show' : ''}">Wrong code</div>`;
+      html += '<div class="kap-grid">';
+      for (let d = 1; d <= 9; d++) html += `<button class="kap-key" data-key="${d}">${d}</button>`;
+      html += '<button class="kap-key kap-fn" data-key="back">⌫</button>';
+      html += '<button class="kap-key" data-key="0">0</button>';
+      html += '<button class="kap-key kap-fn" data-key="enter">✓</button>';
+      html += '</div>';
+      html += '<button class="kap-cancel">Cancel</button>';
+      html += '</div>';
+    }
+
+    panel.innerHTML = html;
+
+    // Event delegation
+    panel.onclick = (e) => {
+      const modeBtn = e.target.closest('.kap-mode');
+      if (modeBtn) { handleAlarmMode(modeBtn.dataset.mode); return; }
+      const keyBtn = e.target.closest('.kap-key');
+      if (keyBtn) {
+        const key = keyBtn.dataset.key;
+        if (key === 'back') { handleAlarmBackspace(); }
+        else if (key === 'enter') { submitAlarmDisarm(); }
+        else { handleAlarmDigit(key); }
+        return;
+      }
+      if (e.target.closest('.kap-cancel')) { closeAlarmPanel(); }
+    };
+  }
+
+  function updateAlarmPanel() {
+    if (!_alarmPanelOpen || !_hass) return;
+    const panel = document.getElementById('kis-alarm-panel');
+    if (!panel) return;
+    const ent = getState(_hass, ALARM_ENTITY);
+    const state = ent ? ent.state : 'unavailable';
+    const lastChanged = ent ? ent.last_changed : null;
+    const isDayMode = _currentMode === 'day';
+    const modeColors = isDayMode ? ALARM_MODE_COLORS_DAY : ALARM_MODE_COLORS_NIGHT;
+
+    // Update state label + time
+    const labelEl = panel.querySelector('.kap-state-label');
+    const timeEl = panel.querySelector('.kap-state-time');
+    const stateLabel = (ALARM_NIGHT[state] || ALARM_UNKNOWN_NIGHT).label;
+    if (labelEl) labelEl.textContent = stateLabel;
+    if (timeEl) timeEl.textContent = alarmRelativeTime(lastChanged);
+
+    // Update mode buttons
+    panel.querySelectorAll('.kap-mode').forEach(btn => {
+      const mode = btn.dataset.mode;
+      const isActive = state === mode;
+      const isArming = (state === 'arming' && mode === 'armed_home') || (state === 'pending' && mode === 'disarmed');
+      btn.classList.toggle('kap-active', isActive);
+      btn.classList.toggle('kap-arming', isArming);
+      btn.style.color = (isActive || isArming) ? (modeColors[mode] || '') : '';
+    });
+
+    // Auto-close on successful transition (watched states)
+    if (_alarmWaitTimer && state === 'disarmed') {
+      clearTimeout(_alarmWaitTimer);
+      _alarmWaitTimer = null;
+      closeAlarmPanel();
+    }
+  }
+
+  function handleAlarmMode(mode) {
+    if (!_hass) return;
+    const ent = getState(_hass, ALARM_ENTITY);
+    const currentState = ent ? ent.state : null;
+    if (currentState === mode) return;
+
+    if (mode === 'disarmed') {
+      _alarmKeypadVisible = true;
+      _alarmDigits = [];
+      _alarmError = false;
+      renderAlarmPanelContent();
+      return;
+    }
+
+    const svc = mode === 'armed_home' ? 'alarm_arm_home' : 'alarm_arm_away';
+    _hass.callService('alarm_control_panel', svc, { entity_id: ALARM_ENTITY });
+  }
+
+  function handleAlarmDigit(d) {
+    if (_alarmDigits.length >= ALARM_CODE_LEN) return;
+    if (_alarmError) {
+      _alarmError = false;
+      if (_alarmWaitTimer) { clearTimeout(_alarmWaitTimer); _alarmWaitTimer = null; }
+    }
+    _alarmDigits.push(d);
+    updateAlarmDots();
+    if (_alarmDigits.length === ALARM_CODE_LEN) {
+      submitAlarmDisarm();
+    }
+  }
+
+  function handleAlarmBackspace() {
+    if (_alarmDigits.length === 0) return;
+    if (_alarmError) { _alarmError = false; }
+    _alarmDigits.pop();
+    updateAlarmDots();
+  }
+
+  function updateAlarmDots() {
+    const panel = document.getElementById('kis-alarm-panel');
+    if (!panel) return;
+    panel.querySelectorAll('.kap-dot').forEach((dot, i) => {
+      dot.classList.toggle('kap-filled', i < _alarmDigits.length);
+    });
+    const errEl = panel.querySelector('.kap-err-msg');
+    if (errEl) errEl.classList.toggle('kap-show', _alarmError);
+    const keypad = panel.querySelector('.kap-keypad');
+    if (keypad) keypad.classList.toggle('kap-shake', false);
+  }
+
+  function submitAlarmDisarm() {
+    if (!_hass || _alarmDigits.length === 0) return;
+    const code = _alarmDigits.join('');
+    _alarmDigits = [];
+    updateAlarmDots();
+
+    _hass.callService('alarm_control_panel', 'alarm_disarm', {
+      entity_id: ALARM_ENTITY,
+      code: code,
+    });
+
+    if (_alarmWaitTimer) clearTimeout(_alarmWaitTimer);
+    _alarmWaitTimer = setTimeout(() => {
+      _alarmWaitTimer = null;
+      const ent = getState(_hass, ALARM_ENTITY);
+      if (!ent || ent.state !== 'disarmed') {
+        showAlarmError();
+      }
+    }, ALARM_VERIFY_TIMEOUT);
+  }
+
+  function showAlarmError() {
+    _alarmError = true;
+    _alarmDigits = [];
+    const panel = document.getElementById('kis-alarm-panel');
+    if (!panel) return;
+    const keypad = panel.querySelector('.kap-keypad');
+    if (keypad) keypad.classList.add('kap-shake');
+    updateAlarmDots();
+    const errEl = panel.querySelector('.kap-err-msg');
+    if (errEl) errEl.classList.add('kap-show');
+    setTimeout(() => {
+      _alarmError = false;
+      if (errEl) errEl.classList.remove('kap-show');
+      if (keypad) keypad.classList.remove('kap-shake');
+    }, 1500);
   }
 
   // ── Header rendering ───────────────────────────────────────────────────────
@@ -610,7 +943,7 @@
     const dateStr = DAYS[now.getDay()] + ' · ' + MONTHS[now.getMonth()] + ' ' + now.getDate();
 
     // Alarm
-    const alarmEnt = getState(_hass, 'alarm_control_panel.kuprycz_home');
+    const alarmEnt = getState(_hass, ALARM_ENTITY);
     const alarmState = alarmEnt ? alarmEnt.state : null;
     const ALARM_COLORS = isDayMode ? ALARM_DAY : ALARM_NIGHT;
     const alarm = ALARM_COLORS[alarmState] || (isDayMode ? ALARM_UNKNOWN_DAY : ALARM_UNKNOWN_NIGHT);
@@ -702,7 +1035,7 @@
         const ent = getState(hass, id);
         if (ent && ent.state === 'open') urgent++;
       });
-      const alarm = getState(hass, 'alarm_control_panel.kuprycz_home');
+      const alarm = getState(hass, ALARM_ENTITY);
       const chris = getState(hass, 'person.chris');
       const claire = getState(hass, 'person.claire');
       if (alarm && alarm.state === 'disarmed') {
@@ -796,6 +1129,7 @@
     _origOnHassUpdate(hass);
     if (onV2Dashboard()) {
       renderV2Header();
+      updateAlarmPanel();
     }
   };
 
