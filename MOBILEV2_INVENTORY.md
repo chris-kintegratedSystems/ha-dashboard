@@ -145,7 +145,7 @@ All mobilev2 resources are registered in `.storage/lovelace_resources` on the Pi
 | kis-app-shell.js | `/local/mobile_v2/kis-app-shell.js` | `?v=42` | v42 |
 | kis-control-panel.js | `/local/mobile_v2/custom-cards/kis-control-panel.js` | `?v=30` | v30 |
 | kis-scenes.js | `/local/mobile_v2/custom-cards/kis-scenes.js` | `?v=11` | v11 |
-| kis-settings.js | `/local/mobile_v2/custom-cards/kis-settings.js` | `?v=7` | v7 |
+| kis-settings.js | `/local/mobile_v2/custom-cards/kis-settings.js` | `?v=8` | v8 |
 | kis-priority-view.js | `/local/mobile_v2/custom-cards/kis-priority-view.js` | `?v=15` | v15 |
 
 **kis-design-tokens.js** is imported by the cards at runtime (ES module `import`), not registered separately as a resource.
@@ -156,14 +156,14 @@ All mobilev2 resources are registered in `.storage/lovelace_resources` on the Pi
 
 ## Deployed State vs Git Drift Check
 
-As of 2026-05-17 (Stage 2 deployed):
+As of 2026-05-17 (Stage 3 deployed):
 
 | File | Deployed (Pi) | Git (branch) | Drift? |
 |------|---------------|------------|--------|
 | kis-app-shell.js | v=42 | v42 (syncWrapperColumns + adoptedStyleSheets column override) | No |
 | kis-control-panel.js | v=30 | v30 (bp.columns layout + box-sizing fix) | No |
 | kis-scenes.js | v=11 | v11 (3x2 phone grid) | No |
-| kis-settings.js | v=7 | v7 | No |
+| kis-settings.js | v=8 | v8 (density token migration — 7 spacing sites) | No |
 | kis-priority-view.js | v=15 | v15 | No |
 
 **All files deployed and in sync.**

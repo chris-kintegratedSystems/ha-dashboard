@@ -415,7 +415,7 @@ class KisSettings extends HTMLElement {
       .kis-settings {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--kis-spacing-h, 8px);
         max-width: 600px;
         margin: 0 auto;
         min-height: calc(100vh - 152px);
@@ -423,10 +423,10 @@ class KisSettings extends HTMLElement {
         box-sizing: border-box;
       }
       ${KIS_SECTION_LABEL_CSS}
-      .kis-section-label { margin-top: 8px; }
+      .kis-section-label { margin-top: var(--kis-spacing-h, 8px); }
       .kis-section-label:first-child { margin-top: 0; }
       .card {
-        padding: ${T.padding.card};
+        padding: var(--kis-card-pad-v, 18px) var(--kis-card-pad-h, 16px);
         border-radius: ${T.radius.card};
         background: var(--ha-card-background, ${T.night.bgCard});
         border: 1px solid var(--ha-card-border-color, ${T.night.borderCard});
@@ -447,7 +447,7 @@ class KisSettings extends HTMLElement {
       /* Theme selector */
       .theme-row {
         display: flex;
-        gap: 8px;
+        gap: var(--kis-spacing-h, 8px);
       }
       .theme-btn {
         flex: 1;
@@ -532,7 +532,7 @@ class KisSettings extends HTMLElement {
       .color-picker-wrap {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--kis-spacing-h, 8px);
       }
       .color-preview {
         padding: 0;
@@ -558,7 +558,7 @@ class KisSettings extends HTMLElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 16px;
+        padding: var(--kis-card-pad-v, 10px) var(--kis-card-pad-h, 16px);
         border-bottom: 1px solid var(--divider-color, ${T.night.borderCard});
       }
       .color-row:last-child { border-bottom: none; }
@@ -595,7 +595,7 @@ class KisSettings extends HTMLElement {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 16px;
+        padding: var(--kis-card-pad-v, 10px) var(--kis-card-pad-h, 16px);
       }
       .contrast-label {
         font-family: ${T.fontFamily};
