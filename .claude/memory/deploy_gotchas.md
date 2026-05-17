@@ -54,7 +54,7 @@ kis-nav deploy:
 2. Increment `?v=N` in ha-config `configuration.yaml` to match.
 3. Both repos get a commit+push in the same session.
 4. `sudo docker restart homeassistant` after configuration.yaml changes.
-5. Hard-refresh FKB on Tab S9 and verify the version badge or `window.KIS_NAV_VERSION`
+5. Hard-refresh FKB on Galaxy Tab A9+ and verify the version badge or `window.KIS_NAV_VERSION`
    in a probe matches the new number before declaring the deploy done.
 
 ## 2026-04-21: Nest SDM 429 during rapid deploy iteration
@@ -181,6 +181,18 @@ ssh cooper5389@192.168.51.179 "sudo cp /tmp/kis-dashboard-v2.yaml \
 Note: this YAML lives in `www/` (static asset served at `/local/...`),
 NOT in `.storage/`. HA reads it via lovelace resource loading, not as a
 storage-mode dashboard. Docker restart is still required.
+
+## 2026-05-17: FKB Remote Admin on Galaxy Tab A9+
+Wall kiosk device: Samsung Galaxy Tab A9+ (SM-X210), Android 16, Chrome 147 WebView.
+- LAN IP: 192.168.51.150 (DHCP — may change, prefer reservation)
+- Endpoint: http://192.168.51.150:2323/
+- Auth: FKB_PASSWORD in .env (1Password reference)
+- Useful commands: deviceInfo, loadUrl, getKioskInfo, getScreenshot
+- Used for: viewport probing, start URL changes, kiosk lock toggle,
+  brightness control via Remote API (alternative to HA integration),
+  real-device screenshot capture in qa-camera-burst.js
+- CSS viewport: 1280×799 @ DPR 1.5 (NOT 1440×900 as previously assumed)
+- Physical resolution: 1920×1200
 
 ## 2026-05-17: Drift diagnostic — line-ending caveat
 MD5 comparison between local repo files and Pi-deployed files may show

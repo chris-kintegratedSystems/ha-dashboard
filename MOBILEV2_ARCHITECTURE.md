@@ -190,16 +190,16 @@ Two breakpoints control the entire responsive system:
 These live in `KIS_TOKENS.breakpoints` and are used by cards via `window.matchMedia()`.
 
 ### Tested device matrix
-| Device | Viewport | Scale | Classification |
-|--------|----------|-------|---------------|
-| iPad 11" portrait | 834×1194 | 2x | singleColumn |
-| iPad 11" landscape | 1194×834 | 2x | twoColumn |
-| Tab S9+ portrait | 876×1400 | 2x | singleColumn |
-| Tab S9+ landscape | 1400×876 | 2x | twoColumn |
-| iPhone 17 Pro Max portrait | 440×956 | 3x | singleColumn |
-| iPhone 17 Pro Max landscape | 956×440 | 3x | singleColumn |
-| iPhone 16 Pro portrait | 402×874 | 3x | singleColumn |
-| iPhone 16 Pro landscape | 874×402 | 3x | singleColumn |
+| Device | Viewport | Scale | Classification | Notes |
+|--------|----------|-------|---------------|-------|
+| Galaxy Tab A9+ landscape | 1280×799 | 1.5x | twoColumn | **Real wall kiosk** (SM-X210, FKB, Android 16, Chrome 147 WebView) |
+| iPad 11" portrait | 834×1194 | 2x | singleColumn | |
+| iPad 11" landscape | 1194×834 | 2x | twoColumn | |
+| Generic tablet-landscape | 1440×900 | 2x | twoColumn | Spec representative — coverage for wider tablet-landscape devices, not the actual wall kiosk |
+| iPhone 17 Pro Max portrait | 440×956 | 3x | singleColumn | |
+| iPhone 17 Pro Max landscape | 956×440 | 3x | singleColumn | |
+| iPhone 16 Pro portrait | 402×874 | 3x | singleColumn | |
+| iPhone 16 Pro landscape | 874×402 | 3x | singleColumn | |
 
 ---
 
