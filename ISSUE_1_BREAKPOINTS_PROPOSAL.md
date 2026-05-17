@@ -65,7 +65,7 @@ function recomputeBreakpoint() {
   const h = window.innerHeight;
   const orient = w > h ? 'landscape' : 'portrait';
   const pointer = mqlPointer.matches ? 'coarse' : 'fine';
-  const bp = classifyBreakpoint(w, h, orient, pointer);
+  const bp = classifyBreakpoint(w, h, orient, pointer); // uses Math.min(w,h) for phone detection
   Object.assign(window.KIS_BREAKPOINT, bp);
   document.body.dataset.kisBp = bp.name;
   document.documentElement.style.setProperty('--kis-breakpoint', bp.name);
@@ -95,11 +95,15 @@ Follow-up: update `MOBILEV2_ARCHITECTURE.md` §7 (Page Authoring Checklist) to d
 
 | Name | Predicate | Columns | Density |
 |------|-----------|---------|---------|
-| `phone-portrait` | width < 600 AND orientation = portrait | 1 | compact |
-| `phone-landscape` | width < 600 AND orientation = landscape | 1 | compact |
-| `tablet-portrait` | width ≥ 600 AND width < 1100 AND orientation = portrait | 1 | normal |
-| `tablet-landscape` | width ≥ 1100 AND pointer = coarse | 2 | normal |
-| `desktop` | width ≥ 1100 AND pointer = fine | 2 | normal |
+| `phone-portrait` | min(w,h) < 600 AND orientation = portrait | 1 | compact |
+| `phone-landscape` | min(w,h) < 600 AND orientation = landscape | 1 | compact |
+| `tablet-portrait` | min(w,h) ≥ 600 AND width < 1100 AND orientation = portrait | 1 | normal |
+| `tablet-landscape` | min(w,h) ≥ 600 AND width ≥ 1100 AND pointer = coarse | 2 | normal |
+| `desktop` | min(w,h) ≥ 600 AND width ≥ 1100 AND pointer = fine | 2 | normal |
+
+**Note on `min(w,h)`:** CSS swaps `innerWidth`/`innerHeight` on rotation — a phone in landscape reports width=852, height=393. Using the shorter viewport dimension (`min(w,h)`) as the phone-detection signal ensures phone-landscape is reachable regardless of which axis CSS reports as "width". In `classifyBreakpoint()`, this is `const shortDim = Math.min(w, h)`.
+
+**Worked example:** iPhone 16 Pro rotated to landscape → w=852, h=393, orient=landscape, pointer=coarse. `min(852,393)=393 < 600` → `phone-landscape` ✓
 
 ### 6 test profiles → breakpoint mapping
 
