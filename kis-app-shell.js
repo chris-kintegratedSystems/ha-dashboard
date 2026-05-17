@@ -278,6 +278,9 @@
         }
       }
     }
+
+    const kioskState = hass.states['input_boolean.kiosk_mode']?.state ?? null;
+    if (kioskState !== _prevKiosk && onV2Dashboard()) syncKioskMode(hass);
   }
 
   // ── Expose for other cards ────────────────────────────────────────────────
@@ -803,11 +806,57 @@
     return true;
   }
 
+  function removeShadowCSS(shadowRoot, id) {
+    if (!shadowRoot) return;
+    const el = shadowRoot.querySelector('#' + id);
+    if (el) el.remove();
+  }
+
+  const KIOSK_CSS = 'app-header { display: none !important; }';
+
+  let _kioskOriginals = null;
+  let _prevKiosk = null;
+
+  function syncKioskMode(hass) {
+    const entity = hass?.states?.['input_boolean.kiosk_mode'];
+    const isOn = !entity || entity.state === 'on';
+
+    const ha = document.querySelector('home-assistant');
+    const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+    const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+    const sidebar = drawer?.querySelector('ha-sidebar');
+    const panel = drawer?.querySelector('ha-panel-lovelace') || main?.shadowRoot?.querySelector('ha-panel-lovelace');
+    const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
+
+    if (isOn) {
+      if (drawer) {
+        drawer.style.setProperty('--mdc-drawer-width', '0px');
+        if (sidebar) sidebar.style.display = 'none';
+        if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
+        drawer.setAttribute('type', 'modal');
+      }
+      if (huiRoot?.shadowRoot) {
+        injectShadowCSS(huiRoot.shadowRoot, 'kisv2-kiosk-patch', KIOSK_CSS);
+      }
+    } else {
+      if (drawer && _kioskOriginals) {
+        drawer.style.setProperty('--mdc-drawer-width', _kioskOriginals.drawerWidth || '');
+        if (_kioskOriginals.drawerType) drawer.setAttribute('type', _kioskOriginals.drawerType);
+        else drawer.removeAttribute('type');
+        if (sidebar) sidebar.style.display = _kioskOriginals.sidebarDisplay || '';
+      }
+      if (huiRoot?.shadowRoot) {
+        removeShadowCSS(huiRoot.shadowRoot, 'kisv2-kiosk-patch');
+      }
+    }
+
+    _prevKiosk = entity?.state ?? null;
+  }
+
   const HEADER_H = 68;
 
   function getHuiRootCSS() {
     return `
-      app-header { display: none !important; }
       ha-app-layout {
         --header-height: 0px !important;
         --app-header-height: 0px !important;
@@ -1057,11 +1106,24 @@
       const drawer = main.shadowRoot.querySelector('ha-drawer');
       if (drawer) {
         panel = drawer.querySelector('ha-panel-lovelace');
-        drawer.style.setProperty('--mdc-drawer-width', '0px');
-        const sidebar = drawer.querySelector('ha-sidebar');
-        if (sidebar) sidebar.style.display = 'none';
-        if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
-        drawer.setAttribute('type', 'modal');
+        // Capture originals before any hide — first drawer encounter only
+        if (!_kioskOriginals) {
+          const sidebar = drawer.querySelector('ha-sidebar');
+          _kioskOriginals = {
+            drawerWidth: drawer.style.getPropertyValue('--mdc-drawer-width'),
+            drawerType: drawer.getAttribute('type'),
+            sidebarDisplay: sidebar ? sidebar.style.display : '',
+          };
+        }
+        // Boot-time: unconditionally hide chrome (prevents sidebar flash).
+        // Once _hass is available, syncKioskMode handles state-aware toggling.
+        if (!_hass) {
+          drawer.style.setProperty('--mdc-drawer-width', '0px');
+          const sidebar = drawer.querySelector('ha-sidebar');
+          if (sidebar) sidebar.style.display = 'none';
+          if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
+          drawer.setAttribute('type', 'modal');
+        }
       }
       if (!panel) panel = main.shadowRoot.querySelector('ha-panel-lovelace');
       if (!panel?.shadowRoot) throw new Error('no panel');
@@ -1071,6 +1133,10 @@
 
       const huiShadow = huiRoot.shadowRoot;
       injectShadowCSS(huiShadow, 'kisv2-hui-patch', getHuiRootCSS());
+      // Boot-time kiosk CSS injection (before _hass is available)
+      if (!_hass) {
+        injectShadowCSS(huiShadow, 'kisv2-kiosk-patch', KIOSK_CSS);
+      }
 
       const appLayout = huiShadow.querySelector('ha-app-layout');
       if (appLayout?.shadowRoot) {
@@ -1086,6 +1152,8 @@
           armRevealGate(sectionsView);
         }
       }
+
+      if (_hass) syncKioskMode(_hass);
     } catch (e) {
       if (attempt < 30) {
         setTimeout(() => patchHALayout(attempt + 1), Math.min(300 * (attempt + 1), 2000));

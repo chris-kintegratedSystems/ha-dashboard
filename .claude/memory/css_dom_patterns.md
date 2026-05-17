@@ -699,6 +699,32 @@ ssh ... "sudo sed -i 's|kis-app-shell.js?v=25|kis-app-shell.js?v=26|' \
 Then `sudo docker restart homeassistant`. The `lovelace_resources` file
 is a JSON file with no `.json` extension, same as other HA storage files.
 
+## 2026-05-17 — Kiosk mode: default-hide on boot, opt-out via entity subscription
+
+Kiosk mode uses two CSS injection IDs — `kisv2-hui-patch` (layout, permanent)
+vs `kisv2-kiosk-patch` (chrome-hide, toggled). Inline-style restoration uses
+capture-then-restore via `_kioskOriginals`, not hardcoded defaults.
+`patchHALayout` re-arms kiosk state on every nav so fresh ha-drawer/ha-sidebar
+elements stay correct.
+
+Pattern:
+1. `patchHALayout` captures originals (drawer width, type, sidebar display)
+   BEFORE the boot-time hide runs. Originals are captured only once.
+2. Boot-time hide (when `_hass` is null): unconditionally hides chrome to
+   prevent sidebar flash on initial load.
+3. `syncKioskMode(hass)`: called from `onHassUpdate` on entity change AND
+   at end of `patchHALayout` when `_hass` is available. Reads
+   `input_boolean.kiosk_mode` — if ON, applies hide + injects
+   `kisv2-kiosk-patch`; if OFF, restores from `_kioskOriginals` + removes
+   `kisv2-kiosk-patch`.
+4. `_prevKiosk` tracks last-synced state to avoid redundant DOM writes on
+   every hass update (~1/sec).
+
+Shadow DOM targets for hide/restore:
+- `ha-drawer`: `--mdc-drawer-width` (0px / original), `type` attr (modal / original)
+- `ha-sidebar`: `style.display` (none / original)
+- `hui-root` shadowRoot: `kisv2-kiosk-patch` style element with `app-header { display: none !important; }`
+
 ## 2026-05-17 — MutationObserver on #view required for nav reveal
 
 `location-changed` fires BEFORE HA swaps view children. The
