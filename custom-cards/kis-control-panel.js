@@ -151,7 +151,6 @@ class KisControlPanel extends HTMLElement {
       :host {
         display: block;
         height: 100%;
-        min-height: 100%;
         --cp-h: var(--kis-card-h, 80px);
         --cp-icon: clamp(14px, calc(var(--cp-h) * 0.35), 24px);
         --cp-chip-box: clamp(24px, calc(var(--cp-h) * 0.58), 40px);
@@ -173,6 +172,7 @@ class KisControlPanel extends HTMLElement {
         box-sizing: border-box;
       }
       ${KIS_SECTION_LABEL_CSS}
+      .kis-section-label { margin-bottom: 0; }
       .row {
         position: relative;
         display: flex;
@@ -243,6 +243,19 @@ class KisControlPanel extends HTMLElement {
       .garage-pair > .row {
         flex: 1;
         min-width: 0;
+      }
+      @media (min-width: 769px) {
+        .kis-cp > .row,
+        .kis-cp > .garage-pair {
+          flex: 1;
+          min-height: 48px;
+        }
+        .garage-pair > .row {
+          min-height: 48px;
+        }
+        .kis-cp > .row {
+          transition: none;
+        }
       }
       @media (max-width: 768px) {
         :host {

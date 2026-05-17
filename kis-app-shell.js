@@ -848,7 +848,7 @@
         display: block;
         margin-top: ${HEADER_H}px;
         padding-top: 0 !important;
-        padding-bottom: ${NAV_H}px !important;
+        padding-bottom: 68px !important;
         box-sizing: border-box;
         --kis-spacing-b: clamp(10px, 1.5vw, 24px);
         --kis-spacing-h: calc(var(--kis-spacing-b) / 2);
@@ -890,6 +890,8 @@
       }
       .container ha-sortable > div {
         align-items: stretch !important;
+        min-height: calc(100vh - ${HEADER_H}px - 68px - var(--kis-spacing-b, 12px)) !important;
+        grid-template-rows: auto 1fr !important;
       }
       .container ha-sortable > div > div {
         display: flex !important;
