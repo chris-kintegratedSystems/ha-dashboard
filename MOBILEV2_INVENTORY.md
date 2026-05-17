@@ -172,8 +172,10 @@ As of 2026-05-17:
 
 ## Infrastructure Notes
 
+- **Dashboard YAML source of truth:** `kis-dashboard-v2.yaml` in this repo. Changes deploy via SCP to the Pi like any other resource.
 - **Deploy method:** SCP to Pi `/tmp/` → `sudo cp` to target + permissions fix + docker restart. Or: `sed -i` cache-bust in `lovelace_resources` + docker restart for version bumps only.
 - **Dashboard storage:** `/home/cooper5389/homeassistant/config/.storage/lovelace.dashboard_mobilev2`
+- **Dashboard YAML on Pi:** `/home/cooper5389/homeassistant/config/www/mobile_v2/kis-dashboard-v2.yaml`
 - **Static assets:** `/home/cooper5389/homeassistant/config/www/mobile_v2/`
 - **HA restart required:** Yes, always — HA caches both Lovelace config and resource URLs in memory.
 - **Cache-bust pattern:** Increment `?v=N` in lovelace_resources entry + docker restart. FKB hard-refresh on Tab S9 after.

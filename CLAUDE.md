@@ -43,8 +43,9 @@ custom elements replace Lovelace's native card chrome.
 - `kis-design-tokens.js` — shared sizing/color/responsive constants.
 - `custom-cards/kis-*.js` — page-level custom cards (scenes, control
   panel, priority view, settings).
-- `kis-dashboard-v2.yaml` — Lovelace sections-view definition deployed
-  as `.storage/lovelace.dashboard_mobilev2` on the Pi.
+- `kis-dashboard-v2.yaml` — Lovelace sections-view definition (canonical
+  source of truth, version-controlled here). Deployed via SCP to
+  `/config/www/mobile_v2/` on the Pi.
 
 See `MOBILEV2_ARCHITECTURE.md` for the full component pattern, CSS
 injection points, layout primitives, and page authoring checklist.

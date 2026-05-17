@@ -166,3 +166,18 @@ ssh cooper5389@192.168.51.179 "sudo sed -i 's|kis-app-shell.js?v=25|kis-app-shel
 ```
 Works because HA re-reads `.storage/lovelace_resources` on restart. Still
 need the docker restart regardless of which method changes the file.
+
+## 2026-05-17: Deploy YAML changes (kis-dashboard-v2.yaml)
+The dashboard YAML source of truth is `kis-dashboard-v2.yaml` in the
+ha-dashboard repo. After editing, deploy like any other static asset:
+```bash
+scp kis-dashboard-v2.yaml cooper5389@192.168.51.179:/tmp/ && \
+ssh cooper5389@192.168.51.179 "sudo cp /tmp/kis-dashboard-v2.yaml \
+  /home/cooper5389/homeassistant/config/www/mobile_v2/kis-dashboard-v2.yaml && \
+  sudo chown root:root /home/cooper5389/homeassistant/config/www/mobile_v2/kis-dashboard-v2.yaml && \
+  sudo chmod 644 /home/cooper5389/homeassistant/config/www/mobile_v2/kis-dashboard-v2.yaml && \
+  sudo docker restart homeassistant"
+```
+Note: this YAML lives in `www/` (static asset served at `/local/...`),
+NOT in `.storage/`. HA reads it via lovelace resource loading, not as a
+storage-mode dashboard. Docker restart is still required.
