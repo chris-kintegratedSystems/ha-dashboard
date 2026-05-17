@@ -195,6 +195,7 @@
     Object.assign(window.KIS_BREAKPOINT, bp);
     document.body.dataset.kisBp = bp.name;
     applyDensityTokens(bp.density);
+    syncWrapperColumns();
 
     if (prev !== null && prev !== bp.name) {
       for (const card of _registeredCards) {
@@ -1442,6 +1443,38 @@
     });
   }
 
+  let _kisColSheet = null;
+  let _kisColSheetRoot = null;
+  function syncWrapperColumns() {
+    if (!onV2Dashboard()) return;
+    const cols = window.KIS_BREAKPOINT.columns;
+    try {
+      const ha = document.querySelector('home-assistant');
+      const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+      const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+      const panel = (drawer?.querySelector('ha-panel-lovelace')) || main?.shadowRoot?.querySelector('ha-panel-lovelace');
+      const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
+      const viewEl = huiRoot?.shadowRoot?.querySelector('#view');
+      const sectionsView = viewEl?.querySelector('hui-sections-view');
+      const sr = sectionsView?.shadowRoot;
+      const wrapper = sr?.querySelector('.wrapper');
+      if (!wrapper) return;
+      wrapper.style.setProperty('--content-column-count', String(cols));
+      wrapper.style.setProperty('--column-count', String(cols));
+      wrapper.classList.toggle('kis-single-col', cols === 1);
+      if (!_kisColSheet) {
+        _kisColSheet = new CSSStyleSheet();
+        _kisColSheet.replaceSync(
+          '.wrapper.kis-single-col .content .section { grid-column: 1 / -1 !important; }'
+        );
+      }
+      if (_kisColSheetRoot !== sr) {
+        sr.adoptedStyleSheets = [...sr.adoptedStyleSheets, _kisColSheet];
+        _kisColSheetRoot = sr;
+      }
+    } catch (e) { /* not ready yet */ }
+  }
+
   // ── Early-hide: inject opacity:0 on hui-sections-view the frame its shadow host is available ──
   let _earlyHideInjected = false;
   function earlyHideLoop() {
@@ -1602,6 +1635,7 @@
         if (sectionsView?.shadowRoot) {
           injectShadowCSS(sectionsView.shadowRoot, 'kisv2-sections-patch', getSectionsViewCSS());
           patchGridSections(sectionsView.shadowRoot);
+          syncWrapperColumns();
           armRevealGate(sectionsView);
         }
       }
@@ -1626,8 +1660,8 @@
     // HA's style writes drop --kis-card-h during initial page load)
     setTimeout(recomputeBreakpoint, 100);
 
-    window.addEventListener('location-changed', () => { resetRevealGate(); syncV2State(); });
-    window.addEventListener('popstate', () => { resetRevealGate(); syncV2State(); });
+    window.addEventListener('location-changed', () => { resetRevealGate(); syncV2State(); setTimeout(() => patchHALayout(0), 500); });
+    window.addEventListener('popstate', () => { resetRevealGate(); syncV2State(); setTimeout(() => patchHALayout(0), 500); });
 
     // Tick header every second for live clock
     setInterval(() => {
@@ -1636,6 +1670,11 @@
 
     // Initial layout patch with retries
     setTimeout(() => patchHALayout(0), 500);
+
+    // HA may swap sections-view after patchHALayout succeeds on an earlier
+    // instance. Re-run the full patch at staggered delays to catch the final one.
+    setTimeout(() => patchHALayout(0), 2000);
+    setTimeout(() => patchHALayout(0), 5000);
   }
 
   // ── Boot ──────────────────────────────────────────────────────────────────

@@ -95,7 +95,7 @@ class KisScenes extends HTMLElement {
         flex-direction: column;
         height: 100%;
         box-sizing: border-box;
-        --sc-h: var(--kis-card-h, 64px);
+        --sc-h: var(--kis-scene-h, 64px);
         --sc-icon: clamp(14px, calc(var(--sc-h) * 0.30), 24px);
         --sc-icon-box: clamp(24px, calc(var(--sc-h) * 0.50), 36px);
         --sc-icon-r: clamp(6px, calc(var(--sc-h) * 0.14), 10px);
@@ -150,6 +150,10 @@ class KisScenes extends HTMLElement {
           max-width: min(100%, calc(55vh * 16 / 9));
           margin-left: auto;
           margin-right: auto;
+        }
+        .scene-grid {
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(2, 1fr);
         }
       }
     `;

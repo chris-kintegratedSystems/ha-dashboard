@@ -142,9 +142,9 @@ All mobilev2 resources are registered in `.storage/lovelace_resources` on the Pi
 
 | Resource | Path | Current cache-bust | Git version |
 |----------|------|-------------------|-------------|
-| kis-app-shell.js | `/local/mobile_v2/kis-app-shell.js` | `?v=38` | v38 |
-| kis-control-panel.js | `/local/mobile_v2/custom-cards/kis-control-panel.js` | `?v=27` | v27 |
-| kis-scenes.js | `/local/mobile_v2/custom-cards/kis-scenes.js` | `?v=10` | v10 |
+| kis-app-shell.js | `/local/mobile_v2/kis-app-shell.js` | `?v=42` | v42 |
+| kis-control-panel.js | `/local/mobile_v2/custom-cards/kis-control-panel.js` | `?v=30` | v30 |
+| kis-scenes.js | `/local/mobile_v2/custom-cards/kis-scenes.js` | `?v=11` | v11 |
 | kis-settings.js | `/local/mobile_v2/custom-cards/kis-settings.js` | `?v=7` | v7 |
 | kis-priority-view.js | `/local/mobile_v2/custom-cards/kis-priority-view.js` | `?v=15` | v15 |
 
@@ -156,17 +156,17 @@ All mobilev2 resources are registered in `.storage/lovelace_resources` on the Pi
 
 ## Deployed State vs Git Drift Check
 
-As of 2026-05-17:
+As of 2026-05-17 (Stage 2 deployed):
 
-| File | Deployed (Pi) | Git (main) | Drift? |
+| File | Deployed (Pi) | Git (branch) | Drift? |
 |------|---------------|------------|--------|
-| kis-app-shell.js | v=38 | v38 (VERSION='2') | No |
-| kis-control-panel.js | v=27 | Matches | No |
-| kis-scenes.js | v=10 | Matches | No |
-| kis-settings.js | v=7 | Matches | No |
-| kis-priority-view.js | v=15 | Matches | No |
+| kis-app-shell.js | v=42 | v42 (syncWrapperColumns + adoptedStyleSheets column override) | No |
+| kis-control-panel.js | v=30 | v30 (bp.columns layout + box-sizing fix) | No |
+| kis-scenes.js | v=11 | v11 (3x2 phone grid) | No |
+| kis-settings.js | v=7 | v7 | No |
+| kis-priority-view.js | v=15 | v15 | No |
 
-**No drift detected.** Deployed state matches git on all resources.
+**All files deployed and in sync.**
 
 ---
 
