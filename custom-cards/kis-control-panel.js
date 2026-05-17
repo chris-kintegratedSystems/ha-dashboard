@@ -101,24 +101,32 @@ class KisControlPanel extends HTMLElement {
     this._built = false;
     this._holdTimers = {};
     this._held = {};
+    this._columns = 0;
   }
 
   connectedCallback() {
     if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this);
-    this._ro = new ResizeObserver(() => {
-      const cp = this.shadowRoot?.querySelector('.kis-cp');
-      if (!cp) return;
-      if (window.innerWidth >= 769) {
-        cp.style.minHeight = '';
-      } else {
-        cp.style.minHeight = this.getBoundingClientRect().height + 'px';
-      }
-    });
-    this._ro.observe(this);
   }
   disconnectedCallback() {
     if (window.KIS_UNREGISTER_CARD) window.KIS_UNREGISTER_CARD(this);
-    this._ro?.disconnect();
+  }
+
+  _onBreakpointChange(bp) {
+    this._applyLayout(bp.columns);
+  }
+
+  _applyLayout(columns) {
+    if (columns === this._columns) return;
+    this._columns = columns;
+    const cp = this.shadowRoot?.querySelector('.kis-cp');
+    if (!cp) return;
+    if (columns >= 2) {
+      cp.classList.add('two-col');
+      this.classList.add('two-col-host');
+    } else {
+      cp.classList.remove('two-col');
+      this.classList.remove('two-col-host');
+    }
   }
 
   setConfig(config) {
@@ -136,6 +144,8 @@ class KisControlPanel extends HTMLElement {
     if (!this._built) {
       this._build();
       this._built = true;
+      const bp = window.KIS_BREAKPOINT;
+      if (bp && bp.columns) this._applyLayout(bp.columns);
       return;
     }
 
@@ -156,7 +166,7 @@ class KisControlPanel extends HTMLElement {
       :host {
         display: block;
         height: 100%;
-        --cp-h: var(--kis-card-h, 80px);
+        --cp-h: var(--kis-row-h, 80px);
         --cp-icon: clamp(14px, calc(var(--cp-h) * 0.35), 24px);
         --cp-chip-box: clamp(24px, calc(var(--cp-h) * 0.58), 40px);
         --cp-chip-r: clamp(6px, calc(var(--cp-h) * 0.14), 10px);
@@ -249,56 +259,41 @@ class KisControlPanel extends HTMLElement {
         flex: 1;
         min-width: 0;
       }
-      @media (min-width: 769px) {
-        :host {
-          contain: size;
-        }
-        .kis-cp {
-          display: grid;
-          grid-template-rows: auto 1fr 1fr 1fr auto 1fr;
-        }
-        .kis-cp > .row {
-          min-height: 0;
-          overflow: hidden;
-          box-sizing: border-box;
-          padding-top: 6px;
-          padding-bottom: 6px;
-          border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
-          border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
-          transition: none;
-        }
-        .kis-cp > .garage-pair {
-          min-height: 0;
-          overflow: hidden;
-        }
-        .kis-cp > .garage-pair > .row {
-          box-sizing: border-box;
-          height: 100%;
-          min-height: 0;
-          padding-top: 6px;
-          padding-bottom: 6px;
-          border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
-          border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
-        }
+      .kis-cp.two-col {
+        display: grid;
+        grid-template-rows: auto 1fr 1fr 1fr auto 1fr;
       }
-      @media (max-width: 768px) {
-        :host {
-          height: auto;
-          max-width: min(100%, calc(55vh * 16 / 9));
-          margin-left: auto;
-          margin-right: auto;
-        }
-        .kis-cp {
-          height: auto;
-        }
+      :host(.two-col-host) {
+        contain: size;
       }
-      @media (max-width: 430px) {
-        .garage-pair {
-          flex-direction: column;
-        }
-        .garage-pair > .row {
-          width: 100%;
-        }
+      .kis-cp.two-col > .row {
+        min-height: 0;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+        border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+        transition: none;
+      }
+      .kis-cp.two-col > .garage-pair {
+        min-height: 0;
+        overflow: hidden;
+      }
+      .kis-cp.two-col > .garage-pair > .row {
+        box-sizing: border-box;
+        height: 100%;
+        min-height: 0;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+        border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+      }
+      :host(:not(.two-col-host)) {
+        height: auto;
+      }
+      .kis-cp:not(.two-col) {
+        height: auto;
       }
     `;
     s.appendChild(style);
