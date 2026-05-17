@@ -575,6 +575,11 @@
       if (player) player.setAttribute('hidden', '');
       _headerInitialized = false;
       _prevMediaState = null;
+      // Clean up sidebar inset patch so it doesn't leak into other dashboards
+      const ha = document.querySelector('home-assistant');
+      const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+      const sidebar = main?.shadowRoot?.querySelector('ha-drawer')?.querySelector('ha-sidebar');
+      if (sidebar?.shadowRoot) removeShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch');
     }
   }
 
@@ -814,10 +819,28 @@
 
   const KIOSK_CSS = 'app-header { display: none !important; }';
 
+  const SIDEBAR_INSET_CSS = `
+    :host {
+      padding-top: calc(68px + env(safe-area-inset-top, 0px)) !important;
+      padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+      box-sizing: border-box !important;
+      height: 100% !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .panels-list {
+      overflow-y: auto !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+    }
+  `;
+
   let _kioskOriginals = null;
   let _prevKiosk = null;
 
   function syncKioskMode(hass) {
+    if (!_kioskOriginals) return;
     const entity = hass?.states?.['input_boolean.kiosk_mode'];
     const isOn = !entity || entity.state === 'on';
 
@@ -838,6 +861,9 @@
       if (huiRoot?.shadowRoot) {
         injectShadowCSS(huiRoot.shadowRoot, 'kisv2-kiosk-patch', KIOSK_CSS);
       }
+      if (sidebar?.shadowRoot) {
+        removeShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch');
+      }
     } else {
       if (drawer && _kioskOriginals) {
         drawer.style.setProperty('--mdc-drawer-width', _kioskOriginals.drawerWidth || '');
@@ -847,6 +873,9 @@
       }
       if (huiRoot?.shadowRoot) {
         removeShadowCSS(huiRoot.shadowRoot, 'kisv2-kiosk-patch');
+      }
+      if (sidebar?.shadowRoot) {
+        injectShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch', SIDEBAR_INSET_CSS);
       }
     }
 
