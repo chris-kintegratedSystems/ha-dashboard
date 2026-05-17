@@ -18,8 +18,8 @@
 | Card padding | `.card { padding }` | 18px 16px | `T.padding.card` | **Migrate** → `var(--kis-card-pad-v, 18px) var(--kis-card-pad-h, 16px)` |
 | Theme button row gap | `.theme-row { gap }` | 8px | Hardcoded | **Migrate** → `var(--kis-spacing-h, 8px)` |
 | Color picker wrap gap | `.color-picker-wrap { gap }` | 8px | Hardcoded | **Migrate** → `var(--kis-spacing-h, 8px)` |
-| Color row padding-h | `.color-row { padding }` | 10px 16px | Hardcoded | **Migrate h-only** → `10px var(--kis-card-pad-h, 16px)` |
-| Contrast row padding-h | `.contrast-row { padding }` | 10px 16px | Hardcoded | **Migrate h-only** → `10px var(--kis-card-pad-h, 16px)` |
+| Color row padding | `.color-row { padding }` | 10px 16px | Hardcoded | **Migrate both axes** → `var(--kis-card-pad-v, 10px) var(--kis-card-pad-h, 16px)` |
+| Contrast row padding | `.contrast-row { padding }` | 10px 16px | Hardcoded | **Migrate both axes** → `var(--kis-card-pad-v, 10px) var(--kis-card-pad-h, 16px)` |
 | Wrap padding-bottom | `.kis-settings { padding-bottom }` | 16px | Hardcoded | **Leave** — structural clearance for nav bar |
 | Theme button padding | `.theme-btn { padding }` | 12px 8px | `T.padding.themeBtn` | **Leave** — button-specific, not card spacing |
 | Theme button gap | `.theme-btn { gap }` | 4px | Hardcoded | **Leave** — icon-to-label gap, not density-responsive |
@@ -51,5 +51,5 @@ Zero new sections, controls, or reordering. Token consumption only.
 
 ## Migration Count
 
-- **7 sites migrate** (5 gap/margin, 1 full card padding, 1 partial padding)
+- **7 sites migrate** (5 gap/margin, 3 full card-padding sites — `.card`, `.color-row`, `.contrast-row` — all using both `--kis-card-pad-v` and `--kis-card-pad-h`)
 - **6 sites left unchanged** (buttons, structural, inline templates)
