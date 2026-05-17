@@ -773,3 +773,17 @@ Four guards:
 4. **RAF-poll for shadowRoot** — HA adds `HUI-VIEW` to `#view` but
    `hui-sections-view` inside it may not have a `shadowRoot` yet on
    the same frame. The `waitForSectionsView` loop polls until ready.
+
+## 2026-05-17: Custom alarm panel replaces native more-info dialog
+
+HA's native `more-info-alarm_control_panel` has a `_currentMode` optimistic
+cache bug (HA architecture #740) — Lit `willUpdate` checks stateObj by
+reference equality, so optimistic updates desync `_currentMode` from actual
+entity state across dialog open/close cycles. Fix: replace `hass-more-info`
+dispatch on alarm pill with custom inline panel (`#kis-alarm-panel`) that
+reads `hass.states[ALARM_ENTITY]` fresh on every render — zero local state
+mirroring entity state. Disarm code validated server-side via Vivint
+integration `disarm_code` config option (code_format: "number"). Panel
+elements: `#kis-alarm-backdrop` (z-index 10000002) + `#kis-alarm-panel`
+(z-index 10000003), both above header (10000001). Day mode uses
+`body:has(#kis-v2-header[data-kis-day])` ancestor selector.
