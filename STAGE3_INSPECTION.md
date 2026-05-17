@@ -53,3 +53,27 @@ Zero new sections, controls, or reordering. Token consumption only.
 
 - **7 sites migrate** (5 gap/margin, 3 full card-padding sites — `.card`, `.color-row`, `.contrast-row` — all using both `--kis-card-pad-v` and `--kis-card-pad-h`)
 - **6 sites left unchanged** (buttons, structural, inline templates)
+
+## Resolution Notes (post-migration)
+
+### Sites 6+7 revised scope
+Original inspection recommended h-only migration (`10px var(--kis-card-pad-h, 16px)`).
+Chris approved full migration using `var(--kis-card-pad-v, 10px) var(--kis-card-pad-h, 16px)` —
+both vertical and horizontal padding now density-driven. No new tokens added.
+
+### Verified computed values (kis-settings.js v=8)
+
+| Profile | Density | `.kis-settings` gap | `.card` padding | `.color-row` padding |
+|---------|---------|---------------------|-----------------|---------------------|
+| iPhone 16 Pro (402×874) | compact | 5px | 8px 10px | 8px 10px |
+| iPhone 17 Pro Max (440×956) | compact | 5px | 8px 10px | 8px 10px |
+| iPad portrait (834×1194) | normal | 6.3px | 14px 16px | 14px 16px |
+| iPad landscape (1194×834) | normal | 9.0px | 14px 16px | 14px 16px |
+| Tab S9 landscape (1400×876) | normal | 10.5px | 14px 16px | 14px 16px |
+| Desktop (1440×900) | normal | 10.8px | 14px 16px | 14px 16px |
+
+### `--kis-spacing-h` scoping note
+Gap values on phones show 5px instead of the root density token's 4px.
+Cause: sections-view `:host` defines `--kis-spacing-h: calc(var(--kis-spacing-b) / 2)`
+which overrides the `:root` density token at narrow viewports. Not a regression —
+pre-existing scoping behavior. Functionally equivalent (1px difference).
