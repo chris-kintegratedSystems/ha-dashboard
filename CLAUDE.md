@@ -26,14 +26,34 @@ Do not skip this protocol even if the first message implies urgency.
 
 # ha-dashboard — Claude Code Project
 
-Mobile + tablet dashboard JSONs and the shared kis-nav.js fixed UI for
-Chris's Home Assistant. See parent `C:\Projects\kintegrated\CLAUDE.md`
-for KIS master context and `C:\Projects\ha-config\CLAUDE.md` for HA-side
-deploy rules.
+Two live dashboard systems for Chris's Home Assistant, plus shared QA
+tooling. See parent `C:\Projects\kintegrated\CLAUDE.md` for KIS master
+context and `C:\Projects\ha-config\CLAUDE.md` for HA-side deploy rules.
 
 ---
 
 ## Architecture
+
+### mobilev2 (active development)
+Custom-card-based dashboard with a persistent app shell. Full-width
+custom elements replace Lovelace's native card chrome.
+
+- `kis-app-shell.js` — persistent UI layer (header, nav, mini-player,
+  theme engine, hass bridge). Loaded via `lovelace_resources`.
+- `kis-design-tokens.js` — shared sizing/color/responsive constants.
+- `custom-cards/kis-*.js` — page-level custom cards (scenes, control
+  panel, priority view, settings).
+- `kis-dashboard-v2.yaml` — Lovelace sections-view definition deployed
+  as `.storage/lovelace.dashboard_mobilev2` on the Pi.
+
+See `MOBILEV2_ARCHITECTURE.md` for the full component pattern, CSS
+injection points, layout primitives, and page authoring checklist.
+See `MOBILEV2_INVENTORY.md` for current views, entity bindings, and
+deployed state.
+
+### mobilev1 (maintenance only)
+Legacy JSON-card-based dashboard. Still deployed and used on Tab S9
+as the primary wall-mount UI.
 
 - `dashboard_mobilev1.json` / `dashboard_tabletv1.json` — Lovelace storage
   files that get SCP'd to `/config/.storage/lovelace.<id>` on the Pi.
@@ -43,6 +63,11 @@ deploy rules.
   `document.body` from **outside** the HA shadow DOM tree. Loaded via
   `frontend.extra_module_url` in `configuration.yaml`, NOT via dashboard
   resources. See ha-config CLAUDE.md for the cache-bust pattern.
+
+### Both dashboards
+- Deploy to `.storage/lovelace.<id>` (no `.json` extension, root:root 644)
+- HA caches in memory — always `docker restart homeassistant` after changes
+- QA via `qa-screenshot.js` (8 device profiles × views)
 
 ---
 
@@ -721,6 +746,23 @@ When a fix has failed once, the next step is a diagnostic pass —
 instrument the code, log the relevant state, report findings to Chris
 BEFORE applying any fix. Never attempt a second fix without confirmed
 root cause.
+
+---
+
+## mobilev2 Phase Queue
+
+Current state: Home + Settings views live. Phase 1 (foundation) complete.
+
+| Phase | Scope | Status |
+|-------|-------|--------|
+| 1 — Foundation | App shell, design tokens, Home (scenes + control-panel + priority-view), Settings | **Complete** |
+| 2 — Climate | Thermostat card, room temperature grid, HVAC mode control | Planned |
+| 3 — Lights | Room-grouped brightness sliders, scene-aware state | Planned |
+| 4 — Cameras | Dedicated camera grid view (panel + native grid card pattern from mobilev1) | Planned |
+| 5 — Media | Full media player page, queue, source selection | Planned |
+
+Each phase adds one view + one custom card. Follow the page authoring
+checklist in `MOBILEV2_ARCHITECTURE.md` § 7.
 
 ---
 
