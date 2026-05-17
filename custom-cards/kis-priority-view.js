@@ -760,13 +760,6 @@ class KisPriorityView extends HTMLElement {
         aspect-ratio: 16 / 9;
         transition: border 0.3s ease, box-shadow 0.3s ease;
       }
-      @media (min-width: 600px) {
-        .carousel-viewport {
-          aspect-ratio: auto;
-          flex: 1;
-          min-height: 200px;
-        }
-      }
 
       .carousel-slider {
         display: flex;

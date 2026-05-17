@@ -1,6 +1,7 @@
 .env
 node_modules/
 qa-screenshots/
+.scratch/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 # Policing runtime files (generated, do not commit)

@@ -411,13 +411,16 @@ class KisSettings extends HTMLElement {
 
   _css() {
     return `
-      :host { display: block; }
+      :host { display: block; min-height: calc(100vh - 136px); }
       .kis-settings {
         display: flex;
         flex-direction: column;
         gap: 8px;
         max-width: 600px;
         margin: 0 auto;
+        min-height: calc(100vh - 152px);
+        padding-bottom: 16px;
+        box-sizing: border-box;
       }
       ${KIS_SECTION_LABEL_CSS}
       .kis-section-label { margin-top: 8px; }

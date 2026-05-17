@@ -107,7 +107,12 @@ class KisControlPanel extends HTMLElement {
     if (window.KIS_REGISTER_CARD) window.KIS_REGISTER_CARD(this);
     this._ro = new ResizeObserver(() => {
       const cp = this.shadowRoot?.querySelector('.kis-cp');
-      if (cp) cp.style.minHeight = this.getBoundingClientRect().height + 'px';
+      if (!cp) return;
+      if (window.innerWidth >= 769) {
+        cp.style.minHeight = '';
+      } else {
+        cp.style.minHeight = this.getBoundingClientRect().height + 'px';
+      }
     });
     this._ro.observe(this);
   }
@@ -151,7 +156,6 @@ class KisControlPanel extends HTMLElement {
       :host {
         display: block;
         height: 100%;
-        min-height: 100%;
         --cp-h: var(--kis-card-h, 80px);
         --cp-icon: clamp(14px, calc(var(--cp-h) * 0.35), 24px);
         --cp-chip-box: clamp(24px, calc(var(--cp-h) * 0.58), 40px);
@@ -173,6 +177,7 @@ class KisControlPanel extends HTMLElement {
         box-sizing: border-box;
       }
       ${KIS_SECTION_LABEL_CSS}
+      .kis-section-label { margin-bottom: 0; }
       .row {
         position: relative;
         display: flex;
@@ -243,6 +248,38 @@ class KisControlPanel extends HTMLElement {
       .garage-pair > .row {
         flex: 1;
         min-width: 0;
+      }
+      @media (min-width: 769px) {
+        :host {
+          contain: size;
+        }
+        .kis-cp {
+          display: grid;
+          grid-template-rows: auto 1fr 1fr 1fr auto 1fr;
+        }
+        .kis-cp > .row {
+          min-height: 0;
+          overflow: hidden;
+          box-sizing: border-box;
+          padding-top: 6px;
+          padding-bottom: 6px;
+          border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+          border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+          transition: none;
+        }
+        .kis-cp > .garage-pair {
+          min-height: 0;
+          overflow: hidden;
+        }
+        .kis-cp > .garage-pair > .row {
+          box-sizing: border-box;
+          height: 100%;
+          min-height: 0;
+          padding-top: 6px;
+          padding-bottom: 6px;
+          border-top: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+          border-bottom: 1px solid var(--ha-card-border-color, ${KIS_TOKENS.night.borderCard});
+        }
       }
       @media (max-width: 768px) {
         :host {

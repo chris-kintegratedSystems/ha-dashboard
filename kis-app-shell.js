@@ -824,6 +824,13 @@
         padding-top: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
+        opacity: 0;
+        visibility: hidden;
+      }
+      hui-sections-view.kis-ready {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 250ms ease-out, visibility 0s linear 0s;
       }
     `;
   }
@@ -848,7 +855,7 @@
         display: block;
         margin-top: ${HEADER_H}px;
         padding-top: 0 !important;
-        padding-bottom: ${NAV_H}px !important;
+        padding-bottom: 68px !important;
         box-sizing: border-box;
         --kis-spacing-b: clamp(10px, 1.5vw, 24px);
         --kis-spacing-h: calc(var(--kis-spacing-b) / 2);
@@ -856,6 +863,14 @@
         --column-max-width: none !important;
         --ha-view-sections-column-gap: var(--kis-spacing-b) !important;
         --ha-view-sections-row-gap: var(--kis-spacing-h) !important;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 250ms ease-out, visibility 0s linear 250ms;
+      }
+      :host(.kis-ready) {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 250ms ease-out, visibility 0s linear 0s;
       }
       .wrapper {
         padding: 0 !important;
@@ -890,6 +905,7 @@
       }
       .container ha-sortable > div {
         align-items: stretch !important;
+        grid-template-rows: auto auto !important;
       }
       .container ha-sortable > div > div {
         display: flex !important;
@@ -924,6 +940,71 @@
     });
   }
 
+  // ── Early-hide: inject opacity:0 on hui-sections-view the frame its shadow host is available ──
+  let _earlyHideInjected = false;
+  function earlyHideLoop() {
+    if (_earlyHideInjected || !onV2Dashboard()) return;
+    const ha = document.querySelector('home-assistant');
+    const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+    const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+    const panel = (drawer?.querySelector('ha-panel-lovelace')) || main?.shadowRoot?.querySelector('ha-panel-lovelace');
+    const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
+    if (huiRoot?.shadowRoot) {
+      injectShadowCSS(huiRoot.shadowRoot, 'kisv2-hui-patch', getHuiRootCSS());
+      _earlyHideInjected = true;
+      return;
+    }
+    requestAnimationFrame(earlyHideLoop);
+  }
+
+  let _revealGateActive = false;
+  let _revealFailsafe = null;
+
+  function armRevealGate(sectionsView) {
+    if (_revealGateActive) return;
+    _revealGateActive = true;
+
+    _revealFailsafe = setTimeout(() => {
+      if (!sectionsView.classList.contains('kis-ready')) {
+        console.warn('[kis-app-shell] reveal failsafe fired — a custom element may have failed to register');
+        sectionsView.classList.add('kis-ready');
+      }
+      _revealGateActive = false;
+    }, 2000);
+
+    Promise.all([
+      customElements.whenDefined('kis-scenes'),
+      customElements.whenDefined('kis-control-panel'),
+      customElements.whenDefined('kis-priority-view'),
+      customElements.whenDefined('kis-settings'),
+    ]).then(() => {
+      function checkReady() {
+        if (!_hass) { requestAnimationFrame(checkReady); return; }
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          sectionsView.classList.add('kis-ready');
+          clearTimeout(_revealFailsafe);
+          _revealGateActive = false;
+        }));
+      }
+      checkReady();
+    });
+  }
+
+  function resetRevealGate() {
+    _revealGateActive = false;
+    _earlyHideInjected = false;
+    if (_revealFailsafe) { clearTimeout(_revealFailsafe); _revealFailsafe = null; }
+    const ha = document.querySelector('home-assistant');
+    const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+    const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+    const panel = drawer?.querySelector('ha-panel-lovelace') || main?.shadowRoot?.querySelector('ha-panel-lovelace');
+    const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
+    const viewEl = huiRoot?.shadowRoot?.querySelector('#view');
+    const sv = viewEl?.querySelector('hui-sections-view');
+    if (sv) sv.classList.remove('kis-ready');
+    requestAnimationFrame(earlyHideLoop);
+  }
+
   function patchHALayout(attempt) {
     attempt = attempt || 0;
     if (!onV2Dashboard()) return;
@@ -939,11 +1020,9 @@
       const drawer = main.shadowRoot.querySelector('ha-drawer');
       if (drawer) {
         panel = drawer.querySelector('ha-panel-lovelace');
-        // Hide sidebar and force full-width content
         drawer.style.setProperty('--mdc-drawer-width', '0px');
         const sidebar = drawer.querySelector('ha-sidebar');
         if (sidebar) sidebar.style.display = 'none';
-        // Force drawer to not show aside
         if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
         drawer.setAttribute('type', 'modal');
       }
@@ -967,6 +1046,7 @@
         if (sectionsView?.shadowRoot) {
           injectShadowCSS(sectionsView.shadowRoot, 'kisv2-sections-patch', getSectionsViewCSS());
           patchGridSections(sectionsView.shadowRoot);
+          armRevealGate(sectionsView);
         }
       }
     } catch (e) {
@@ -984,8 +1064,8 @@
       customElements.whenDefined('ha-icon').then(() => setTimeout(injectUI, 200));
     }
 
-    window.addEventListener('location-changed', () => { syncV2State(); patchHALayout(0); });
-    window.addEventListener('popstate', () => { syncV2State(); patchHALayout(0); });
+    window.addEventListener('location-changed', () => { resetRevealGate(); syncV2State(); patchHALayout(0); });
+    window.addEventListener('popstate', () => { resetRevealGate(); syncV2State(); patchHALayout(0); });
 
     // Tick header every second for live clock
     setInterval(() => {
@@ -998,6 +1078,7 @@
 
   // ── Boot ──────────────────────────────────────────────────────────────────
   connectToHA();
+  requestAnimationFrame(earlyHideLoop);
   bootUI();
 
 })();
