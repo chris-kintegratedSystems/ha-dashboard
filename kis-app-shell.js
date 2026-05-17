@@ -990,10 +990,18 @@
     });
   }
 
+  let _pendingViewObserver = null;
+  let _viewObserverFailsafe = null;
+
   function resetRevealGate() {
     _revealGateActive = false;
     _earlyHideInjected = false;
     if (_revealFailsafe) { clearTimeout(_revealFailsafe); _revealFailsafe = null; }
+
+    // Guard 1: disconnect prior observer on rapid nav
+    if (_pendingViewObserver) { _pendingViewObserver.disconnect(); _pendingViewObserver = null; }
+    if (_viewObserverFailsafe) { clearTimeout(_viewObserverFailsafe); _viewObserverFailsafe = null; }
+
     const ha = document.querySelector('home-assistant');
     const main = ha?.shadowRoot?.querySelector('home-assistant-main');
     const drawer = main?.shadowRoot?.querySelector('ha-drawer');
@@ -1003,6 +1011,35 @@
     const sv = viewEl?.querySelector('hui-sections-view');
     if (sv) sv.classList.remove('kis-ready');
     requestAnimationFrame(earlyHideLoop);
+
+    // Guard 2: defensive #view lookup — only install observer if viewEl exists
+    if (viewEl) {
+      let fired = false;
+
+      function onViewSwap() {
+        if (fired) return;
+        fired = true;
+        if (_pendingViewObserver) { _pendingViewObserver.disconnect(); _pendingViewObserver = null; }
+        if (_viewObserverFailsafe) { clearTimeout(_viewObserverFailsafe); _viewObserverFailsafe = null; }
+        // HA swaps HUI-VIEW children; hui-sections-view inside may not have
+        // a shadowRoot yet. RAF-poll until it does, then patch.
+        function waitForSectionsView(n) {
+          const newSv = viewEl.querySelector('hui-sections-view');
+          if (newSv?.shadowRoot) { patchHALayout(0); return; }
+          if (n < 60) requestAnimationFrame(() => waitForSectionsView(n + 1));
+        }
+        requestAnimationFrame(() => waitForSectionsView(0));
+      }
+
+      _pendingViewObserver = new MutationObserver(onViewSwap);
+      _pendingViewObserver.observe(viewEl, { childList: true });
+
+      // Guard 3: failsafe — if observer doesn't fire within 500ms, patch directly
+      _viewObserverFailsafe = setTimeout(() => {
+        _viewObserverFailsafe = null;
+        onViewSwap();
+      }, 500);
+    }
   }
 
   function patchHALayout(attempt) {
@@ -1064,8 +1101,8 @@
       customElements.whenDefined('ha-icon').then(() => setTimeout(injectUI, 200));
     }
 
-    window.addEventListener('location-changed', () => { resetRevealGate(); syncV2State(); patchHALayout(0); });
-    window.addEventListener('popstate', () => { resetRevealGate(); syncV2State(); patchHALayout(0); });
+    window.addEventListener('location-changed', () => { resetRevealGate(); syncV2State(); });
+    window.addEventListener('popstate', () => { resetRevealGate(); syncV2State(); });
 
     // Tick header every second for live clock
     setInterval(() => {

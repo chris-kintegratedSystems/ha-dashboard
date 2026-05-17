@@ -698,3 +698,31 @@ ssh ... "sudo sed -i 's|kis-app-shell.js?v=25|kis-app-shell.js?v=26|' \
 ```
 Then `sudo docker restart homeassistant`. The `lovelace_resources` file
 is a JSON file with no `.json` extension, same as other HA storage files.
+
+## 2026-05-17 — MutationObserver on #view required for nav reveal
+
+`location-changed` fires BEFORE HA swaps view children. The
+`resetRevealGate()` → `patchHALayout()` call that existed prior to
+this fix patched the OLD `hui-sections-view` (about to be destroyed).
+HA then creates a new `hui-sections-view` inside a fresh `HUI-VIEW`
+element, which inherits `opacity:0` from the parent `kisv2-hui-patch`
+but has no `kisv2-sections-patch` and no `kis-ready` class.
+
+Fix: install a `MutationObserver` on `#view` (`childList: true`) that
+detects when HA swaps `HUI-VIEW` children. The observer callback
+RAF-polls for the new `hui-sections-view` to have a `shadowRoot`,
+then calls `patchHALayout(0)` which injects CSS and arms the reveal
+gate on the correct element.
+
+Four guards:
+1. **Prior observer disconnect** — `_pendingViewObserver.disconnect()`
+   at the top of `resetRevealGate()` prevents stacked observers on
+   rapid nav.
+2. **Defensive `#view` lookup** — observer only installs if `viewEl`
+   exists; falls through to failsafe otherwise.
+3. **500ms failsafe** — if the observer never fires (same-view nav
+   where HA doesn't swap children), the failsafe calls
+   `patchHALayout(0)` directly.
+4. **RAF-poll for shadowRoot** — HA adds `HUI-VIEW` to `#view` but
+   `hui-sections-view` inside it may not have a `shadowRoot` yet on
+   the same frame. The `waitForSectionsView` loop polls until ready.
