@@ -160,7 +160,7 @@ As of 2026-05-17:
 
 | File | Deployed (Pi) | Git (main) | Drift? |
 |------|---------------|------------|--------|
-| kis-app-shell.js | v=26 | v26 (VERSION='2') | No |
+| kis-app-shell.js | v=29 | v29 (VERSION='2') | No |
 | kis-control-panel.js | v=26 | Matches | No |
 | kis-scenes.js | v=9 | Matches | No |
 | kis-settings.js | v=6 | Matches | No |
