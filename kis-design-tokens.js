@@ -228,7 +228,7 @@ export const KIS_TOKENS = {
     mini:   'blur(20px) saturate(180%)',
   },
 
-  // ── Responsive Breakpoints ─────────────────────────────────────────────────
+  // ── Responsive Breakpoints (legacy — use KIS_BREAKPOINT_DEFS for new code)
   breakpoints: {
     singleColumn: '(max-width: 1099px)',
     twoColumn:    '(min-width: 1100px)',
@@ -256,3 +256,46 @@ export const KIS_SECTION_LABEL_CSS = `
     padding: 0;
   }
 `;
+
+// ── Density Tokens ────────────────────────────────────────────────────────────
+// Two density levels keyed by breakpoint classification.
+// Values map 1:1 to CSS custom properties injected on :root by kis-app-shell.
+export const KIS_DENSITY = {
+  compact: {
+    '--kis-spacing-h':    '4px',
+    '--kis-spacing-b':    '8px',
+    '--kis-card-pad-v':   '8px',
+    '--kis-card-pad-h':   '10px',
+    '--kis-row-h':       '54px',
+    '--kis-scene-h':      '44px',
+    '--kis-label-fs':     '9px',
+    '--kis-name-fs':      '11px',
+    '--kis-radius':       '10px',
+    '--kis-icon-scene':   '18px',
+    '--kis-touch-min':    '44px',
+  },
+  normal: {
+    '--kis-spacing-h':    'clamp(8px, 1vw, 12px)',
+    '--kis-spacing-b':    'clamp(12px, 1.5vw, 24px)',
+    '--kis-card-pad-v':   '14px',
+    '--kis-card-pad-h':   '16px',
+    '--kis-row-h':       '80px',
+    '--kis-scene-h':      '64px',
+    '--kis-label-fs':     '10px',
+    '--kis-name-fs':      '14px',
+    '--kis-radius':       '14px',
+    '--kis-icon-scene':   '26px',
+    '--kis-touch-min':    '44px',
+  },
+};
+
+// ── Breakpoint Taxonomy ───────────────────────────────────────────────────────
+// Canonical breakpoint definitions. classifyBreakpoint() in kis-app-shell uses
+// these predicates; the objects here serve as the reference contract.
+export const KIS_BREAKPOINT_DEFS = [
+  { name: 'phone-portrait',   columns: 1, density: 'compact' },
+  { name: 'phone-landscape',  columns: 1, density: 'compact' },
+  { name: 'tablet-portrait',  columns: 1, density: 'normal'  },
+  { name: 'tablet-landscape', columns: 2, density: 'normal'  },
+  { name: 'desktop',          columns: 2, density: 'normal'  },
+];

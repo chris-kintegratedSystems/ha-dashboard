@@ -808,3 +808,58 @@ the popup immediately — no wait for entity transition to armed. Disarm closes
 on entity transition to `disarmed` (watched via `updateAlarmPanel` on hass
 change, with 5s timeout for wrong-code detection). Backdrop tap and Cancel
 button dismiss with full state clear (_alarmDigits, _alarmError, _alarmWaitTimer).
+
+## 2026-05-17: HA theme system strips inline CSS custom properties from :root
+
+**Behavior:** HA's theme initialization (runs during page load and on theme
+changes) iterates over `document.documentElement.style` and removes/resets
+inline CSS custom properties it does not recognize as part of the active
+theme definition. This is positional/timing-dependent — not all properties
+are stripped, and the specific property that disappears varies by iteration
+order. During Stage 1 testing, `--kis-card-h` (later renamed `--kis-row-h`)
+was consistently stripped from `:root` inline styles while 10 sibling
+density tokens set in the same loop persisted.
+
+**Symptom:** `getComputedStyle(document.documentElement).getPropertyValue('--kis-row-h')`
+returns empty string despite `setProperty()` having been called. Other
+density tokens set in the same code path retain their values.
+
+**Root cause:** HA's frontend uses `element.style` manipulation on
+`document.documentElement` during theme application. Any inline CSS custom
+property that isn't in HA's theme map gets removed as a side effect. The
+exact property dropped depends on timing relative to HA's theme init cycle.
+
+**Mitigation (two-part, both required):**
+
+1. **`<style>` element injection instead of inline styles.** Rather than
+   `document.documentElement.style.setProperty('--kis-foo', value)`, inject
+   a persistent `<style id="kis-density-vars">` element in `<head>` with
+   a `:root { ... }` rule containing all density tokens. HA's theme system
+   cannot interfere with rules in a separate `<style>` element — it only
+   manipulates the `element.style` property bag on `:root`.
+
+   ```javascript
+   function applyDensityTokens(density) {
+     const tokens = DENSITY_TOKENS[density];
+     if (!tokens) return;
+     let el = document.getElementById('kis-density-vars');
+     if (!el) {
+       el = document.createElement('style');
+       el.id = 'kis-density-vars';
+       (document.head || document.documentElement).appendChild(el);
+     }
+     const vars = Object.entries(tokens).map(([k, v]) => `${k}:${v}`);
+     vars.push(`--kis-breakpoint:${window.KIS_BREAKPOINT.name}`);
+     el.textContent = `:root{${vars.join(';')}}`;
+   }
+   ```
+
+2. **Re-apply after theme changes.** Call `applyDensityTokens()` at the end
+   of `initTheme()` / theme-change handler to ensure density tokens are
+   re-injected if HA's theme application somehow invalidates or replaces
+   the `<style>` element.
+
+**Rule for future CSS custom property injection in kis-app-shell.js:**
+Never use `document.documentElement.style.setProperty()` for persistent
+CSS variables. Always use a named `<style>` element with a `:root {}` rule.
+Inline styles on `:root` are HA's territory and will be silently mutated.

@@ -14,7 +14,7 @@
  * Used by: kis-dashboard-v2.yaml (Home view, right column)
  */
 
-import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=2';
+import { KIS_TOKENS, KIS_SECTION_LABEL_CSS } from '/local/mobile_v2/kis-design-tokens.js?v=3';
 
 // ── Carousel item configuration ──────────────────────────────────────────────
 const CAMERAS = [
