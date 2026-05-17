@@ -51,9 +51,10 @@ custom elements replace Lovelace's native card chrome.
 All files deployed and in sync as of 2026-05-17.
 
 ### mobilev1 (maintenance only)
-Legacy JSON-card-based dashboard. Still deployed on Tab S9 as the
-primary wall-mount UI. kis-nav.js v38 is the current deployed version.
-No active development planned — maintenance and bug fixes only.
+Legacy JSON-card-based dashboard. Still deployed on Galaxy Tab A9+
+(SM-X210) as the primary wall-mount UI. kis-nav.js v38 is the current
+deployed version. No active development planned — maintenance and bug
+fixes only.
 
 ---
 

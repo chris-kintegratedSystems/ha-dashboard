@@ -146,7 +146,7 @@ Density-aware sizing in `kis-settings.js`.
 Cross-card consistency check on all 8 device profiles.
 
 **Stage 5 — Real-device sign-off:**
-Tab S9 + iPhone + iPad verification of all breakpoints.
+Galaxy Tab A9+ + iPhone + iPad verification of all breakpoints.
 
 ---
 

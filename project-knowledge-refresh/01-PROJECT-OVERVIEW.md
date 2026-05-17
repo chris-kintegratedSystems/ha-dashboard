@@ -75,7 +75,7 @@ Docker.
 
 | Device | Dashboard | Notes |
 |--------|-----------|-------|
-| Samsung Galaxy Tab S9+ | Wall kiosk (Fully Kiosk Browser) | Primary display, landscape |
+| Samsung Galaxy Tab A9+ (SM-X210) | Wall kiosk (Fully Kiosk Browser), CSS viewport 1280×799 @ DPR 1.5 | Primary display, landscape, currently at Chris's desk pending Kitchen wall mount |
 | iPhone (Chris) | HA Companion App | mobilev1 default view |
 | iPad 11" | HA Companion App | Both orientations tested |
 
@@ -88,4 +88,4 @@ Docker.
 - **--mock-cameras**: Zero Nest API calls for layout iteration
 - **--camera-delay N**: Spaces out device profiles to stay under Nest 5 QPM quota
 
-Device profiles: iPad 11" (portrait/landscape), Tab S9+ (portrait/landscape), iPhone 17 Pro Max (portrait/landscape), iPhone 16 Pro (portrait/landscape).
+Device profiles: iPad 11" (portrait/landscape), Galaxy Tab A9+ landscape (real wall kiosk, 1280×799 @1.5x DPR), generic tablet-landscape (1440×900 @2x DPR, spec representative), iPhone 17 Pro Max (portrait/landscape), iPhone 16 Pro (portrait/landscape).

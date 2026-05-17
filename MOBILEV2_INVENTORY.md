@@ -178,4 +178,4 @@ As of 2026-05-17 (Stage 2 deployed):
 - **Dashboard YAML on Pi:** `/home/cooper5389/homeassistant/config/www/mobile_v2/kis-dashboard-v2.yaml`
 - **Static assets:** `/home/cooper5389/homeassistant/config/www/mobile_v2/`
 - **HA restart required:** Yes, always — HA caches both Lovelace config and resource URLs in memory.
-- **Cache-bust pattern:** Increment `?v=N` in lovelace_resources entry + docker restart. FKB hard-refresh on Tab S9 after.
+- **Cache-bust pattern:** Increment `?v=N` in lovelace_resources entry + docker restart. FKB hard-refresh on Galaxy Tab A9+ after.
