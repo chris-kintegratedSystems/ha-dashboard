@@ -631,3 +631,70 @@ scroll enabled.
 PASSED Playwright QA but FAILED on real devices (2026-05-07). Do not
 trust this approach without real-device diagnostic confirmation first.
 See dead_ends.md entry of same date.
+
+## 2026-05-17 — mobilev2 FOUC elimination via RAF early-hide loop + readiness gate
+
+Shadow DOM CSS injection via `patchHALayout` retry loop (300ms backoff)
+is too slow to hide `hui-sections-view` before its first paint. Under
+4x CPU throttle, the element appears visible for ~1.2s before the CSS
+arrives.
+
+**Fix — two-layer approach:**
+
+1. **RAF early-hide loop** (`earlyHideLoop`): starts at script load via
+   `requestAnimationFrame`, polls every frame for `huiRoot.shadowRoot`.
+   The MOMENT it finds it, injects `getHuiRootCSS()` which includes
+   `hui-sections-view { opacity: 0; visibility: hidden; }`. This fires
+   within 1 frame of the shadow root existing — before `patchHALayout`'s
+   first retry. Separate from the full layout patching to minimize time
+   to first injection.
+
+2. **Readiness gate** (`armRevealGate`): after `patchHALayout` succeeds
+   and injects `getSectionsViewCSS()` (which has `:host { opacity:0 }`
+   and `:host(.kis-ready) { opacity:1; transition:250ms }`), arms a
+   gate that waits for `Promise.all([whenDefined('kis-scenes'),
+   whenDefined('kis-control-panel'), whenDefined('kis-priority-view'),
+   whenDefined('kis-settings')])` + `_hass` available + double-RAF.
+   Then adds `kis-ready` class → 250ms fade-in. 2000ms failsafe forces
+   reveal with console.warn.
+
+3. **Navigation re-arm** (`resetRevealGate`): on `location-changed` /
+   `popstate`, synchronously removes `kis-ready`, resets
+   `_earlyHideInjected = false`, and restarts `earlyHideLoop`.
+
+CSS injection IDs: `kisv2-hui-patch` (in huiRoot.shadowRoot, targets
+`hui-sections-view` as descendant) and `kisv2-sections-patch` (in
+sectionsView.shadowRoot, targets `:host`). Both carry opacity:0 rules
+— belt and suspenders.
+
+**Key timing insight:** `getComputedStyle` during a RAF callback sees
+the pre-injection state, but the actual browser paint happens AFTER all
+RAF callbacks complete. So if `earlyHideLoop`'s RAF and a monitoring
+script's RAF both fire in the same frame, the monitoring script may
+read `opacity: 1` but the paint uses the post-injection `opacity: 0`.
+Under normal conditions (no throttle), zero FOUC — the CSS is injected
+before the first paint of `hui-sections-view`.
+
+## 2026-05-17 — CSS Grid 1fr eliminates flex box-sizing decoration floor inequality
+
+With `flex: 1 1 0%` + `box-sizing: border-box`, items with padding+border
+have a decoration floor (can't shrink below padding+border height), while
+items with zero decoration have no floor. This causes unequal distribution
+when the container has limited height.
+
+**Fix:** CSS Grid `grid-template-rows: 1fr 1fr 1fr` gives each track an
+equal fraction of available space regardless of item decoration. The item's
+padding+border come out of its own 1fr allocation. Applied to
+`kis-control-panel.js` desktop media query for lock rows + garage pair.
+
+## 2026-05-17 — mobilev2 lovelace_resources cache-bust path
+
+mobilev2 card resources (kis-app-shell.js, kis-control-panel.js, etc.)
+are registered in `.storage/lovelace_resources`, NOT in
+`configuration.yaml`'s `extra_module_url`. To bump cache-bust:
+```bash
+ssh ... "sudo sed -i 's|kis-app-shell.js?v=25|kis-app-shell.js?v=26|' \
+  /home/cooper5389/homeassistant/config/.storage/lovelace_resources"
+```
+Then `sudo docker restart homeassistant`. The `lovelace_resources` file
+is a JSON file with no `.json` extension, same as other HA storage files.

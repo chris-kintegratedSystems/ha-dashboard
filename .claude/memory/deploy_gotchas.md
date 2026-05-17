@@ -156,3 +156,13 @@ After updating, `docker restart homeassistant` is required. Browsers
 URLs live in `.storage/lovelace_resources` — no configuration.yaml edit
 needed. Get resource IDs from:
 `sudo cat /config/.storage/lovelace_resources | python -c "import sys,json; ..."`
+
+## 2026-05-17: sed-based lovelace_resources cache-bust (simpler than WebSocket)
+Direct sed on the Pi is faster than WebSocket for single-resource bumps:
+```bash
+ssh cooper5389@192.168.51.179 "sudo sed -i 's|kis-app-shell.js?v=25|kis-app-shell.js?v=26|' \
+  /home/cooper5389/homeassistant/config/.storage/lovelace_resources && \
+  sudo docker restart homeassistant"
+```
+Works because HA re-reads `.storage/lovelace_resources` on restart. Still
+need the docker restart regardless of which method changes the file.
