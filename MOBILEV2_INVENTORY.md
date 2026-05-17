@@ -142,7 +142,7 @@ All mobilev2 resources are registered in `.storage/lovelace_resources` on the Pi
 
 | Resource | Path | Current cache-bust | Git version |
 |----------|------|-------------------|-------------|
-| kis-app-shell.js | `/local/mobile_v2/kis-app-shell.js` | `?v=26` | v26 |
+| kis-app-shell.js | `/local/mobile_v2/kis-app-shell.js` | `?v=31` | v31 |
 | kis-control-panel.js | `/local/mobile_v2/custom-cards/kis-control-panel.js` | `?v=26` | v26 |
 | kis-scenes.js | `/local/mobile_v2/custom-cards/kis-scenes.js` | `?v=9` | v9 |
 | kis-settings.js | `/local/mobile_v2/custom-cards/kis-settings.js` | `?v=6` | v6 |
@@ -160,7 +160,7 @@ As of 2026-05-17:
 
 | File | Deployed (Pi) | Git (main) | Drift? |
 |------|---------------|------------|--------|
-| kis-app-shell.js | v=29 | v29 (VERSION='2') | No |
+| kis-app-shell.js | v=31 | v31 (VERSION='2') | No |
 | kis-control-panel.js | v=26 | Matches | No |
 | kis-scenes.js | v=9 | Matches | No |
 | kis-settings.js | v=6 | Matches | No |
