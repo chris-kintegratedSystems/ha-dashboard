@@ -200,6 +200,7 @@ class KisControlPanel extends HTMLElement {
         cursor: pointer;
         overflow: visible;
         min-height: var(--cp-h);
+        box-sizing: border-box;
         transition: min-height 0.25s cubic-bezier(0.4,0,0.2,1);
         user-select: none;
         -webkit-user-select: none;
