@@ -13,8 +13,13 @@ Last updated: 2026-05-17
 ### Issue 1 — Responsive breakpoint system (Stages 3/4/5)
 - **Status:** in-progress
 - Stage 3: density-aware sizing in `kis-settings.js`
-- Stage 4: validation sweep across all cards on 8 device profiles
-- Stage 5: real-device sign-off (Tab S9 + iPhone + iPad)
+- Stage 4: validation sweep across all cards on 8 device profiles.
+  Stage 4 must re-baseline at A9+ real viewport (1280×799) and diff
+  against current `/qa/baseline-pre-issue1/` screenshots taken at
+  1440×900. Document any visual delta. Math justification in proposal
+  §3 holds (752→651 usable height after chrome, 500px landscape layout
+  fits with 151px margin).
+- Stage 5: real-device sign-off (Galaxy Tab A9+ + iPhone + iPad)
 - Stages 1+2 merged (PRs #64, #65)
 
 ---
@@ -63,10 +68,15 @@ Last updated: 2026-05-17
 - `RELEASE_NOTES.md` exists but releases are not yet tagged in git
 - Proposal: tag `v<N>` on every merge that bumps a resource version
 
-### Galaxy Tab kiosk auto-dim
-- **Status:** queued
+### Galaxy Tab A9+ kiosk auto-dim
+- **Status:** queued, ready to scope when picked up
 - Auto-dim/screen-off schedule for wall kiosk when no motion detected
-- Fully Kiosk Browser has built-in motion detection + screen management [VERIFY]
+- Buildable today via existing FKB integration entities:
+  - `number.galaxy_tab_a9_screen_brightness` (already exposed in HA)
+  - `switch.galaxy_tab_a9_motion_detection` (already exposed in HA,
+    uses tablet front camera for motion detection)
+- HA automation: motion detected → bright; no motion for N minutes → dim
+- No external hardware purchase needed (mmWave sensor NOT required)
 
 ### Vehicle tiles
 - **Status:** queued
