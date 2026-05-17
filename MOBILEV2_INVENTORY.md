@@ -125,7 +125,7 @@ The app shell (`kis-app-shell.js`) reads these entities directly (not via cards)
 | Theme mode | `input_select.theme_mode` | Day/Night/Auto resolution |
 | Sun state | `sun.sun` | Auto mode → below_horizon = night |
 | Weather | `weather.home` | Header: icon + temperature |
-| Alarm | `alarm_control_panel.vivint` | Header: alarm state chip |
+| Alarm | `alarm_control_panel.kuprycz_home` | Header: alarm state chip |
 | Presence | `person.*` (all) | Header: presence pills |
 | Media player | `media_player.benjamins_hatch_media_player` | Mini-player bar |
 | Badge: locks | `lock.front_door_lock`, `lock.back_door_lock`, `lock.gemelli_door_lock` | Security attention signal |

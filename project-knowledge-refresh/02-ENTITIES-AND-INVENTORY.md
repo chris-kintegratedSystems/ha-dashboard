@@ -39,8 +39,7 @@ Current entity truth sourced from `ha-config/CLAUDE.md` and
 | Master | `climate.master` | |
 | Upstairs | `climate.upstairs` | Ecobee |
 
-*Note: 4 thermostats confirmed. A 5th thermostat entity has not been
-identified in ha-config.* [VERIFY]
+4 thermostats confirmed — no 5th exists in ha-config.
 
 ---
 
@@ -78,11 +77,10 @@ lock acquisition, preemption, and 60s trailing hold.
 
 | Entity | Integration | Notes |
 |--------|-------------|-------|
-| `alarm_control_panel.vivint` | Vivint (HACS: natekspencer/ha-vivint) | States: disarmed, armed_home, armed_away, arming, pending, triggered |
+| `alarm_control_panel.kuprycz_home` | Vivint (HACS: natekspencer/ha-vivint) | States: disarmed, armed_home, armed_away, arming, pending, triggered |
 
-Also referenced as `alarm_control_panel.kuprycz_home` in ha-config
-CLAUDE.md. [VERIFY — may be same entity with different ID in different
-contexts]
+Attributes: `code_format`, `changed_by`, `code_arm_required`,
+`supported_features`.
 
 Known issue: 520 errors are intermittent Vivint cloud errors, not a
 code bug.
