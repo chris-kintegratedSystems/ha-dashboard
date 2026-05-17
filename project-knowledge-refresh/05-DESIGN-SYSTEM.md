@@ -29,18 +29,21 @@ and `KIS_SECTION_LABEL_CSS`.
 
 ### `KIS_DENSITY` (Stage 1 addition)
 
-5 named breakpoints with density taxonomy:
+2 density classes — `compact` and `normal` — mapped from 5 named
+breakpoints via `classifyBreakpoint(w, h, orient, pointer)` in
+`kis-app-shell.js`:
 
-| Breakpoint | Media query | Density class |
-|-----------|------------|---------------|
-| phone-portrait | `max-width: 599px` | Compact |
-| phone-landscape | `(min-width: 600px) and (max-width: 1099px) and (orientation: landscape)` | Compact-wide |
-| tablet-portrait | `(min-width: 600px) and (max-width: 1099px) and (orientation: portrait)` | Comfortable |
-| tablet-landscape | `(min-width: 1100px) and (max-width: 1599px)` | Spacious |
-| desktop | `min-width: 1600px` | Spacious-wide |
+| Breakpoint name | Classification predicate | Density class |
+|-----------------|------------------------|---------------|
+| phone-portrait | shortDim < 600 | compact |
+| phone-landscape | shortDim < 600 | compact |
+| tablet-portrait | w < 1100, pointer coarse | normal |
+| tablet-landscape | w >= 1100, pointer coarse | normal |
+| desktop | w >= 1100, pointer fine | normal |
 
-`DENSITY_TOKENS` exports per-breakpoint sizing values consumed via
-CSS custom properties (e.g., `--kis-row-h`, `--kis-scene-h`).
+`DENSITY_TOKENS` exports per-class sizing values consumed via CSS
+custom properties (e.g., `--kis-row-h`, `--kis-scene-h`,
+`--kis-card-pad-v`, `--kis-card-pad-h`).
 
 Tokens injected via `<style id="kis-density-vars">` element in `<head>`
 with a `:root {}` rule. **NOT** inline `setProperty()` on
@@ -175,11 +178,21 @@ state patch). Keep `_update()` fast — fires ~1/sec.
 
 ## Acceptance Criteria — Home View (Issue 1)
 
-Per the Issue 1 responsive breakpoint proposal:
-- All 8 device profiles render without overflow or clipping
+Per the Issue 1 responsive breakpoint proposal, tested across 6
+device profiles:
+
+1. Galaxy Tab A9+ landscape (1280×799, DPR 1.5) — real wall kiosk
+2. iPad 11" portrait (834×1194, DPR 2)
+3. iPad 11" landscape (1194×834, DPR 2)
+4. iPhone 17 Pro Max portrait (440×956, DPR 3)
+5. iPhone 17 Pro Max landscape (956×440, DPR 3)
+6. iPhone 16 Pro portrait (402×874, DPR 3)
+
+Criteria:
+- All 6 profiles render without overflow or clipping
 - Single-column layout on phones and portrait tablets
-- Two-column layout on landscape tablets and desktop
-- Density tokens size controls appropriately for each device class
-- No FOUC on any device profile
+- Two-column layout on landscape tablets (A9+, iPad landscape)
+- Density tokens size controls appropriately for each class (compact vs normal)
+- No FOUC on any profile
 - Day and night themes correct on all profiles
 - Touch targets minimum 44x44px on all controls

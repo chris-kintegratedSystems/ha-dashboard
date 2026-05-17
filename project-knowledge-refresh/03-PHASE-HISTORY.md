@@ -143,7 +143,7 @@ closes on entity transition.
 Density-aware sizing in `kis-settings.js`.
 
 **Stage 4 — Validation sweep:**
-Cross-card consistency check on all 8 device profiles.
+Cross-card consistency check on all 6 Issue 1 device profiles.
 
 **Stage 5 — Real-device sign-off:**
 Galaxy Tab A9+ + iPhone + iPad verification of all breakpoints.

@@ -77,7 +77,7 @@ fixes only.
   invariant for density-token heights
 - **Stage 3** (next): Settings tokens — density-aware sizing in `kis-settings.js`
 - **Stage 4**: Validation sweep across all cards
-- **Stage 5**: Real-device sign-off on all 8 device profiles
+- **Stage 5**: Real-device sign-off (Galaxy Tab A9+ + iPhone + iPad)
 
 ---
 

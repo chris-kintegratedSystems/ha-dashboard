@@ -83,9 +83,28 @@ Docker.
 
 ## QA Pipeline
 
-- **qa-screenshot.js**: 8 device profiles x views = up to 48 Playwright screenshots + 1 FKB real-device capture
+### mobilev1 QA (qa-screenshot.js)
+
+8 device profiles × views = up to 48 Playwright screenshots + 1 FKB
+real-device capture:
+- iPad 11" (portrait/landscape)
+- Galaxy Tab A9+ landscape (real wall kiosk, 1280×799 @1.5x DPR)
+- Generic tablet-landscape (1440×900 @2x DPR, spec representative)
+- iPhone 17 Pro Max (portrait/landscape)
+- iPhone 16 Pro (portrait/landscape)
+
+Additional tools:
 - **qa-camera-burst.js**: FKB screenshots for camera loading transitions
 - **--mock-cameras**: Zero Nest API calls for layout iteration
 - **--camera-delay N**: Spaces out device profiles to stay under Nest 5 QPM quota
 
-Device profiles: iPad 11" (portrait/landscape), Galaxy Tab A9+ landscape (real wall kiosk, 1280×799 @1.5x DPR), generic tablet-landscape (1440×900 @2x DPR, spec representative), iPhone 17 Pro Max (portrait/landscape), iPhone 16 Pro (portrait/landscape).
+### mobilev2 Issue 1 test matrix (6 profiles)
+
+DevTools verification across the 6 profiles that cover all density
+breakpoints:
+1. Galaxy Tab A9+ landscape (1280×799, DPR 1.5) — real wall kiosk
+2. iPad 11" portrait (834×1194, DPR 2)
+3. iPad 11" landscape (1194×834, DPR 2)
+4. iPhone 17 Pro Max portrait (440×956, DPR 3)
+5. iPhone 17 Pro Max landscape (956×440, DPR 3)
+6. iPhone 16 Pro portrait (402×874, DPR 3)
