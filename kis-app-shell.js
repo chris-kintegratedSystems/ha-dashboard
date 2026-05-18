@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '2';
+  const VERSION = '50';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -1242,7 +1242,17 @@
     if (el) el.remove();
   }
 
-  const KIOSK_CSS = 'app-header { display: none !important; }';
+  const KIOSK_CSS = `
+    app-header { display: none !important; }
+    ha-app-layout {
+      --header-height: 0px !important;
+      --app-header-height: 0px !important;
+    }
+    #view { height: 100vh !important; }
+  `;
+
+  const KIOSK_DRAWER_HOST_CSS = ':host(.kis-kiosk-collapsed) { --mdc-drawer-width: 0px !important; }';
+  const KIOSK_SIDEBAR_HOST_CSS = ':host(.kis-kiosk-hidden) { display: none !important; }';
 
   const SIDEBAR_INSET_CSS = `
     :host {
@@ -1264,8 +1274,19 @@
   let _kioskOriginals = null;
   let _prevKiosk = null;
 
+  function forceReflow(...elements) {
+    for (const el of elements) {
+      if (el && typeof el.offsetHeight === 'number') void el.offsetHeight;
+    }
+  }
+
+  // ISSUE C3 (2026-05-17): iPhone Companion App portrait does NOT show HA
+  // sidebar overlay or hamburger when kiosk is OFF. WKWebView strict config
+  // suppresses modal-drawer summon path on <470px viewports. All other
+  // devices/orientations work. Accepted as scope-limited — mobilev2 is the
+  // iPhone primary dashboard; escape paths exist (Mobile Safari, app
+  // reinstall, default-dashboard setting).
   function syncKioskMode(hass) {
-    if (!_kioskOriginals) return;
     const entity = hass?.states?.['input_boolean.kiosk_mode'];
     const isOn = !entity || entity.state === 'on';
 
@@ -1276,10 +1297,22 @@
     const panel = drawer?.querySelector('ha-panel-lovelace') || main?.shadowRoot?.querySelector('ha-panel-lovelace');
     const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
 
+    // Inject :host() class rules into shadow roots (idempotent)
+    if (drawer?.shadowRoot) {
+      injectShadowCSS(drawer.shadowRoot, 'kisv2-kiosk-drawer-host', KIOSK_DRAWER_HOST_CSS);
+    }
+    if (sidebar?.shadowRoot) {
+      injectShadowCSS(sidebar.shadowRoot, 'kisv2-kiosk-sidebar-host', KIOSK_SIDEBAR_HOST_CSS);
+    }
+
     if (isOn) {
       if (drawer) {
+        drawer.classList.add('kis-kiosk-collapsed');
         drawer.style.setProperty('--mdc-drawer-width', '0px');
-        if (sidebar) sidebar.style.display = 'none';
+        if (sidebar) {
+          sidebar.classList.add('kis-kiosk-hidden');
+          sidebar.style.display = 'none';
+        }
         if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
         drawer.setAttribute('type', 'modal');
       }
@@ -1289,12 +1322,17 @@
       if (sidebar?.shadowRoot) {
         removeShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch');
       }
+      forceReflow(drawer, sidebar, huiRoot);
     } else {
-      if (drawer && _kioskOriginals) {
-        drawer.style.setProperty('--mdc-drawer-width', _kioskOriginals.drawerWidth || '');
-        if (_kioskOriginals.drawerType) drawer.setAttribute('type', _kioskOriginals.drawerType);
+      if (drawer) {
+        drawer.classList.remove('kis-kiosk-collapsed');
+        drawer.style.removeProperty('--mdc-drawer-width');
+        if (_kioskOriginals?.drawerType) drawer.setAttribute('type', _kioskOriginals.drawerType);
         else drawer.removeAttribute('type');
-        if (sidebar) sidebar.style.display = _kioskOriginals.sidebarDisplay || '';
+        if (sidebar) {
+          sidebar.classList.remove('kis-kiosk-hidden');
+          sidebar.style.removeProperty('display');
+        }
       }
       if (huiRoot?.shadowRoot) {
         removeShadowCSS(huiRoot.shadowRoot, 'kisv2-kiosk-patch');
@@ -1302,6 +1340,7 @@
       if (sidebar?.shadowRoot) {
         injectShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch', SIDEBAR_INSET_CSS);
       }
+      forceReflow(drawer, sidebar, huiRoot);
     }
 
     _prevKiosk = entity?.state ?? null;
@@ -1311,12 +1350,7 @@
 
   function getHuiRootCSS() {
     return `
-      ha-app-layout {
-        --header-height: 0px !important;
-        --app-header-height: 0px !important;
-      }
       #view {
-        height: 100vh !important;
         padding-top: 0 !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
@@ -1340,10 +1374,6 @@
 
   function getAppLayoutCSS() {
     return `
-      :host {
-        --header-height: 0px !important;
-        --app-header-height: 0px !important;
-      }
       #contentContainer, [part="content"], .content {
         padding-top: 0 !important;
         margin-top: 0 !important;
@@ -1601,12 +1631,23 @@
             sidebarDisplay: sidebar ? sidebar.style.display : '',
           };
         }
+        // Inject :host() class rules for class-based kiosk toggling
+        if (drawer.shadowRoot) {
+          injectShadowCSS(drawer.shadowRoot, 'kisv2-kiosk-drawer-host', KIOSK_DRAWER_HOST_CSS);
+        }
+        const sidebarBoot = drawer.querySelector('ha-sidebar');
+        if (sidebarBoot?.shadowRoot) {
+          injectShadowCSS(sidebarBoot.shadowRoot, 'kisv2-kiosk-sidebar-host', KIOSK_SIDEBAR_HOST_CSS);
+        }
         // Boot-time: unconditionally hide chrome (prevents sidebar flash).
         // Once _hass is available, syncKioskMode handles state-aware toggling.
         if (!_hass) {
+          drawer.classList.add('kis-kiosk-collapsed');
           drawer.style.setProperty('--mdc-drawer-width', '0px');
-          const sidebar = drawer.querySelector('ha-sidebar');
-          if (sidebar) sidebar.style.display = 'none';
+          if (sidebarBoot) {
+            sidebarBoot.classList.add('kis-kiosk-hidden');
+            sidebarBoot.style.display = 'none';
+          }
           if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
           drawer.setAttribute('type', 'modal');
         }
