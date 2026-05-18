@@ -34,6 +34,12 @@ Walk to the tablet (or pick up if at desk).
 
 ## Section B: Chris's iPhone (HA Companion App)
 
+> **C3 scope note:** iPhone Portrait kiosk-OFF sidebar overlay is
+> accepted as scope-limited per Issue C3 close-out (PR #71). The
+> "toggle Kiosk Mode OFF > ON, sidebar appears then disappears"
+> check does not apply in portrait orientation. Landscape orientation
+> kiosk toggle IS tested normally (sidebar rail appears on K:off).
+
 Open HA Companion App. Navigate to mobile-v2 dashboard, Home view.
 
 - [ ] Home loads: 1-column layout, compact density (tight spacing) —
