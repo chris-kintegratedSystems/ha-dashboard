@@ -863,3 +863,21 @@ exact property dropped depends on timing relative to HA's theme init cycle.
 Never use `document.documentElement.style.setProperty()` for persistent
 CSS variables. Always use a named `<style>` element with a `:root {}` rule.
 Inline styles on `:root` are HA's territory and will be silently mutated.
+
+## 2026-05-17 — WKWebView shadow DOM kiosk toggle gotchas (Issue C3)
+
+iOS WKWebView in HA Companion App context:
+- Inline `style.display` mutations on shadow-DOM-hosted elements may not
+  trigger compositor repaint. Use class-based toggles (`:host(.cls)` rules
+  in the element's own shadow root) + `forceReflow` (`void el.offsetHeight`).
+- Captured original CSS custom property values (`_kioskOriginals`) become
+  stale on orientation change (`safe-area-inset-left` varies by orientation).
+  Use `removeProperty` to restore natural state — don't cache originals.
+- `app-header` (containing HA hamburger button) must NOT be permanently
+  hidden on mobilev2. Gate the `app-header { display:none }` rule on
+  `input_boolean.kiosk_mode` via `kisv2-kiosk-patch`. Otherwise narrow-
+  viewport sidebar access (modal drawer mode on <470px) is impossible.
+- Even with above fixes, iPhone Portrait Companion App sidebar overlay
+  reachability is unresolved. WKWebView strict config in Companion App
+  suppresses modal drawer summon path. Mobile Safari works; Companion App
+  does not. Accepted as scope-limited (2026-05-17).
