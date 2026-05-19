@@ -1,2 +1,4 @@
 node_modules/
 report/
+# Scratch QA screenshots — not tracked
+*.png
