@@ -881,3 +881,24 @@ iOS WKWebView in HA Companion App context:
   reachability is unresolved. WKWebView strict config in Companion App
   suppresses modal drawer summon path. Mobile Safari works; Companion App
   does not. Accepted as scope-limited (2026-05-17).
+
+## 2026-05-19: Bug E root cause — Lovelace resource load order
+Chrome flash on cold load was caused by Lovelace resources loading
+AFTER HA frontend paints chrome. earlyHideLoop couldn't prevent
+flash because the script hadn't executed yet when the drawer painted.
+
+Fix: load kis-app-shell.js via `frontend.extra_module_url` instead
+of Lovelace resources. extra_module_url scripts execute during HA
+frontend boot (~51ms), before chrome elements are created (~493ms).
+earlyHideLoop starts RAF-polling before drawer exists, catches it
+at DOM creation time. Pattern reusable for any future code that
+needs to run before HA's first paint.
+
+## 2026-05-19: tryConnect guard for early boot
+When loaded via extra_module_url, `haMain.hass` can be truthy but
+`hass.states` is null (WebSocket connected but states not yet
+loaded). `initTheme` crashes accessing `hass.states['input_select.theme_mode']`.
+Also, installing the hass property interceptor before
+`home-assistant-main` shadow root exists blocks HA's own hass
+propagation ("Loading data" stuck screen). Guard must require:
+`haMain.hass && haMain.hass.states && mainEl.shadowRoot`.
