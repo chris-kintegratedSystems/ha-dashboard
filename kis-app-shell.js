@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '51';
+  const VERSION = '53';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -296,9 +296,16 @@
       initTheme(_hass);
 
       // Watch for hass updates (theme mode, sun, helper changes)
-      const origDescriptor = Object.getOwnPropertyDescriptor(
-        Object.getPrototypeOf(haMain), 'hass'
-      );
+      // Walk the prototype chain to find hass — Lit defines it far up
+      // (HassElement, not HomeAssistant), so checking only the immediate
+      // prototype misses it, silently skipping the original Lit setter
+      // and breaking hass propagation to all HA child components.
+      let origDescriptor = null;
+      let _proto = Object.getPrototypeOf(haMain);
+      while (_proto && !origDescriptor) {
+        origDescriptor = Object.getOwnPropertyDescriptor(_proto, 'hass');
+        if (!origDescriptor) _proto = Object.getPrototypeOf(_proto);
+      }
       let _hassValue = haMain.hass;
 
       Object.defineProperty(haMain, 'hass', {
@@ -309,6 +316,12 @@
           }
           _hassValue = newHass;
           _hass = newHass;
+          // Our instance-level property override shadows Lit's reactive
+          // property, breaking its internal propagation to child elements.
+          // Explicitly forward hass to home-assistant-main so all
+          // downstream panels (config, history, etc.) receive updates.
+          const haMainEl = this.shadowRoot?.querySelector('home-assistant-main');
+          if (haMainEl) haMainEl.hass = newHass;
           onHassUpdate(newHass);
           for (const card of _registeredCards) {
             if (card.isConnected) card.hass = newHass;
@@ -1643,7 +1656,13 @@
       if (sidebar) {
         sidebar.classList.remove('kis-kiosk-hidden');
         sidebar.style.removeProperty('display');
-        if (sidebar.shadowRoot) removeShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch');
+        if (sidebar.shadowRoot) {
+          removeShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch');
+          removeShadowCSS(sidebar.shadowRoot, 'kisv2-kiosk-sidebar-host');
+        }
+      }
+      if (drawer.shadowRoot) {
+        removeShadowCSS(drawer.shadowRoot, 'kisv2-kiosk-drawer-host');
       }
       forceReflow(drawer, sidebar);
     }
