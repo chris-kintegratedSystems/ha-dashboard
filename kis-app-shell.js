@@ -12,7 +12,7 @@
  *
  * All UI elements scoped to /mobile-v2/ — do NOT render on /dashboard-mobilev1/.
  *
- * Loaded via lovelace.resources in configuration.yaml.
+ * Loaded via frontend.extra_module_url in configuration.yaml.
  * Survives Lovelace page transitions.
  *
  * Paired with: kis-dashboard-v2.yaml (page structure)
@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '53';
+  const VERSION = '55';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -282,7 +282,12 @@
 
     function tryConnect() {
       const haMain = doc.querySelector('home-assistant');
-      if (!haMain || !haMain.hass) {
+      if (!haMain || !haMain.hass || !haMain.hass.states) {
+        requestAnimationFrame(tryConnect);
+        return;
+      }
+      const _mainEl = haMain.shadowRoot?.querySelector('home-assistant-main');
+      if (!_mainEl || !_mainEl.shadowRoot) {
         requestAnimationFrame(tryConnect);
         return;
       }
@@ -1359,6 +1364,7 @@
     }
 
     _prevKiosk = entity?.state ?? null;
+    try { localStorage.setItem('kis-kiosk-state', isOn ? 'on' : 'off'); } catch (e) {}
   }
 
   const HEADER_H = 68;
@@ -1520,17 +1526,55 @@
     } catch (e) { /* not ready yet */ }
   }
 
-  // ── Early-hide: inject opacity:0 on hui-sections-view the frame its shadow host is available ──
+  // ── Early-hide: hide HA chrome + mobilev2 content before first paint ──
   let _earlyHideInjected = false;
+  let _earlyChromeHidden = false;
   function earlyHideLoop() {
     if (_earlyHideInjected || !onV2Dashboard()) return;
     const ha = document.querySelector('home-assistant');
     const main = ha?.shadowRoot?.querySelector('home-assistant-main');
     const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+
+    // Bug E: hide HA chrome the frame drawer is available (before huiRoot)
+    if (drawer && !_earlyChromeHidden) {
+      const sidebar = drawer.querySelector('ha-sidebar');
+      // Capture originals BEFORE modification so patchHALayout finds true defaults
+      if (!_kioskOriginals) {
+        _kioskOriginals = {
+          drawerWidth: drawer.style.getPropertyValue('--mdc-drawer-width'),
+          drawerType: drawer.getAttribute('type'),
+          sidebarDisplay: sidebar ? sidebar.style.display : '',
+        };
+      }
+      // Only early-hide if last-known kiosk state was ON (or unknown/first-load)
+      const lastKiosk = localStorage.getItem('kis-kiosk-state');
+      if (lastKiosk !== 'off') {
+        drawer.classList.add('kis-kiosk-collapsed');
+        drawer.style.setProperty('--mdc-drawer-width', '0px');
+        if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
+        drawer.setAttribute('type', 'modal');
+        if (sidebar) {
+          sidebar.classList.add('kis-kiosk-hidden');
+          sidebar.style.display = 'none';
+        }
+        if (drawer.shadowRoot) {
+          injectShadowCSS(drawer.shadowRoot, 'kisv2-kiosk-drawer-host', KIOSK_DRAWER_HOST_CSS);
+        }
+        if (sidebar?.shadowRoot) {
+          injectShadowCSS(sidebar.shadowRoot, 'kisv2-kiosk-sidebar-host', KIOSK_SIDEBAR_HOST_CSS);
+        }
+      }
+      _earlyChromeHidden = true;
+    }
+
     const panel = (drawer?.querySelector('ha-panel-lovelace')) || main?.shadowRoot?.querySelector('ha-panel-lovelace');
     const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
     if (huiRoot?.shadowRoot) {
       injectShadowCSS(huiRoot.shadowRoot, 'kisv2-hui-patch', getHuiRootCSS());
+      const lastKiosk = localStorage.getItem('kis-kiosk-state');
+      if (lastKiosk !== 'off') {
+        injectShadowCSS(huiRoot.shadowRoot, 'kisv2-kiosk-patch', KIOSK_CSS);
+      }
       _earlyHideInjected = true;
       return;
     }
@@ -1576,6 +1620,7 @@
   function resetRevealGate() {
     _revealGateActive = false;
     _earlyHideInjected = false;
+    _earlyChromeHidden = false;
     if (_revealFailsafe) { clearTimeout(_revealFailsafe); _revealFailsafe = null; }
 
     // Guard 1: disconnect prior observer on rapid nav
@@ -1671,6 +1716,7 @@
     _prevKiosk = null;
     _patchesApplied = false;
     _earlyHideInjected = false;
+    _earlyChromeHidden = false;
     _kisColSheetRoot = null;
   }
 
@@ -1706,9 +1752,9 @@
         if (sidebarBoot?.shadowRoot) {
           injectShadowCSS(sidebarBoot.shadowRoot, 'kisv2-kiosk-sidebar-host', KIOSK_SIDEBAR_HOST_CSS);
         }
-        // Boot-time: unconditionally hide chrome (prevents sidebar flash).
+        // Boot-time: hide chrome if last-known kiosk was ON or unknown.
         // Once _hass is available, syncKioskMode handles state-aware toggling.
-        if (!_hass) {
+        if (!_hass && localStorage.getItem('kis-kiosk-state') !== 'off') {
           drawer.classList.add('kis-kiosk-collapsed');
           drawer.style.setProperty('--mdc-drawer-width', '0px');
           if (sidebarBoot) {
@@ -1728,7 +1774,7 @@
       const huiShadow = huiRoot.shadowRoot;
       injectShadowCSS(huiShadow, 'kisv2-hui-patch', getHuiRootCSS());
       // Boot-time kiosk CSS injection (before _hass is available)
-      if (!_hass) {
+      if (!_hass && localStorage.getItem('kis-kiosk-state') !== 'off') {
         injectShadowCSS(huiShadow, 'kisv2-kiosk-patch', KIOSK_CSS);
       }
 
@@ -1780,6 +1826,20 @@
     }
     window.addEventListener('location-changed', onLocationChange);
     window.addEventListener('popstate', onLocationChange);
+
+    // Bug D: re-apply patches when app returns from background (iPad/iPhone Companion)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && onV2Dashboard()) {
+        patchHALayout(0);
+        if (_hass) syncKioskMode(_hass);
+      }
+    });
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted && onV2Dashboard()) {
+        patchHALayout(0);
+        if (_hass) syncKioskMode(_hass);
+      }
+    });
 
     // Tick header every second for live clock
     setInterval(() => {
