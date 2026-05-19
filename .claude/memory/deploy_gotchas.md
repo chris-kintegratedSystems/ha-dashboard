@@ -194,6 +194,17 @@ Wall kiosk device: Samsung Galaxy Tab A9+ (SM-X210), Android 16, Chrome 147 WebV
 - CSS viewport: 1280×799 @ DPR 1.5 (NOT 1440×900 as previously assumed)
 - Physical resolution: 1920×1200
 
+## 2026-05-19: kis-app-shell.js loads via extra_module_url (not lovelace_resources)
+Since v55, kis-app-shell.js loads via `frontend.extra_module_url` in
+ha-config `configuration.yaml` (alongside kis-nav.js). The old entry in
+`.storage/lovelace_resources` was removed. To bump the cache-bust:
+1. Edit `?v=N` in ha-config `configuration.yaml` extra_module_url list
+2. SCP configuration.yaml to Pi `/config/`
+3. `sudo docker restart homeassistant`
+Do NOT edit `.storage/lovelace_resources` for kis-app-shell.js — it's
+no longer there. Other mobilev2 cards (kis-control-panel, kis-scenes,
+kis-settings, kis-priority-view) still use lovelace_resources.
+
 ## 2026-05-17: Drift diagnostic — line-ending caveat
 MD5 comparison between local repo files and Pi-deployed files may show
 false drift due to CRLF (local Windows) vs LF (Pi Debian). Always
