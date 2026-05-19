@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '50';
+  const VERSION = '51';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -1273,6 +1273,7 @@
 
   let _kioskOriginals = null;
   let _prevKiosk = null;
+  let _patchesApplied = false;
 
   function forceReflow(...elements) {
     for (const el of elements) {
@@ -1287,6 +1288,7 @@
   // iPhone primary dashboard; escape paths exist (Mobile Safari, app
   // reinstall, default-dashboard setting).
   function syncKioskMode(hass) {
+    if (!_kioskOriginals) return;
     const entity = hass?.states?.['input_boolean.kiosk_mode'];
     const isOn = !entity || entity.state === 'on';
 
@@ -1607,6 +1609,52 @@
     }
   }
 
+  function unpatchHALayout() {
+    const ha = document.querySelector('home-assistant');
+    const main = ha?.shadowRoot?.querySelector('home-assistant-main');
+    const drawer = main?.shadowRoot?.querySelector('ha-drawer');
+    const panel = drawer?.querySelector('ha-panel-lovelace') || main?.shadowRoot?.querySelector('ha-panel-lovelace');
+    const huiRoot = panel?.shadowRoot?.querySelector('hui-root');
+    const huiShadow = huiRoot?.shadowRoot;
+
+    if (huiShadow) {
+      removeShadowCSS(huiShadow, 'kisv2-hui-patch');
+      removeShadowCSS(huiShadow, 'kisv2-kiosk-patch');
+      const appLayout = huiShadow.querySelector('ha-app-layout');
+      if (appLayout?.shadowRoot) {
+        removeShadowCSS(appLayout.shadowRoot, 'kisv2-applayout-patch');
+      }
+      const viewEl = huiShadow.querySelector('#view');
+      const sectionsView = viewEl?.querySelector('hui-sections-view');
+      if (sectionsView?.shadowRoot) {
+        removeShadowCSS(sectionsView.shadowRoot, 'kisv2-sections-patch');
+        sectionsView.shadowRoot.querySelectorAll('hui-section, hui-grid-section').forEach(gs => {
+          if (gs.shadowRoot) removeShadowCSS(gs.shadowRoot, 'kisv2-gridsection-patch');
+        });
+      }
+    }
+
+    if (drawer) {
+      drawer.classList.remove('kis-kiosk-collapsed');
+      drawer.style.removeProperty('--mdc-drawer-width');
+      if (_kioskOriginals?.drawerType) drawer.setAttribute('type', _kioskOriginals.drawerType);
+      else drawer.removeAttribute('type');
+      const sidebar = drawer.querySelector('ha-sidebar');
+      if (sidebar) {
+        sidebar.classList.remove('kis-kiosk-hidden');
+        sidebar.style.removeProperty('display');
+        if (sidebar.shadowRoot) removeShadowCSS(sidebar.shadowRoot, 'kisv2-sidebar-inset-patch');
+      }
+      forceReflow(drawer, sidebar);
+    }
+
+    _kioskOriginals = null;
+    _prevKiosk = null;
+    _patchesApplied = false;
+    _earlyHideInjected = false;
+    _kisColSheetRoot = null;
+  }
+
   function patchHALayout(attempt) {
     attempt = attempt || 0;
     if (!onV2Dashboard()) return;
@@ -1682,6 +1730,7 @@
       }
 
       if (_hass) syncKioskMode(_hass);
+      _patchesApplied = true;
     } catch (e) {
       if (attempt < 30) {
         setTimeout(() => patchHALayout(attempt + 1), Math.min(300 * (attempt + 1), 2000));
@@ -1701,8 +1750,17 @@
     // HA's style writes drop --kis-card-h during initial page load)
     setTimeout(recomputeBreakpoint, 100);
 
-    window.addEventListener('location-changed', () => { resetRevealGate(); syncV2State(); setTimeout(() => patchHALayout(0), 500); });
-    window.addEventListener('popstate', () => { resetRevealGate(); syncV2State(); setTimeout(() => patchHALayout(0), 500); });
+    function onLocationChange() {
+      syncV2State();
+      if (onV2Dashboard()) {
+        resetRevealGate();
+        setTimeout(() => patchHALayout(0), 500);
+      } else {
+        unpatchHALayout();
+      }
+    }
+    window.addEventListener('location-changed', onLocationChange);
+    window.addEventListener('popstate', onLocationChange);
 
     // Tick header every second for live clock
     setInterval(() => {
