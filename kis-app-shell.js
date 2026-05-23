@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '55';
+  const VERSION = '56';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -109,6 +109,8 @@
 
   let _hass = null;
   let _currentMode = null; // 'day' or 'night'
+  let _updateEntityKeys = [];
+  let _entityKeyCount = -1;
 
   // ── Alarm panel local state (UI only — never mirrors entity state) ────────
   let _alarmPanelOpen = false;
@@ -321,6 +323,11 @@
           }
           _hassValue = newHass;
           _hass = newHass;
+          const keyCount = Object.keys(newHass.states).length;
+          if (keyCount !== _entityKeyCount) {
+            _entityKeyCount = keyCount;
+            _updateEntityKeys = Object.keys(newHass.states).filter(k => k.startsWith('update.'));
+          }
           // Our instance-level property override shadows Lit's reactive
           // property, breaking its internal propagation to child elements.
           // Explicitly forward hass to home-assistant-main so all
@@ -1151,10 +1158,8 @@
         const allAway = (!chris || chris.state !== 'home') && (!claire || claire.state !== 'home');
         if (allAway) urgent++;
       }
-      // Advisory: any HACS/integration update available
-      const updateEntities = Object.keys(hass.states).filter(k => k.startsWith('update.'));
-      for (const eid of updateEntities) {
-        if (hass.states[eid].state === 'on') advisory++;
+      for (const eid of _updateEntityKeys) {
+        if (hass.states[eid]?.state === 'on') advisory++;
       }
     }
 
