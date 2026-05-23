@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '58';
+  const VERSION = '59';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -1720,6 +1720,21 @@
   function patchHALayout(attempt) {
     attempt = attempt || 0;
     if (!onV2Dashboard()) return;
+
+    if (_patchesApplied) {
+      try {
+        const ha = document.querySelector('home-assistant');
+        const huiShadow = ha?.shadowRoot
+          ?.querySelector('home-assistant-main')?.shadowRoot
+          ?.querySelector('ha-drawer ha-panel-lovelace, ha-panel-lovelace')?.shadowRoot
+          ?.querySelector('hui-root')?.shadowRoot;
+        if (huiShadow?.querySelector('#kisv2-hui-patch')) {
+          const sv = huiShadow.querySelector('#view hui-sections-view');
+          if (sv?.shadowRoot?.querySelector('#kisv2-sections-patch')) return;
+        }
+      } catch (_) { /* fall through to full patch */ }
+      _patchesApplied = false;
+    }
 
     try {
       const ha = document.querySelector('home-assistant');
