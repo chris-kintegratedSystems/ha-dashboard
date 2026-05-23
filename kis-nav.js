@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 52;
+  window.KIS_NAV_VERSION = 53;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -2201,9 +2201,6 @@
 
     syncState();
 
-    window.addEventListener('location-changed', syncState);
-    window.addEventListener('popstate', syncState);
-
     // Re-measure header clearance on any resize or orientation change
     window.addEventListener('resize', () => {
       applyDynamicHeaderClearance();
@@ -2291,23 +2288,34 @@
     setTimeout(applyDynamicHeaderClearance, 3500);
   }
 
+  // ─── Navigation listener (always active — enables lazy inject on v1 nav) ──
+  function onLocationChanged() {
+    if (document.getElementById('kis-nav-bar')) {
+      syncState();
+    } else if (onMobileDashboard()) {
+      if (customElements.get('ha-icon')) {
+        inject();
+      } else {
+        customElements.whenDefined('ha-icon').then(() => setTimeout(inject, 200));
+      }
+    }
+  }
+
   // ─── Boot ──────────────────────────────────────────────────────────────────
   function boot() {
+    window.addEventListener('location-changed', onLocationChanged);
+    window.addEventListener('popstate', onLocationChanged);
+
+    if (!onMobileDashboard()) return;
+
+    hookPictureEntityDefinition();
+
     if (customElements.get('ha-icon')) {
       inject();
     } else {
       customElements.whenDefined('ha-icon').then(() => setTimeout(inject, 200));
     }
   }
-
-  // Kick the picture-entity prototype patch as early as kis-nav.js can run,
-  // BEFORE boot() waits for ha-icon. customElements.whenDefined resolves as
-  // soon as HA's bundle registers hui-picture-entity-card — at that moment
-  // we patch connectedCallback to hide the host + inject placeholder CSS
-  // on every future connection, and walk the tree to cover any instances
-  // that connected before this script loaded. This is the earliest point
-  // at which we can intercept picture-entity renders.
-  hookPictureEntityDefinition();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
@@ -2316,6 +2324,6 @@
   }
 
   window.addEventListener('load', () => {
-    setTimeout(() => { if (!document.getElementById('kis-nav-bar')) inject(); }, 600);
+    setTimeout(() => { if (onMobileDashboard() && !document.getElementById('kis-nav-bar')) inject(); }, 600);
   });
 })();
