@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '57';
+  const VERSION = '58';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -395,20 +395,6 @@
       _prevSun = sunState;
       _prevThemeMode = tmState;
       initTheme(hass);
-    }
-
-    // Check if any color helper changed (for live preview from settings)
-    const newMode = resolveMode(hass);
-    for (const entry of COLOR_MAP) {
-      const entityId = `input_text.kis_${newMode}_${entry.key}`;
-      const entity = hass.states[entityId];
-      if (entity && entity.state && entity.state.startsWith('#')) {
-        const current = document.documentElement.style.getPropertyValue(entry.css).trim();
-        if (current !== entity.state) {
-          applyColors(readColors(hass, newMode));
-          break;
-        }
-      }
     }
 
     const kioskState = hass.states['input_boolean.kiosk_mode']?.state ?? null;
@@ -1850,6 +1836,10 @@
         patchHALayout(0);
         if (_hass) syncKioskMode(_hass);
       }
+    });
+
+    window.addEventListener('kis-color-changed', () => {
+      if (_hass) applyColors(readColors(_hass, resolveMode(_hass)));
     });
 
     // Tick header every second for live clock

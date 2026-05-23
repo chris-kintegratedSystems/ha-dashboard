@@ -357,9 +357,10 @@ class KisSettings extends HTMLElement {
         // ignore if helper doesn't exist yet
       }
     }
+    window.dispatchEvent(new CustomEvent('kis-color-changed', { detail: { mode } }));
   }
 
-  _resetColors() {
+  async _resetColors() {
     const themeInfo = window.KIS_THEME || {};
     const factory = themeInfo.getFactory ? themeInfo.getFactory() : null;
     if (!factory) return;
@@ -369,16 +370,25 @@ class KisSettings extends HTMLElement {
 
     fireEvent(this, 'haptic', 'light');
     const inputs = this.shadowRoot.querySelectorAll('.color-input');
-    inputs.forEach(input => {
+    for (const input of inputs) {
       const def = defaults[input.dataset.key];
       if (def) {
         input.value = def;
         const hex = this.shadowRoot.querySelector(`.color-hex[data-key="${input.dataset.key}"]`);
         if (hex) hex.textContent = def;
+        if (this._hass) {
+          const entityId = `input_text.kis_${mode}_${input.dataset.key}`;
+          try {
+            await this._hass.callService('input_text', 'set_value', {
+              entity_id: entityId, value: def,
+            });
+          } catch (e) { /* ignore */ }
+        }
       }
-    });
+    }
     this._updatePreview();
     this._checkContrast();
+    window.dispatchEvent(new CustomEvent('kis-color-changed', { detail: { mode } }));
   }
 
   _rebuildColorPicker() {
