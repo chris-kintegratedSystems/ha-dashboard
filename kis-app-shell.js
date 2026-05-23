@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '56';
+  const VERSION = '57';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -111,6 +111,7 @@
   let _currentMode = null; // 'day' or 'night'
   let _updateEntityKeys = [];
   let _entityKeyCount = -1;
+  let _rafId = 0;
 
   // ── Alarm panel local state (UI only — never mirrors entity state) ────────
   let _alarmPanelOpen = false;
@@ -334,7 +335,12 @@
           // downstream panels (config, history, etc.) receive updates.
           const haMainEl = this.shadowRoot?.querySelector('home-assistant-main');
           if (haMainEl) haMainEl.hass = newHass;
-          onHassUpdate(newHass);
+          if (!_rafId) {
+            _rafId = requestAnimationFrame(() => {
+              _rafId = 0;
+              onHassUpdate(_hass);
+            });
+          }
           for (const card of _registeredCards) {
             if (card.isConnected) card.hass = newHass;
             else _registeredCards.delete(card);
