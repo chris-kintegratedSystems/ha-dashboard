@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 54;
+  window.KIS_NAV_VERSION = 55;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -648,17 +648,20 @@
     var isOn = !entity || entity.state === 'on';
     var newState = entity ? entity.state : null;
 
-    if (newState === _prevKiosk) return;
-
     var ha = document.querySelector('home-assistant');
     var main = ha && ha.shadowRoot && ha.shadowRoot.querySelector('home-assistant-main');
     var drawer = main && main.shadowRoot && main.shadowRoot.querySelector('ha-drawer');
-    var sidebar = drawer && drawer.querySelector('ha-sidebar');
+    if (!drawer) return;
+
+    if (newState === _prevKiosk) {
+      if (!isOn) return;
+      if (drawer.classList.contains('kis-kiosk-collapsed')) return;
+    }
+
+    var sidebar = drawer.querySelector('ha-sidebar');
     var panel = (drawer && drawer.querySelector('ha-panel-lovelace'))
              || (main && main.shadowRoot && main.shadowRoot.querySelector('ha-panel-lovelace'));
     var huiRoot = panel && panel.shadowRoot && panel.shadowRoot.querySelector('hui-root');
-
-    if (!drawer) return;
 
     if (_kioskOriginals && !_kioskOriginals.drawer.isConnected) {
       _kioskOriginals = null;
@@ -714,6 +717,16 @@
     _prevKiosk = newState;
     try { localStorage.setItem('kis-kiosk-state', isOn ? 'on' : 'off'); } catch (e) {}
   }
+
+  function reapplyKioskAfterNav() {
+    if (onV2Dashboard()) return;
+    setTimeout(function() {
+      var h = getHass();
+      if (h) syncKioskMode(h);
+    }, 0);
+  }
+  window.addEventListener('location-changed', reapplyKioskAfterNav);
+  window.addEventListener('popstate', reapplyKioskAfterNav);
 
   function onMobileDashboard() {
     return window.location.pathname.startsWith(DASHBOARD_PREFIX);
