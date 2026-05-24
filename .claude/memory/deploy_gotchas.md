@@ -31,16 +31,13 @@ Relied on HA theme names never registered. Now reads sun.sun directly.
 ## 2026-04-21: Settings version v16
 Implement window.KIS_NAV_VERSION read by button-card template.
 
-## 2026-04-21: card-mod not actually installed
-`/hacsfiles/card-mod` is ABSENT from `lovelace_resources` on this HA.
-Lovelace's schema accepts a `card_mod:` key on any card without validating
-that card-mod is loaded — so every card_mod block in the dashboard has been
-silently ignored for months. Verify before trusting any card_mod fix:
-`ssh ... sudo cat /config/.storage/lovelace_resources | grep -i card-mod`.
-If you need styling that today relies on card_mod, either (a) install
-card-mod as a HACS custom resource, or (b) rewrite using custom:button-card
-native styles (our preferred path, since button-card IS installed and a lot
-of the dashboard already uses it).
+## 2026-04-21: card-mod not actually installed (RESOLVED 2026-05-05)
+card-mod was installed via HACS around 2026-05-05. File at
+`/config/www/community/lovelace-card-mod/card-mod.js` (99KB), registered
+in `lovelace_resources`. 23 active `card_mod` usages in dashboard now
+functional. Original lesson still valid: Lovelace silently accepts
+`card_mod:` keys whether card-mod is loaded or not — verify the resource
+exists before assuming card_mod CSS is applying.
 
 ## 2026-04-21: ha-config cache-bust can drift from ha-dashboard kis-nav version
 The kis-nav.js version number (`window.KIS_NAV_VERSION` inside the file)

@@ -11,7 +11,7 @@ Append new entries at the bottom. Date-stamp every entry.
 | custom:button-card | State-driven styling | WORKS | ONLY card confirmed working. Use native JS templates. | 2026-04 |
 | custom:button-card | Brightness slider | WORKS | show_state + slider layout. | 2026-04-21 |
 | custom:button-card | Thin section label | WORKS | button_card_templates `section_label` — styles.name with 9px uppercase + border-bottom hairline, no card_mod needed. | 2026-04-21 |
-| card-mod (ANY usage) | Custom styling | NOT INSTALLED | `/hacsfiles/card-mod` missing from lovelace_resources. All card_mod blocks are silently ignored by Lovelace schema. Verify w/ `cat /config/.storage/lovelace_resources` before trusting any card_mod CSS. | 2026-04-21 |
+| card-mod (ANY usage) | Custom styling | INSTALLED | Installed via HACS ~2026-05-05. `/config/www/community/lovelace-card-mod/card-mod.js` (99KB). Registered in `lovelace_resources`. 23 active usages in dashboard_mobilev1.json (camera popups, close buttons, grid transparency). | 2026-05-24 |
 | card-mod + Jinja | State-driven styling | BROKEN | Jinja doesn't render inside button-card (separate issue from above). | 2026-04 |
 | card-mod | aspect-ratio on picture-entity | BROKEN | Use native aspect_ratio prop. | 2026-04-20 |
 | type: markdown + inline HTML | Section header | WORKS IF card-mod not needed | Default HA markdown card ships with heavy `.card-content` padding + white background. Only viable for thin labels if card-mod strips them — which it doesn't here. Use custom:button-card section_label template instead. | 2026-04-21 |
@@ -51,6 +51,8 @@ Append new entries at the bottom. Date-stamp every entry.
 | weather-radar-card (HACS) | WORKS | RainViewer, Dark map, DFW center. Shadow injection hides `#bottom-container` (timestamp, attribution). No config prop to hide — CSS only. zoom:7, 400ms frame delay, 2hr loop. | 2026-05-07 |
 | kiosk-mode (HACS integration) | PARTIAL | Template `[[[is_state(...)]]]` in dashboard JSON works on iPad + Tab S9. Does NOT work on iPhone Companion or desktop browsers. Not investigated — may be per-device caching, Companion URL residue, or template eval timing. | 2026-05-07 |
 | custom:kis-priority-view | 10-item carousel (cameras + vehicles + weather + radar) | WORKS | mobilev2 custom card. Native touch handling (no simple-swipe-card). Camera motion override via `sensor.priority_camera`, 2-min client-side sticky. Weather radar via `weather-radar-card` element. Must NOT gate `customElements.define` on `hui-picture-entity-card` — see dead_ends.md 2026-05-10. | 2026-05-10 |
+| mini-media-player (HACS) v1.16.12 | Sonos active zone card | WORKS | `artwork: full-cover` + `scale: 1.15` for prominent album art. `speaker_group` with `platform: sonos` for inline zone grouping. `card_mod` works for border-radius, min-height, brightness filter on artwork. On wide viewports (tablet landscape), full-cover creates a square card that exceeds viewport height — by design for "full real estate" approach. `hide.icon: true` removes default icon when artwork is present. | 2026-05-24 |
+| mini-media-player + sections grid | grid_options columns calibration | WORKS | Sections view uses 12 internal grid columns. `columns: "full"` = spans all 12 (full section width). `columns: 3` = 4 tiles per row. `columns: 6` = 2 per row. Initial attempt with `columns: 2` produced 6 per row (too narrow). | 2026-05-24 |
 | iCloud3 (AirTags) | NOT STARTED | Needs Apple ID auth. |
 | Tesla | NOT STARTED | Needs OAuth + virtual key. |
 | Mercedes mbapi2020 | UNCERTAIN | G580 support unconfirmed. |
