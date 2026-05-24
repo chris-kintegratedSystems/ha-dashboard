@@ -3057,56 +3057,782 @@
           "path": "media",
           "icon": "mdi:speaker",
           "type": "sections",
-          "max_columns": 4,
+          "max_columns": 2,
           "sections": [
             {
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "template": "section_label",
-                  "name": "MEDIA"
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "template": "section_label",
+                      "name": "MEDIA"
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "name": "Browse Spotify",
+                      "icon": "mdi:spotify",
+                      "show_name": true,
+                      "show_icon": true,
+                      "show_state": false,
+                      "show_label": false,
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/media-browser/media_player.living_room"
+                      },
+                      "styles": {
+                        "card": [
+                          {
+                            "background": "rgba(30, 215, 96, 0.12)"
+                          },
+                          {
+                            "border": "1px solid rgba(30, 215, 96, 0.3)"
+                          },
+                          {
+                            "border-radius": "12px"
+                          },
+                          {
+                            "box-shadow": "none"
+                          },
+                          {
+                            "padding": "6px 14px"
+                          },
+                          {
+                            "min-height": "0"
+                          },
+                          {
+                            "height": "auto"
+                          }
+                        ],
+                        "icon": [
+                          {
+                            "color": "#1ED760"
+                          },
+                          {
+                            "width": "18px"
+                          }
+                        ],
+                        "name": [
+                          {
+                            "font-size": "12px"
+                          },
+                          {
+                            "font-weight": "600"
+                          },
+                          {
+                            "color": "#1ED760"
+                          },
+                          {
+                            "letter-spacing": "0.03em"
+                          },
+                          {
+                            "white-space": "nowrap"
+                          }
+                        ],
+                        "grid": [
+                          {
+                            "grid-template-areas": "\"i n\""
+                          },
+                          {
+                            "grid-template-columns": "min-content auto"
+                          },
+                          {
+                            "grid-gap": "6px"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
                 },
                 {
                   "type": "conditional",
                   "conditions": [
                     {
-                      "entity": "media_player.benjamins_hatch_media_player",
-                      "state_not": "unavailable"
+                      "entity": "media_player.living_room",
+                      "state_not": "idle"
                     },
                     {
-                      "entity": "media_player.benjamins_hatch_media_player",
+                      "entity": "media_player.living_room",
                       "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.living_room",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.living_room",
+                    "name": "Living Room",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.gemelli",
+                      "state_not": "idle"
+                    },
+                    {
+                      "entity": "media_player.gemelli",
+                      "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.gemelli",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.gemelli",
+                    "name": "Gemelli",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.patio",
+                      "state_not": "idle"
+                    },
+                    {
+                      "entity": "media_player.patio",
+                      "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.patio",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.patio",
+                    "name": "Patio",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.chriss_office",
+                      "state_not": "idle"
+                    },
+                    {
+                      "entity": "media_player.chriss_office",
+                      "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.chriss_office",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.chriss_office",
+                    "name": "Chris's Office",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.dining_room",
+                      "state_not": "idle"
+                    },
+                    {
+                      "entity": "media_player.dining_room",
+                      "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.dining_room",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.dining_room",
+                    "name": "Dining Room",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.master_bathroom",
+                      "state_not": "idle"
+                    },
+                    {
+                      "entity": "media_player.master_bathroom",
+                      "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.master_bathroom",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.master_bathroom",
+                    "name": "Master Bath",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.master_bedroom",
+                      "state_not": "idle"
+                    },
+                    {
+                      "entity": "media_player.master_bedroom",
+                      "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.master_bedroom",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.master_bedroom",
+                    "name": "Master Bedroom",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.office",
+                      "state_not": "idle"
+                    },
+                    {
+                      "entity": "media_player.office",
+                      "state_not": "off"
+                    },
+                    {
+                      "entity": "media_player.office",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mini-media-player",
+                    "entity": "media_player.office",
+                    "name": "Office",
+                    "artwork": "full-cover",
+                    "scale": 1.15,
+                    "hide": {
+                      "power": true,
+                      "source": false,
+                      "volume": false,
+                      "controls": false,
+                      "progress": false,
+                      "icon": true
+                    },
+                    "speaker_group": {
+                      "platform": "sonos",
+                      "show_group_count": true,
+                      "entities": [
+                        {
+                          "entity_id": "media_player.living_room",
+                          "name": "Living Room"
+                        },
+                        {
+                          "entity_id": "media_player.gemelli",
+                          "name": "Gemelli"
+                        },
+                        {
+                          "entity_id": "media_player.patio",
+                          "name": "Patio"
+                        },
+                        {
+                          "entity_id": "media_player.chriss_office",
+                          "name": "Chris's Office"
+                        },
+                        {
+                          "entity_id": "media_player.dining_room",
+                          "name": "Dining Room"
+                        },
+                        {
+                          "entity_id": "media_player.master_bathroom",
+                          "name": "Master Bath"
+                        },
+                        {
+                          "entity_id": "media_player.master_bedroom",
+                          "name": "Master Bedroom"
+                        },
+                        {
+                          "entity_id": "media_player.office",
+                          "name": "Office"
+                        }
+                      ]
+                    },
+                    "tap_action": {
+                      "action": "more-info"
+                    },
+                    "card_mod": {
+                      "style": "ha-card {\n  border: none !important;\n  border-radius: 16px !important;\n  overflow: hidden !important;\n  min-height: 200px !important;\n  --mmp-accent-color: var(--accent-color, #00d4f0);\n}\n.mmp__bg, .mmp__bg > div {\n  background-size: cover !important;\n  filter: brightness(0.7) !important;\n}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.living_room",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.living_room",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.living_room",
+                      "state_not": "unavailable"
                     }
                   ],
                   "card": {
                     "type": "custom:button-card",
-                    "entity": "media_player.benjamins_hatch_media_player",
-                    "show_name": false,
+                    "entity": "media_player.living_room",
+                    "name": "Living Room",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
                     "show_state": false,
-                    "show_icon": false,
                     "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
                     "tap_action": {
                       "action": "call-service",
-                      "service": "media_player.media_play_pause",
+                      "service": "media_player.media_play",
                       "service_data": {
-                        "entity_id": "media_player.benjamins_hatch_media_player"
+                        "entity_id": "media_player.living_room"
                       }
                     },
                     "hold_action": {
                       "action": "more-info"
                     },
-                    "label": "[[[ const e = entity || {}; const state = e.state || 'unavailable'; const isPlaying = state === 'playing'; const isPaused = state === 'paused'; const attrs = e.attributes || {}; const track = attrs.media_title || (isPlaying || isPaused ? 'Unknown Track' : (state === 'idle' ? 'Nothing Playing' : 'Unavailable')); const artist = attrs.media_artist || ''; const stateLabel = {playing:'Playing',paused:'Paused',idle:'Idle',unavailable:'Unavailable',off:'Off'}[state] || state; const stateColorRgb = isPlaying ? '77,142,240' : isPaused ? '245,166,35' : '74,85,112'; const volPct = attrs.volume_level != null ? Math.round(attrs.volume_level * 100) : 0; const dur = attrs.media_duration || 0; const pos = attrs.media_position || 0; const updAt = attrs.media_position_updated_at; const elapsed = (isPlaying && updAt) ? pos + (Date.now() - new Date(updAt).getTime()) / 1000 : pos; const pct = dur > 0 ? Math.min(100, Math.round(elapsed / dur * 100)) : 0; const fmt = s => { const m = Math.floor(s/60); return m + ':' + String(Math.floor(s%60)).padStart(2,'0'); }; const playIconSvg = isPlaying   ? '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'none\\' stroke=\\'var(--accent-color, #00d4f0)\\' stroke-width=\\'2.5\\' stroke-linecap=\\'round\\'><rect x=\\'6\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/><rect x=\\'14\\' y=\\'4\\' width=\\'4\\' height=\\'16\\'/></svg>'   : '<svg viewBox=\\'0 0 24 24\\' width=\\'26\\' height=\\'26\\' fill=\\'var(--accent-color, #00d4f0)\\' stroke=\\'none\\'><polygon points=\\'5,3 19,12 5,21\\'/></svg>'; const artUrl = attrs.entity_picture || null; const artHtml = artUrl   ? '<img src=\"' + artUrl + '\" style=\"width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0;\" />'   : '<div style=\"width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,#1a1040,#0d2030);border:1px solid var(--ha-card-border-color, rgba(255,255,255,0.06));display:flex;align-items:center;justify-content:center;flex-shrink:0;\"><svg width=\\'24\\' height=\\'24\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'1.5\\'><path d=\\'M9 18V5l12-2v13\\'/><circle cx=\\'6\\' cy=\\'18\\' r=\\'3\\'/><circle cx=\\'18\\' cy=\\'16\\' r=\\'3\\'/></svg></div>'; return '<div style=\"padding:12px 14px;box-sizing:border-box;\">'   + '<div style=\"display:flex;align-items:center;justify-content:space-around;padding:4px 0 12px;\">'   + '<div style=\"width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'19 20 9 12 19 4 19 20\\'/><line x1=\\'5\\' y1=\\'19\\' x2=\\'5\\' y2=\\'5\\'/></svg>'   + '</div>'   + '<div style=\"width:50px;height:50px;border-radius:50%;background:rgba(0,212,240,0.10);border:1px solid rgba(0,212,240,0.20);display:flex;align-items:center;justify-content:center;\">' + playIconSvg + '</div>'   + '<div style=\"width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;\">'   + '<svg viewBox=\\'0 0 24 24\\' width=\\'18\\' height=\\'18\\' fill=\\'none\\' stroke=\\'#8a9ab8\\' stroke-width=\\'2\\'><polygon points=\\'5 4 15 12 5 20 5 4\\'/><line x1=\\'19\\' y1=\\'5\\' x2=\\'19\\' y2=\\'19\\'/></svg>'   + '</div>'   + '</div>'   + '<div style=\"display:flex;align-items:center;gap:12px;padding-top:0;\">'   + artHtml   + '<div style=\"flex:1;min-width:0;\">'   + '<div style=\"font-size:14px;font-weight:600;color:var(--primary-text-color,#eef2f8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + track + '</div>'   + (artist ? '<div style=\"font-size:11px;color:#8a9ab8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">' + artist + '</div>' : '')   + '<div style=\"font-size:9px;color:var(--disabled-text-color,#4a5570);letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;\">Benjamin\\'s Room</div>'   + '</div>'   + '<span style=\"font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:10px;border:1px solid rgba(' + stateColorRgb + ',0.35);background:rgba(' + stateColorRgb + ',0.10);color:rgb(' + stateColorRgb + ');flex-shrink:0;\">' + stateLabel + '</span>'   + '</div>'   + (dur > 0 ? '<div style=\"padding:10px 0 0;\"><div style=\"height:3px;background:#1c2438;border-radius:3px;\"><div style=\"height:100%;width:' + pct + '%;background:linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0));border-radius:3px;\"></div></div><div style=\"display:flex;justify-content:space-between;margin-top:4px;\"><span style=\"font-size:10px;color:var(--disabled-text-color,#4a5570);font-variant-numeric:tabular-nums;\">' + fmt(elapsed) + '</span><span style=\"font-size:10px;color:var(--disabled-text-color,#4a5570);font-variant-numeric:tabular-nums;\">' + fmt(dur) + '</span></div></div>' : '')   + (volPct > 0 ? '<div style=\"display:flex;align-items:center;gap:8px;padding:8px 0 0;\"><svg width=\\'12\\' height=\\'12\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a5570\\' stroke-width=\\'2\\'><polygon points=\\'11 5 6 9 2 9 2 15 6 15 11 19 11 5\\'/><path d=\\'M15.54 8.46a5 5 0 0 1 0 7.07\\'/></svg><div style=\\'flex:1;height:3px;background:#1c2438;border-radius:3px;\\'><div style=\\'height:100%;width:' + volPct + '%;background:linear-gradient(to right,#4d8ef0,var(--accent-color, #00d4f0));border-radius:3px;\\'></div></div><span style=\\'font-size:9px;color:var(--disabled-text-color,#4a5570);\\'>' + volPct + '%</span></div>' : '')   + '</div>'; ]]]",
                     "styles": {
                       "card": [
                         {
-                          "background": "var(--card-background-color, #10151f)"
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
                         },
                         {
                           "border-radius": "14px"
-                        },
-                        {
-                          "padding": "0px"
                         },
                         {
                           "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
@@ -3115,185 +3841,710 @@
                           "box-shadow": "none"
                         },
                         {
-                          "border-left": "3px solid #4d8ef0"
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
                         }
                       ],
                       "label": [
                         {
-                          "width": "100%"
+                          "font-size": "11px"
                         },
                         {
-                          "white-space": "normal"
+                          "color": "var(--disabled-text-color, #4a5570)"
                         },
                         {
-                          "text-align": "left"
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
                         }
                       ]
-                    },
-                    "card_mod": {
-                      "style": "ha-card { border-left: 2px solid #4d8ef0; border-radius: 14px; }"
                     }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
                   }
                 },
                 {
                   "type": "conditional",
                   "conditions": [
                     {
-                      "entity": "media_player.benjamins_hatch_media_player",
-                      "state": "unavailable"
+                      "entity": "media_player.gemelli",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.gemelli",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.gemelli",
+                      "state_not": "unavailable"
                     }
                   ],
                   "card": {
                     "type": "custom:button-card",
-                    "show_name": false,
+                    "entity": "media_player.gemelli",
+                    "name": "Gemelli",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
                     "show_state": false,
-                    "show_icon": false,
                     "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
                     "tap_action": {
-                      "action": "none"
+                      "action": "call-service",
+                      "service": "media_player.media_play",
+                      "service_data": {
+                        "entity_id": "media_player.gemelli"
+                      }
                     },
-                    "label": "[[[ return '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 20px;\"><svg width=\"56\" height=\"56\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2a3448\" stroke-width=\"1\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg><div style=\"font-size:15px;font-weight:500;color:var(--disabled-text-color,#4a5570);letter-spacing:0.06em;\">Nothing Playing</div><div style=\"font-size:12px;color:#2a3448;margin-top:4px;\">Benjamin's Room</div></div>'; ]]]",
+                    "hold_action": {
+                      "action": "more-info"
+                    },
                     "styles": {
                       "card": [
                         {
-                          "background": "#0b0e17"
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
                         },
                         {
                           "border-radius": "14px"
                         },
                         {
-                          "border": "1px solid rgba(255,255,255,0.04)"
+                          "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
                         },
                         {
                           "box-shadow": "none"
                         },
                         {
-                          "min-height": "200px"
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
                         }
                       ],
                       "label": [
                         {
-                          "width": "100%"
+                          "font-size": "11px"
                         },
                         {
-                          "white-space": "normal"
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
                         }
                       ]
-                    },
-                    "card_mod": {
-                      "style": "ha-card { border-left: 2px solid #4d8ef0; }\nha-card { opacity: 0.5; }"
                     }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
                   }
                 },
                 {
                   "type": "conditional",
                   "conditions": [
                     {
-                      "entity": "media_player.benjamins_hatch_media_player",
-                      "state": "off"
+                      "entity": "media_player.patio",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.patio",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.patio",
+                      "state_not": "unavailable"
                     }
                   ],
                   "card": {
                     "type": "custom:button-card",
-                    "show_name": false,
+                    "entity": "media_player.patio",
+                    "name": "Patio",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
                     "show_state": false,
-                    "show_icon": false,
                     "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
                     "tap_action": {
-                      "action": "none"
+                      "action": "call-service",
+                      "service": "media_player.media_play",
+                      "service_data": {
+                        "entity_id": "media_player.patio"
+                      }
                     },
-                    "label": "[[[ return '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 20px;\"><svg width=\"56\" height=\"56\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2a3448\" stroke-width=\"1\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg><div style=\"font-size:15px;font-weight:500;color:var(--disabled-text-color,#4a5570);letter-spacing:0.06em;\">Nothing Playing</div><div style=\"font-size:12px;color:#2a3448;margin-top:4px;\">Benjamin's Room</div></div>'; ]]]",
+                    "hold_action": {
+                      "action": "more-info"
+                    },
                     "styles": {
                       "card": [
                         {
-                          "background": "#0b0e17"
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
                         },
                         {
                           "border-radius": "14px"
                         },
                         {
-                          "border": "1px solid rgba(255,255,255,0.04)"
+                          "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
                         },
                         {
                           "box-shadow": "none"
                         },
                         {
-                          "min-height": "200px"
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
                         }
                       ],
                       "label": [
                         {
-                          "width": "100%"
+                          "font-size": "11px"
                         },
                         {
-                          "white-space": "normal"
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
                         }
                       ]
-                    },
-                    "card_mod": {
-                      "style": "ha-card { border-left: 2px solid #4d8ef0; }\nha-card { opacity: 0.5; }"
                     }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.chriss_office",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.chriss_office",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.chriss_office",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "entity": "media_player.chriss_office",
+                    "name": "Chris's Office",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
+                    "show_state": false,
+                    "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
+                    "tap_action": {
+                      "action": "call-service",
+                      "service": "media_player.media_play",
+                      "service_data": {
+                        "entity_id": "media_player.chriss_office"
+                      }
+                    },
+                    "hold_action": {
+                      "action": "more-info"
+                    },
+                    "styles": {
+                      "card": [
+                        {
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                        },
+                        {
+                          "border-radius": "14px"
+                        },
+                        {
+                          "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
+                        },
+                        {
+                          "box-shadow": "none"
+                        },
+                        {
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
+                        }
+                      ],
+                      "label": [
+                        {
+                          "font-size": "11px"
+                        },
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
+                        }
+                      ]
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.dining_room",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.dining_room",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.dining_room",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "entity": "media_player.dining_room",
+                    "name": "Dining Room",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
+                    "show_state": false,
+                    "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
+                    "tap_action": {
+                      "action": "call-service",
+                      "service": "media_player.media_play",
+                      "service_data": {
+                        "entity_id": "media_player.dining_room"
+                      }
+                    },
+                    "hold_action": {
+                      "action": "more-info"
+                    },
+                    "styles": {
+                      "card": [
+                        {
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                        },
+                        {
+                          "border-radius": "14px"
+                        },
+                        {
+                          "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
+                        },
+                        {
+                          "box-shadow": "none"
+                        },
+                        {
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
+                        }
+                      ],
+                      "label": [
+                        {
+                          "font-size": "11px"
+                        },
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
+                        }
+                      ]
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.master_bathroom",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.master_bathroom",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.master_bathroom",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "entity": "media_player.master_bathroom",
+                    "name": "Master Bath",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
+                    "show_state": false,
+                    "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
+                    "tap_action": {
+                      "action": "call-service",
+                      "service": "media_player.media_play",
+                      "service_data": {
+                        "entity_id": "media_player.master_bathroom"
+                      }
+                    },
+                    "hold_action": {
+                      "action": "more-info"
+                    },
+                    "styles": {
+                      "card": [
+                        {
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                        },
+                        {
+                          "border-radius": "14px"
+                        },
+                        {
+                          "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
+                        },
+                        {
+                          "box-shadow": "none"
+                        },
+                        {
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
+                        }
+                      ],
+                      "label": [
+                        {
+                          "font-size": "11px"
+                        },
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
+                        }
+                      ]
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.master_bedroom",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.master_bedroom",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.master_bedroom",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "entity": "media_player.master_bedroom",
+                    "name": "Master Bedroom",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
+                    "show_state": false,
+                    "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
+                    "tap_action": {
+                      "action": "call-service",
+                      "service": "media_player.media_play",
+                      "service_data": {
+                        "entity_id": "media_player.master_bedroom"
+                      }
+                    },
+                    "hold_action": {
+                      "action": "more-info"
+                    },
+                    "styles": {
+                      "card": [
+                        {
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                        },
+                        {
+                          "border-radius": "14px"
+                        },
+                        {
+                          "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
+                        },
+                        {
+                          "box-shadow": "none"
+                        },
+                        {
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
+                        }
+                      ],
+                      "label": [
+                        {
+                          "font-size": "11px"
+                        },
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
+                        }
+                      ]
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "media_player.office",
+                      "state_not": "playing"
+                    },
+                    {
+                      "entity": "media_player.office",
+                      "state_not": "paused"
+                    },
+                    {
+                      "entity": "media_player.office",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "entity": "media_player.office",
+                    "name": "Office",
+                    "icon": "mdi:speaker",
+                    "show_name": true,
+                    "show_icon": true,
+                    "show_state": false,
+                    "show_label": true,
+                    "label": "[[[ return entity.state === 'idle' ? 'Idle' : 'Off'; ]]]",
+                    "tap_action": {
+                      "action": "call-service",
+                      "service": "media_player.media_play",
+                      "service_data": {
+                        "entity_id": "media_player.office"
+                      }
+                    },
+                    "hold_action": {
+                      "action": "more-info"
+                    },
+                    "styles": {
+                      "card": [
+                        {
+                          "background": "var(--ha-card-background, rgba(16,21,31,0.72))"
+                        },
+                        {
+                          "border-radius": "14px"
+                        },
+                        {
+                          "border": "1px solid var(--ha-card-border-color, rgba(255,255,255,0.06))"
+                        },
+                        {
+                          "box-shadow": "none"
+                        },
+                        {
+                          "padding": "12px"
+                        }
+                      ],
+                      "icon": [
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "width": "28px"
+                        }
+                      ],
+                      "name": [
+                        {
+                          "font-size": "13px"
+                        },
+                        {
+                          "font-weight": "600"
+                        },
+                        {
+                          "color": "var(--primary-text-color, #eef2f8)"
+                        }
+                      ],
+                      "label": [
+                        {
+                          "font-size": "11px"
+                        },
+                        {
+                          "color": "var(--disabled-text-color, #4a5570)"
+                        },
+                        {
+                          "text-transform": "uppercase"
+                        },
+                        {
+                          "letter-spacing": "0.06em"
+                        }
+                      ]
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
                   }
                 }
               ]
             }
           ],
-          "footer": {
-            "type": "custom:mushroom-chips-card",
-            "alignment": "center",
-            "chips": [
-              {
-                "type": "template",
-                "icon": "mdi:home",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/home"
-                },
-                "content": "Home"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:thermostat",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/climate"
-                },
-                "content": "Climate"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:lightbulb",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/lights"
-                },
-                "content": "Lights"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:cctv",
-                "icon_color": "disabled",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/cameras"
-                },
-                "content": "Cameras"
-              },
-              {
-                "type": "template",
-                "icon": "mdi:speaker",
-                "icon_color": "cyan",
-                "tap_action": {
-                  "action": "navigate",
-                  "navigation_path": "/dashboard-mobilev1/media"
-                },
-                "content": "Media"
-              }
-            ]
-          },
           "background": "var(--lovelace-background, #070910)"
         },
         {

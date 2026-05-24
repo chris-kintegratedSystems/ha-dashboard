@@ -94,6 +94,9 @@ hairline }. Day/night colors via CSS custom properties flipped by kis-nav.js
 **Broader lesson:** before assuming card_mod styling will work, verify card-mod
 is actually installed — the `card_mod` key is accepted silently by Lovelace's
 schema whether card-mod is loaded or not.
+**Update 2026-05-24:** card-mod was installed via HACS ~2026-05-05 and is now
+functional. The 23 `card_mod` usages in the dashboard are active. The lesson
+about verifying install status still applies to any future HACS card.
 
 ## 2026-04-21: Camera placeholder via DOM-injected overlay inside picture-entity
 **Tried:** kis-nav.js v29 created a `<div class="kis-cam-placeholder">` inside
