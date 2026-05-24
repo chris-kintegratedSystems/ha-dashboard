@@ -456,3 +456,65 @@ was never removed. Player stayed invisible despite active media.
 **Broader lesson:** When a DOM element starts in a hidden state and a state
 machine controls its visibility, the initial/null state must be treated the same
 as the hidden state for the "show" transition.
+
+## 2026-05-23: iOS resume bug — Fix A removed kis-ready and Phase 5 early-exit prevented re-add
+**Tried:** Adding `resetRevealGate()` to `visibilitychange`/`pageshow` handlers
+to mirror the `location-changed` (navigation) path. The idea was that resume
+should re-arm the reveal gate the same way navigation does.
+**Failed:** `resetRevealGate()` removes `kis-ready` as its first act (line 1634),
+making `hui-sections-view` invisible (opacity:0). But the subsequent
+`patchHALayout(0)` call early-exits via Phase 5 logic (`_patchesApplied` still
+true, stylesheets `#kisv2-hui-patch` and `#kisv2-sections-patch` still present
+on the unchanged sections-view element). Resume doesn't swap DOM elements like
+navigation does, so the Phase 5 check passes and `armRevealGate()` never fires.
+`kis-ready` never re-added, content stuck at opacity:0. 100% failure rate
+confirmed via Chrome DevTools MCP harness (0/30 cycles passed).
+**Fix:** Clear `_patchesApplied = false` at top of `resetRevealGate()` so the
+subsequent `patchHALayout` always runs the full patch including `armRevealGate`.
+Single line addition. Verified 38/38 cycles passed (v61 30/30 + v62 clean 8/8).
+**Broader lesson:** When an early-exit optimization caches "system is healthy"
+state, any function that explicitly wants a full re-patch must invalidate that
+cache. The navigation path worked by accident because HA swaps the DOM element,
+causing the early-exit's stylesheet-presence check to fail naturally. The resume
+path kept the same element, so the cache was never invalidated.
+
+## 2026-05-23: mobilev2 body-level injection — architecture dead end
+The kis-app-shell.js pattern injects persistent UI (header, nav,
+mini-player, alarm panel) into document.body, outside HA's shadow
+DOM tree. This created an entire class of bugs on iOS WKWebView
+resume:
+- v60-v62 arc: hui-sections-view kis-ready class lost on resume,
+  content stuck opacity:0 (fixed by clearing _patchesApplied in
+  resetRevealGate)
+- v63-v66 arc: header/nav/mini-player not painted on iPad resume
+  (fixed by layering translate3d + position:fixed cycle +
+  synthetic scroll in resumeUIChrome)
+
+Root cause: body-level UI is not covered by HA's resume/repaint
+logic. Every fix is a workaround compensating for the architectural
+choice to inject outside Lovelace.
+
+**Techniques tried for WKWebView compositor stall (v63-v65):**
+- v63 `display:none → offsetHeight → display:''` — NOT strong enough.
+  WKWebView compositor ignores this invalidation on stalled layers.
+- v64 `transform: translate3d(0,0,0) → offsetHeight → clear` — NOT
+  strong enough. GPU layer promotion/demotion alone does not flush
+  the stalled compositor on iPadOS.
+- v65 added position:fixed→static→fixed reanchor + synthetic scroll
+  (`window.scrollBy(0,1); window.scrollBy(0,-1)`) — WORKS. The
+  synthetic scroll mimics pull-to-refresh which Chris confirmed
+  reliably forces compositor flush. All three techniques kept as
+  belt-and-suspenders.
+
+**Key diagnostic evidence:** pull-to-refresh in HA Companion App
+instantly restored header/nav every time, confirming elements were
+in DOM (not removed) but compositor was not painting them. This is
+H1 (compositor stall), not H2 (DOM removal).
+
+Resolution: mobilev2 is maintenance-only at v66. mobilev3 will use
+standard Lovelace architecture (custom cards inside Lovelace views,
+no body-level injection, HA's native view tabs for navigation).
+
+**Future-Chris/future-Claude: do NOT add more repaint workarounds to
+mobilev2. If v66 breaks on future iOS, the answer is to ship v3,
+not to add a fourth repaint technique.**
