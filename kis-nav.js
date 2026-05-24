@@ -58,7 +58,7 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 53;
+  window.KIS_NAV_VERSION = 54;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
@@ -604,6 +604,115 @@
     style.textContent = css;
     shadowRoot.appendChild(style);
     return true;
+  }
+
+  function removeShadowCSS(shadowRoot, id) {
+    if (!shadowRoot) return;
+    var el = shadowRoot.querySelector('#' + id);
+    if (el) el.remove();
+  }
+
+  function forceReflow() {
+    for (var i = 0; i < arguments.length; i++) {
+      if (arguments[i] && typeof arguments[i].offsetWidth === 'number') void arguments[i].offsetWidth;
+    }
+  }
+
+  function onV2Dashboard() {
+    return window.location.pathname.startsWith('/mobile-v2');
+  }
+
+  // ─── Kiosk CSS engine ─────────────────────────────────────────────────────
+  // Ported from kis-app-shell.js syncKioskMode. kis-nav.js owns kiosk on
+  // mobilev1 (and any non-v2 dashboard). kis-app-shell.js owns on mobilev2.
+  // CSS IDs use kis-kiosk-* prefix (v2 uses kisv2-kiosk-*) — no collision.
+
+  var KIOSK_CSS = '\
+    app-header { display: none !important; }\
+    ha-app-layout {\
+      --header-height: 0px !important;\
+      --app-header-height: 0px !important;\
+    }\
+    #view { height: 100vh !important; }\
+  ';
+  var KIOSK_DRAWER_HOST_CSS = ':host(.kis-kiosk-collapsed) { --mdc-drawer-width: 0px !important; }';
+  var KIOSK_SIDEBAR_HOST_CSS = ':host(.kis-kiosk-hidden) { display: none !important; }';
+
+  var _kioskOriginals = null;
+  var _prevKiosk = null;
+
+  function syncKioskMode(hass) {
+    if (onV2Dashboard()) return;
+
+    var entity = hass && hass.states && hass.states['input_boolean.kiosk_mode'];
+    var isOn = !entity || entity.state === 'on';
+    var newState = entity ? entity.state : null;
+
+    if (newState === _prevKiosk) return;
+
+    var ha = document.querySelector('home-assistant');
+    var main = ha && ha.shadowRoot && ha.shadowRoot.querySelector('home-assistant-main');
+    var drawer = main && main.shadowRoot && main.shadowRoot.querySelector('ha-drawer');
+    var sidebar = drawer && drawer.querySelector('ha-sidebar');
+    var panel = (drawer && drawer.querySelector('ha-panel-lovelace'))
+             || (main && main.shadowRoot && main.shadowRoot.querySelector('ha-panel-lovelace'));
+    var huiRoot = panel && panel.shadowRoot && panel.shadowRoot.querySelector('hui-root');
+
+    if (!drawer) return;
+
+    if (_kioskOriginals && !_kioskOriginals.drawer.isConnected) {
+      _kioskOriginals = null;
+    }
+
+    if (!_kioskOriginals) {
+      _kioskOriginals = {
+        drawer: drawer,
+        drawerWidth: drawer.style.getPropertyValue('--mdc-drawer-width'),
+        drawerType: drawer.getAttribute('type'),
+        sidebarDisplay: sidebar ? sidebar.style.display : '',
+      };
+    }
+
+    if (drawer.shadowRoot) {
+      injectShadowCSS(drawer.shadowRoot, 'kis-kiosk-drawer-host', KIOSK_DRAWER_HOST_CSS);
+    }
+    if (sidebar && sidebar.shadowRoot) {
+      injectShadowCSS(sidebar.shadowRoot, 'kis-kiosk-sidebar-host', KIOSK_SIDEBAR_HOST_CSS);
+    }
+
+    if (isOn) {
+      drawer.classList.add('kis-kiosk-collapsed');
+      drawer.style.setProperty('--mdc-drawer-width', '0px');
+      if (sidebar) {
+        sidebar.classList.add('kis-kiosk-hidden');
+        sidebar.style.display = 'none';
+      }
+      if (drawer.hasAttribute('open')) drawer.removeAttribute('open');
+      drawer.setAttribute('type', 'modal');
+      if (huiRoot && huiRoot.shadowRoot) {
+        injectShadowCSS(huiRoot.shadowRoot, 'kis-kiosk-patch', KIOSK_CSS);
+      }
+      forceReflow(drawer, sidebar, huiRoot);
+    } else {
+      drawer.classList.remove('kis-kiosk-collapsed');
+      drawer.style.removeProperty('--mdc-drawer-width');
+      if (_kioskOriginals.drawerType) {
+        drawer.setAttribute('type', _kioskOriginals.drawerType);
+      } else {
+        drawer.removeAttribute('type');
+      }
+      if (sidebar) {
+        sidebar.classList.remove('kis-kiosk-hidden');
+        sidebar.style.removeProperty('display');
+      }
+      if (huiRoot && huiRoot.shadowRoot) {
+        removeShadowCSS(huiRoot.shadowRoot, 'kis-kiosk-patch');
+      }
+      forceReflow(drawer, sidebar, huiRoot);
+    }
+
+    _prevKiosk = newState;
+    try { localStorage.setItem('kis-kiosk-state', isOn ? 'on' : 'off'); } catch (e) {}
   }
 
   function onMobileDashboard() {
@@ -2001,6 +2110,30 @@
 
       let panel = null;
       const drawer = main.shadowRoot.querySelector('ha-drawer');
+
+      // Boot-time kiosk pre-hide: collapse sidebar before first paint if
+      // last-known kiosk state was ON. Prevents sidebar flash-on-load.
+      // syncKioskMode will confirm/override once hass is available.
+      if (drawer && !onV2Dashboard() && _prevKiosk === null &&
+          localStorage.getItem('kis-kiosk-state') !== 'off') {
+        var sidebar = drawer.querySelector('ha-sidebar');
+        if (!_kioskOriginals) {
+          _kioskOriginals = {
+            drawer: drawer,
+            drawerWidth: drawer.style.getPropertyValue('--mdc-drawer-width'),
+            drawerType: drawer.getAttribute('type'),
+            sidebarDisplay: sidebar ? sidebar.style.display : '',
+          };
+        }
+        drawer.classList.add('kis-kiosk-collapsed');
+        drawer.style.setProperty('--mdc-drawer-width', '0px');
+        drawer.setAttribute('type', 'modal');
+        if (sidebar) {
+          sidebar.classList.add('kis-kiosk-hidden');
+          sidebar.style.display = 'none';
+        }
+      }
+
       if (drawer) panel = drawer.querySelector('ha-panel-lovelace');
       if (!panel) panel = main.shadowRoot.querySelector('ha-panel-lovelace');
       if (!panel?.shadowRoot) throw new Error('no panel');
@@ -2248,6 +2381,24 @@
       }).catch(function () {});
     })();
 
+    // Event-driven kiosk mode subscription — instant response to toggle.
+    (function installKioskSubscription() {
+      if (!window.hassConnection) {
+        setTimeout(installKioskSubscription, 500);
+        return;
+      }
+      window.hassConnection.then(function (result) {
+        var conn = result.conn;
+        if (!conn || !conn.subscribeEvents) return;
+        conn.subscribeEvents(function (event) {
+          if (event.data && event.data.entity_id === 'input_boolean.kiosk_mode') {
+            var h = getHass();
+            if (h) syncKioskMode(h);
+          }
+        }, 'state_changed');
+      }).catch(function () {});
+    })();
+
     // Update header content every second (live clock + entity states).
     // Also opportunistically re-attach the swipe-card observer, and refresh
     // camera placeholders, in case elements remounted since last syncState.
@@ -2258,6 +2409,8 @@
         updateCameraPlaceholders();
         installZoneHeightObserver();
       }
+      var h = getHass();
+      if (h) syncKioskMode(h);
     }, 1000);
 
     // Instant theme sync: watch for CSS variable changes on documentElement.
