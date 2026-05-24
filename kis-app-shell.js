@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '59';
+  const VERSION = '62';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -1615,6 +1615,7 @@
   let _viewObserverFailsafe = null;
 
   function resetRevealGate() {
+    _patchesApplied = false;
     _revealGateActive = false;
     _earlyHideInjected = false;
     _earlyChromeHidden = false;
@@ -1839,16 +1840,18 @@
     window.addEventListener('location-changed', onLocationChange);
     window.addEventListener('popstate', onLocationChange);
 
-    // Bug D: re-apply patches when app returns from background (iPad/iPhone Companion)
+    // Bug D + iOS resume fix: re-arm reveal gate when app returns from background
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && onV2Dashboard()) {
-        patchHALayout(0);
+        resetRevealGate();
+        setTimeout(() => patchHALayout(0), 500);
         if (_hass) syncKioskMode(_hass);
       }
     });
-    window.addEventListener('pageshow', (e) => {
-      if (e.persisted && onV2Dashboard()) {
-        patchHALayout(0);
+    window.addEventListener('pageshow', () => {
+      if (onV2Dashboard()) {
+        resetRevealGate();
+        setTimeout(() => patchHALayout(0), 500);
         if (_hass) syncKioskMode(_hass);
       }
     });
@@ -1869,6 +1872,7 @@
     // instance. Re-run the full patch at staggered delays to catch the final one.
     setTimeout(() => patchHALayout(0), 2000);
     setTimeout(() => patchHALayout(0), 5000);
+
   }
 
   // ── Boot ──────────────────────────────────────────────────────────────────

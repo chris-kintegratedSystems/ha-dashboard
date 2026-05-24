@@ -456,3 +456,24 @@ was never removed. Player stayed invisible despite active media.
 **Broader lesson:** When a DOM element starts in a hidden state and a state
 machine controls its visibility, the initial/null state must be treated the same
 as the hidden state for the "show" transition.
+
+## 2026-05-23: iOS resume bug — Fix A removed kis-ready and Phase 5 early-exit prevented re-add
+**Tried:** Adding `resetRevealGate()` to `visibilitychange`/`pageshow` handlers
+to mirror the `location-changed` (navigation) path. The idea was that resume
+should re-arm the reveal gate the same way navigation does.
+**Failed:** `resetRevealGate()` removes `kis-ready` as its first act (line 1634),
+making `hui-sections-view` invisible (opacity:0). But the subsequent
+`patchHALayout(0)` call early-exits via Phase 5 logic (`_patchesApplied` still
+true, stylesheets `#kisv2-hui-patch` and `#kisv2-sections-patch` still present
+on the unchanged sections-view element). Resume doesn't swap DOM elements like
+navigation does, so the Phase 5 check passes and `armRevealGate()` never fires.
+`kis-ready` never re-added, content stuck at opacity:0. 100% failure rate
+confirmed via Chrome DevTools MCP harness (0/30 cycles passed).
+**Fix:** Clear `_patchesApplied = false` at top of `resetRevealGate()` so the
+subsequent `patchHALayout` always runs the full patch including `armRevealGate`.
+Single line addition. Verified 38/38 cycles passed (v61 30/30 + v62 clean 8/8).
+**Broader lesson:** When an early-exit optimization caches "system is healthy"
+state, any function that explicitly wants a full re-patch must invalidate that
+cache. The navigation path worked by accident because HA swaps the DOM element,
+causing the early-exit's stylesheet-presence check to fail naturally. The resume
+path kept the same element, so the cache was never invalidated.

@@ -902,3 +902,20 @@ Also, installing the hass property interceptor before
 `home-assistant-main` shadow root exists blocks HA's own hass
 propagation ("Loading data" stuck screen). Guard must require:
 `haMain.hass && haMain.hass.states && mainEl.shadowRoot`.
+
+## 2026-05-23: Phase 5 early-exit must be invalidated explicitly on re-patch
+The `_patchesApplied` flag and the stylesheet-presence check in
+`patchHALayout`'s early-exit assume "stylesheets present = system
+healthy." This breaks when something downstream (`kis-ready` class)
+can be in a bad state while stylesheets are intact. When code
+explicitly wants a full re-patch (`resetRevealGate`), it must clear
+`_patchesApplied = false` to bypass the early-exit. The early-exit is
+only safe for the staggered retry `setTimeout`s (t=2s, t=5s in
+`bootUI`) where `_patchesApplied` accurately reflects "we already
+patched and the retries are redundant."
+
+Key asymmetry: navigation (`location-changed`) swaps the DOM element,
+so the stylesheet-presence check fails naturally and the full patch
+runs. Resume (`visibilitychange`) keeps the same element, so the check
+passes and `armRevealGate` is skipped unless `_patchesApplied` is
+explicitly cleared.
