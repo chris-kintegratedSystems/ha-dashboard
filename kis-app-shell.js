@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '59';
+  const VERSION = '66';
   window.KIS_APP_SHELL_VERSION = VERSION;
 
   const DASHBOARD_PREFIX = '/mobile-v2';
@@ -1615,6 +1615,7 @@
   let _viewObserverFailsafe = null;
 
   function resetRevealGate() {
+    _patchesApplied = false;
     _revealGateActive = false;
     _earlyHideInjected = false;
     _earlyChromeHidden = false;
@@ -1839,17 +1840,54 @@
     window.addEventListener('location-changed', onLocationChange);
     window.addEventListener('popstate', onLocationChange);
 
-    // Bug D: re-apply patches when app returns from background (iPad/iPhone Companion)
+    // iOS resume fix: re-arm reveal gate + force compositor repaint on body-level chrome
+    function resumeUIChrome() {
+      var navEl = document.getElementById('kis-v2-nav');
+      var headerEl = document.getElementById('kis-v2-header');
+      var playerEl = document.getElementById('kis-v2-player');
+      if (!navEl || !headerEl) {
+        _uiInjected = false;
+        injectUI();
+      } else {
+        navEl.style.transform = 'translate3d(0, 0, 0)';
+        headerEl.style.transform = 'translate3d(0, 0, 0)';
+        if (playerEl) playerEl.style.transform = 'translate3d(0, 0, 0)';
+        void navEl.offsetHeight;
+        void headerEl.offsetHeight;
+        navEl.style.transform = '';
+        headerEl.style.transform = '';
+        if (playerEl) playerEl.style.transform = '';
+        var els = [navEl, headerEl, playerEl];
+        for (var i = 0; i < els.length; i++) {
+          if (els[i]) {
+            var origPos = els[i].style.position;
+            els[i].style.position = 'static';
+            void els[i].offsetHeight;
+            els[i].style.position = origPos || 'fixed';
+          }
+        }
+        window.scrollBy(0, 1);
+        window.scrollBy(0, -1);
+        document.body.scrollBy(0, 1);
+        document.body.scrollBy(0, -1);
+      }
+      syncV2State();
+    }
+
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && onV2Dashboard()) {
-        patchHALayout(0);
+        resetRevealGate();
+        setTimeout(() => patchHALayout(0), 500);
         if (_hass) syncKioskMode(_hass);
+        setTimeout(resumeUIChrome, 100);
       }
     });
-    window.addEventListener('pageshow', (e) => {
-      if (e.persisted && onV2Dashboard()) {
-        patchHALayout(0);
+    window.addEventListener('pageshow', () => {
+      if (onV2Dashboard()) {
+        resetRevealGate();
+        setTimeout(() => patchHALayout(0), 500);
         if (_hass) syncKioskMode(_hass);
+        setTimeout(resumeUIChrome, 100);
       }
     });
 
@@ -1869,6 +1907,7 @@
     // instance. Re-run the full patch at staggered delays to catch the final one.
     setTimeout(() => patchHALayout(0), 2000);
     setTimeout(() => patchHALayout(0), 5000);
+
   }
 
   // ── Boot ──────────────────────────────────────────────────────────────────

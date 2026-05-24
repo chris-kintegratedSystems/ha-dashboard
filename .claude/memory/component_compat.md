@@ -54,3 +54,19 @@ Append new entries at the bottom. Date-stamp every entry.
 | iCloud3 (AirTags) | NOT STARTED | Needs Apple ID auth. |
 | Tesla | NOT STARTED | Needs OAuth + virtual key. |
 | Mercedes mbapi2020 | UNCERTAIN | G580 support unconfirmed. |
+
+## 2026-05-23: document.body injection pattern — BROKEN for iOS WKWebView
+Pattern: injecting UI directly into document.body (e.g.
+#kis-v2-header, #kis-v2-nav, #kis-v2-player) for persistence across
+Lovelace page transitions.
+Symptom on iOS WKWebView: elements survive in DOM through
+backgrounding but compositor stops painting them on resume.
+document.body-level UI is not within scope of HA's frontend resume
+logic and gets no automatic recovery.
+Workaround applied: v66 layers translate3d nudge + position:fixed
+reanchor + synthetic scroll on visibilitychange/pageshow events.
+Fragility: dependent on specific iPadOS compositor behavior. Future
+iOS may not respond to these tricks.
+Use instead: render persistent UI as a Lovelace custom card inside
+a view's section grid. HA's runtime will handle resume/repaint
+correctly.

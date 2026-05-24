@@ -1,50 +1,49 @@
 # HANDOFF.md — ha-dashboard
-# Last updated: 2026-05-19
+# Last updated: 2026-05-23
 
 ## Last session summary
-Bug D + Bug E fixes shipped as v55 of kis-app-shell.js.
+iOS resume bugs fixed and shipped as v66 of kis-app-shell.js.
+mobilev2 is now in maintenance-only mode. v3 rebuild planned.
 
-**Bug E (initial chrome flash on cold load):** Eliminated by moving
-kis-app-shell.js from Lovelace resources to frontend.extra_module_url.
-Script now loads during HA frontend boot (~51ms), before HA chrome
-paints (~493ms). earlyHideLoop catches drawer at DOM creation and
-hides it before first paint. localStorage gate prevents hide-then-show
-flicker for kiosk=off users. tryConnect guard hardened to wait for
-hass.states + home-assistant-main shadow root before installing
-property interceptor (prevents crash during early boot).
+**Content invisible on resume (v60-v62 arc):** Phase 5's idempotent
+early-exit prevented `armRevealGate()` from firing on resume because
+`_patchesApplied` was still true and stylesheets survived suspension.
+Fixed by clearing `_patchesApplied = false` at top of
+`resetRevealGate()`.
 
-**Bug D (iPad background/foreground strips patches):** Fixed with
-visibilitychange + pageshow event listeners that re-run patchHALayout
-and syncKioskMode when app returns to foreground.
+**Header/nav not painted on iPad resume (v63-v66 arc):** Body-level
+position:fixed elements survive in DOM but WKWebView compositor stops
+painting them. Fixed by layering three repaint techniques in
+`resumeUIChrome()`: translate3d GPU nudge + position:fixed reanchor +
+synthetic scroll. Confirmed via pull-to-refresh diagnostic evidence.
 
-**Deploy mechanism change (IMPORTANT):** kis-app-shell.js now loads
-via `frontend.extra_module_url` in ha-config configuration.yaml
-(since v55). Cache-bust updates happen there, NOT in
-`.storage/lovelace_resources`. The lovelace_resources entry was
-removed from the Pi. Future sessions update the `?v=N` parameter in
-configuration.yaml.
+**Architecture decision:** These bugs are inherent to the body-level
+injection pattern (kis-app-shell.js injects header/nav/player into
+document.body, outside HA's shadow DOM). v3 will use standard
+Lovelace custom cards inside views — no body injection, no compositor
+workarounds. Do NOT extend the v66 bandage pattern.
 
 ## Current state
-- Branch: feat/initial-load-and-foreground-fixes
+- ha-dashboard branch: hotfix/ipad-resume-final
+- ha-config branch: hotfix/cache-bust-v66
 - Open PRs:
-  - ha-config #43: feat(frontend): load kis-app-shell.js via extra_module_url
-    https://github.com/chris-kintegratedSystems/ha-config/pull/43
-  - ha-dashboard #75: feat(app-shell): v55 — initial-load flash + iPad foreground fixes
-    https://github.com/chris-kintegratedSystems/ha-dashboard/pull/75
-  - ha-dashboard #74: chore(qa): add .gitignore for scratch screenshots
-    https://github.com/chris-kintegratedSystems/ha-dashboard/pull/74
+  - ha-config #51: fix(frontend): bump kis-app-shell.js cache-bust to v66
+    https://github.com/chris-kintegratedSystems/ha-config/pull/51
+  - ha-dashboard #82: fix(app-shell): iOS resume — reveal gate + compositor repaint (v66)
+    https://github.com/chris-kintegratedSystems/ha-dashboard/pull/82
   - ha-dashboard #68: Issue 1 Stage 5 (paused — do not touch)
+- Closed PRs (superseded):
+  - ha-config #50: closed, superseded by #51
+  - ha-dashboard #81: closed, superseded by #82
+- Deployed state: v66 on Pi, matches hotfix/ipad-resume-final branch
 
 ## Next steps
-- Merge PRs #43 (ha-config) and #75 + #74 (ha-dashboard)
-- Level 1 theming: color HA's native boot splash (black/logo + white/loading)
-  to match KIS theme — separate work, not in scope of Bug E
-- Tab A9+ FKB splash screen config — separate work
-- mobilev2 Phase 2 (Climate view) when ready
+- Merge PRs #51 (ha-config first) then #82 (ha-dashboard)
+- v3 dashboard architecture planning session
+- Do NOT add more repaint workarounds to mobilev2
 
 ## Known issues
-- HA native boot splash (black logo screen + white "Loading data" spinner)
-  still visible on cold load — this is HA core rendering before any custom
-  JS executes. Bug E fix eliminated the chrome flash that came AFTER these
-  splash screens. Requires Level 1 theming or FKB splash config.
 - PR #68 (Issue 1 Stage 5) is paused — do not touch
+- v66 compositor fix is a bandage dependent on iPadOS-specific behavior
+- Future iOS updates may break the synthetic scroll trick — answer is
+  to ship v3, not add more workarounds
