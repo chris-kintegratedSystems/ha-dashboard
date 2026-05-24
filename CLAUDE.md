@@ -334,7 +334,7 @@ run the full 6-phase checkpoint:
 2. UPDATE MEMORY — capture session lessons to .claude/memory/ files
    BEFORE committing (so they're included in the push)
 3. COMMIT + PUSH — stage everything (code + memory), push to origin
-4. PR MERGE — guide Chris through merging on GitHub, pull fresh master
+4. PR MERGE — guide Chris through merging on GitHub, pull fresh main
 5. SESSION HANDOFF — upload to Drive for cross-session continuity
 6. FINAL REPORT — green/red checklist + next steps
 
@@ -383,7 +383,7 @@ DO NOT commit yet — these get committed with code in Phase 3.
   why — do not proceed to the remaining PRs.
 - If Chris says he will do it on GitHub: WAIT for confirmation.
 - After all merges are complete (either path): run
-  `git checkout master && git pull origin master` on BOTH repos. Verify
+  `git checkout main && git pull origin main` on BOTH repos. Verify
   the merged commits appear in `git log`.
 
 ### Phase 5: SESSION HANDOFF
@@ -400,7 +400,7 @@ contain three subsections, each with full clickable URLs on their own lines
 - Memory files updated
 - All changes committed and pushed
 - All PRs merged (or list remaining)
-- Both repos on master, up to date
+- Both repos on main, up to date
 - Session handoff saved
 - Deployed state matches git
 - No scratch files
@@ -436,18 +436,18 @@ End with: "Safe to exit" or "Not safe — [reason]"
   execute the merges using `gh pr merge <number> --repo
   chris-kintegratedSystems/<repo> --merge` in the correct order —
   ha-config FIRST, ha-dashboard SECOND, oldest PR number first within
-  each repo. After all merges complete, run `git checkout master &&
-  git pull origin master` on BOTH repos and verify merged commits
+  each repo. After all merges complete, run `git checkout main &&
+  git pull origin main` on BOTH repos and verify merged commits
   appear in `git log`. If any merge fails (conflicts, failing checks,
   branch protection), stop immediately and report which PR failed.
   If Chris does NOT say to merge, print the clickable URLs and wait
   for him to merge manually on GitHub — same as before.
 - Save memory files BEFORE committing — they go in the same push
 - Always push BEFORE saying "safe to exit"
-- Always pull master AFTER PRs are merged
+- Always pull main AFTER PRs are merged
 - Flag deployed/git mismatches clearly
 - "Safe to exit" means next session starts with just:
-  git checkout master && git pull origin master && new branch
+  git checkout main && git pull origin main && new branch
 
 ---
 
