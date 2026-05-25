@@ -3099,171 +3099,497 @@
                                 },
                                 {
                                   "type": "custom:button-card",
-                                  "name": "Play Liked Songs",
-                                  "icon": "mdi:heart",
-                                  "show_name": true,
-                                  "show_icon": true,
-                                  "show_state": false,
-                                  "show_label": false,
-                                  "tap_action": {
-                                    "action": "call-service",
-                                    "service": "media_player.play_media",
-                                    "service_data": {
-                                      "entity_id": "media_player.living_room",
-                                      "media_content_id": "spotify:user:spotify:collection:tracks",
-                                      "media_content_type": "playlist"
-                                    }
-                                  },
-                                  "styles": {
-                                    "card": [
-                                      {
-                                        "background": "rgba(30,215,96,0.08)"
-                                      },
-                                      {
-                                        "border": "1px solid rgba(30,215,96,0.2)"
-                                      },
-                                      {
-                                        "border-radius": "14px"
-                                      },
-                                      {
-                                        "box-shadow": "none"
-                                      },
-                                      {
-                                        "padding": "14px"
-                                      }
-                                    ],
-                                    "icon": [
-                                      {
-                                        "color": "#1ED760"
-                                      },
-                                      {
-                                        "width": "24px"
-                                      }
-                                    ],
-                                    "name": [
-                                      {
-                                        "font-size": "14px"
-                                      },
-                                      {
-                                        "font-weight": "600"
-                                      },
-                                      {
-                                        "color": "#eef2f8"
-                                      }
-                                    ]
-                                  }
+                                  "template": "section_label",
+                                  "name": "PLAY ON"
                                 },
                                 {
-                                  "type": "custom:button-card",
-                                  "name": "Play Discover Weekly",
-                                  "icon": "mdi:compass",
-                                  "show_name": true,
-                                  "show_icon": true,
-                                  "show_state": false,
-                                  "show_label": false,
-                                  "tap_action": {
-                                    "action": "call-service",
-                                    "service": "media_player.play_media",
-                                    "service_data": {
-                                      "entity_id": "media_player.living_room",
-                                      "media_content_id": "spotify:playlist:37i9dQZEVXcQ9COmYvLbiS",
-                                      "media_content_type": "playlist"
+                                  "type": "horizontal-stack",
+                                  "cards": [
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.living_room",
+                                      "name": "Living Room",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Living Room",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.gemelli",
+                                      "name": "Gemelli",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Gemelli",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.patio",
+                                      "name": "Patio",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Patio",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.dining_room",
+                                      "name": "Dining Room",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Dining Room",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
                                     }
-                                  },
-                                  "styles": {
-                                    "card": [
-                                      {
-                                        "background": "rgba(30,215,96,0.08)"
-                                      },
-                                      {
-                                        "border": "1px solid rgba(30,215,96,0.2)"
-                                      },
-                                      {
-                                        "border-radius": "14px"
-                                      },
-                                      {
-                                        "box-shadow": "none"
-                                      },
-                                      {
-                                        "padding": "14px"
-                                      }
-                                    ],
-                                    "icon": [
-                                      {
-                                        "color": "#1ED760"
-                                      },
-                                      {
-                                        "width": "24px"
-                                      }
-                                    ],
-                                    "name": [
-                                      {
-                                        "font-size": "14px"
-                                      },
-                                      {
-                                        "font-weight": "600"
-                                      },
-                                      {
-                                        "color": "#eef2f8"
-                                      }
-                                    ]
-                                  }
+                                  ]
                                 },
                                 {
-                                  "type": "custom:button-card",
-                                  "name": "Play Daily Mix 1",
-                                  "icon": "mdi:playlist-music",
-                                  "show_name": true,
-                                  "show_icon": true,
-                                  "show_state": false,
-                                  "show_label": false,
-                                  "tap_action": {
-                                    "action": "call-service",
-                                    "service": "media_player.play_media",
-                                    "service_data": {
-                                      "entity_id": "media_player.living_room",
-                                      "media_content_id": "spotify:playlist:37i9dQZF1E35SquBFrkKid",
-                                      "media_content_type": "playlist"
+                                  "type": "horizontal-stack",
+                                  "cards": [
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.chriss_office",
+                                      "name": "Chris's Office",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Chris's Office",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.office",
+                                      "name": "Office",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Office",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.master_bedroom",
+                                      "name": "Master Bed",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Master Bedroom",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "type": "custom:button-card",
+                                      "entity": "media_player.master_bathroom",
+                                      "name": "Master Bath",
+                                      "show_name": true,
+                                      "show_icon": false,
+                                      "show_state": false,
+                                      "show_label": false,
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "spotifyplus.player_transfer_playback",
+                                        "service_data": {
+                                          "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                          "device_id": "Master Bathroom",
+                                          "play": true,
+                                          "delay": 0.5
+                                        }
+                                      },
+                                      "styles": {
+                                        "card": [
+                                          {
+                                            "background": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? 'rgba(30,215,96,0.25)' : 'rgba(255,255,255,0.05)' ]]]"
+                                          },
+                                          {
+                                            "border": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '1px solid rgba(30,215,96,0.5)' : '1px solid rgba(255,255,255,0.1)' ]]]"
+                                          },
+                                          {
+                                            "border-radius": "16px"
+                                          },
+                                          {
+                                            "box-shadow": "none"
+                                          },
+                                          {
+                                            "padding": "6px 10px"
+                                          },
+                                          {
+                                            "min-height": "0"
+                                          },
+                                          {
+                                            "height": "auto"
+                                          }
+                                        ],
+                                        "name": [
+                                          {
+                                            "font-size": "11px"
+                                          },
+                                          {
+                                            "font-weight": "500"
+                                          },
+                                          {
+                                            "color": "[[[ return (entity.state === 'playing' || entity.state === 'paused') ? '#1ED760' : '#8a95a8' ]]]"
+                                          },
+                                          {
+                                            "white-space": "nowrap"
+                                          }
+                                        ]
+                                      }
                                     }
-                                  },
-                                  "styles": {
-                                    "card": [
-                                      {
-                                        "background": "rgba(30,215,96,0.08)"
-                                      },
-                                      {
-                                        "border": "1px solid rgba(30,215,96,0.2)"
-                                      },
-                                      {
-                                        "border-radius": "14px"
-                                      },
-                                      {
-                                        "box-shadow": "none"
-                                      },
-                                      {
-                                        "padding": "14px"
-                                      }
-                                    ],
-                                    "icon": [
-                                      {
-                                        "color": "#1ED760"
-                                      },
-                                      {
-                                        "width": "24px"
-                                      }
-                                    ],
-                                    "name": [
-                                      {
-                                        "font-size": "14px"
-                                      },
-                                      {
-                                        "font-weight": "600"
-                                      },
-                                      {
-                                        "color": "#eef2f8"
-                                      }
-                                    ]
-                                  }
+                                  ]
+                                },
+                                {
+                                  "type": "custom:spotifyplus-card",
+                                  "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                  "sections": [
+                                    "searchmedia",
+                                    "recents",
+                                    "playlistfavorites",
+                                    "trackfavorites",
+                                    "albumfavorites",
+                                    "devices"
+                                  ],
+                                  "sectionDefault": "searchmedia",
+                                  "width": "fill",
+                                  "height": "fill"
                                 }
                               ]
                             }
