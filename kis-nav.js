@@ -58,11 +58,30 @@
   // Expose version so the Settings → About card can read it dynamically
   // via a custom:button-card [[[ ]]] template. Bump this whenever the
   // ?v=N cache-bust in configuration.yaml goes up.
-  window.KIS_NAV_VERSION = 55;
+  window.KIS_NAV_VERSION = 56;
 
   const DASHBOARD_PREFIX = '/dashboard-mobilev1';
   const NAV_H = 80; // px — bottom nav bar height + safe-area buffer
-  const MEDIA_PLAYER_ENTITY = 'media_player.benjamins_hatch_media_player';
+  const SONOS_ZONES = [
+    'media_player.living_room',
+    'media_player.gemelli',
+    'media_player.patio',
+    'media_player.dining_room',
+    'media_player.chriss_office',
+    'media_player.office',
+    'media_player.master_bedroom',
+    'media_player.master_bathroom',
+  ];
+  const SONOS_ZONE_NAMES = {
+    'media_player.living_room': 'Living Room',
+    'media_player.gemelli': 'Gemelli',
+    'media_player.patio': 'Patio',
+    'media_player.dining_room': 'Dining Room',
+    'media_player.chriss_office': "Chris's Office",
+    'media_player.office': 'Office',
+    'media_player.master_bedroom': 'Master Bedroom',
+    'media_player.master_bathroom': 'Master Bath',
+  };
 
   // Badge entity groups — urgent (red) conditions
   const BADGE_LOCKS = ['lock.front_door_lock', 'lock.back_door_lock', 'lock.gemelli_door_lock'];
@@ -216,6 +235,12 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
+    #kis-mini-player .kmp-zone {
+      font-size: 9px; color: #4a5570; text-transform: uppercase;
+      letter-spacing: 0.08em; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
     #kis-mini-player .kmp-play {
       background: none; border: none; cursor: pointer;
       -webkit-tap-highlight-color: transparent; flex-shrink: 0;
@@ -242,6 +267,7 @@
     #kis-mini-player[data-kis-day] .kmp-art { background: #e4e8f0; }
     #kis-mini-player[data-kis-day] .kmp-track { color: #1a2030; }
     #kis-mini-player[data-kis-day] .kmp-artist { color: #4a5a72; }
+    #kis-mini-player[data-kis-day] .kmp-zone { color: #7a8698; }
     #kis-mini-player[data-kis-day] .kmp-play ha-icon { color: #0088a8; }
     #kis-mini-player[data-kis-day] .kmp-progress { background: #c0c8d4; }
     #kis-mini-player[data-kis-day] .kmp-progress-fill { background: #0088a8; }
@@ -927,6 +953,32 @@
 
   // ─── Mini-player rendering ──────────────────────────────────────────────────
   let _prevMediaState = null;
+  let _activeZoneEntity = null;
+
+  function getActiveSonosZone(hass) {
+    if (!hass || !hass.states) return null;
+    var candidates = [];
+    for (var i = 0; i < SONOS_ZONES.length; i++) {
+      var eid = SONOS_ZONES[i];
+      var ent = hass.states[eid];
+      if (!ent) continue;
+      var s = ent.state;
+      if (s !== 'playing' && s !== 'paused') continue;
+      var src = (ent.attributes && ent.attributes.source) || '';
+      if (src === 'TV') continue;
+      var title = (ent.attributes && ent.attributes.media_title) || '';
+      if (!title) continue;
+      candidates.push(ent);
+    }
+    if (candidates.length === 0) return null;
+    if (candidates.length === 1) return candidates[0].entity_id;
+    candidates.sort(function(a, b) {
+      var ta = new Date(a.last_changed || 0).getTime();
+      var tb = new Date(b.last_changed || 0).getTime();
+      return tb - ta;
+    });
+    return candidates[0].entity_id;
+  }
 
   function updateMiniPlayer(hass, isDayMode) {
     const player = document.getElementById('kis-mini-player');
@@ -939,19 +991,23 @@
       player.removeAttribute('data-kis-day');
     }
 
-    const ent = hass ? getState(hass, MEDIA_PLAYER_ENTITY) : null;
+    var zoneId = getActiveSonosZone(hass);
+    _activeZoneEntity = zoneId;
+    const ent = zoneId && hass ? hass.states[zoneId] : null;
     const state = ent ? ent.state : 'off';
     const isActive = state === 'playing' || state === 'paused';
 
     if (!isActive) {
-      if (_prevMediaState !== 'hidden') {
+      if (_prevMediaState !== 'hidden' && _prevMediaState !== null) {
         player.setAttribute('hidden', '');
+        _prevMediaState = 'hidden';
+      } else if (_prevMediaState === null) {
         _prevMediaState = 'hidden';
       }
       return;
     }
 
-    if (_prevMediaState === 'hidden') {
+    if (_prevMediaState === 'hidden' || _prevMediaState === null) {
       player.removeAttribute('hidden');
     }
     _prevMediaState = state;
@@ -960,6 +1016,7 @@
     const track = attrs.media_title || 'Unknown';
     const artist = attrs.media_artist || '';
     const art = attrs.entity_picture || '';
+    const zoneName = SONOS_ZONE_NAMES[zoneId] || '';
 
     // Targeted updates — only touch changed elements
     const trackEl = player.querySelector('.kmp-track');
@@ -967,6 +1024,9 @@
 
     const artistEl = player.querySelector('.kmp-artist');
     if (artistEl && artistEl.textContent !== artist) artistEl.textContent = artist;
+
+    const zoneEl = player.querySelector('.kmp-zone');
+    if (zoneEl && zoneEl.textContent !== zoneName) zoneEl.textContent = zoneName;
 
     // Album art
     const artBox = player.querySelector('.kmp-art');
@@ -2283,6 +2343,7 @@
       <div class="kmp-info">
         <div class="kmp-track">Not playing</div>
         <div class="kmp-artist"></div>
+        <div class="kmp-zone"></div>
       </div>
       <button class="kmp-play" aria-label="Play/Pause">
         <ha-icon icon="mdi:play"></ha-icon>
@@ -2291,23 +2352,18 @@
     `;
     player.querySelector('.kmp-play').addEventListener('click', () => {
       const hass = getHass();
-      if (!hass) return;
-      const ent = getState(hass, MEDIA_PLAYER_ENTITY);
+      if (!hass || !_activeZoneEntity) return;
+      const ent = hass.states[_activeZoneEntity];
       if (!ent) return;
       hass.callService('media_player', ent.state === 'playing' ? 'media_pause' : 'media_play', {
-        entity_id: MEDIA_PLAYER_ENTITY,
+        entity_id: _activeZoneEntity,
       });
     });
-    // Tap anywhere on mini-player (except play button) opens more-info
+    // Tap anywhere on mini-player (except play button) navigates to Media page
     player.addEventListener('click', (e) => {
       if (e.target.closest('.kmp-play')) return;
-      const ha = document.querySelector('home-assistant');
-      if (ha) {
-        ha.dispatchEvent(new CustomEvent('hass-more-info', {
-          bubbles: true, composed: true,
-          detail: { entityId: MEDIA_PLAYER_ENTITY },
-        }));
-      }
+      window.history.pushState(null, '', DASHBOARD_PREFIX + '/media');
+      window.dispatchEvent(new Event('location-changed'));
     });
     document.body.appendChild(player);
 
