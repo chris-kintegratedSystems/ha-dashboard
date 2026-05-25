@@ -3579,6 +3579,7 @@
                                 {
                                   "type": "custom:spotifyplus-card",
                                   "entity_id": "media_player.spotifyplus_chris_kuprycz",
+                                  "cardUniqueId": "kismv1-spotify-browse",
                                   "sections": [
                                     "searchmedia",
                                     "recents",
